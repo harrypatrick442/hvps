@@ -1,0 +1,16 @@
+LTspice 24.0.12 for Windows
+Circuit: * C:\repos\snippets\CircuitAnalysis\VoltageMultiplier\LTSpice\VillardCascadingModel3\VillardCascadingModel3.asc
+Start Time: Wed Feb 19 16:27:26 2025
+solver = Normal
+Maximum thread count: 16
+tnom = 27
+temp = 27
+method = modified trap
+Limiting rise time of source v5 to 3.125e-06
+Limiting fall time of source v5 to 3.125e-06
+Direct Newton iteration for .op point succeeded.
+Heightened Def Con from 0.000348987 to 0.000348989
+Heightened Def Con from 0.000500998 to 0.000501
+Heightened Def Con from 0.000536478 to 0.000536479
+Total elapsed time: 0.197 seconds.
+

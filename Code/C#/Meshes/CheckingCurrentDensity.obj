@@ -1,0 +1,145 @@
+# Alias OBJ Model File
+# Exported from SketchUp, (c) 2000-2012 Trimble Navigation Limited
+# File units = millimeters
+
+mtllib CheckingCurrentDensity.mtl
+
+g Mesh1 Component_1_1 Model
+
+usemtl MaterialBoundary
+v -16.75 -11.75 51.5
+vt 0 0.19685
+vn 0 1 0
+v -5 -11.75 46.5
+vt -0.462598 0
+v -16.75 -11.75 46.5
+vt 0 0
+f 1/1/1 2/2/1 3/3/1
+
+v -5 -11.75 51.5
+vt -0.462598 0.19685
+f 2/2/1 1/1/1 4/4/1
+
+usemtl BackColor
+vn -0 -1 -0
+f 3/3/2 2/2/2 1/1/2
+
+usemtl MaterialBoundary
+vn 0 0 -1
+v -16.75 -16.75 46.5
+f 2/4/3 5/3/3 3/1/3
+
+v -5 -16.75 46.5
+f 5/3/3 2/4/3 6/2/3
+
+usemtl BackColor
+vn -0 -0 1
+f 3/1/4 5/3/4 2/4/4
+
+usemtl MaterialBoundary
+vn -1 0 0
+vt -0.19685 0.19685
+vt -0.19685 0
+f 5/3/5 1/5/5 3/6/5
+
+v -16.75 -16.75 51.5
+f 1/5/5 5/3/5 7/1/5
+
+usemtl WindingCurrentFirstBoundary
+vn 1 -0 -0
+f 7/1/6 5/3/6 1/5/6
+
+usemtl MaterialBoundary
+vn 0 -1 0
+v -5 -16.75 51.5
+vt 0.462598 0.19685
+f 5/3/7 8/7/7 7/1/7
+
+vt 0.462598 0
+f 8/7/7 5/3/7 6/8/7
+
+usemtl BackColor
+vn -0 1 -0
+f 6/8/8 5/3/8 8/7/8
+
+f 6/2/4 2/4/4 5/3/4
+
+usemtl WindingCurrentSecondBoundary
+f 6/3/5 4/5/5 2/6/5
+
+f 4/5/5 6/3/5 8/1/5
+
+usemtl BackColor
+f 8/1/6 6/3/6 4/5/6
+
+f 2/6/6 4/5/6 6/3/6
+
+f 4/4/2 1/1/2 2/2/2
+
+usemtl MaterialBoundary
+vn 0 7.04992e-17 1
+vt 0.462598 -1.38778e-17
+f 1/1/9 8/9/9 4/7/9
+
+vt 0 -1.38778e-17
+f 8/9/9 1/1/9 7/10/9
+
+usemtl BackColor
+vn -0 -7.04992e-17 -1
+f 7/10/10 1/1/10 8/9/10
+
+f 4/7/10 8/9/10 1/1/10
+
+f 7/1/8 8/7/8 5/3/8
+
+usemtl WindingCurrentFirstBoundary
+f 3/6/6 1/5/6 5/3/6
+
+g Mesh2 Component_1_1 Model
+
+usemtl FrontColor
+v -10.1981 -14.0628 47.5838
+vt -0.25795 0.0426707
+v -9.10471 -14.0628 46.5
+vt -0.300996 0
+v -10.1981 -14.0628 46.5
+vt -0.25795 0
+f 9/11/1 10/12/1 11/13/1
+
+usemtl WindingVolumeFirstHalf1
+f 11/13/2 10/12/2 9/11/2
+
+g Mesh3 Component_1_1 Model
+
+l 6 8
+
+l 6 2
+
+l 5 6
+
+l 5 3
+
+l 5 7
+
+l 7 8
+
+l 7 1
+
+l 3 1
+
+l 3 2
+
+l 2 4
+
+l 1 4
+
+l 8 4
+
+g Mesh4 Component_1_1 Model
+
+l 9 11
+
+l 9 10
+
+l 11 10
+

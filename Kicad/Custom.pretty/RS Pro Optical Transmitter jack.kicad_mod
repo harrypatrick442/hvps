@@ -1,0 +1,131 @@
+(footprint "RS Pro Optical Transmitter jack"
+	(version 20240108)
+	(generator "pcbnew")
+	(generator_version "8.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 0 2 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "1cff6b0e-54ef-4d7b-b072-2e7425588c88")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+		)
+	)
+	(property "Value" "OT"
+		(at 0 3.5 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(uuid "8e2a95e8-50e9-4c12-a975-376094e45734")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Footprint" ""
+		(at 1 8.75 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "a1e72a52-b9bf-4250-a98b-5ce925902e82")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 1 8.75 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "fbea1345-2715-4b1f-836a-620673c3c899")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 1 8.75 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "60b842a9-b937-4261-a16c-1aa21c85182d")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr through_hole)
+	(fp_rect
+		(start -6 -6.75)
+		(end 6 6.7754)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(fill none)
+		(layer "F.SilkS")
+		(uuid "f6cf868c-e568-44e4-a93d-b4d6b3d1a4a5")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 5 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(uuid "613b6a87-4b9b-4688-866e-fdbbfaae38ec")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "" np_thru_hole circle
+		(at -3.81 0)
+		(size 3 3)
+		(drill 2.6)
+		(layers "F&B.Cu" "*.Mask")
+		(uuid "094a4056-427f-4f7f-8422-afc9c76c2227")
+	)
+	(pad "" np_thru_hole circle
+		(at 3.81 0)
+		(size 3 3)
+		(drill 2.6)
+		(layers "F&B.Cu" "*.Mask")
+		(uuid "2ee81fa1-57b5-4346-9ca1-7d331fd7decb")
+	)
+	(pad "1" thru_hole circle
+		(at 2.54 -3.75)
+		(size 2 2)
+		(drill 0.8)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "7c8ee5da-c858-4df3-af2d-385c3ab07d75")
+	)
+	(pad "2" thru_hole circle
+		(at 0 -3.75)
+		(size 2 2)
+		(drill 0.8)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "fc179485-845d-4292-8bf2-237fee642a97")
+	)
+	(pad "3" thru_hole circle
+		(at -2.54 -3.75)
+		(size 2 2)
+		(drill 0.8)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "186a8ada-d862-4538-9afc-9eca8a19d3a5")
+	)
+)

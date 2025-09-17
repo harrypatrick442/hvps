@@ -1,0 +1,62 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PlatformTarget>x64</PlatformTarget>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="components\**" />
+    <Compile Remove="output - Copy %282%29\**" />
+    <Compile Remove="output - Copy\**" />
+    <Compile Remove="output\**" />
+    <Compile Remove="output_protection_resistor\**" />
+    <EmbeddedResource Remove="components\**" />
+    <EmbeddedResource Remove="output - Copy %282%29\**" />
+    <EmbeddedResource Remove="output - Copy\**" />
+    <EmbeddedResource Remove="output\**" />
+    <EmbeddedResource Remove="output_protection_resistor\**" />
+    <None Remove="components\**" />
+    <None Remove="output - Copy %282%29\**" />
+    <None Remove="output - Copy\**" />
+    <None Remove="output\**" />
+    <None Remove="output_protection_resistor\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="BasicCalculations.xlsx" />
+    <None Remove="experimenting with component layout.png" />
+    <None Remove="Parts.xlsx" />
+    <None Remove="~%24BasicCalculations.xlsx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CircuitAnalysis\CircuitAnalysis.csproj" />
+    <ProjectReference Include="..\FiniteElementAnalysis\FiniteElementAnalysis.csproj" />
+    <ProjectReference Include="..\ModifiedNodalAnalysis\ModifiedNodalAnalysis.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="MeshResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MeshResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="MeshResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MeshResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controller\" />
+  </ItemGroup>
+
+</Project>

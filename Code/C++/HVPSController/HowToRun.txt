@@ -1,0 +1,7 @@
+A) open cmd.
+B) cd C:\repos\snippets\CircuitAnalysis\VoltageMultiplier\Code\C++\HVPSController
+C)set IDF_PATH=C:\Users\USER1\esp\v5.4\esp-idf
+D)call %IDF_PATH%\export.bat  
+C) idf.py build
+D) idf.py -p COM3 flash while HOLDING LHS BOOT BUTTON
+E) idf.py -p COM3 monitor

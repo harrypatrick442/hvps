@@ -1,0 +1,8 @@
+* C:\repos\snippets\CircuitAnalysis\VoltageMultiplier\LTSpice\RegenerativeSnubberModelling\RegenerativeSnubbe.asc
+L_m N001 N002 0.000049 IC=22
+C_s N002 N001 3.3E-6
+V3 N001 0 36
+R2 N002 0 1000000000
+.tran 0 0.0000625 0 6.25e-8
+.backanno
+.end
