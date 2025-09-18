@@ -1,0 +1,41 @@
+﻿.location-picker{
+	position:relative;
+}.location-picker .map{
+	width:100%;
+	height:100%;
+	position:relative;
+}
+.location-picker .marker-housing{
+	position:absolute;
+	bottom:0px;
+	right:0px;
+	width:60px;
+	height:70px;
+	display:none;
+}
+.location-picker .marker-housing.visible{
+	display:block;
+}
+.location-picker.moving-marker .marker-housing.visible{
+	display:none;
+}
+.location-picker .marker{
+	width:60px;
+	height:60px;
+	position:absolute;
+	z-index:3;
+	left:50%;
+	top:50%;
+	left:calc(50% - 30px);
+	top:calc(50% - 60px);
+	cursor:move;
+}
+.location-picker .marker > img{
+	height:100%;
+}
+.location-picker .marker.unset{
+	bottom:5px;
+	right:0px;
+	top:auto;
+	left:auto;
+}

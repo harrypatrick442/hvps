@@ -1,0 +1,136 @@
+.date-picker{
+	display:none;
+	position:relative;
+}
+.date-picker.visible{
+	display:block;
+}
+.date-picker .day-month-year-row{
+	display:flex;
+	flex-direction:row;
+}
+.date-picker .date-button{
+	flex-grow:1;
+	display:block;
+	border:0px;
+	border-radius:0;
+	margin:2px;
+	height:30px;
+	font-size:18px;
+}
+.date-picker .month-picker{
+	width:100%;
+	box-sizing:border-box;
+	display:none;
+}
+.date-picker .month-picker.visible{
+	display:block;
+}
+.date-picker .year-picker{
+	width:100%;
+	box-sizing:border-box;
+	display:none;
+}
+.date-picker .year-picker.visible{
+	display:flex;
+	flex-direction:row;
+}
+.date-picker .year-picker .entries{
+	width:100%;
+}
+.date-picker .year-picker .entries{
+	width:100%;
+	box-sizing:border-box;
+}
+.date-picker .year-picker .entries .entry{
+	float:left;
+	width:20%;
+	box-sizing:border-box;
+	padding:2px;
+}
+.date-picker .year-picker .entries .entry .inner{
+	border:0;
+	padding:2px;
+	font-size:12px;
+	width:100%;
+	border-radius:0;
+}
+.date-picker .year-picker .button-left,
+.date-picker .year-picker .button-right{
+	width:16px;
+	position:relative;
+	border:0px;
+	background-color:none;
+}
+.date-picker .year-picker .button-left img,
+.date-picker .year-picker .button-right img{
+	width:14px;
+	height:14px;
+	top:50%;
+	left:50%;
+	transform:translate(-50%,-50%);
+	position:absolute;
+}
+.date-picker .month-picker .entry{
+	width:33.3%;
+	box-sizing:border-box;
+	float:left;
+	padding:2px;
+	height:28px;
+	cursor:pointer
+}
+.date-picker .month-picker .entry .inner{
+	text-align:center;
+	font-size:14px;
+	line-height:24px;
+	height:100%;
+}
+.date-picker .day-of-the-month-picker{
+	width:100%;
+	box-sizing:border-box;
+	display:none;
+	
+}
+.date-picker .day-of-the-month-picker.visible{
+	display:block;
+}
+.date-picker .day-of-the-month-picker .headings{
+	box-sizing:border-box;
+	width:100%;
+}
+.date-picker .day-of-the-month-picker .headings .heading{
+	box-sizing:border-box;
+	width:14.28%;
+	float:left;
+	padding:2px;
+	font-size:10px;
+	text-align:center;
+}
+.date-picker .day-of-the-month-picker .day,
+.date-picker .day-of-the-month-picker .filler{
+	box-sizing:border-box;
+	width:14.28%;
+	float:left;
+	padding:2px;
+}
+.date-picker .day-of-the-month-picker .filler{
+	display:none;
+	opacity:0.3;
+}
+.date-picker .day-of-the-month-picker .filler.visible{
+	display:block;
+}
+.date-picker .day-of-the-month-picker .filler .inner{
+	cursor:default;
+}
+.date-picker .day-of-the-month-picker .filler .inner,
+.date-picker .day-of-the-month-picker .day .inner{
+	box-sizing:border-box;
+	width:100%;
+	border:0;
+	border-radius:0px;
+	text-align:center;
+	height:20px;
+	padding:0px;
+	border:0px
+}

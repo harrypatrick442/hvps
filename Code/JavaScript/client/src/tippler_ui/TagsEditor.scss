@@ -1,0 +1,57 @@
+.tags-editor{
+	box-sizing:border-box;
+	&.has-entries .entries{
+		display:block;
+	}
+	.entries{
+		box-sizing:border-box;
+		display:inline-block;
+		padding:2px;
+		padding-top:0px;
+		display:none;
+		.entry{
+			margin-top:2px;
+			float:left;
+			flex-grow:1;
+			flex-shrink:0;
+			height:18px;
+			box-sizing:border-box;
+			font-size:12px;
+			padding-left:3px;
+			margin-left:2px;
+			border-radius:3px;
+			display:flex;
+			flex-direction:row;
+			.str{
+			}
+			.remove-button{
+				box-sizing:border-box;
+				height:100%;
+				flex-shrink:0;
+				padding:3px;
+			}
+		}
+	}
+	.inputs{
+		box-sizing:border-box;
+		height:20px;
+		height:100%;
+		display:flex;
+		position:relative;
+		width:100%;
+		.input{
+			background-color:transparent;
+			border:0 none;
+			outline:0;
+			height:100%;
+			padding-right:20px;
+			flex-grow:1;
+		}
+		.clear-button{
+			position:absolute;
+			right:0px;
+			height:18px;
+			flex-shrink:0;
+		}
+	}
+}

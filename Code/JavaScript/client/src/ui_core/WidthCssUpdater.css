@@ -1,0 +1,13 @@
+
+.width-css-updater-standard.width-1 > .category > .children > div{
+		width:49.4%;
+		width:calc(50% - 3px);
+}
+.width-css-updater-standard.width-2  > .category > .children > div{
+		width:33%;
+		width:calc(33.33% - 3px);
+}
+.width-css-updater-standard.width-1 > .category > .children > .full-width,
+.width-css-updater-standard.width-2 > .category > .children > .full-width{
+	width:100%;
+}

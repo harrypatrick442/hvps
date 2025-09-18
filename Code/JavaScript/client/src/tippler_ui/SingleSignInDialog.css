@@ -1,0 +1,39 @@
+.single-sign-in-dialog{
+	display:none;
+	position:fixed;
+    /* margin: auto; */
+    top: 50%;
+    left: 50%;
+    height: 40px;
+    transform: translate(-50%, -50%);
+    width: 290px;
+    display: none;
+    background-color: var(--color-7);
+	box-sizing:border-box;
+	padding:5px;
+	flex-direction:row;
+	max-width:90%;
+}
+.single-sign-in-dialog.visible{
+	display:flex;
+}
+.single-sign-in-dialog .password{
+	background-color:transparent;
+	outline:0;
+	border:0;
+	font-size:24px;
+	height:100%;
+	line-height:24px;
+    flex-grow: 1;
+    flex-basis: 0;
+    width: 0px;
+}
+.single-sign-in-dialog .button-sign-in{
+	flex-shrink:0;
+	width:32px;
+	height:32px;
+}
+.single-sign-in-dialog .button-sign-in img{
+	width:100%;
+	height:100%;
+}

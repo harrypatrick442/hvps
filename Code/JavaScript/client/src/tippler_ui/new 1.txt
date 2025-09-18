@@ -1,0 +1,11 @@
+export default class TimePicker_UpDown{
+	constructor({callbackChanged, maxValue}){
+		this._element = E.div('up-down');
+		this._valueElement = E.div('value');
+		this._buttonUp = this._buttonBack =  _createImageButton(ICON_UP_ARROW, 'button-back', this._handleClickedUp, this._disposes); 
+		this._element.appendChild(this._valueElement);
+	}
+	get value(){
+		return this._value;
+	}
+}

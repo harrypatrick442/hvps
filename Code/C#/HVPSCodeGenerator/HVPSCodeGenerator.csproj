@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\snippets\API\BaseMessages\BaseMessages.csproj" />
+    <ProjectReference Include="..\..\..\..\snippets\API\DataMemberNamesClassBuilder\DataMemberNamesClassBuilder.csproj" />
+    <ProjectReference Include="..\..\..\..\snippets\API\MessageTypes\MessageTypes.csproj" />
+    <ProjectReference Include="..\..\..\..\snippets\API\Ticketing\Ticketing.csproj" />
+    <ProjectReference Include="..\..\..\..\snippets\CircuitAnalysis\Bluetooth\Bluetooth.csproj" />
+    <ProjectReference Include="..\..\..\..\snippets\CircuitAnalysis\HVPSMessages\HVPSMessages.csproj" />
+    <ProjectReference Include="..\..\..\..\snippets\CircuitAnalysis\HVPSUIAPI\HVPSUIAPI.csproj" />
+    <ProjectReference Include="..\VoltageFeedbackMessages\VoltageFeedbackMessages.csproj" />
+  </ItemGroup>
+
+</Project>

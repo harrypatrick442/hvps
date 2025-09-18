@@ -1,0 +1,11 @@
+﻿.location-summary{
+
+}
+.location-summary .text{
+	flex-grow:1;
+	padding-left:3px;
+	line-height:20px;
+    flex-basis: 0;
+    max-width: 100%;
+    width: 100px;	
+}

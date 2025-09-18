@@ -1,0 +1,59 @@
+{
+  "name": "futurium-database-editor",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "./",
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/user-event": "^12.8.3",
+    "is-hotkey": "^0.2.0",
+    "is-url": "^1.2.4",
+    "ol": "8.2.0",
+    "react": "^18.2.0",
+    "react-device-detect": "^2.2.3",
+    "react-dom": "^18.2.0",
+    "react-scripts": "^5.0.1",
+    "sass": "^1.70.0",
+    "slate-history": "^0.100.0",
+    "slate-react": "^0.101.6",
+    "web-vitals": "^1.1.2"
+  },
+  "scripts": {
+    "start_filesrelay": "xcopy \".\\public_filesrelay\\\" \".\\public\\\" /s /e /h /y && copy /y \".\\src\\FilesRelay.js\" \".\\src\\index.js\" && react-scripts start",
+    "start_filesrelayoffline": "xcopy \".\\public_filesrelayoffline\\\" \".\\public\\\" /s /e /h /y && copy /y \".\\src\\FilesRelayOffline.js\" \".\\src\\index.js\" && react-scripts start",
+    "start_maintenanceclient": "xcopy \".\\public_maintenanceclient\\\" \".\\public\\\" /s /e /h /y && copy /y \".\\src\\MaintenanceClient.js\" \".\\src\\index.js\" && react-scripts start",
+    "start_logviewer": "xcopy \".\\public_logviewer\\\" \".\\public\\\" /s /e /h /y && copy /y \".\\src\\LogViewer.js\" \".\\src\\index.js\" && react-scripts start",
+    "start_echat": "xcopy \".\\public_echat\\\" \".\\public\\\" /s /e /h /y && xcopy \".\\src\\icons\\\" \".\\public\\icons\\\" /s /e /h /y &&  xcopy \".\\src\\styles\\\" \".\\public\\styles\\\" /s /e /h /y && copy /y \".\\src\\EChat.js\" \".\\src\\index.js\" && react-scripts start",
+    "start_futuriumlocalarea": "xcopy \".\\public_futuriumlocalarea\\\" \".\\public\\\" /s /e /h /y && rmdir /s /q \".\\public\\icons\\\" && xcopy \".\\src\\icons\\futurium\\\" \".\\public\\icons\\\" /s /e /h /y && copy /y \".\\src\\FuturiumLocalArea.js\" \".\\src\\index.js\" && react-scripts start",
+    "start_hvpsui": "xcopy \".\\public_hvpsui\\\" \".\\public\\\" /s /e /h /y && copy /y \".\\src\\HVPSUI.js\" \".\\src\\index.js\" && react-scripts start",
+    "build_filesrelay": "rmdir /s /q \".\\public\\\" && xcopy \".\\public_filesrelay\\\" \".\\public\\\" /s /e /h /y && copy /y \".\\src\\FilesRelay.js\" \".\\src\\index.js\" && set \"GENERATE_SOURCEMAP=false\" && set \"BUILD_PATH=./build_filesrelay\" &&  react-scripts build && pscp -agent -r -P 22 C:\\repos\\snippets\\client\\build_filesrelay\\ root@fs.objmesh.com:/var/client/filesrelay.com/ && pscp -agent -r -P 22 C:\\repos\\snippets\\client\\build_filesrelay\\ root@fs2.filesrelay.com:/var/client/filesrelay.com/ && pscp -agent -r -P 22 C:\\repos\\snippets\\client\\build_filesrelay\\ root@fs.filesrelay.com:/var/client/fs.filesrelay.com/ && pscp -agent -r -P 22 C:\\repos\\snippets\\client\\build_filesrelay\\ root@fs2.filesrelay.com:/var/client/fs2.filesrelay.com/ && pscp -agent -r -P 22 C:\\repos\\snippets\\client\\build_filesrelay\\ root@fs.filesrelay.com:/var/client/android.filesrelay.com/ && pscp -agent -r -P 22 C:\\repos\\snippets\\client\\build_filesrelay\\ root@fs.filesrelay.com:/var/client/ios.filesrelay.com/ && pscp -agent -r -P 22 C:\\repos\\snippets\\client\\build_filesrelay\\ root@fs2.filesrelay.com:/var/client/android.filesrelay.com/ && pscp -agent -r -P 22 C:\\repos\\snippets\\client\\build_filesrelay\\ root@fs2.filesrelay.com:/var/client/ios.filesrelay.com/",
+    "build_maintenanceclient": "rmdir /s /q \".\\public\\\" && xcopy \".\\public_maintenanceclient\\\" \".\\public\\\" /s /e /h /y && copy /y \".\\src\\MaintenanceClient.js\" \".\\src\\index.js\" && set \"GENERATE_SOURCEMAP=false\" && set \"BUILD_PATH=./build_maintenanceclient\" &&  react-scripts build && pscp -agent -r -P 22 C:\\repos\\snippets\\client\\build_maintenanceclient\\ root@maintenance.objmesh.com:/var/client_maintenanceclient/",
+    "build_logviewer": "rmdir /s /q \".\\public\\\" && xcopy \".\\public_logviewer\\\" \".\\public\\\" /s /e /h /y && copy /y \".\\src\\LogViewer.js\" \".\\src\\index.js\" && set \"GENERATE_SOURCEMAP=false\" && set \"BUILD_PATH=./build_logviewer\"&&  react-scripts build && pscp -agent -r -P 22 C:\\repos\\snippets\\client\\build_logviewer\\ root@log.objmesh.com:/var/client_logviewer/",
+    "build_filesrelayoffline": "rmdir /s /q \".\\public\\\" && xcopy \".\\public_filesrelayoffline\\\" \".\\public\\\" /s /e /h /y && copy /y \".\\src\\FilesRelayOffline.js\" \".\\src\\index.js\" && set \"GENERATE_SOURCEMAP=false\" && set \"BUILD_PATH=./build_filesrelayoffline\"&&  react-scripts build",
+    "build_echat": "rmdir /s /q \".\\public\\\" && xcopy \".\\public_echat\\\" \".\\public\\\" /s /e /h /y && xcopy \".\\src\\styles\\\" \".\\public\\styles\\\" /s /e /h /y && copy /y \".\\src\\EChat.js\" \".\\src\\index.js\" && set \"GENERATE_SOURCEMAP=false\" && set \"BUILD_PATH=./build_echat\"&&  react-scripts build",
+    "build_echat_old": "rmdir /s /q \".\\public\\\" && xcopy \".\\public_echat\\\" \".\\public\\\" /s /e /h /y && copy /y \".\\src\\EChat.js\" \".\\src\\index.js\" && set \"GENERATE_SOURCEMAP=false\" && set \"BUILD_PATH=./build_echat\"&&  react-scripts build  && pscp -agent -r -P 22 C:\\repos\\snippets\\client\\build_echat\\ root@fs.objmesh.com:/var/client/dev.e-chat.live/",
+    "build_futuriumlocalarea": "rmdir /s /q \".\\public\\\" && xcopy \".\\public_futuriumlocalarea\\\" \".\\public\\\" /s /e /h /y && xcopy \".\\src\\icons\\futurium\\\" \".\\public\\icons\\\" /s /e /h /y  && copy /y \".\\src\\FuturiumLocalArea.js\" \".\\src\\index.js\" && set \"GENERATE_SOURCEMAP=false\" && set \"BUILD_PATH=./build_futuriumlocalarea\"&&  react-scripts build",
+	"build_hvpsui": "rmdir /s /q \".\\public\\\" && xcopy \".\\build_hvpsui\\\" \".\\public\\\" /s /e /h /y && copy /y \".\\src\\HVPSUI.js\" \".\\src\\index.js\" && set \"GENERATE_SOURCEMAP=false\" && set \"BUILD_PATH=./build_hvpsui\" &&  react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

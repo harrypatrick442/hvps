@@ -1,0 +1,41 @@
+.date-time-picker{
+	display:none;
+	padding:4px;
+	flex-direction:column;
+}
+.date-time-picker > .date-time-picker-compact > .button-date,
+.date-time-picker > .date-time-picker-compact > .button-time{
+	
+}
+
+.date-time-picker > .top-row >.close-button{
+	
+}
+.date-time-picker > .top-row > .close-button
+{
+	
+}
+
+.date-time-picker > .top-row{
+	display:flex;
+	flex-direction:row;
+}
+.date-time-picker > .top-row > .close-button img
+{
+	width:100%;
+	height:100%;
+}
+.date-time-picker > .top-row > .date-time-picker-compact
+{
+	display:flex;
+}
+.date-time-picker > .date-picker,
+.date-time-picker > .time-picker
+{
+	display:none;
+}
+.date-time-picker.picking-date > .date-picker,
+.date-time-picker.picking-time > .time-picker,
+.date-time-picker.picking-time > .top-row > .back-button{
+	display:flex;
+}

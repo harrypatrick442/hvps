@@ -1,0 +1,24 @@
+.editable-text-block{
+	display:flex;
+	flex-direction:row;
+	font-size:14px;
+}
+.editable-text-block .text{
+	text-overflow: ellipsis;
+	white-space: nowrap;
+    overflow: hidden;
+}
+.editable-text-block .edit-button{
+	width:12px;
+	margin-left:3px;
+	display:flex;
+	flex-direction:column;
+	box-sizing:border-box;
+    flex-shrink: 0;
+}
+.editable-text-block .edit-button img{
+   display: block;
+   width: 100%;
+   height: auto; /* maintain aspect ratio*/
+   margin: auto;
+}

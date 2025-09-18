@@ -1,0 +1,97 @@
+import enableBindingToOthers from '../mvvm/enableBindingToOthers';
+import PropertyBindingFactory from '../mvvm/PropertyBindingFactory';
+import ParameterErrors from '../errors/ParameterErrors';
+import eventEnable from '../core/eventEnable';
+import EfficientMoveCycle from '../ui_core/EfficientMoveCycle';
+import FrequencyLimitedCallback from '../core/FrequencyLimitedCallback';
+import E from '../ui_core/E';
+const {throwNotProvided}=ParameterErrors;
+export default class ProgressBar{
+	constructor(props){
+		eventEnable(this);
+		const {propertyNameProgressProportion, propertyNameVisible, delayHide, model, clickEvent} = props;
+		if(propertyNameProgressProportion===undefined||propertyNameProgressProportion===null)throwNotProvided('propertyNameProgressProportion');
+		enableBindingToOthers(this);
+		this._handleProgressProportionChanged=this._handleProgressProportionChanged.bind(this);
+		this._handleVisibleChanged=this._handleVisibleChanged.bind(this);
+		this._touchedProgressBar=this._touchedProgressBar.bind(this);
+		
+		this._startedTouchForwardReverse=this._startedTouchForwardReverse.bind(this);
+		this._moveTouchForwardReverse=this._moveTouchForwardReverse.bind(this);
+		this._endTouchForwardReverse=this._endTouchForwardReverse.bind(this);
+		this.dispose=this.dispose.bind(this);
+		this._updateProgressBarProportionFromTouch=this._updateProgressBarProportionFromTouch.bind(this);
+		
+		if(delayHide===undefined)this._delayHide = 2000;
+		else if(delayHide==null) this._delayHide  = 0;
+		else this._delayHide =delayHide;
+		
+		this._element = E.div('progress-bar');
+		this._barElement = E.div('bar');
+		this._barElement.style.width = '0px';
+		const innerElement = E.div('progress-bar-inner');
+		this._element.appendChild(innerElement);
+		innerElement.appendChild(this._barElement);
+		this._timeoutHide = null;
+		this._reachedHundredPercentAt = null;
+		this._propertyBindingProgressProportion = PropertyBindingFactory.standard(this, model, propertyNameProgressProportion, this._handleProgressProportionChanged);
+		if(propertyNameVisible)
+			this._propertyBindingVisible = PropertyBindingFactory.standard(this, model, propertyNameVisible, this._handleVisibleChanged);
+		if(clickEvent){
+			this._element.addEventListener('mousedown', this._touchedProgressBar);
+			this._efficientMoveCycleTouchForwardReverse = new EfficientMoveCycle({element:this._element, stopPropagation:true, preventDefault:true,
+				onStart:this._startedTouchForwardReverse, onMove:this._moveTouchForwardReverse, onEnd:this._endTouchForwardReverse, friendlyXY:true});
+			this._frequencyLimitedCallbackTouchForwardReverse = new FrequencyLimitedCallback({frequencyHz:4});
+		}
+	}
+	_startedTouchForwardReverse(e){
+		this._frequencyLimitedCallbackTouchForwardReverse.cancel();
+		this._updateProgressBarProportionFromTouch(e);
+	}
+	_moveTouchForwardReverse(e){
+		this._touchedProgressBar(e);
+	}
+	_endTouchForwardReverse(){
+		
+	}
+	get element(){
+		return this._element;
+	}
+	get barElement(){
+		return this._barElement;
+	}
+	_handleProgressProportionChanged(value){
+		if(value>=1){
+			this._reachedHundredPercentAt= new Date().getTime();
+		}
+		this._barElement.style.width = (100*value)+'%';
+	}
+	_handleVisibleChanged(value){
+		if(this._timeoutHide)
+			clearTimeout(this._timeoutHide);
+		if(value)
+			this._element.classList.add('visible');
+		else {
+			let delayHide = this._reachedHundredPercentAt!==null? this._delayHide -(new Date().getTime() - this._reachedHundredPercentAt):0;
+			if(delayHide<0)delayHide=0;
+			this._timeoutHide = setTimeout(()=>{
+				this._element.classList.remove('visible');
+			}, delayHide);
+		}
+	}
+	_touchedProgressBar(e){
+		this._frequencyLimitedCallbackTouchForwardReverse.trigger(()=>this._updateProgressBarProportionFromTouch(e));
+	}
+	_updateProgressBarProportionFromTouch(e){
+		const {x, y} = e;
+		const barX = this._barElement.getBoundingClientRect().left;
+		let dX = x - barX;
+		let proportion = dX / this._element.clientWidth;
+		if(proportion<0)proportion=0;else if (proportion>1)proportion=1;
+		this.dispatchEvent({type:'clicked', proportion})
+	}
+	dispose(){
+		this._element.removeEventListener('mousedown', this._touchedProgressBar);
+		this.myBindings.dispose();
+	}
+}

@@ -1,0 +1,31 @@
+.hvpsui-dialog{    
+	display:none;
+    top: 20%;
+}
+.hvpsui-dialog.visible{    
+	display:block;
+}
+.hvpsui-dialog .top{    
+	display:flex;
+	flex-direction:row;
+	
+}
+.hvpsui-dialog .close-button{  
+	height:30px;
+	width:30px;
+	margin-left:5px;
+	border:2px solid var(--color-12);
+	border-radius:3px;
+    flex-shrink: 0;
+	cursor:pointer;
+}
+.hvpsui-dialog .close-button:hover{
+	border:2px solid var(--color-5);
+}
+.hvpsui-dialog .close-button img{
+	height:100%;
+	width:100%;
+}
+.dialog >.inner .buttons .dialog-button {
+	cursor:pointer;
+}

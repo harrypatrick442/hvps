@@ -1,0 +1,11 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.onestonesolutions.filesrelay",
+    "sha256_cert_fingerprints":
+    ["DA:16:3F:AD:B3:34:0F:CA:3E:1D:9F:82:AB:E9:0E:C5:DD:55:1D:CF:B3:F9:2B:BF:5F:C9:C6:2F:55:B1:D9:AE",
+	"DD:D5:78:AE:31:C3:E3:F1:F6:8D:0B:D0:BC:74:CA:A7:FE:6D:20:CA:E4:EA:31:F3:34:AE:0E:24:F6:52:A0:3C",
+	"12:16:39:97:9B:57:EF:BC:A8:60:8A:32:8B:E4:5B:B9:3E:84:26:F9:A0:F7:E4:35:F2:70:A7:EF:CB:16:EE:A3"]
+  }
+}]

@@ -1,0 +1,111 @@
+.dialog{
+	position:fixed;
+	left:50%;
+	top:50%;
+	transform: translate(-50%,-50%);
+	color:var(--color-6);
+	border-radius:5px;
+	height:auto;
+	max-width:95%;
+}
+.dialog >.inner{
+    background-color: var( --dialog-background-color);
+    box-shadow: var(--dialog-box-shadow);
+	width:300px;
+	max-width:100%;
+	border-radius:4px;
+	border:1px solid var(--color-6);
+	padding-bottom:10px;
+	background-color:var(--color-1);
+}
+.dialog > .inner .top{
+	padding-top:6px;
+	padding-right:6px;
+	padding-left:6px;
+}
+.dialog > .inner .top .title{
+	width:100%;
+	padding-left:36px;
+	padding-right:6px;
+	box-sizing:border-box;
+	color:var(--dialog-message-color);
+	text-align:center;
+}
+.dialog >.inner .top .close{
+	float:right;
+	padding:0px;
+}
+.dialog >.inner .top .close >.inner{
+	box-sizing:border-box;
+	float:right;
+	background-color:transparent;
+	box-shadow:none;
+}
+.dialog >.inner .top .close >.inner{
+	width:30px;
+	height:30px;
+	box-sizing:border-box;
+	
+}
+.dialog >.inner .top .close >.inner .icon{
+	width:100%;
+	height:100%;
+	box-sizing:border-box;
+	
+}
+.dialog >.inner .top .close >.inner .icon img{
+	max-width:100%;
+	max-height:100%;
+	
+}
+.dialog >.inner .message{
+	padding:6px;
+	color:var(--dialog-message-color);
+	text-align:center;
+}
+.dialog >.inner .buttons{
+	width:100%;
+	height:auto;
+	padding:4px;
+	display:flex;
+	flex-direction:row;
+	justify-content:space-around;
+}
+.dialog .buttons .dialog-button{
+	border:0;
+	padding:1px;
+	color:white;
+	min-width:90px;
+	border-radius:3px;
+	font-weight:bold;
+	color:var(--dialog-button-text-color);
+	background-color:var(--dialog-button-background-color);
+	border-radius:9999px;
+	background-color:var(--color-1);
+	border:1px solid var(--color-6);
+}
+.dialog .buttons .dialog-button:hover{
+	color:var(--dialog-button-text-color-hover);
+	background-color:var(--dialog-button-background-color-hover);
+}
+
+.dialog.error .dialog-button{
+	border-color:var(--error-red);
+}
+.dialog .dont-show-again{
+	display:none;
+	font-size:12px;
+	color:var(--color-4);
+	background-color:var(--color-1);
+	margin-right:10px;
+    text-align: right;
+
+}
+
+.dialog .dont-show-again input{
+	position:relative;
+	top:2px;
+}
+.dialog.has-dont-show-again .dont-show-again{
+	display:block;
+}

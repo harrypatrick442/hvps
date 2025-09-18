@@ -1,0 +1,51 @@
+.bluetooth-device-picker{
+	color:var(--color-5);
+	box-sizing:border-box;
+	border:2px solid var(--color-bluetooth);
+	padding:3px;
+	position:relative;
+	.top-row{
+		display:flex;
+		flex-direction:row;
+		.refresh-bluetooth-devices-button{
+			height:16px;
+			margin-left:4px;
+		}
+	}
+	&.refreshing{
+		.refresh-bluetooth-devices-button{
+			  animation-name: spin-refresh-button;
+			  animation-duration: 2000ms;
+			  animation-iteration-count: infinite;
+			  animation-timing-function: linear; 
+		}
+	}
+	.blocker{
+	}
+	.spinner{
+		display:none;
+		height:100%;
+		max-height:100%;
+		flex-direction: row;
+		justify-content: center;
+		position:absolute;
+		top:0px;
+		bottom:0px;
+		left:calc(50% - 20px);
+		width:40px;
+	}
+	&.busy{
+		.spinner{
+			display: flex;
+		}
+	}
+	@keyframes spin-refresh-button {
+		from {
+			transform:rotate(0deg);
+		}
+		to {
+			transform:rotate(360deg);
+		}
+	}
+}
+	

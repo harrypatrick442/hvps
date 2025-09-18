@@ -1,0 +1,62 @@
+.time-picker{
+	display:none;
+	flex-direction:row;
+	box-sizing:border-box;
+    align-items: center;
+    justify-content: center;
+}
+.time-picker.visible{
+	display:flex;
+}
+.time-picker .up-down{
+	width:36px;
+	box-sizing:border-box;
+}
+.time-picker .colon{
+	display:flex;
+	flex-direction:column;
+	align-items: center;
+	justify-content: center;
+	padding-bottom:3px;
+}
+.time-picker .colon .inner{
+	
+}
+.time-picker .up-down{
+	display:flex;
+	flex-direction:column;
+}
+.time-picker .up-down .value{
+	text-align:center;
+	height:20px;
+	line-height:20px;
+	box-sizing:border-box;
+	position:relative;
+	top:-1px;
+}
+.time-picker .up-down .button-up,
+.time-picker .up-down .button-down{
+	width:100%;
+	box-sizing:border-box;
+	background-color:transparent;
+	height:20px;
+	overflow:hidden;
+	margin:0;
+	border:0;
+	outline:0;
+	position:relative;
+}
+.time-picker .up-down .button-up img,
+.time-picker .up-down .button-down img{
+	width:14px;
+	position:absolute;
+	bottom:0px;
+	left:50%;
+	transform:translateX(-50%);
+}
+.time-picker .up-down .button-up img{
+	bottom:0px;
+}
+.time-picker .up-down .button-down img{
+	top:0px;
+}

@@ -1,0 +1,141 @@
+.hvpsui{
+	box-sizing:border-box;	
+	background-color:var(--color-0);
+	button{
+		border: none;
+		outline: none;
+		background: none;
+		cursor:pointer;
+	}
+	display:flex;
+	flex-direction:column;
+	border:2px solid transparent;
+	&.state-unknown{
+		border-color:var(--color-state-unknown);
+	}
+	&.state-live{
+		border-color:var(--color-state-live);
+	}
+	&.state-standby-live{
+		border-color:var(--color-state-standby-live);
+	}
+	&.state-standby-safe{
+		border-color:var(--color-state-standby-safe);
+	}
+	&.state-shutdown{
+		border-color:var(--color-state-shutdown);
+	}
+	.inner{
+		padding:3px;
+		display:flex;
+		flex-direction:column;
+		flex-grow:1;
+		overflow: hidden;
+		.device-specific{
+			display:flex;
+			position:relative;
+			flex-direction:column;
+			flex-grow:1;
+		}
+	}
+	.multi-select{
+		cursor:pointer;
+		font-size:18px;
+		background-color:var(--color-1);
+		width:200px;
+		max-width:100%;
+		.text .inner{
+			font-size:14px;
+			font-weight:bold;
+		}
+		background-color:var(--color-1);
+		.items{
+			background-color:var(--color-2);
+			border-radius:3px;
+			.item{
+				color:var(--color-4);
+				&.selected{
+					color:var(--color-5);
+					font-weight:bold;
+				}
+			}
+			button{
+			}
+			button::hover{
+				
+			}
+		}
+	}
+	.bluetooth-device-picker{
+		margin-top:3px;
+	}
+	.control-buttons{
+		margin-top:3px;
+		padding-top:3px;
+		button{
+			outline:none;
+			text-align:center;
+			font-weight:bold;
+			border:1px solid var(--color-4);
+			color:var(--color-2);
+			margin-right:3px;
+			&.start-button{
+				background-color:var(--color-11);
+			}
+			&.stop-button{
+				background-color:var(--color-12);
+			}
+			&.shut-down-button{
+				background-color:var(--color-13);
+			}
+			&.run-system-checks-only-button{
+				background-color:var(--color-14);
+			}
+			box-sizing:border-box;
+			padding:4px;
+		}
+		button:hover{
+			padding:3px;
+			border:2px solid var(--color-5);
+		}
+	}
+	.reconnect-dialog{
+		z-index: 1;
+		display:none;
+		flex-direction:column;
+		justify-content:center;
+		position:absolute;
+		top:0px;
+		bottom:0px;
+		width:100%;
+		.reconnect-button{
+			color:var(--color-5);
+			font-size:18px;
+			border:1px solid var(--color-5);
+			border-radius:3px;
+			margin-left:auto;
+			margin-right:auto;
+			display:block;
+			background-color:var(--color-2);
+			padding:5px;
+			.img-wrapper{
+				height:50px;
+				img{
+					max-height:100%;
+				}
+			}
+			&.hovering{
+				color:var(--color-4);
+				border-color:var(--color-4);
+			}
+		}
+	}
+	.console{
+		margin-top:3px;
+	}
+	&.show-bluetooth-reconnect{
+		.reconnect-dialog{
+			display:flex;
+		}
+	}
+}

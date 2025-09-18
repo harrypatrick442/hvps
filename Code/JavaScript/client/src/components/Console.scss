@@ -1,0 +1,15 @@
+.console{
+	background-color:black;
+	color:white;
+	min-height:50px;
+	padding:2px;
+	flex-grow:1;
+	overflow-y:scroll;
+	font-family:var(--font-family-console);
+	.info{
+		color:var(--color-6);
+	}
+	.error{
+		color:var(--color-12);
+	}
+}

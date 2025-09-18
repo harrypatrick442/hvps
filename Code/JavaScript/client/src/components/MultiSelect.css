@@ -1,0 +1,86 @@
+.multi-select{
+	height:20px;
+	display:flex;
+	flex-direction:row;
+	position:relative;
+}
+.multi-select .text{
+	flex-grow:1;
+	padding-left:4px;
+	height:100%;
+	width:0;
+}
+.multi-select .text .inner{
+	font-size:10px;
+	line-height: 20px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+	overflow:hidden;
+	color:var(--color-font-1);
+}
+.multi-select.hovering .text .inner{
+	color:var(--color-font-2);
+}
+.multi-select.expanded .text{
+}
+.multi-select .expand-button,
+.multi-select .collapse-button{
+	flex-grow:0;
+	width:20px;
+	height:100%;
+	border-radius:0px;
+}
+
+.multi-select .collapse-button{
+	display:none;
+}
+.multi-select .expand-button img,
+.multi-select .collapse-button img{
+	width:9px;
+	height:8px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.multi-select.expanded .expand-button{
+	display:none;
+}
+.multi-select.expanded .collapse-button{
+	display:block;
+}
+.multi-select .items{
+    position: absolute;
+	top:calc(100%);
+	left:0px;
+	width:100%;
+	display:none;
+	height:auto;
+	flex-direction:column;
+    z-index: 10;
+	border:0.5px solid var(--color-5);
+	box-sizing:border-box;
+	
+}
+.multi-select.above .items{
+	top:auto;
+	bottom:calc(100%);	
+}
+.multi-select.expanded .items{
+	display:flex;
+    overflow-y: auto;
+}
+.multi-select.expanded .items .item{
+	cursor:pointer;
+	width:100%;
+	padding:3px;
+	box-sizing:border-box;
+	margin-bottom:1px;
+	text-align:left;
+	color:var(--color-font-1);
+}
+.multi-select.expanded .items .item.selected{
+
+}
+.multi-select.expanded .items .item.selected:focus,
+.multi-select.expanded .items .item:focus{
+	background-color:#1d3e55;
+}

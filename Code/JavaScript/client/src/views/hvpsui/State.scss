@@ -1,0 +1,22 @@
+.state{
+	height:20px;
+	box-sizing:border-box;
+	padding:1px 3px 3px 3px;
+	font-weight:bold;
+	color:#2cffff;
+	&.unknown{
+		background-color:var(--color-state-unknown);
+	}
+	&.live{
+		background-color:var(--color-state-live);
+	}
+	&.standby-live{
+		background-color:var(--color-state-standby-live);
+	}
+	&.standby-safe{
+		background-color:var(--color-state-standby-safe);
+	}
+	&.shutdown{
+		background-color:var(--color-state-shutdown);
+	}
+}
