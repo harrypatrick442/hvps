@@ -1,9 +1,4 @@
-﻿using CircuitAnalysis;
-using CircuitAnalysis.ComponentSpecs;
-using VoltageMultiplier.CircuitSimulation;
-using ModifiedNodalAnalysis;
-using DD1800 = CircuitAnalysis.DD1800;
-using ModifiedNodalAnalysis.Solver;
+﻿using CircuitAnalysis.ComponentSpecs;
 using Shutdown;
 using Logging;
 using Core.FileSystem;
@@ -75,7 +70,6 @@ namespace FlybackModelling
             GpuMemoryInfoNVML.Initialize();
             CudaContextAssignedThreadPool? mnaCudaThreadPool = null;
             mnaCudaThreadPool = new CudaContextAssignedThreadPool(N_CUDA_CONTEXT);
-            MNAInversionHandler.Initialize(mnaCudaThreadPool);
             Dispatcher.InitializeWithNative(Console.WriteLine);
             byte[] modelObjFileBytes = File.ReadAllBytes(meshPath);
             Console.WriteLine("Used cached flyback transformer FEA results? (y/n) [y]:");

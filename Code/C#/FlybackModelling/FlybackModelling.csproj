@@ -1,21 +1,23 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\snippets\API\Core\Core.csproj" />
-    <ProjectReference Include="..\..\..\..\snippets\API\Shutdown\Shutdown.csproj" />
-    <ProjectReference Include="..\..\..\..\snippets\CircuitAnalysis\CircuitAnalysis\CircuitAnalysis.csproj" />
-    <ProjectReference Include="..\..\..\..\snippets\CircuitAnalysis\FiniteElementAnalysis\FiniteElementAnalysis.csproj" />
+    <Compile Remove="Meshes\**" />
+    <Compile Remove="output\**" />
+    <EmbeddedResource Remove="Meshes\**" />
+    <EmbeddedResource Remove="output\**" />
+    <None Remove="Meshes\**" />
+    <None Remove="output\**" />
   </ItemGroup>
-
   <ItemGroup>
-    <Folder Include="Meshes\" />
+    <ProjectReference Include="..\..\..\..\shared-public\Core\CSharp\Core.csproj" />
+    <ProjectReference Include="..\..\..\..\shared-public\Shutdown\CSharp\Shutdown.csproj" />
+    <ProjectReference Include="..\..\..\..\shared-public\CircuitAnalysis\CSharp\CircuitAnalysis.csproj" />
+    <ProjectReference Include="..\..\..\..\FiniteElementAnalysis\CSharp\FiniteElementAnalysis.csproj" />
   </ItemGroup>
-
 </Project>

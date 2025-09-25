@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\shared-public\BaseMessages\CSharp\BaseMessages.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="HVPS">
+      <HintPath>..\HVPS\obj\Debug\net8.0\ref\HVPS.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DataMemberNames\Responses\" />
+    <Folder Include="DataMemberNames\Requests\" />
+    <Folder Include="Requests\" />
+    <Folder Include="Responses\" />
+  </ItemGroup>
+</Project>

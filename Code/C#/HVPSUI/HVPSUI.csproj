@@ -1,20 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="InTheHand.BluetoothLE" Version="4.0.37" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3296.44" />
+    <PackageReference Include="Plugin.BluetoothLE" Version="6.3.0.19" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\..\..\shared-public\BaseMessages\CSharp\BaseMessages.csproj" />
-    <ProjectReference Include="..\..\..\..\shared-public\DataMemberNamesClassBuilder\DataMemberNamesClassBuilder.csproj" />
+    <ProjectReference Include="..\..\..\..\shared-public\BasicEvents\CSharp\BasicEvents.csproj" />
     <ProjectReference Include="..\..\..\..\shared-private\MessageTypes\MessageTypes.csproj" />
-    <ProjectReference Include="..\..\..\..\shared-public\Bluetooth\CSharp\Bluetooth.csproj" />
     <ProjectReference Include="..\..\..\..\shared-public\Native\CSharp\Native.csproj" />
+    <ProjectReference Include="..\..\..\..\shared-public\Bluetooth\CSharp\Bluetooth.csproj" />
     <ProjectReference Include="..\HVPSAPI\HVPSAPI.csproj" />
     <ProjectReference Include="..\HVPSMessages\HVPSMessages.csproj" />
     <ProjectReference Include="..\HVPSUIMessages\HVPSUIMessages.csproj" />
-    <ProjectReference Include="..\VoltageFeedbackMessages\VoltageFeedbackMessages.csproj" />
   </ItemGroup>
 </Project>

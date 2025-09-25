@@ -7,6 +7,8 @@ namespace HVPSConfigurationGenerator
     class Constants
     {
         public const double SafetyFactor = 1.2;
+        public const int Frequency = 16000;
+        public const double DutyCycle = 0.5;
         public const double VillardCapacitorVoltageRating = 20000;
         public const double VillardCapacitorDeratedMaximumVoltage = 15000;
         public const double VillardCapacitorCapacitance = 1e-9;
@@ -17,8 +19,11 @@ namespace HVPSConfigurationGenerator
         public const double MaximumVillardDiodeForwardVoltageDrop = 52;
         public const double FlybackTransformerMeasuredPrimaryInductances = 4.9e-5;
         public const double FlybackTransformerMaximumCurrent = 20;
-        public const double DesiredMaximumOutputVoltage = 80000;
-        public const double NSeriesOutputCurrentLimitingResistors = ;
+        public const double MaximumDesiredOutputVoltage = 80000;
+        public const double MinimumDesiredOutputVoltage = 60000;
+        public const double NSeriesOutputCurrentLimitingResistors = 5;
+        public const double IndividualOutputCurrentLimitingResistorResistance = 200000;
+        public const double MaximumCompositeOutputCurrentLimitingResistorAveragePower = 12.5;
 
     }
 }
