@@ -4,8 +4,12 @@
 #include "../JSON/JHelper.hpp"
 #include "../Messaging/MessageConstants.hpp"
 #include "../Generated/Messages/ConsoleMessage.hpp"
-#include "../States/SystemState.hpp"
-#include "../States/SystemState.hpp"
+#include "../Generated/Messages/HVPSRunSystemChecksOnlyMessage.hpp"
+#include "../Generated/Messages/HVPSShutDownMessage.hpp"
+#include "../Generated/Messages/HVPSStartMessage.hpp"
+#include "../Generated/Messages/HVPSStopMessage.hpp"
+#include "../ControllerCore/HighSpeedCore.hpp"
+#include "../Enums/SystemState.hpp"
 //#include "../Generated/Messages/SetVoltageThresholdRequest.hpp"
 #include <cstring>
 Port_ControllingMachine::Port_ControllingMachine(IChannel& channel)
@@ -16,14 +20,14 @@ _ticketedSender(
 				_channel.sendMessage(msg, true);
 		}){
     _channel.setIncomingMessageHandler(this);
-	State.getInstance().onSystemStateChanged.addHandler(handleStateChanged);
+	HighSpeedCore::getInstance().onSystemStateChanged.addHandler(handleStateChanged);
 }
 Port_ControllingMachine::~Port_ControllingMachine() noexcept
 {
 	
 }
 void Port_ControllingMachine::sendConsoleMessage(const std::string& str) {
-    ConsoleMessage consoleMessage(str.c_str(), false);   // automatic storage, no `new`
+    ConsoleMessage consoleMessage(false, str.c_str());   // automatic storage, no `new`
     _channel.sendMessage(consoleMessage.toJSON());
 }
 void Port_ControllingMachine::sendHVPSLiveData(HVPSLiveDataMessage hvpsLiveDataMessage) {

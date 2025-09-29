@@ -5,6 +5,8 @@
 #include "../Core/CancellationToken.hpp"
 #include "../Core/Timer.hpp"
 #include "TicketedSenderHandle.hpp"
+#include <memory>
+#include <iostream>
 #include <map>
 #include <unordered_set>
 using CallbackSend = std::function<void(cJSON* json)>;

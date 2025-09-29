@@ -48,9 +48,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageTypes", "..\..\..\sh
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HVPSUI", "HVPSUI\HVPSUI.csproj", "{E18C82E4-F1E2-4F57-A64B-E34E611205F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HVPSUIMessages", "HVPSUIMessages\HVPSUIMessages.csproj", "{57829729-4679-4D55-BE48-CFAF75DC509E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HVPSUIMessages", "HVPSUIMessages\HVPSUIMessages.csproj", "{57829729-4679-4D55-BE48-CFAF75DC509E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HVPSCore", "HVPSCore\HVPSCore.csproj", "{DDC90BA6-5A3F-4E38-B797-C052D453DBA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HVPSCore", "HVPSCore\HVPSCore.csproj", "{DDC90BA6-5A3F-4E38-B797-C052D453DBA7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configurations", "..\..\..\shared-private\Configuration\Configurations.csproj", "{603DE856-4EE7-4E2A-9314-A3E20BF22307}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -158,6 +160,10 @@ Global
 		{DDC90BA6-5A3F-4E38-B797-C052D453DBA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDC90BA6-5A3F-4E38-B797-C052D453DBA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDC90BA6-5A3F-4E38-B797-C052D453DBA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{603DE856-4EE7-4E2A-9314-A3E20BF22307}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{603DE856-4EE7-4E2A-9314-A3E20BF22307}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{603DE856-4EE7-4E2A-9314-A3E20BF22307}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{603DE856-4EE7-4E2A-9314-A3E20BF22307}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

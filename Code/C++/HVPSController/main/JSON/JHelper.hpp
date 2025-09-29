@@ -2,6 +2,7 @@
 #define JHELPER_HPP
 
 #include <string>
+#include <memory>
 #include <optional>
 #include <cstdint>
 #include "../cJSON/cJSON.h"

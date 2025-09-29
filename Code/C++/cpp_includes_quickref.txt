@@ -1,0 +1,63 @@
+C++ Standard Library Quick Reference - Common #include Mappings
+============================================================
+
+Smart Pointers
+--------------
+std::unique_ptr, std::shared_ptr, std::weak_ptr   -> #include <memory>
+
+Containers
+----------
+std::vector                                      -> #include <vector>
+std::array                                       -> #include <array>
+std::list, std::forward_list                     -> #include <list>, <forward_list>
+std::deque                                       -> #include <deque>
+std::map, std::multimap                          -> #include <map>
+std::unordered_map, std::unordered_multimap      -> #include <unordered_map>
+std::set, std::multiset                          -> #include <set>
+std::unordered_set, std::unordered_multiset      -> #include <unordered_set>
+std::stack                                       -> #include <stack>
+std::queue, std::priority_queue                  -> #include <queue>
+
+Concurrency & Atomics
+---------------------
+std::thread                                      -> #include <thread>
+std::mutex, std::lock_guard, std::unique_lock    -> #include <mutex>
+std::condition_variable                          -> #include <condition_variable>
+std::future, std::promise, std::async            -> #include <future>
+std::atomic<T>                                   -> #include <atomic>
+
+Utilities & Algorithms
+-----------------------
+std::move, std::forward                          -> #include <utility>
+std::pair, std::tuple                            -> #include <utility>, <tuple>
+std::function, std::bind                         -> #include <functional>
+std::optional                                    -> #include <optional>
+std::variant                                     -> #include <variant>
+std::any                                         -> #include <any>
+std::swap                                        -> #include <utility>
+std::min, std::max, std::sort, std::find         -> #include <algorithm>
+
+Strings & Streams
+-----------------
+std::string, std::wstring                        -> #include <string>
+std::stringstream, std::istringstream            -> #include <sstream>
+std::iostream, std::cin, std::cout, std::cerr    -> #include <iostream>
+std::fstream, std::ifstream, std::ofstream       -> #include <fstream>
+
+Memory & Utilities
+------------------
+std::allocator                                   -> #include <memory>
+std::size_t, std::ptrdiff_t                      -> #include <cstddef>
+assert()                                         -> #include <cassert>
+
+Random & Time
+-------------
+std::chrono                                      -> #include <chrono>
+std::this_thread::sleep_for                      -> #include <thread>
+std::random_device, std::mt19937, distributions  -> #include <random>
+
+Math & Numeric
+--------------
+std::complex                                     -> #include <complex>
+std::numeric_limits                              -> #include <limits>
+std::accumulate, std::inner_product              -> #include <numeric>

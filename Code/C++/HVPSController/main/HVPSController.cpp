@@ -8,13 +8,16 @@
 #include "./IO/Outputs.hpp"
 #include "./IO/Inputs.hpp"
 #include "./IO/AnalogueInputs.hpp"
+#include "./IO/SoftStartHandler.hpp"
 #include "./Timing/Delay.hpp"
 #include "./Communication/I2C/I2C.hpp"
 #include "./Communication/I2C/I2CConfiguration.hpp"
+#include "Ports/Port_FirstStageVoltageFeedback.hpp"
+#include "Ports/Port_OutputVoltageFeedback.hpp"
 #include "./Ports/Port_ControllingMachine.hpp"
 #include "./Broadcasting/LiveDataBroadcaster.hpp"
 #include "./Core/Checksums/Crc32.hpp"
-#include "./HVPSConfig.hpp"
+#include "./generated/HVPSConfig.hpp"
 #include <iostream>
 #include <array>
 #include <sstream>
@@ -31,8 +34,12 @@ static const char *TAG = "HVPS";
 extern "C" void app_main(void)
 {
 	Outputs::initialize();
-	Outputs::toSafe();
-	Crc32::computePod(Configuration) == CONFIG_CRC32_EXPECTED;
+	Outputs::toSafeReversible();
+	if(Crc32::computePod(Config1) != CONFIG_CRC32_EXPECTED){
+		Aborter::safeAbort(TAG, "The Crc32 computed did not match the expected value");
+		return;
+	};
+	SoftStartHandler::doSoftStart();
 	Delay::ms(1000);
 	AnalogueInputs::initialize();
 	Inputs::initialize();
@@ -57,12 +64,12 @@ extern "C" void app_main(void)
         "HVPSControllerServer"
      );
     Bluetooth& bluetooth = Bluetooth::getInstance();
-	Port_ControllingMachine::initialize(bluetooth);
+	Port_ControllingMachine& portControllingMachine = Port_ControllingMachine::initialize(bluetooth);
 	LiveDataCache& liveDataCache = LiveDataCache::initialize(
 		port_FirstStageVoltageFeedback,
 		port_OutputVoltageFeedback
 	);
 							 
-	LiveDataBroadcaster::initialize(liveDataCache, port_ControllingMachine);
+	LiveDataBroadcaster::initialize(liveDataCache, portControllingMachine);
 	vTaskDelete(NULL); // Delete the current task
 }  

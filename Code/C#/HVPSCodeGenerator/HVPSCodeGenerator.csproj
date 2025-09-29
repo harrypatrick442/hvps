@@ -7,6 +7,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\shared-private\Configuration\Configurations.csproj" />
     <ProjectReference Include="..\..\..\..\shared-public\BaseMessages\CSharp\BaseMessages.csproj" />
     <ProjectReference Include="..\..\..\..\shared-public\DataMemberNamesClassBuilder\DataMemberNamesClassBuilder.csproj" />
     <ProjectReference Include="..\..\..\..\shared-private\MessageTypes\MessageTypes.csproj" />

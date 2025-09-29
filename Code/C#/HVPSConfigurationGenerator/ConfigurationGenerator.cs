@@ -131,7 +131,7 @@ namespace HVPSConfigurationGenerator
                 {
                     sbInstance.Append(",");
                 }
-                sbInstance.Append($"{name} = {value}");
+                sbInstance.Append($".{name} = {value}");
             };
         }
     }

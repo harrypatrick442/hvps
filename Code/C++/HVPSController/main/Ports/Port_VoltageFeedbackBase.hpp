@@ -8,6 +8,7 @@
 #include "../Ticketing/TicketedSender.hpp"
 #include "../cJSON/cJSON.h"
 #include "../Core/Macros.hpp"
+#include "../Core/Event.hpp"
 
 class Port_VoltageFeedbackBase : public IIncomingMessageHandler {
 public:

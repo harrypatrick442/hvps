@@ -49,7 +49,7 @@ void TicketedSender::removeFromInstances(TicketedSender* ticketedSender){
 	_instances.erase(ticketedSender);
 	_mutexInstances.unlock();
 }
-shared_ptr<cJSON> TicketedSender::send(cJSON* request, uint64_t timeoutMilliseconds, CancellationToken* cancellationToken){	
+std::shared_ptr<cJSON> TicketedSender::send(cJSON* request, uint64_t timeoutMilliseconds, CancellationToken* cancellationToken){	
 	uint64_t ticket = TicketSource::next();
 	Log::Info(TAG, "Ticket sent was %" PRIu64 "", ticket);
 	JHelper::setUInt64(request, MessageConstants::TICKET_KEY, ticket);

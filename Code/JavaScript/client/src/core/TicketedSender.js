@@ -2,7 +2,7 @@ import TicketedSenderSocketHandle from './TicketedSenderSocketHandle';
 import GeneratedConstants from '../constants/Generated';
 import Timer from './Timer';
 import HashBuilder from './HashBuilder';
-let _nTicket=0;
+let _nTicket=1;
 const _mapSocketHashToTicketedSenderSocketHandle = {};
 export default class TicketedSender {
 	static send(params){
@@ -38,7 +38,7 @@ export default class TicketedSender {
 		return new Date().getTime();
 	}
 	static _generateTicket(){
-		return 'ticket_'+String(TicketedSender._getTime())+'_'+String(_nTicket++);
+		return _nTicket++;
 	};
 }
 var timerTimeout = new Timer({nTicks:-1, delay:100000, callback:TicketedSender._doTimeouts});

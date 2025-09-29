@@ -8,8 +8,8 @@
 
 const char* Outputs::TAG = "Outputs";
 static portMUX_TYPE s_outputsMux = portMUX_INITIALIZER_UNLOCKED;
-bool Outputs::_initialized = false;
-bool Outputs::_safe = false;
+bool Outputs::s_initialized = false;
+bool Outputs::s_safe = false;
 void Outputs::initialize(){
 	
 	
@@ -39,6 +39,11 @@ void Outputs::toSafe(){
     }
     portEXIT_CRITICAL(&s_outputsMux);
 }
+void Outputs::toSafeReversible(){
+    portENTER_CRITICAL(&s_outputsMux);
+	_setMOSFETOnOff(false);
+    portEXIT_CRITICAL(&s_outputsMux);
+}
 void Outputs::setMOSFETOnOff(bool onElseOff){
     portENTER_CRITICAL(&s_outputsMux);
     if (!s_safe && s_initialized) {
@@ -46,6 +51,16 @@ void Outputs::setMOSFETOnOff(bool onElseOff){
     }
     portEXIT_CRITICAL(&s_outputsMux);
 }
+void Outputs::setSoftStartResistorBypassOnOff(bool onElseOff){
+    portENTER_CRITICAL(&s_outputsMux);
+    if (!s_safe && s_initialized) {
+		_setSoftStartResistorBypassOnOff(onElseOff);
+    }
+    portEXIT_CRITICAL(&s_outputsMux);
+}
 void Outputs::_setMOSFETOnOff(bool onElseOff){
 	gpio_set_level((gpio_num_t)PinDefinitions::MOSFET_DRIVE, onElseOff?1:0);
+}
+void Outputs::_setSoftStartResistorBypassOnOff(bool onElseOff){
+	gpio_set_level((gpio_num_t)PinDefinitions::SOFT_START_RESISTOR_BYPASS, onElseOff?1:0);
 }

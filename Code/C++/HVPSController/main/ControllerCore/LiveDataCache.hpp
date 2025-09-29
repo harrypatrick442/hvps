@@ -2,6 +2,9 @@
 #include <atomic>
 #include "../Core/SingletonBase.hpp"
 #include "../Core/Macros.hpp"
+#include "../Core/DoubleAndTime.hpp"
+#include "../Core/Event.hpp"
+#include <atomic>
 class Port_FirstStageVoltageFeedback;
 class Port_OutputVoltageFeedback;
 class LiveDataCache final: public SingletonBase<LiveDataCache>{
@@ -38,11 +41,11 @@ private:
 	Port_FirstStageVoltageFeedback& _port_firstStageVoltageFeedback;
 	Port_OutputVoltageFeedback& _port_OutputVoltageFeedback;
 	
-    std::atomic<DoubleAndTime> _outputVoltage{0.0};
-    std::atomic<DoubleAndTime> _outputCurrent{0.0};
-    std::atomic<DoubleAndTime> _totalOutputEnergy{0.0};
-    std::atomic<DoubleAndTime> _firstStageVoltage{0.0};
-    std::atomic<DoubleAndTime> _peakPrimaryCurrent{0.0};
+    std::atomic<DoubleAndTime> _outputVoltage{DoubleAndTime{0.0, 0}};
+    std::atomic<DoubleAndTime> _outputCurrent{DoubleAndTime{0.0, 0}};
+    std::atomic<DoubleAndTime> _totalOutputEnergy{DoubleAndTime{0.0, 0}};
+    std::atomic<DoubleAndTime> _firstStageVoltage{DoubleAndTime{0.0, 0}};
+    std::atomic<DoubleAndTime> _peakPrimaryCurrent{DoubleAndTime{0.0, 0}};
 	EventConnection _eventConnectionGotOutputVoltage;
 	EventConnection _eventConnectionGotFirstStageVoltage;
 	
@@ -51,6 +54,4 @@ private:
 	void handleGotOutputVoltage(double voltage) noexcept;
 	void handleGotFirstStageVoltage(double voltage) noexcept;
 };
-
-#endif // LIVE_DATA_HPP
 

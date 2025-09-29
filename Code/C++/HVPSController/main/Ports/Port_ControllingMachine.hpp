@@ -12,6 +12,7 @@
 class Port_ControllingMachine final:
 	public SingletonBase<Port_ControllingMachine>,
 	public IIncomingMessageHandler {
+    friend class SingletonBase<Port_ControllingMachine>;
 public:
 	static inline constexpr const char* TAG = "Port_ControllingMachine";
     // Force derived classes to identify themselves
@@ -26,8 +27,13 @@ public:
 protected:
     explicit Port_ControllingMachine(IChannel& channel)noexcept;
 	virtual ~Port_ControllingMachine();
-
-protected:
     IChannel&  _channel;
     TicketedSender	_ticketedSender;
+private:
+	void handleRunSystemChecksOnlyMessage(cJSON* message);
+	void handleShutDownMessage(cJSON* message);
+	void handleStartMessage(cJSON* message);
+	void handleStopMessage(cJSON* message);
+	void handleStateChanged(SystemState systemState);
+
 };

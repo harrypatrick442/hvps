@@ -3,6 +3,7 @@
 #include "esp_log.h"
 #include "driver/i2c.h"
 #include "../../Logging/Log.hpp"
+#include "../../System/Aborter.hpp"
 #define I2C_MASTER_TIMEOUT_MS 1000
 #include <utility>
 const char* I2C::TAG = "I2C";
