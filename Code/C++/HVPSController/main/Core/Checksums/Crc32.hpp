@@ -3,9 +3,8 @@
 #include <cstddef>
 #include <cstdint>
 #include <type_traits>
+#include <optional>
 
-
-// CRC-32 (IEEE 802.3) – polynomial 0xEDB88320, init/xorout 0xFFFFFFFF
 class Crc32 {
 public:
     static constexpr uint32_t kPoly   = 0xEDB88320u;
@@ -25,33 +24,9 @@ public:
         return compute(p, sizeof(T), seed);
     }
 
-    // Constexpr-friendly: compute for a std::array of bytes
-    template <std::size_t N>
-    static constexpr uint32_t compute(const std::array<uint8_t, N>& bytes,
-                                      uint32_t seed = kInit) noexcept {
-        uint32_t crc = seed;
-        for (std::size_t i = 0; i < N; ++i) {
-            const uint32_t idx = (crc ^ bytes[i]) & 0xFFu;
-            crc = (crc >> 8) ^ kTable[idx];
-        }
-        return crc ^ kXorOut;
-    }
-
 private:
-    // Build the 256-entry table at compile time
-    static constexpr std::array<uint32_t, 256> makeTable() noexcept {
-        std::array<uint32_t, 256> t{};
-        for (uint32_t i = 0; i < 256; ++i) {
-            uint32_t c = i;
-            for (int k = 0; k < 8; ++k) {
-                c = (c & 1u) ? (kPoly ^ (c >> 1)) : (c >> 1);
-            }
-            t[i] = c;
-        }
-        return t;
-    }
+    static const std::array<uint32_t, 256>& getTable() noexcept;
+    static std::array<uint32_t, 256> makeTable() noexcept;
 
-    // The lookup table (inline so it’s a single ODR instance across TUs)
-    static inline constexpr std::array<uint32_t, 256> kTable = makeTable();
+    static inline std::optional<std::array<uint32_t, 256>> kTableOpt;
 };
-

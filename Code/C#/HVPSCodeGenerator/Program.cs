@@ -20,7 +20,6 @@ namespace HVPSCodeGenerator
             string hvpsDirectory = Path.Combine(reposDirectory, "hvps");
             Type[] typeInEachNamespace = new Type[] {
                 typeof(Configurations.Android),
-                typeof(MessageTypes.MessageTypes),
                 typeof(Ticketing),
                 typeof(BaseMessages.Constants.Ticketing),
                 typeof(Native.DataMemberNames.Messages.NativeCloseFileMessageDataMemberNames),

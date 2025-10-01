@@ -1,10 +1,16 @@
 #include "LiveDataBroadcaster.hpp"
 #include "../Generated/Messages/HVPSLiveDataMessage.hpp"
-const char* LiveDataBroadcaster::TAG = "LiveDataBroadcaster";
-LiveDataBroadcaster::LiveDataBroadcaster(LiveDataCache& liveDataCache, Port_ControllingMachine& port_ControllingMachine):
-	_liveDataCache(liveDataCache);
-	_port_ControllingMachine(port_ControllingMachine),
-	_timer(500, _run, true){
+LiveDataBroadcaster::LiveDataBroadcaster(
+	LiveDataCache& liveDataCache, 
+	Port_ControllingMachine& portControllingMachine
+):
+	_liveDataCache(liveDataCache),
+	_portControllingMachine(portControllingMachine),
+	_timer(500, 
+		[this](){
+			this->_run();
+		}, true
+	){
 }
 void LiveDataBroadcaster::start(){
 	_timer.start();
@@ -14,10 +20,10 @@ void LiveDataBroadcaster::stop(){
 }
 void LiveDataBroadcaster::_run(){
 	HVPSLiveDataMessage hvpsLiveDataMessage(
-		_liveDataCache.getFirstStageVoltage().value, 
-		_liveDataCache.getOutputCurrent().value, 
-		_liveDataCache.getOutputVoltage().value, 
-		_liveDataCache.getPeakPrimaryCurrent().value, 
-		_liveDataCache.getTotalOutputEnergy().value));
+		_liveDataCache.getFirstStageVoltage().d, 
+		_liveDataCache.getOutputCurrent().d, 
+		_liveDataCache.getOutputVoltage().d, 
+		_liveDataCache.getPeakPrimaryCurrent().d, 
+		_liveDataCache.getTotalOutputEnergy().d);
 	_portControllingMachine.sendHVPSLiveData(hvpsLiveDataMessage);
 }

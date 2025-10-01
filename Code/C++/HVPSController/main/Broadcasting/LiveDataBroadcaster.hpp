@@ -13,10 +13,10 @@ class LiveDataBroadcaster final
 		void stop();
 	private:
 		friend class SingletonBase<LiveDataBroadcaster>;
-		Timer _timer;
-		LiveDataCache& _liveDataCachep;
+		LiveDataCache& _liveDataCache;
 		Port_ControllingMachine& _portControllingMachine;
+		Timer _timer;
 		LiveDataBroadcaster(LiveDataCache& liveDataCache, Port_ControllingMachine& port_ControllingMachine) noexcept;
 		void _run();
 	
-}
+};

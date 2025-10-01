@@ -28,19 +28,14 @@
 
 #define WATCHDOG_TIMEOUT_MILLISECONDS 10000
 
-inline constexpr uint32_t CONFIG_CRC32_EXPECTED = 0x0;
 static const char *TAG = "HVPS";
 
 extern "C" void app_main(void)
 {
 	Outputs::initialize();
 	Outputs::toSafeReversible();
-	if(Crc32::computePod(Config1) != CONFIG_CRC32_EXPECTED){
-		Aborter::safeAbort(TAG, "The Crc32 computed did not match the expected value");
-		return;
-	};
+	validateConfiguration();
 	SoftStartHandler::doSoftStart();
-	Delay::ms(1000);
 	AnalogueInputs::initialize();
 	Inputs::initialize();
 	esp_wifi_stop();
@@ -64,11 +59,17 @@ extern "C" void app_main(void)
         "HVPSControllerServer"
      );
     Bluetooth& bluetooth = Bluetooth::getInstance();
-	Port_ControllingMachine& portControllingMachine = Port_ControllingMachine::initialize(bluetooth);
 	LiveDataCache& liveDataCache = LiveDataCache::initialize(
 		port_FirstStageVoltageFeedback,
 		port_OutputVoltageFeedback
 	);
+	HighSpeedCore& highSpeedCore = HighSpeedCore::initialize(
+		port_FirstStageVoltageFeedback,
+		port_OutputVoltageFeedback,
+		liveDataCache
+	);
+	Port_ControllingMachine& portControllingMachine 
+		= Port_ControllingMachine::initialize(bluetooth, highSpeedCore);
 							 
 	LiveDataBroadcaster::initialize(liveDataCache, portControllingMachine);
 	vTaskDelete(NULL); // Delete the current task

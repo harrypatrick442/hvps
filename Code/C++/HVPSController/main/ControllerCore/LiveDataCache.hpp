@@ -3,10 +3,10 @@
 #include "../Core/SingletonBase.hpp"
 #include "../Core/Macros.hpp"
 #include "../Core/DoubleAndTime.hpp"
+#include "../Ports/Port_FirstStageVoltageFeedback.hpp"
+#include "../Ports/Port_OutputVoltageFeedback.hpp"
 #include "../Core/Event.hpp"
 #include <atomic>
-class Port_FirstStageVoltageFeedback;
-class Port_OutputVoltageFeedback;
 class LiveDataCache final: public SingletonBase<LiveDataCache>{
 public:
     static inline constexpr const char* TAG = "LiveDataCache";
@@ -34,12 +34,12 @@ private:
     // Let the base construct us
     friend class SingletonBase<LiveDataCache>;
 	LiveDataCache(
-		Port_FirstStageVoltageFeedback& port_firstStageVoltageFeedback,
-		Port_OutputVoltageFeedback& port_OutputVoltageFeedback
+		Port_FirstStageVoltageFeedback& portFirstStageVoltageFeedback,
+		Port_OutputVoltageFeedback& portOutputVoltageFeedback
 	) noexcept;
 	
-	Port_FirstStageVoltageFeedback& _port_firstStageVoltageFeedback;
-	Port_OutputVoltageFeedback& _port_OutputVoltageFeedback;
+	Port_FirstStageVoltageFeedback& _portFirstStageVoltageFeedback;
+	Port_OutputVoltageFeedback& _portOutputVoltageFeedback;
 	
     std::atomic<DoubleAndTime> _outputVoltage{DoubleAndTime{0.0, 0}};
     std::atomic<DoubleAndTime> _outputCurrent{DoubleAndTime{0.0, 0}};

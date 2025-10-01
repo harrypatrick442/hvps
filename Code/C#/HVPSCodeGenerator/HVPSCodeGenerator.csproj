@@ -10,7 +10,6 @@
     <ProjectReference Include="..\..\..\..\shared-private\Configuration\Configurations.csproj" />
     <ProjectReference Include="..\..\..\..\shared-public\BaseMessages\CSharp\BaseMessages.csproj" />
     <ProjectReference Include="..\..\..\..\shared-public\DataMemberNamesClassBuilder\DataMemberNamesClassBuilder.csproj" />
-    <ProjectReference Include="..\..\..\..\shared-private\MessageTypes\MessageTypes.csproj" />
     <ProjectReference Include="..\..\..\..\shared-public\Bluetooth\CSharp\Bluetooth.csproj" />
     <ProjectReference Include="..\..\..\..\shared-public\Native\CSharp\Native.csproj" />
     <ProjectReference Include="..\HVPSAPI\HVPSAPI.csproj" />

@@ -6,6 +6,8 @@
 #include "../Generated/Messages/HVPSLiveDataMessage.hpp"
 #include "../Core/SingletonBase.hpp"
 #include "../Core/Macros.hpp"
+#include "../Enums/SystemState.hpp"
+#include "../ControllerCore/HighSpeedCore.hpp"
 #include "../cJSON/cJSON.h"
 #include <string>
 
@@ -25,9 +27,11 @@ public:
 	void sendHVPSLiveData(HVPSLiveDataMessage hvpsLiveDataMessage);
 
 protected:
-    explicit Port_ControllingMachine(IChannel& channel)noexcept;
+    explicit Port_ControllingMachine(
+		IChannel& channel, HighSpeedCore& highSpeedCore)noexcept;
 	virtual ~Port_ControllingMachine();
     IChannel&  _channel;
+	HighSpeedCore& _highSpeedCore;
     TicketedSender	_ticketedSender;
 private:
 	void handleRunSystemChecksOnlyMessage(cJSON* message);

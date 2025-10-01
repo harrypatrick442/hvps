@@ -1,7 +1,8 @@
 #include "SoftStartHandler.hpp"
-#include "../Core/Delay.hpp"
+#include "../Timing/Delay.hpp"
 #include "AnalogueInputs.hpp"
 #include "../Core/ArrayHelper.hpp"
+#include "../IO/Outputs.hpp"
 
 double SoftStartHandler::doSoftStart(){
 	Outputs::setSoftStartResistorBypassOnOff(false);

@@ -25,7 +25,8 @@ class TicketedSender
    public:
         TicketedSender(CallbackSend callbackSend);
         ~TicketedSender();
-        std::shared_ptr<cJSON> send(cJSON* request, uint64_t timeoutMilliseconds, CancellationToken* cancellationToken = nullptr) noexcept;
+        std::shared_ptr<cJSON> send(cJSON* request, 
+			uint64_t timeoutMilliseconds =10000, CancellationToken* cancellationToken = nullptr) noexcept;
 		bool handleTicketedMessage(cJSON* message) noexcept;
 		bool handleTicketedMessage(cJSON* message, char* type) noexcept;
 		void removeHandle(TicketedSenderHandle* handle, uint64_t ticket) noexcept;

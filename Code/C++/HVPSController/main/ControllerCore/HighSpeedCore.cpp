@@ -2,14 +2,20 @@
 #include "../Tasks/TaskFactory.hpp"
 #include "../IO/Inputs.hpp"
 #include "../IO/Outputs.hpp"
+#include "../Timing/Delay.hpp"
+#include "../Timing/TimeHelper.hpp"
+#include "../Core/DoubleAndTime.hpp"
+#include "SystemChecks.hpp"
 HighSpeedCore::HighSpeedCore(
 	Port_FirstStageVoltageFeedback& portFirstStageVoltageFeedback, 
-	Port_OutputVoltageFeedback& portOutputVoltageFeedback
+	Port_OutputVoltageFeedback& portOutputVoltageFeedback,
+	LiveDataCache& liveDataCache
 ):
 _portFirstStageVoltageFeedback(portFirstStageVoltageFeedback),
 _portOutputVoltageFeedback(portOutputVoltageFeedback),
+_liveDataCache(liveDataCache),
 _shuttingOrShutDown(false),
-_systemState(SystemState::Idle),
+_actualSystemState(SystemState::Idle),
 _desiredSystemState(SystemState::Idle),
 _shuttingOrShutDown_2(false),
 _systemChecksResult(nullptr),
@@ -34,21 +40,21 @@ std::shared_ptr<SystemChecksResult> HighSpeedCore::runSystemChecksOnly(){
 }
 void HighSpeedCore::shutDown(){
 	setDesiredSystemState(SystemState::ShutDown);
-	_shuttingOrShutDown.store(v, std::memory_order_relaxed);
-	_shuttingOrShutDown_2.store(v, std::memory_order_relaxed);
+	_shuttingOrShutDown.store(true, std::memory_order_relaxed);
+	_shuttingOrShutDown_2.store(true, std::memory_order_relaxed);
 }
 SystemState HighSpeedCore::getDesiredSystemState(){
 	return _desiredSystemState.load(std::memory_order_relaxed);
 }
-void HighSpeedCore::setDesiredSystemState(SystemState v){
-	_desiredSystemState.store(v, std::memory_order_relaxed);
-}
 SystemState HighSpeedCore::getActualSystemState(){
 	return _actualSystemState.load(std::memory_order_relaxed);
 }
-void HighSpeedCore::setActualSystemState(SystemState v){
-	_actualSystemState.store(v, std::memory_order_relaxed);
-	dispatchSystemStateChanged(v);
+void HighSpeedCore::setDesiredSystemState(SystemState systemState){
+	_desiredSystemState.store(systemState, std::memory_order_relaxed);
+}
+void HighSpeedCore::setActualSystemState(SystemState systemState){
+	_actualSystemState.store(systemState, std::memory_order_relaxed);
+	dispatchSystemStateChanged(systemState);
 }
 bool HighSpeedCore::isShuttingDownOrShutDown(){
 	if(_shuttingOrShutDown.load(std::memory_order_relaxed)){
@@ -60,9 +66,12 @@ bool HighSpeedCore::isShuttingDownOrShutDown(){
 	return false;
 }
 void HighSpeedCore::startCoreTask(){
-	TaskFactory::createPriorityTask(_run, nullptr, "HighSpeedCore::_run");
+	TaskFactory::createPriorityTask(_run_taskTrampoline, this, "HighSpeedCore::_run");
 }
-void HighSpeedCore::_run(void* ignore){
+void  HighSpeedCore::_run_taskTrampoline(void* arg) {
+    static_cast<HighSpeedCore*>(arg)->_run();
+}
+void HighSpeedCore::_run(){
 	while(true){
 		Delay::ms(10);
 		if(isShuttingDownOrShutDown()||getActualSystemState()==SystemState::ShutDown){
@@ -93,6 +102,7 @@ std::shared_ptr<SystemChecksResult> HighSpeedCore::doSystemChecks(){
 	std::shared_ptr<SystemChecksResult> result = SystemChecks::run();
 	std::unique_lock<std::mutex> lock(_mutexSystemChecksResult);
 	_systemChecksResult = result;
+	return result;
 }
 void HighSpeedCore::doShutDown(){
 	bool v = true;
@@ -100,6 +110,7 @@ void HighSpeedCore::doShutDown(){
 	_shuttingOrShutDown_2.store(v, std::memory_order_relaxed);
 	setActualSystemState(SystemState::ShuttingDown);
 	uint64_t lastTime = 0;
+	SystemState desiredSystemState = getDesiredSystemState();
 	while(true){
 		if(
 			(desiredSystemState!=SystemState::ShutDown)
@@ -108,7 +119,7 @@ void HighSpeedCore::doShutDown(){
 		{
 			return;
 		}
-		DoubleAndTime outputVoltageAndTime = LiveDataCache::getVoltage(outputVoltage);
+		DoubleAndTime outputVoltageAndTime = _liveDataCache.getOutputVoltage();
 		if(outputVoltageAndTime.t!=lastTime){
 			if(outputVoltageAndTime.d<=SAFE_OUTPUT_VOLTAGE){
 				setActualSystemState(SystemState::ShutDown);
@@ -137,14 +148,14 @@ void HighSpeedCore::doLive(){
 		return;
 	}
 	std::shared_ptr<SystemChecksResult> systemChecksResult = doSystemChecks();
-	if(!systemChecksResult.getSuccess()){
+	if(!systemChecksResult->success){
 		return;
 	}
 	uint64_t time, endTime, endTime_2;
 	setActualSystemState(SystemState::Live);
 	while(true){
-		endTime = esp_timer_get_time()+ON_TIME_US;
-		endTime_2 = esp_timer_get_time()+ON_TIME_US_2;
+		endTime = TimeHelper::us()+ON_TIME_US;
+		endTime_2 = TimeHelper::us()+ON_TIME_US_2;
 		if(isShuttingDownOrShutDown()){
 			return;
 		}
@@ -153,7 +164,7 @@ void HighSpeedCore::doLive(){
 				Outputs::setMOSFETOnOff(true);
 		}
 		while(true){
-			time = esp_timer_get_time();
+			time = TimeHelper::us();
 			if(time>=endTime){
 				break;
 			}
@@ -164,8 +175,8 @@ void HighSpeedCore::doLive(){
 		Outputs::setMOSFETOnOff(false);
 		
 		
-		endTime = esp_timer_get_time()+OFF_TIME_US;
-		endTime_2 = esp_timer_get_time()+OFF_TIME_US_2;
+		endTime = TimeHelper::us()+OFF_TIME_US;
+		endTime_2 = TimeHelper::us()+OFF_TIME_US_2;
 		
 		if(getDesiredSystemState()!=SystemState::Live){
 			return;
@@ -173,8 +184,8 @@ void HighSpeedCore::doLive(){
 		setActualSystemState(SystemState::Live);
 		
 		while(true){
-			time = esp_timer_get_time();
-			if(time>=endDriveOnTime){
+			time = TimeHelper::us();
+			if(time>=endTime){
 				break;
 			}
 			if(time>=endTime_2){
@@ -183,6 +194,6 @@ void HighSpeedCore::doLive(){
 		}
 	}
 }
-void dispatchSystemStateChanged(SystemState v){
+void HighSpeedCore::dispatchSystemStateChanged(SystemState v){
 	onSystemStateChanged.dispatch(v);
 }

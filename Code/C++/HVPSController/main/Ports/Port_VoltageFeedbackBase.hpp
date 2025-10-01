@@ -23,7 +23,7 @@ public:
 	bool setVoltageThreshold(double voltage);
     bool getVoltageThreshold(double& voltage);
     bool getVoltage(double& voltage);
-	void handleVoltageMessage(double voltage);
+	void handleVoltageMessage(cJSON* message);
 
 protected:
     explicit Port_VoltageFeedbackBase(TOSLINKDuplexChannel* channel);

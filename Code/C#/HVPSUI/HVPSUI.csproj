@@ -15,7 +15,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\shared-public\BaseMessages\CSharp\BaseMessages.csproj" />
     <ProjectReference Include="..\..\..\..\shared-public\BasicEvents\CSharp\BasicEvents.csproj" />
-    <ProjectReference Include="..\..\..\..\shared-private\MessageTypes\MessageTypes.csproj" />
     <ProjectReference Include="..\..\..\..\shared-public\Native\CSharp\Native.csproj" />
     <ProjectReference Include="..\..\..\..\shared-public\Bluetooth\CSharp\Bluetooth.csproj" />
     <ProjectReference Include="..\HVPSAPI\HVPSAPI.csproj" />

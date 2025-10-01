@@ -8,19 +8,24 @@
 #include "../Generated/Messages/HVPSShutDownMessage.hpp"
 #include "../Generated/Messages/HVPSStartMessage.hpp"
 #include "../Generated/Messages/HVPSStopMessage.hpp"
-#include "../ControllerCore/HighSpeedCore.hpp"
-#include "../Enums/SystemState.hpp"
+#include "../Generated/Messages/HVPSStateChangedMessage.hpp"
 //#include "../Generated/Messages/SetVoltageThresholdRequest.hpp"
 #include <cstring>
-Port_ControllingMachine::Port_ControllingMachine(IChannel& channel)
+Port_ControllingMachine::Port_ControllingMachine(
+	IChannel& channel, HighSpeedCore& highSpeedCore)
 :
 _channel(channel),
+_highSpeedCore(highSpeedCore),
 _ticketedSender(
 			[this](cJSON* msg){
 				_channel.sendMessage(msg, true);
 		}){
     _channel.setIncomingMessageHandler(this);
-	HighSpeedCore::getInstance().onSystemStateChanged.addHandler(handleStateChanged);
+	_highSpeedCore.onSystemStateChanged.addHandler(
+		[this](SystemState systemState){
+			this->handleStateChanged(systemState);
+		}
+	);
 }
 Port_ControllingMachine::~Port_ControllingMachine() noexcept
 {
@@ -63,20 +68,20 @@ void Port_ControllingMachine::handleIncomingMessage(cJSON* message, bool& dontDe
 	}
 }
 void Port_ControllingMachine::handleRunSystemChecksOnlyMessage(cJSON* message){
-	shared_ptr<SystemChecksResult> systemChecksResult = HighSpeedCore::runSystemChecksOnly();
+	std::shared_ptr<SystemChecksResult> systemChecksResult = _highSpeedCore.runSystemChecksOnly();
 }
 void Port_ControllingMachine::handleShutDownMessage(cJSON* message){
-	HighSpeedCore::shutDown();
+	_highSpeedCore.shutDown();
 }
 void Port_ControllingMachine::handleStartMessage(cJSON* message){
-	HighSpeedCore::start();
+	_highSpeedCore.start();
 	
 }
 void Port_ControllingMachine::handleStopMessage(cJSON* message){
-	HighSpeedCore::stop();
+	_highSpeedCore.stop();
 }
 void Port_ControllingMachine::handleStateChanged(SystemState systemState){		
 	HVPSStateChangedMessage hvpsStateChangedMessage((int32_t)systemState);
-	_channel.sendMessage(hvpsStateChangedMessage);
+	_channel.sendMessage(hvpsStateChangedMessage.toJSON());
 }
 

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Checksums;
 using Core.Atomics;
 namespace HVPSConfigurationGenerator
 {
@@ -50,79 +52,54 @@ namespace HVPSConfigurationGenerator
             }
             double maxOutputVoltageThreshold = Constants.MaximumDesiredOutputVoltage;
             double totalCapacitanceSeenByOutput = (2 * flybackCapacitorMinimumCapacitanceForTolerance / Constants.NStages);
-            double energyWhenDesiredMaximumOutputVoltageReached = 0.5 * totalCapacitanceSeenByOutput*Math.Pow(Constants.MaximumDesiredOutputVoltage, 2);
+            double energyWhenDesiredMaximumOutputVoltageReached = 0.5 * totalCapacitanceSeenByOutput * Math.Pow(Constants.MaximumDesiredOutputVoltage, 2);
 
-            double potentialOutputVoltageReachedDuringOutputVoltageThresholdReachedDetection = 
-                Math.Pow((energyWhenDesiredMaximumOutputVoltageReached + maxFlybackEnergyPerCycle)/(0.5*totalCapacitanceSeenByOutput), 0.5);
+            double potentialOutputVoltageReachedDuringOutputVoltageThresholdReachedDetection =
+                Math.Pow((energyWhenDesiredMaximumOutputVoltageReached + maxFlybackEnergyPerCycle) / (0.5 * totalCapacitanceSeenByOutput), 0.5);
             if (potentialOutputVoltageReachedDuringOutputVoltageThresholdReachedDetection > maximumAchievableOutputVoltage) {
                 double energyAtMaximumAchievableOutputVoltage = 0.5 * totalCapacitanceSeenByOutput * Math.Pow(maximumAchievableOutputVoltage, 2);
-                maxOutputVoltageThreshold = Math.Pow((energyAtMaximumAchievableOutputVoltage-maxFlybackEnergyPerCycle)/(0.5*totalCapacitanceSeenByOutput), 0.5);
+                maxOutputVoltageThreshold = Math.Pow((energyAtMaximumAchievableOutputVoltage - maxFlybackEnergyPerCycle) / (0.5 * totalCapacitanceSeenByOutput), 0.5);
                 Console.WriteLine("WARNING, Had to clamp the {nameof(safeOutputVoltage)} in order to safely absorb the additional energy from one cycle");
             }
-            long onTimeMicroSeconds = (long)(1000000d * Constants.DutyCycle / Constants.Frequency);
-            long offTimeMicroSeconds = (long)(1000000d * (1d-Constants.DutyCycle) / Constants.Frequency);
+            ulong onTimeMicroSeconds = (long)(1000000d * Constants.DutyCycle / Constants.Frequency);
+            ulong offTimeMicroSeconds = (long)(1000000d * (1d - Constants.DutyCycle) / Constants.Frequency);
             maxOutputVoltageThreshold = Math.Floor(maxOutputVoltageThreshold);
+            HVPSConfig configurationStruct = new HVPSConfig {
+                onTimeMicroSeconds= onTimeMicroSeconds,
+                offTimeMicroSeconds= offTimeMicroSeconds,
+                maxOutputVoltageThreshold= maxOutputVoltageThreshold,
+                minOutputVoltageThreshold= Constants.MinimumDesiredOutputVoltage,
+                firstStageVoltageThreshold= firstStageVoltageThreshold,
+                maxAverageOutputPower= Constants.MaximumCompositeOutputCurrentLimitingResistorAveragePower,
+                nStages= Constants.NStages
+            };
             WriteFile(
                 filePath,
-                onTimeMicroSeconds: onTimeMicroSeconds,
-                offTimeMicroSeconds: offTimeMicroSeconds,
-                maxOutputVoltageThreshold: maxOutputVoltageThreshold,
-                minOutputVoltageThreshold: Constants.MinimumDesiredOutputVoltage,
-                firstStageVoltageThreshold: firstStageVoltageThreshold,
-                maxAverageOutputPower:Constants.MaximumCompositeOutputCurrentLimitingResistorAveragePower,
-                nStages:Constants.NStages
+                configurationStruct
             );
         }
-        private static void WriteFile(
+        private static void WriteFile<TConfigurationStruct>(
             string filePath,
-            long onTimeMicroSeconds,
-            long offTimeMicroSeconds,
-            double maxOutputVoltageThreshold,
-            double minOutputVoltageThreshold,
-            double firstStageVoltageThreshold,
-            double maxAverageOutputPower,
-            short nStages
-        ) {
+            TConfigurationStruct configurationStruct
+        ) where TConfigurationStruct: unmanaged
+        {
+
+
+            uint crc = Crc32.Compute(in configurationStruct);
             StringBuilder sbStruct = new StringBuilder();
             StringBuilder sbInstance = new StringBuilder();
             Atomic<bool> isFirst = new Atomic<bool>(true);
-            var appendUInt64 = Create_AppendUInt64(sbStruct, sbInstance, isFirst);
-            var appendDouble = Create_AppendDouble(sbStruct, sbInstance, isFirst);
-            var appendUInt8 = Create_AppendUInt8(sbStruct, sbInstance, isFirst);
             sbStruct.AppendLine("#pragma once");
-            sbStruct.AppendLine("struct HVPSConfig {");
-            sbInstance.AppendLine("inline constexpr HVPSConfig Config1{");
+            sbStruct.AppendLine("#include \"../System/Aborter.hpp\"");
+            sbStruct.AppendLine("struct Configuration {");
+            sbInstance.AppendLine("inline constexpr Configuration Config1{");
             sbInstance.Append("    ");
-            appendUInt64("onTimeMicroSeconds", onTimeMicroSeconds);
-            appendUInt64("offTimeMicroSeconds", offTimeMicroSeconds);
-            appendDouble("maxOutputVoltageThreshold", maxOutputVoltageThreshold);
-            appendDouble("minOutputVoltageThreshold", minOutputVoltageThreshold);
-            appendDouble("firstStageVoltageThreshold", firstStageVoltageThreshold);
-            appendDouble("maxAverageOutputPower", maxAverageOutputPower);
-            appendUInt8("nStages", nStages);
-            sbStruct.AppendLine("};");
-            sbInstance.AppendLine();
-            sbInstance.AppendLine("};");
-            StringBuilder sbAll = new StringBuilder();
-            sbAll.Append(sbStruct);
-            sbAll.Append(sbInstance);
-            File.WriteAllText(filePath, sbAll.ToString());
-        }
-        private static Action<string, long> Create_AppendUInt64(StringBuilder sbStruct, StringBuilder sbInstance, Atomic<bool> isFirst)
-        {
-            return Create_Append<long>(sbStruct, sbInstance, "uint64_t", isFirst);
-        }
-        private static Action<string, double> Create_AppendDouble(StringBuilder sbStruct, StringBuilder sbInstance, Atomic<bool> isFirst)
-        {
-            return Create_Append<double>(sbStruct, sbInstance, "double", isFirst);
-        }
-        private static Action<string, short> Create_AppendUInt8(StringBuilder sbStruct, StringBuilder sbInstance, Atomic<bool> isFirst)
-        {
-            return Create_Append<short>(sbStruct, sbInstance, "uint8_t", isFirst);
-        }
-        private static Action<string, TValue> Create_Append<TValue>(StringBuilder sbStruct, StringBuilder sbInstance, string type, Atomic<bool> isFirst) {
-            return (name, value) => {
-                sbStruct.AppendLine($"    {type} {name};");
+            foreach (var field in typeof(HVPSConfig).GetFields(BindingFlags.Public | BindingFlags.Instance))
+            {
+                string cPlusPlusTypeName = GetCPlusPlusTypeName(field.FieldType);
+                string fieldName = field.Name;
+                object? value = field.GetValue(configurationStruct);
+                sbStruct.AppendLine($"    {cPlusPlusTypeName} {fieldName};");
                 if (isFirst.Value)
                 {
                     isFirst.Value = false;
@@ -131,8 +108,48 @@ namespace HVPSConfigurationGenerator
                 {
                     sbInstance.Append(",");
                 }
-                sbInstance.Append($".{name} = {value}");
-            };
+                sbInstance.Append($".{fieldName} = {value}");
+            }
+            sbStruct.AppendLine("};");
+            sbInstance.AppendLine();
+            sbInstance.AppendLine("};");
+            StringBuilder sbAll = new StringBuilder();
+            sbAll.Append(sbStruct);
+            sbAll.Append(sbInstance);
+            sbAll.AppendLine($"inline const uint32_t CONFIG_CRC32_EXPECTED = {crc};");
+            //sbAll.AppendLine("static_assert(podConfig1 == CONFIG_CRC32_EXPECTED, \"pod did not match expected crc\"");
+            sbAll.AppendLine("inline Configuration Config2 = Config1;//This one is in RAM. Config1 is in ROM.");
+sbAll.Append(@"bool validateConfiguration(){
+	uint32_t podConfig1 = Crc32::computePod(Config1);
+	uint32_t podConfig2 = Crc32::computePod(Config2);
+	if(podConfig1 != podConfig2){
+		Aborter::safeAbort(""Configuration"", ""The CRC32 computed for Config2 did not match the CRC32 for Config1"");
+		return false;
+	}
+    if (podConfig1 != CONFIG_CRC32_EXPECTED){
+		Aborter::safeAbort(""Configuration"", ""The CRC32 computed for Config1 did not match the expected value"");
+		return false;
+	};
+    return true;
+}");
+            File.WriteAllText(filePath, sbAll.ToString());
+        }
+        private static string GetCPlusPlusTypeName(Type fieldType)
+        {
+            if (fieldType == typeof(byte)) return "uint8_t";
+            if (fieldType == typeof(sbyte)) return "int8_t";
+            if (fieldType == typeof(short)) return "int16_t";
+            if (fieldType == typeof(ushort)) return "uint16_t";
+            if (fieldType == typeof(int)) return "int32_t";
+            if (fieldType == typeof(uint)) return "uint32_t";
+            if (fieldType == typeof(long)) return "int64_t";
+            if (fieldType == typeof(ulong)) return "uint64_t";
+
+            if (fieldType == typeof(float)) return "float";
+            if (fieldType == typeof(double)) return "double";
+            if (fieldType == typeof(decimal)) return "double"; // no native decimal in C++, map to double
+
+            throw new NotSupportedException($"Unsupported type: {fieldType.FullName}");
         }
     }
 }

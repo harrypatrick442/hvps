@@ -14,7 +14,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\shared-public\BaseMessages\CSharp\BaseMessages.csproj" />
-    <ProjectReference Include="..\..\..\..\shared-private\MessageTypes\MessageTypes.csproj" />
     <ProjectReference Include="..\HVPSCore\HVPSCore.csproj" />
   </ItemGroup>
   <ItemGroup>
