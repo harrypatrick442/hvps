@@ -1,8 +1,8 @@
 #ifndef HIGH_SPEED_CORE_HPP
 #define HIGH_SPEED_CORE_HPP
 #include "../Enums/SystemState.hpp"
-#include "../Core/Event.hpp"
-#include "../Core/SingletonBase.hpp"
+#include "Core/Event.hpp"
+#include "Core/SingletonBase.hpp"
 #include "SystemChecksResult.hpp"
 #include "../Ports/Port_FirstStageVoltageFeedback.hpp"
 #include "../Ports/Port_OutputVoltageFeedback.hpp"

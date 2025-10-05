@@ -1,14 +1,14 @@
 #ifndef Port_VoltageFeedbackBase_hpp
 #define Port_VoltageFeedbackBase_hpp
 
-#include "../Communication/Interfaces/IIncomingMessageHandler.hpp"
-#include "../Communication/Interfaces/IMessageSender.hpp"
-#include "../Communication/FiberOptic/TOSLINKDuplexChannel.hpp"
+#include "Communication/Interfaces/IIncomingMessageHandler.hpp"
+#include "Communication/Interfaces/IMessageSender.hpp"
+#include "Communication/FiberOptic/TOSLINKDuplexChannel.hpp"
 #include "../Enums/SystemState.hpp"
-#include "../Ticketing/TicketedSender.hpp"
-#include "../cJSON/cJSON.h"
-#include "../Core/Macros.hpp"
-#include "../Core/Event.hpp"
+#include "Ticketing/TicketedSender.hpp"
+#include "cJSON/cJSON.h"
+#include "Core/Macros.hpp"
+#include "Core/Event.hpp"
 
 class Port_VoltageFeedbackBase : public IIncomingMessageHandler {
 public:

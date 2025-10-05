@@ -1,10 +1,12 @@
 #include "./Inputs.hpp"
-#include "../Logging/Log.hpp"
+#include "Logging/Log.hpp"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include <stdio.h>
 #include "PinDefinitions.hpp"
-#include "../System/Aborter.hpp"
+#include "ADCChannels.hpp"
+#include "ADC/ADC.hpp"
+#include "System/Aborter.hpp"
 
 const char* Inputs::TAG = "Inputs";
 bool Inputs::_initialized = false;
@@ -67,4 +69,24 @@ void Inputs::checkInitialized(){
 	if(!Inputs::_initialized){
         Aborter::safeAbort(TAG, "Not Initialized!");
 	}
+}
+double Inputs::getADCVoltage()
+{
+    return ADC::getVoltage();
+}
+void Inputs::selectADCReferenceVoltageChannel()
+{
+    ADC::setChannel(ADCChannels::REFERENCE_VOLTAGE);
+}
+void Inputs::selectADCSnubberVoltageFeedbackChannel()
+{
+    ADC::setChannel(ADCChannels::SNUBBER_VOLTAGE_FEEDBACK);
+}
+void Inputs::selectADCPrimaryCurrentFeedbackChannel()
+{
+    ADC::setChannel(ADCChannels::PRIMARY_CURRENT_FEEDBACK);
+}
+void Inputs::selectADCPowerSupplyVoltageFeedbackChannel()
+{
+    ADC::setChannel(ADCChannels::POWER_SUPPLY_VOLTAGE_FEEDBACK);
 }

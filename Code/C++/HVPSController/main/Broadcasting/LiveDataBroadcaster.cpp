@@ -1,5 +1,5 @@
 #include "LiveDataBroadcaster.hpp"
-#include "../Generated/Messages/HVPSLiveDataMessage.hpp"
+#include "Generated/Messages/HVPSLiveDataMessage.hpp"
 LiveDataBroadcaster::LiveDataBroadcaster(
 	LiveDataCache& liveDataCache, 
 	Port_ControllingMachine& portControllingMachine

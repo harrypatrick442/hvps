@@ -69,3 +69,14 @@ Code/C\#/HVPSUI/HVPSUI.csproj.user
 Code/C\#/HVPSUI_Win/HVPSUI_Win.csproj.user
 Kicad/HVPSController/~HVPSController.kicad_sch.lck
 Spreadsheets/~$BasicCalculations.xlsx
+/Code/C\#/EspIdfSmartPrebuild/obj
+/Code/C++/FirstStageVoltageFeedbackModule/.vscode
+/Code/C++/FirstStageVoltageFeedbackModule/build
+/Code/C++/HVPSController/main/IO/junk
+/Code/C++/junk
+/Code/C++/OutputVoltageFeedbackModule/build
+/Code/C++/Shared/cJSON
+/Code/C\#/EspIdfSmartPrebuild
+/Code/C++/OutputVoltageFeedbackModule/.vscode
+/Code/C++/OutputVoltageFeedbackModule/.devcontainer
+/Code/C++/FirstStageVoltageFeedbackModule/.devcontainer

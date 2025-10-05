@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include "driver/adc.h"
 #include "esp_system.h"
-#include "../Logging/Log.hpp"
-#include "../Timing/Delay.hpp"
+#include "Logging/Log.hpp"
+#include "Timing/Delay.hpp"
 #include "esp_timer.h"
 #include <cstdint> 
 const char* AnalogueInputs::TAG = "AnalogueInputs";

@@ -1,6 +1,6 @@
 #pragma once
 #include "Port_VoltageFeedbackBase.hpp"
-#include "../Core/SingletonBase.hpp"
+#include "Core/SingletonBase.hpp"
 class Port_FirstStageVoltageFeedback final :
 	public Port_VoltageFeedbackBase,
 	public SingletonBase<Port_FirstStageVoltageFeedback>{

@@ -15,6 +15,13 @@ class Inputs {
 		static bool getFirstStageVoltageFeedbackThresholdReached();
 		static bool getOutputCurrentFeedbackThresholdReached();
 		static void checkInitialized();
+		
+		
+		static void selectADCReferenceVoltageChannel();
+		static void selectADCSnubberVoltageFeedbackChannel();
+		static void selectADCPrimaryCurrentFeedbackChannel();
+		static void    	selectADCPowerSupplyVoltageFeedbackChannel();
+		static double getADCVoltage();
 };
 
 #endif // INPUTS_HPP

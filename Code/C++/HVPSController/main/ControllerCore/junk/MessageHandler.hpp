@@ -1,8 +1,8 @@
 #ifndef MessageHandler_hpp
 #define MessageHandler_hpp
-#include "../Communication/Interfaces/IIncomingMessageHandler.hpp"
-#include "../Communication/Interfaces/IMessageSender.hpp"
-#include "../cJSON/cJSON.h"
+#include "Communication/Interfaces/IIncomingMessageHandler.hpp"
+#include "Communication/Interfaces/IMessageSender.hpp"
+#include "cJSON/cJSON.h"
 class MessageHandler : public IIncomingMessageHandler{
     public :
         MessageHandler& initialize();

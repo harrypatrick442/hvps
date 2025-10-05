@@ -1,6 +1,6 @@
 #include "Port_FirstStageVoltageFeedback.hpp"
 #include "../IO/FirstStageVoltageFeedbackFiberOpticDuplexChannel.hpp"
-#include "../Communication/FiberOptic/TOSLINKDuplexChannel.hpp"
+#include "Communication/FiberOptic/TOSLINKDuplexChannel.hpp"
 
 Port_FirstStageVoltageFeedback& Port_FirstStageVoltageFeedback::initialize() noexcept{
 	return SingletonBase<Port_FirstStageVoltageFeedback>::initialize(

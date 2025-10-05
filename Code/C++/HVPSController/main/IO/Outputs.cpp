@@ -3,7 +3,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "driver/gpio.h"
-#include "../Logging/Log.hpp"
+#include "Logging/Log.hpp"
 #include "PinDefinitions.hpp"
 
 const char* Outputs::TAG = "Outputs";

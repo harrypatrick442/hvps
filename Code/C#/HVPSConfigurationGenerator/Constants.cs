@@ -8,6 +8,7 @@ namespace HVPSConfigurationGenerator
     {
         public const double SafetyFactor = 1.2;
         public const int Frequency = 16000;
+        public const int BroadcastFrequency = 2;
         public const double DutyCycle = 0.5;
         public const double VillardCapacitorVoltageRating = 20000;
         public const double VillardCapacitorDeratedMaximumVoltage = 15000;
@@ -24,6 +25,9 @@ namespace HVPSConfigurationGenerator
         public const double NSeriesOutputCurrentLimitingResistors = 5;
         public const double IndividualOutputCurrentLimitingResistorResistance = 200000;
         public const double MaximumCompositeOutputCurrentLimitingResistorAveragePower = 12.5;
+        public const double PowerSupplyVoltageFeedbackPotentialDividerRatio = 33;
+        public const double FirstStageVoltageFeedbackPotentialDividerRatio = 5600;
+        public const double OutputVoltageFeedbackPotentialDividerRatio = 3.08e4;
 
     }
 }

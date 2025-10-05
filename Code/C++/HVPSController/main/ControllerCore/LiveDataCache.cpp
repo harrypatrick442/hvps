@@ -1,5 +1,5 @@
 #include "LiveDataCache.hpp"
-#include "../Timing/TimeHelper.hpp"
+#include "Timing/TimeHelper.hpp"
 LiveDataCache::LiveDataCache(Port_FirstStageVoltageFeedback& portFirstStageVoltageFeedback,
                              Port_OutputVoltageFeedback& portOutputVoltageFeedback) noexcept
 : _portFirstStageVoltageFeedback(portFirstStageVoltageFeedback)

@@ -1,6 +1,6 @@
 #pragma once
-#include "../Core/Timer.hpp"
-#include "../Core/SingletonBase.hpp"
+#include "Core/Timer.hpp"
+#include "Core/SingletonBase.hpp"
 #include "../ControllerCore/LiveDataCache.hpp"
 #include "../Ports/Port_ControllingMachine.hpp"
 class LiveDataBroadcaster final

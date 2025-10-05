@@ -1,10 +1,10 @@
 #include "HighSpeedCore.hpp"
-#include "../Tasks/TaskFactory.hpp"
+#include "Tasks/TaskFactory.hpp"
 #include "../IO/Inputs.hpp"
 #include "../IO/Outputs.hpp"
-#include "../Timing/Delay.hpp"
-#include "../Timing/TimeHelper.hpp"
-#include "../Core/DoubleAndTime.hpp"
+#include "Timing/Delay.hpp"
+#include "Timing/TimeHelper.hpp"
+#include "Core/DoubleAndTime.hpp"
 #include "SystemChecks.hpp"
 HighSpeedCore::HighSpeedCore(
 	Port_FirstStageVoltageFeedback& portFirstStageVoltageFeedback, 

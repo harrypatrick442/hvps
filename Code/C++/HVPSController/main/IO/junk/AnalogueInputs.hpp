@@ -14,8 +14,8 @@
 #include "esp_adc/adc_continuous.h"   // NEW – IDF 5.x continuous driver
 #include "esp_adc_cal.h"
 #include <optional>
-#include "../ADC/ReverseVoltageToRawLookup.hpp"
-#include "../ADC/MonitorVoltageThresholdHandle.hpp"
+#include "ADC/ReverseVoltageToRawLookup.hpp"
+#include "ADC/MonitorVoltageThresholdHandle.hpp"
 
 // ------------------ configuration constants (change as needed) -------------
 #define DEFAULT_VREF                          1100        // mV (fallback)

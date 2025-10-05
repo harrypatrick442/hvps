@@ -1,18 +1,24 @@
 #include "SoftStartHandler.hpp"
-#include "../Timing/Delay.hpp"
-#include "AnalogueInputs.hpp"
-#include "../Core/ArrayHelper.hpp"
+#include "../IO/Inputs.hpp"
 #include "../IO/Outputs.hpp"
+#include "ADC/ADC.hpp"
+#include "Core/ArrayHelper.hpp"
+#include "System/Aborter.hpp"
+#include "Timing/Delay.hpp"
 
-double SoftStartHandler::doSoftStart(){
+double SoftStartHandler::doSoftStart(const Configuration& config1, const Configuration& config2){
 	Outputs::setSoftStartResistorBypassOnOff(false);
-	AnalogueInputs::selectPowerSupplyVoltageFeedbackChannel();
+	Inputs::selectADCPowerSupplyVoltageFeedbackChannel();
 	double voltages[WINDOW_SAMPLES];
 	size_t index = 0;
 	double lastAverageVoltage=0.0;
 	while(true){
 		Delay::ms(SAMPLE_INTERVAL_MS);
-		voltages[index++] = AnalogueInputs::getVoltage();
+		if(config1.vPsOverVadcRatio!=config2.vPsOverVadcRatio){
+			Aborter::safeAbort(TAG, "A value for the potential divider ratio corrupted");
+			return -1;
+		}
+		voltages[index++] = Inputs::getADCVoltage()*config1.vPsOverVadcRatio;
 		if(index<WINDOW_SAMPLES){
 			continue;
 		}

@@ -6,7 +6,7 @@
 #include <string>
 #include <cctype>
 #include <cstdlib>
-#include "../Logging/Log.hpp"
+#include "Logging/Log.hpp"
 const char* TAG = "BluetoothUUIDHelper";
 // Method to parse a Bluetooth UUID string into an array of bytes
 std::array<uint8_t, 16> BluetoothUUIDHelper::parseBluetoothUUID(

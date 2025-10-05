@@ -54,10 +54,7 @@ namespace HVPSCodeGenerator
             string[] generatedDirectories = new string[]{
                 Path.Combine(
                         reposDirectory,
-                        "hvps", "Code", "C++", "HVPSController", "main", "Generated", "Messages"),
-                Path.Combine(
-                        reposDirectory,
-                        "hvps", "Code", "C++", "VoltageFeedbackModule", "main", "Generated", "Messages")
+                        "hvps", "Code", "C++", "Shared","Generated", "Messages")
             };
             foreach (string directory in generatedDirectories)
             {

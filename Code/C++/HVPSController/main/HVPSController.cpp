@@ -1,23 +1,23 @@
 #include "esp_log.h"
 #include <array>
 #include "freertos/FreeRTOSConfig.h"
-#include "./Communication/Bluetooth/Bluetooth_BR_EDR.hpp"
-#include "./Logging/Log.hpp"
-#include "./System/WatchdogFeeder.hpp"
-#include "./System/StayTheFuckAwake.hpp"
-#include "./IO/Outputs.hpp"
-#include "./IO/Inputs.hpp"
-#include "./IO/AnalogueInputs.hpp"
-#include "./IO/SoftStartHandler.hpp"
-#include "./Timing/Delay.hpp"
-#include "./Communication/I2C/I2C.hpp"
-#include "./Communication/I2C/I2CConfiguration.hpp"
+#include "ADC/ADC.hpp"
+#include "Broadcasting/LiveDataBroadcaster.hpp"
+#include "Communication/Bluetooth/Bluetooth_BR_EDR.hpp"
+#include "Communication/I2C/I2C.hpp"
+#include "Communication/I2C/I2CConfiguration.hpp"
+#include "Core/Checksums/Crc32.hpp"
+#include "Generated/HVPSConfig.hpp"
+#include "IO/SoftStartHandler.hpp"
+#include "IO/Inputs.hpp"
+#include "IO/Outputs.hpp"
+#include "Logging/Log.hpp"
+#include "Ports/Port_ControllingMachine.hpp"
 #include "Ports/Port_FirstStageVoltageFeedback.hpp"
 #include "Ports/Port_OutputVoltageFeedback.hpp"
-#include "./Ports/Port_ControllingMachine.hpp"
-#include "./Broadcasting/LiveDataBroadcaster.hpp"
-#include "./Core/Checksums/Crc32.hpp"
-#include "./generated/HVPSConfig.hpp"
+#include "System/WatchdogFeeder.hpp"
+#include "System/StayTheFuckAwake.hpp"
+#include "Timing/Delay.hpp"
 #include <iostream>
 #include <array>
 #include <sstream>
@@ -32,11 +32,12 @@ static const char *TAG = "HVPS";
 
 extern "C" void app_main(void)
 {
+	Aborter::setToSafe(&Outputs::toSafe);
 	Outputs::initialize();
 	Outputs::toSafeReversible();
 	validateConfiguration();
-	SoftStartHandler::doSoftStart();
-	AnalogueInputs::initialize();
+	SoftStartHandler::doSoftStart(Config1, Config2);
+	ADC::initialize();
 	Inputs::initialize();
 	esp_wifi_stop();
 	esp_wifi_deinit();

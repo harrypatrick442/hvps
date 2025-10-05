@@ -1,6 +1,6 @@
 #include "./MessageHandler.hpp"
-#include "../Logging/Log.hpp"
-#include "../JSON/JHelper.hpp"
+#include "Logging/Log.hpp"
+#include "JSON/JHelper.hpp"
 #include <cstring>
 MessageHandler* MessageHandler::_instance = nullptr;
 MessageHandler& MessageHandler::initialize(){

@@ -1,14 +1,14 @@
 #pragma once
 
-#include "../Communication/Interfaces/IIncomingMessageHandler.hpp"
-#include "../Communication/Interfaces/IChannel.hpp"
-#include "../Ticketing/TicketedSender.hpp"
-#include "../Generated/Messages/HVPSLiveDataMessage.hpp"
-#include "../Core/SingletonBase.hpp"
-#include "../Core/Macros.hpp"
+#include "Communication/Interfaces/IIncomingMessageHandler.hpp"
+#include "Communication/Interfaces/IChannel.hpp"
+#include "Ticketing/TicketedSender.hpp"
+#include "Generated/Messages/HVPSLiveDataMessage.hpp"
+#include "Core/SingletonBase.hpp"
+#include "Core/Macros.hpp"
 #include "../Enums/SystemState.hpp"
 #include "../ControllerCore/HighSpeedCore.hpp"
-#include "../cJSON/cJSON.h"
+#include "cJSON/cJSON.h"
 #include <string>
 
 class Port_ControllingMachine final:
