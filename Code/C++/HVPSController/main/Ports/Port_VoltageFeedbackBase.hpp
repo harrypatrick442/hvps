@@ -23,6 +23,7 @@ public:
 	bool setVoltageThreshold(double voltage);
     bool getVoltageThreshold(double& voltage);
     bool getVoltage(double& voltage);
+	bool setForceThresholdReachedFeedback(bool force);
 	void handleVoltageMessage(cJSON* message);
 
 protected:
@@ -30,9 +31,11 @@ protected:
 	virtual ~Port_VoltageFeedbackBase();
 
 protected:
+	static inline constexpr int TIMEOUT = 1000;
     IMessageSender*       _messageSender = nullptr;
     TOSLINKDuplexChannel*  _TOSLINKDuplexChannel = nullptr;
     TicketedSender        _ticketedSender;
+
 };
 
 #endif

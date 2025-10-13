@@ -28,6 +28,8 @@ namespace HVPSConfigurationGenerator
         public const double PowerSupplyVoltageFeedbackPotentialDividerRatio = 33;
         public const double FirstStageVoltageFeedbackPotentialDividerRatio = 5600;
         public const double OutputVoltageFeedbackPotentialDividerRatio = 3.08e4;
+        public const double OutputResistorMaximumEnergy = ;
+        public const double OutputCurrentLimitingResistorMaxPowerDisipation = 15;
 
     }
 }

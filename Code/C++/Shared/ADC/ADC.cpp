@@ -190,6 +190,10 @@ std::shared_ptr<MonitorVoltageThresholdHandle> ADC::monitorVoltageThresholdWithN
 		double initialVoltage, 
 		std::function<void(bool)> callback
 	) {
+	if(!callback){
+		Aborter::safeAbort(TAG, "No callback provided!");
+		return nullptr;
+	}
 	std::shared_ptr<MonitorVoltageThresholdHandle> handle = std::make_shared<MonitorVoltageThresholdHandle>(
 		initialVoltage, _reverseLookup,  std::move(callback));
 	
@@ -225,18 +229,110 @@ void ADC::_monitorVoltageThreshold(std::shared_ptr<MonitorVoltageThresholdHandle
 		if(value>handle->rawThreshold){
 			if((!set)||isOn){
 				isOn = false;
-                if (handle->callback) handle->callback(false);
+                handle->callback(false);
 			}
 		}
 		else{
 			if((!set)||(!isOn)){
 				isOn = true;
-                if (handle->callback) handle->callback(true);
+                handle->callback(true);
 			}
 		}
 		set = true;
 	}
 }
+
+
+std::shared_ptr<IMonitorCurrentAndPowerHandle> 
+ADC::monitorCurrentAndPower(
+	double senseResistanceOhms, 
+	double outputCurrentLimitingResistanceOhms,
+	double cumulativeEnergyThresholdJ,
+	double energyDisipatedJPerS,
+	std::function<void(bool)> callback
+) {
+	if (!callback){
+		Aborter::safeAbort(TAG, "No callback provided!");
+		return nullptr;
+	} 
+
+	std::shared_ptr<MonitorCurrentAndPowerHandle> handle = std::make_shared<MonitorCurrentAndPowerHandle>(
+		senseResistanceOhms, 
+		outputCurrentLimitingResistanceOhms, 
+		cumulativeEnergyThresholdJ,
+		energyDisipatedJPerS,
+		std::move(callback)
+	);
+
+	TaskFactory::createPriorityTask<MonitorCurrentAndPowerHandle>(
+		&ADC::_monitorCurrentAndPower,
+		handle,
+		"ADC::monitorCurrentAndPower"
+	);
+
+	// Cast to interface type before returning
+	return std::static_pointer_cast<IMonitorCurrentAndPowerHandle>(handle);
+}
+
+void ADC::_monitorCurrentAndPower(
+	std::shared_ptr<MonitorCurrentAndPowerHandle> handle
+){
+	esp_err_t err;
+	double cumulativeEnergyUj = 0;
+	double cumulativeEnergyThresholdUj = handle->getCumulativeEnergyThresholdJ() * 1000.0;
+	uint64_t lastTimeUs = esp_timer_get_time();
+	uint64_t nextTimeUs;
+	uint64_t dTUs;
+	double currentA, powerW;
+	bool set = false;
+	bool isOn = false;
+	adc_digi_output_data_t d; // Stores a single read value
+	uint32_t len = 0;
+	while(!handle->getExitFlag()){
+		err = adc_continuous_read(
+			_adc_hdl,                              // handle
+			reinterpret_cast<uint8_t*>(&d),        // buffer
+			4,                             // size
+			&len,                                   // out bytes
+			0                                       // non-blocking
+		); 
+		if(err!= ESP_OK){
+			continue;
+		}
+		if(len!=4){
+			continue;
+		}
+		nextTimeUs = esp_timer_get_time();
+		dTUs = nextTimeUs - lastTimeUs;
+		if(dTUs<=0){
+			continue;
+		}
+		currentA = convertRawToVoltage(d.type1.data & 0x0FFF) / handle->getSenseResistanceOhms();
+		handle->setCurrentA(currentA);
+		powerW = currentA * currentA * handle->getOutputCurrentLimitingResistanceOhms();
+		cumulativeEnergyUj += powerW * dTUs;
+		cumulativeEnergyUj -= static_cast<double>(dTUs) * handle->getEnergyDisipatedUjPerUs();
+		if(cumulativeEnergyUj<0){
+			cumulativeEnergyUj =0;
+		}
+		if(cumulativeEnergyUj>= cumulativeEnergyThresholdUj){
+			if((!set)||isOn){
+				isOn = false;
+                handle->callbackReachedThreshold(false);
+			}
+		}
+		else{
+			if((!set)||(!isOn)){
+				isOn = true;
+                handle->callbackReachedThreshold(true);
+			}
+		}
+		lastTimeUs = nextTimeUs;
+	}
+}
+
+
+
 double ADC::getVoltage(){
 	adc_digi_output_data_t d;
 	uint32_t len = 0;

@@ -11,8 +11,10 @@
 #include "esp_adc_cal.h"
 #include <optional>
 #include <memory>
-#include "../../../Shared/ADC/ReverseVoltageToRawLookup.hpp"
-#include "../../../Shared/ADC/MonitorVoltageThresholdHandle.hpp"
+#include "ReverseVoltageToRawLookup.hpp"
+#include "MonitorVoltageThresholdHandle.hpp"
+#include "IMonitorCurrentAndPowerHandle.hpp"
+#include "MonitorCurrentAndPowerHandle.hpp"
 
 // ------------------ configuration constants (change as needed) -------------
 #define DEFAULT_VREF                          1100        // mV (fallback)
@@ -67,6 +69,16 @@ public:
 		double initialVoltage, 
 		std::function<void(bool)> callback
 	);
+	static std::shared_ptr<IMonitorCurrentAndPowerHandle> monitorCurrentAndPower(
+		double senseResistanceOhms, 
+		double outputCurrentLimitingResistanceOhms,
+		double cumulativeEnergyThresholdJ,
+		double energyDisipatedJPerS,
+		std::function<void(bool)> callback
+	);
 private:
 	static void _monitorVoltageThreshold(std::shared_ptr<MonitorVoltageThresholdHandle> handle);
+	static void _monitorCurrentAndPower(
+		std::shared_ptr<MonitorCurrentAndPowerHandle> handle
+	);
 };

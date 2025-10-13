@@ -30,7 +30,7 @@ Port_VoltageFeedbackBase::~Port_VoltageFeedbackBase() noexcept
 }
 bool Port_VoltageFeedbackBase::setVoltageThreshold(double voltage){
 	SetVoltageThresholdRequest request(voltage);
-	std::shared_ptr<cJSON> response = _ticketedSender.send(request.toJSON());
+	std::shared_ptr<cJSON> response = _ticketedSender.send(request.toJSON(), TIMEOUT);
 	if(response==nullptr){
 		return false;
 	}
@@ -40,7 +40,7 @@ bool Port_VoltageFeedbackBase::getVoltageThreshold(double& voltage) {
     voltage = -1.0;
 
     GetVoltageThresholdRequest request;   // NOTE: not request()
-    std::shared_ptr<cJSON> jsonResponse = _ticketedSender.send(request.toJSON());
+    std::shared_ptr<cJSON> jsonResponse = _ticketedSender.send(request.toJSON(), TIMEOUT);
     if (!jsonResponse) {
         return false;
     }
@@ -52,12 +52,20 @@ bool Port_VoltageFeedbackBase::getVoltage(double& voltage) {
     voltage = -1.0;
 
     GetVoltageRequest request;   // NOTE: not request()
-    std::shared_ptr<cJSON> jsonResponse = _ticketedSender.send(request.toJSON());
+    std::shared_ptr<cJSON> jsonResponse = _ticketedSender.send(request.toJSON(), TIMEOUT);
     if (!jsonResponse) {
         return false;
     }
 	std::shared_ptr<GetVoltageResponse> response = GetVoltageResponse::fromJSON(jsonResponse.get());
     voltage = response.get()->getVoltage();
+    return true;
+}
+bool Port_VoltageFeedbackBase::setForceThresholdReachedFeedback(bool force){
+    SetForceThresholdReachedRequest request;
+    std::shared_ptr<cJSON> jsonResponse = _ticketedSender.send(request.toJSON(), TIMEOUT);
+    if (!jsonResponse) {
+        return false;
+    }
     return true;
 }
 void Port_VoltageFeedbackBase::handleIncomingMessage(cJSON* message, bool& dontDelete){

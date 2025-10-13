@@ -1,30 +1,16 @@
-#include "esp_log.h"
-#include <array>
-#include "freertos/FreeRTOSConfig.h"
 #include "ADC/ADC.hpp"
 #include "Broadcasting/LiveDataBroadcaster.hpp"
 #include "Communication/Bluetooth/Bluetooth_BR_EDR.hpp"
 #include "Communication/I2C/I2C.hpp"
 #include "Communication/I2C/I2CConfiguration.hpp"
-#include "Core/Checksums/Crc32.hpp"
-#include "Generated/HVPSConfig.hpp"
 #include "IO/SoftStartHandler.hpp"
 #include "IO/Inputs.hpp"
 #include "IO/Outputs.hpp"
-#include "Logging/Log.hpp"
 #include "Ports/Port_ControllingMachine.hpp"
 #include "Ports/Port_FirstStageVoltageFeedback.hpp"
 #include "Ports/Port_OutputVoltageFeedback.hpp"
 #include "System/WatchdogFeeder.hpp"
 #include "System/StayTheFuckAwake.hpp"
-#include "Timing/Delay.hpp"
-#include <iostream>
-#include <array>
-#include <sstream>
-#include <iomanip>
-#ifndef portTICK_PERIOD_MS
-#define portTICK_PERIOD_MS (1000 / configTICK_RATE_HZ)
-#endif
 
 #define WATCHDOG_TIMEOUT_MILLISECONDS 10000
 

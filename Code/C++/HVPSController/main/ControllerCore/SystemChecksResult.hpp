@@ -1,7 +1,15 @@
 #pragma once
-struct SystemChecksResult{
-	bool success;
-	SystemChecksResult(bool successIn):success(successIn){
+class SystemChecksResult{
+private:
+	bool _success;
+	std::string _errorMessage;
+public:
+	getSuccess();
+	getErrorMessage();
+	
+	SystemChecksResult(bool success, std::string errorMessage):
+		_success(success),
+		_errorMessage(errorMessage){
 		
 	}
 };

@@ -138,6 +138,34 @@ namespace HVPSConfigurationGenerator
 
                 );
             }
+            ConfigurationWriter.WriteConfigurationStructFile<CurrentFeedbackModuleConfig>(
+                Path.Combine(reposDirectory, "hvps", "Code", "C++", "CurrentFeedbackModuleBase",
+                    "Generated", "CurrentFeedbackModuleConfiguration.hpp"),
+                alreadyWroteWatcher
+            );
+            {
+                CurrentFeedbackModuleConfig outputCurrentFeedbackModuleConfigStruct = new CurrentFeedbackModuleConfig
+                {
+                    senseResistanceOhms = ,
+                    outputCurrentLimitingResistanceOhms=
+                        Constants.NSeriesOutputCurrentLimitingResistors*
+                        Constants.IndividualOutputCurrentLimitingResistorResistance,
+                    cumulativeEnergyThresholdJ = Constants.OutputResistorMaximumEnergy,
+                    energyDisipatedJPerS = Constants.OutputCurrentLimitingResistorMaxPowerDisipation,
+                    broadcastFrequencyHz = Constants.BroadcastFrequency
+                };
+                ConfigurationWriter.WriteProjectSpecificConfiguration(
+                    projectSpecificConfigurationFilePath:
+                        Path.Combine(reposDirectory, "hvps", "Code", "C++",
+                        "OutputCurrentFeedbackModule", "main",
+                        "Generated", "OutputCurrentFeedbackModuleConfig.hpp"),
+                    outputCurrentFeedbackModuleConfigStruct,
+                    structHppFileRelativePath: "Generated/CurrentFeedbackModuleConfiguration.hpp",
+                    dependenciesIncludePathPrefix,
+                    alreadyWroteWatcher
+
+                );
+            }
         }
     }
 }
