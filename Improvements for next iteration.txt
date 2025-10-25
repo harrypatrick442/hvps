@@ -1,0 +1,5 @@
+Capacitor pin hole sizes for electrolytics bank on controller driver board.
+Switch for power switching from usb to connected supply for votlage feedback modules
+extra connection for third power retulator on main driver board or better just integrate regulators onto the board.
+faraday cage for main driver housing.
+schottkey diode for usb psu shared power line inste4ad of switches?

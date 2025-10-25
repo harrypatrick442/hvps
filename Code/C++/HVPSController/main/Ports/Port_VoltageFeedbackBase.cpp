@@ -9,6 +9,7 @@
 #include "Generated/Messages/GetVoltageThresholdResponse.hpp"
 #include "Generated/Messages/GetVoltageRequest.hpp"
 #include "Generated/Messages/GetVoltageResponse.hpp"
+#include "Generated/Messages/SetForceVoltageThresholdReachedFeedbackRequest.hpp"
 #include "Generated/Messages/VoltageMessage.hpp"
 #include <memory>
 #include <cstring>
@@ -61,7 +62,7 @@ bool Port_VoltageFeedbackBase::getVoltage(double& voltage) {
     return true;
 }
 bool Port_VoltageFeedbackBase::setForceThresholdReachedFeedback(bool force){
-    SetForceThresholdReachedRequest request;
+    SetForceVoltageThresholdReachedFeedbackRequest request(force);
     std::shared_ptr<cJSON> jsonResponse = _ticketedSender.send(request.toJSON(), TIMEOUT);
     if (!jsonResponse) {
         return false;

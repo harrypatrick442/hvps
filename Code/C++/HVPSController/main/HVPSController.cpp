@@ -11,6 +11,9 @@
 #include "Ports/Port_OutputVoltageFeedback.hpp"
 #include "System/WatchdogFeeder.hpp"
 #include "System/StayTheFuckAwake.hpp"
+#include "Generated/HVPSConfiguration.hpp"
+#include "Generated/HVPSConfig.hpp"
+#include "Timing/Delay.hpp"
 
 #define WATCHDOG_TIMEOUT_MILLISECONDS 10000
 
@@ -18,19 +21,20 @@ static const char *TAG = "HVPS";
 
 extern "C" void app_main(void)
 {
+	Delay::ms(1000);
 	Aborter::setToSafe(&Outputs::toSafe);
-	Outputs::initialize();
-	Outputs::toSafeReversible();
-	validateConfiguration();
-	SoftStartHandler::doSoftStart(Config1, Config2);
-	ADC::initialize();
-	Inputs::initialize();
 	esp_wifi_stop();
 	esp_wifi_deinit();
     esp_log_set_vprintf(vprintf);
     esp_log_level_set("*", ESP_LOG_VERBOSE);
     ESP_LOGI(TAG, "Starting HVPSController...");
     StayTheFuckAwake::initialize();
+	Outputs::initialize();
+	Outputs::toSafeReversible();
+	validateConfiguration();
+	ADC::initialize();
+	SoftStartHandler::doSoftStart(Config1, Config2);
+	Inputs::initialize();
 	
     // Initialize the I2C bus
 	I2CConfiguration i2cConfiguration;//Default
@@ -59,5 +63,6 @@ extern "C" void app_main(void)
 		= Port_ControllingMachine::initialize(bluetooth, highSpeedCore);
 							 
 	LiveDataBroadcaster::initialize(liveDataCache, portControllingMachine);
-	vTaskDelete(NULL); // Delete the current task
+	vTaskDelete(NULL); // Delete the current task*/
 }  
+

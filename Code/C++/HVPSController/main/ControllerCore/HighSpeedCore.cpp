@@ -35,8 +35,8 @@ std::shared_ptr<SystemChecksResult> HighSpeedCore::runSystemChecksOnly(){
 	_runSystemChecksLatch.wait();
 	std::unique_lock<std::mutex> lock(_mutexSystemChecksResult);
     auto result = _systemChecksResult; // copy under lock
+	dispatchError(result->getErrorMessage());
     return result; // refcount is incremented, safe after unlock
-	
 }
 void HighSpeedCore::shutDown(){
 	setDesiredSystemState(SystemState::ShutDown);
@@ -99,6 +99,7 @@ void HighSpeedCore::_run(){
 	}
 }
 std::shared_ptr<SystemChecksResult> HighSpeedCore::doSystemChecks(){
+	;
 	std::shared_ptr<SystemChecksResult> result = SystemChecks::run();
 	std::unique_lock<std::mutex> lock(_mutexSystemChecksResult);
 	_systemChecksResult = result;
@@ -148,7 +149,8 @@ void HighSpeedCore::doLive(){
 		return;
 	}
 	std::shared_ptr<SystemChecksResult> systemChecksResult = doSystemChecks();
-	if(!systemChecksResult->success){
+	if(!systemChecksResult->getSuccess()){
+		dispatchError(systemChecksResult->getErrorMessage());
 		return;
 	}
 	uint64_t time, endTime, endTime_2;
@@ -196,4 +198,7 @@ void HighSpeedCore::doLive(){
 }
 void HighSpeedCore::dispatchSystemStateChanged(SystemState v){
 	onSystemStateChanged.dispatch(v);
+}
+void HighSpeedCore::dispatchError(std::string errorMessage){
+	onError.dispatch(errorMessage);
 }

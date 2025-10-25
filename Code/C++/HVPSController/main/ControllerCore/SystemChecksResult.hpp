@@ -1,15 +1,12 @@
 #pragma once
+#include <string>
 class SystemChecksResult{
 private:
 	bool _success;
 	std::string _errorMessage;
 public:
-	getSuccess();
-	getErrorMessage();
+	bool getSuccess();
+	std::string getErrorMessage();
 	
-	SystemChecksResult(bool success, std::string errorMessage):
-		_success(success),
-		_errorMessage(errorMessage){
-		
-	}
+	SystemChecksResult(bool success, std::string errorMessage);
 };

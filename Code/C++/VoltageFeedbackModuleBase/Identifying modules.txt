@@ -1,0 +1,3 @@
+20k resistor  	0011 FirstStageVoltageFeedbackModule
+128.5k resistor 0012 OutputVoltageFeedbackModule
+				0033 HVPSController

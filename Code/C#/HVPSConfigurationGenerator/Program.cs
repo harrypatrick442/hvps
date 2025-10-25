@@ -143,10 +143,11 @@ namespace HVPSConfigurationGenerator
                     "Generated", "CurrentFeedbackModuleConfiguration.hpp"),
                 alreadyWroteWatcher
             );
+            /*
             {
                 CurrentFeedbackModuleConfig outputCurrentFeedbackModuleConfigStruct = new CurrentFeedbackModuleConfig
                 {
-                    senseResistanceOhms = ,
+                    senseResistanceOhms = Constants.SenseResistance,
                     outputCurrentLimitingResistanceOhms=
                         Constants.NSeriesOutputCurrentLimitingResistors*
                         Constants.IndividualOutputCurrentLimitingResistorResistance,
@@ -165,7 +166,7 @@ namespace HVPSConfigurationGenerator
                     alreadyWroteWatcher
 
                 );
-            }
+            }*/
         }
     }
 }

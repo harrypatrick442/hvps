@@ -30,6 +30,7 @@ const MessageTypes ={
      setVoltageThreshold:"svf",
      getVoltageThreshold:"gvf",
      getVoltage:"gv",
+     setForceThresholdReachedFeedback:"sft",
      hVPSUIStart:"start",
      hVPSUIStop:"stop",
      hVPSUIShutDown:"sd",

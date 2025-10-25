@@ -11,6 +11,7 @@ class HighSpeedCore final : public SingletonBase<HighSpeedCore>{
 public:
     static inline constexpr const char* TAG = "HighSpeedCore";
     Event<SystemState> onSystemStateChanged;
+    Event<std::string> onError;
 	void start();
 	void stop();
 	std::shared_ptr<SystemChecksResult>  runSystemChecksOnly();
@@ -54,6 +55,7 @@ private:
 	void setActualSystemState(SystemState systemState);
 	bool isShuttingDownOrShutDown();
 	void dispatchSystemStateChanged(SystemState systemState);
+	void dispatchError(std::string errorMessage);
 };
 
 #endif // HIGH_SPEED_CORE_HPP

@@ -56,7 +56,7 @@ std::shared_ptr<cJSON> TicketedSender::send(cJSON* request, uint64_t timeoutMill
 	Log::Info(TAG, "Modified ticketed message to send key value pairs");
 	JHelper::printJsonKeysAndValues(request);
 	TicketedSenderHandle* handle = new TicketedSenderHandle(
-		TimeHelper::getTimeMilliseconds() + timeoutMilliseconds);
+		TimeHelper::ms() + timeoutMilliseconds);
 	std::unique_lock<std::mutex> lock(_mutex);
 	if(_disposed){
 		delete handle;
@@ -116,7 +116,7 @@ bool TicketedSender::handleTicketedMessage(cJSON* message, char* type){
 }
 void TicketedSender::checkTimedOutOnAllInstances()
 {
-    const uint64_t millisecondsNow = TimeHelper::getTimeMilliseconds();
+    const uint64_t millisecondsNow = TimeHelper::ms();
 
     std::unique_lock<std::mutex> lock(_mutexInstances);
 

@@ -11,6 +11,7 @@
 #include "esp_adc_cal.h"
 #include <optional>
 #include <memory>
+#include <mutex>
 #include "ReverseVoltageToRawLookup.hpp"
 #include "MonitorVoltageThresholdHandle.hpp"
 #include "IMonitorCurrentAndPowerHandle.hpp"
@@ -36,6 +37,7 @@ private:
 	static ReverseVoltageToRawLookup* _reverseLookup;
     // --- ADC continuous driver handle
     static adc_continuous_handle_t _adc_hdl;
+	static std::mutex _mutexSetChannel;
 
     // --- calibration & bookkeeping
     static esp_adc_cal_characteristics_t* _adc_chars;
@@ -76,6 +78,7 @@ public:
 		double energyDisipatedJPerS,
 		std::function<void(bool)> callback
 	);
+	static double getMinimumVoltageCanRead();
 private:
 	static void _monitorVoltageThreshold(std::shared_ptr<MonitorVoltageThresholdHandle> handle);
 	static void _monitorCurrentAndPower(

@@ -6,5 +6,6 @@ namespace VoltageFeedbackMessages
         public const string SetVoltageThreshold = "svf";
         public const string GetVoltageThreshold = "gvf";
         public const string GetVoltage = "gv";
+        public const string SetForceThresholdReachedFeedback = "sft";
     }
 }

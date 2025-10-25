@@ -19,6 +19,7 @@ double ADC::_correctionFactor = 1.0;
 double ADC::_voltageToRaw     = 0.0;
 std::optional<adc_channel_t> ADC::_currentChannel = std::nullopt;
 ReverseVoltageToRawLookup* ADC::_reverseLookup = nullptr;
+std::mutex ADC::_mutexSetChannel;
 
 void ADC::initialize()
 {
@@ -46,6 +47,7 @@ void ADC::initialize()
 }
 void ADC::setChannel(adc_channel_t ch)
 {
+	std::unique_lock<std::mutex> lock(_mutexSetChannel);
     if (_currentChannel && _currentChannel.value() == ch) return;   // already on it
 
     // Stop the driver if running
@@ -185,6 +187,9 @@ double ADC::averagedCorrectedVoltageSampleSelectedChannel(int nSamples)
 double ADC::getCorrection()
 {
     return _correctionFactor;
+}
+double ADC::getMinimumVoltageCanRead(){
+	return ADC::convertRawToVoltage(0);
 }
 std::shared_ptr<MonitorVoltageThresholdHandle> ADC::monitorVoltageThresholdWithNewPriorityTask(
 		double initialVoltage, 
@@ -341,7 +346,7 @@ double ADC::getVoltage(){
 		err = adc_continuous_read(
 			_adc_hdl,                                // handle
 			reinterpret_cast<uint8_t*>(&d),          // buffer
-			sizeof(d),                               // size
+			4,                             // size
 			&len,                                     // out: bytes read
 			portMAX_DELAY                            // timeout (wait forever)
 		);

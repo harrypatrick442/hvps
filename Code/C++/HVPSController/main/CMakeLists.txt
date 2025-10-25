@@ -14,6 +14,8 @@ idf_component_register(
 		"Ports/Port_VoltageFeedbackBase.cpp"
 		"ControllerCore/HighSpeedCore.cpp"
 		"ControllerCore/LiveDataCache.cpp"
+		"ControllerCore/SystemChecks.cpp"
+		"ControllerCore/SystemChecksResult.cpp"
 		"Broadcasting/LiveDataBroadcaster.cpp"
 		"IO/SoftStartHandler.cpp"
 		"IO/OutputVoltageFeedbackFiberOpticDuplexChannel.cpp"

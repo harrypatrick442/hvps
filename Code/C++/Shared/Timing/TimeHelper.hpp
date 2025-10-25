@@ -4,8 +4,8 @@
 class TimeHelper {
 public:
     // Returns the current time in milliseconds since boot
-    static uint64_t getTimeMilliseconds();
     static uint64_t us();
+    static uint64_t ms();
 };
 
 #endif // TIME_HELPER_HPP

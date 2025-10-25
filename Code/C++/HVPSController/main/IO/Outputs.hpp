@@ -1,5 +1,6 @@
 #ifndef OUTPUTS_HPP
 #define OUTPUTS_HPP
+#include <cstdint>
 class Outputs{
 	
 	private:

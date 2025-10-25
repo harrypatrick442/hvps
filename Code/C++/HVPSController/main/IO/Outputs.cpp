@@ -12,22 +12,30 @@ bool Outputs::s_initialized = false;
 bool Outputs::s_safe = false;
 void Outputs::initialize(){
 	
-	
-    portENTER_CRITICAL(&s_outputsMux);
+    //portENTER_CRITICAL(&s_outputsMux);
     if (s_initialized) {
-        portEXIT_CRITICAL(&s_outputsMux);
+        //portEXIT_CRITICAL(&s_outputsMux);
         Log::Error(TAG, "Already Initialized!");
         return;
     }
 	configureOutputPin(PinDefinitions::MOSFET_DRIVE, false);
+	configureOutputPin(PinDefinitions::SOFT_START_RESISTOR_BYPASS, false);
     s_initialized = true;
-    portEXIT_CRITICAL(&s_outputsMux);
+    //portEXIT_CRITICAL(&s_outputsMux);
 }
 void Outputs::configureOutputPin(int pin, bool onElseOff){
-    gpio_set_direction(
-		(gpio_num_t)pin, 
-		GPIO_MODE_OUTPUT);
-	gpio_set_level((gpio_num_t)pin, onElseOff?1:0);
+    gpio_config_t io_conf = {
+        .pin_bit_mask = (1ULL << pin),
+        .mode = GPIO_MODE_OUTPUT,
+        .pull_up_en = GPIO_PULLUP_DISABLE,
+        .pull_down_en = GPIO_PULLDOWN_DISABLE,
+        .intr_type = GPIO_INTR_DISABLE,
+    };
+    esp_err_t err = gpio_config(&io_conf);
+    if (err != ESP_OK) {
+        Log::Error(TAG, "gpio_config failed for pin %d with err %d", pin, err);
+    }
+    gpio_set_level((gpio_num_t)pin, onElseOff ? 1 : 0);
 }
 void Outputs::toSafe(){
     portENTER_CRITICAL(&s_outputsMux);
@@ -42,6 +50,7 @@ void Outputs::toSafe(){
 void Outputs::toSafeReversible(){
     portENTER_CRITICAL(&s_outputsMux);
 	_setMOSFETOnOff(false);
+	_setSoftStartResistorBypassOnOff(false);
     portEXIT_CRITICAL(&s_outputsMux);
 }
 void Outputs::setMOSFETOnOff(bool onElseOff){
@@ -52,11 +61,36 @@ void Outputs::setMOSFETOnOff(bool onElseOff){
     portEXIT_CRITICAL(&s_outputsMux);
 }
 void Outputs::setSoftStartResistorBypassOnOff(bool onElseOff){
+	Log::Info(TAG, "setSoftStartResistorBypassOnOff");
+	Log::Info(TAG, "softStartResistor %d", PinDefinitions::SOFT_START_RESISTOR_BYPASS);
+	if(onElseOff){
+		Log::Info(TAG, "on");
+	}
+	else{
+		Log::Info(TAG, "off");
+	}
+	if(!s_safe){
+		Log::Info(TAG, "no safe");
+	}
+	else{
+		Log::Info(TAG, "safe");	
+	}
+	if(!s_initialized){
+		Log::Info(TAG, "not initialized");
+	}
+	else{
+		Log::Info(TAG, "initialized");
+	}
+	bool didIt = false;
     portENTER_CRITICAL(&s_outputsMux);
     if (!s_safe && s_initialized) {
 		_setSoftStartResistorBypassOnOff(onElseOff);
+		didIt = true;
     }
     portEXIT_CRITICAL(&s_outputsMux);
+	if(didIt){
+		Log::Info(TAG, "did it");
+	}
 }
 void Outputs::_setMOSFETOnOff(bool onElseOff){
 	gpio_set_level((gpio_num_t)PinDefinitions::MOSFET_DRIVE, onElseOff?1:0);

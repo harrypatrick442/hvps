@@ -1,18 +1,23 @@
 #pragma once
+#include <memory>
 #include "SystemChecks.hpp"
-SystemChecksResult SystemChecks::run(){
+#include "../Ports/Port_VoltageFeedbackBase.hpp"
+#include "../Ports/Port_OutputVoltageFeedback.hpp"
+#include "../Ports/Port_FirstStageVoltageFeedback.hpp"
+#include "../IO/Inputs.hpp"
+std::shared_ptr<SystemChecksResult> SystemChecks::run(){
 	std::string errorMessage;
 	bool success = run(errorMessage);
 	return std::make_shared<SystemChecksResult>(success, errorMessage);
 }
 bool SystemChecks::run(std::string& errorMessage){
-	if(!suspended_FirstStageVoltageFeedbackAbstractComs_replies(errorMessage)){
+	if(!suspended_firstStageVoltageFeedbackAbstractComs_replies(errorMessage)){
 		return false;
 	}
 	if(!suspended_outputVoltageFeedbackAbstractComs_replies(errorMessage)){
 		return false;
 	}
-	if(!suspended_FirstStageVoltageFeedbackAbstractComs_highSpeedFeedback(errorMessage)){
+	if(!suspended_firstStageVoltageFeedbackAbstractComs_highSpeedFeedback(errorMessage)){
 		return false;
 	}
 	if(!suspended_outputVoltageFeedbackAbstractComs_highSpeedFeedback(errorMessage)){
@@ -27,7 +32,7 @@ bool SystemChecks::suspended_firstStageVoltageFeedbackAbstractComs_replies(
 	return _suspended_voltageFeedbackAbstractComs_replies(
 		FIRST_STAGE_VOLTAGE_FEEDBACK_MODULE_FRIENDLY_NAME,
 		errorMessage,
-		Port_FirstStageVoltageFeedbackModuleBase::getInstance()
+		Port_FirstStageVoltageFeedback::getInstance()
 	);
 }
 bool SystemChecks::suspended_outputVoltageFeedbackAbstractComs_replies(
@@ -36,10 +41,10 @@ bool SystemChecks::suspended_outputVoltageFeedbackAbstractComs_replies(
 	return _suspended_voltageFeedbackAbstractComs_replies(
 		OUTPUT_VOLTAGE_FEEDBACK_MODULE_FRIENDLY_NAME,
 		errorMessage,
-		Port_OutputVoltageFeedbackModuleBase::getInstance()
+		Port_OutputVoltageFeedback::getInstance()
 	);
 }
-bool SystemChecks::suspended_FirstStageVoltageFeedbackAbstractComs_highSpeedFeedback(
+bool SystemChecks::suspended_firstStageVoltageFeedbackAbstractComs_highSpeedFeedback(
 	std::string& errorMessage
 ){
 	return _suspended_voltageFeedbackModule_highsSpeedFeedback(
@@ -60,9 +65,9 @@ bool SystemChecks::suspended_outputVoltageFeedbackAbstractComs_highSpeedFeedback
 
 
 bool SystemChecks::_suspended_voltageFeedbackAbstractComs_replies( 
-	const char* moduleFriendlyName,
+	const std::string& moduleFriendlyName,
 	std::string& errorMessage,
-	Port_VoltageFeedbackModuleBase& port
+	Port_VoltageFeedbackBase& port
 ){
 	double voltage;
 	if(port.getVoltage(voltage))
@@ -73,32 +78,32 @@ bool SystemChecks::_suspended_voltageFeedbackAbstractComs_replies(
 	return false;
 }
 bool _suspended_voltageFeedbackModule_highsSpeedFeedback( 
-	const char* moduleFriendlyName,
-	std::string& errorMessage
+	const std::string& moduleFriendlyName,
+	std::string& errorMessage,
 	std::function<bool()> getThresholdReached
 ){
 	
 	if(!Port_OutputVoltageFeedback::getInstance().setForceThresholdReachedFeedback(true)){
-		errorMessage = "Failed to communicate with "+moduleName+" during testing high speed feedback (setting forced on)";
+		errorMessage = "Failed to communicate with "+moduleFriendlyName+" during testing high speed feedback (setting forced on)";
 		return false;
 	}
 	if(!getThresholdReached()){
-		errorMessage = "High speed feedback did not indicate threshold reached during testing "+moduleName+" high speed feedback";
+		errorMessage = "High speed feedback did not indicate threshold reached during testing "+moduleFriendlyName+" high speed feedback";
 		return false;
 	}
 	if(!Port_OutputVoltageFeedback::getInstance().setForceThresholdReachedFeedback(false)){
-		errorMessage = "Failed to communicate with "+moduleName+" during testing high speed feedback (setting forced off)";
+		errorMessage = "Failed to communicate with "+moduleFriendlyName+" during testing high speed feedback (setting forced off)";
 		return false;
 	}
 	if(getThresholdReached()){
-		errorMessage = "High speed feedback did not indicate threshold not reached during testing "+moduleName
+		errorMessage = "High speed feedback did not indicate threshold not reached during testing "+moduleFriendlyName
 			+" high speed feedback. Appears stuck on. This can result from fiber optic disconnection";
 		return false;
 	}
 	return true;
 }
 
-
+/*
 bool SystemChecks::suspended_firstStageVoltageFeedback_setVoltageThreshold(){
 	
 }
@@ -116,4 +121,4 @@ bool singleCycle_firstStageVoltageIncreased(){
 }
 bool singleCycle_firstStageVoltageSuitable(){
 	
-}
+}*/
