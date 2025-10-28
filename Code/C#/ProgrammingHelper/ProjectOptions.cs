@@ -1,30 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace ProgrammingHelper
 {
     public partial class ProjectOptions : UserControl
     {
         private const string UNKNOWN_COM_PLACEHOLDER = "[Unknown COM]";
-        private ConsoleBridge? _ConsoleBridge;
-        private ConsoleBridge ConsoleBridge { get {
+        private Esp32ConsoleBridge? _ConsoleBridge;
+        private Esp32ConsoleBridge ConsoleBridge
+        {
+            get
+            {
                 if (_ConsoleBridge == null)
                 {
                     string workingDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, ProjectRelativePath);
-                    _ConsoleBridge = new ConsoleBridge(workingDirectory, ()=>_ConsoleBridge= null);
+                    _ConsoleBridge = new Esp32ConsoleBridge(workingDirectory, () => _ConsoleBridge = null);
                 }
                 return _ConsoleBridge;
-            } 
+            }
         }
+        private string? _CurrentComPort;
         public ProjectOptions()
         {
             InitializeComponent();
@@ -33,14 +28,13 @@ namespace ProgrammingHelper
         private void _ButtonSetup_Click(object sender, EventArgs e)
         {
             ConsoleBridge.BringToFront();
-            ConsoleBridge.Send($"set IDF_PATH=C:\\Users\\USER1\\esp\\v5.4\\esp-idf");
-            ConsoleBridge.Send($"call %IDF_PATH%\\export.bat");
+            ConsoleBridge.SendConfigureEnvironmentCommands();
         }
 
         private void _ButtonBuild_Click(object sender, EventArgs e)
         {
             ConsoleBridge.BringToFront();
-            ConsoleBridge.Send($"idf.py build");
+            ConsoleBridge.SendBuild();
         }
 
         private void _ButtonFlash_Click(object sender, EventArgs e)
@@ -50,7 +44,7 @@ namespace ProgrammingHelper
             {
                 comPort = UNKNOWN_COM_PLACEHOLDER;
             }
-            ConsoleBridge.Send($"idf.py -p {comPort} flash");
+            ConsoleBridge.SendFlash(comPort!);
         }
 
         private void _ButtonMonitor_Click(object sender, EventArgs e)
@@ -60,15 +54,30 @@ namespace ProgrammingHelper
             {
                 comPort = UNKNOWN_COM_PLACEHOLDER;
             }
-            ConsoleBridge.Send($"idf.py -p {comPort} monitor");
+            ConsoleBridge.SendMonitor(comPort!);
         }
-        private bool GetComPort(out string? comPort) {
+        private void ButtonAll_Click(object sender, EventArgs e)
+        {
+            if (!GetComPort(out string? comPort))
+            {
+                comPort = UNKNOWN_COM_PLACEHOLDER;
+            }
+            ConsoleBridge.BringToFront();
+            ConsoleBridge.SendConfigureEnvironmentCommands();
+            ConsoleBridge.SendBuild();
+            ConsoleBridge.SendFlash(comPort!);
+            ConsoleBridge.SendMonitor(comPort!);
+        }
+        private bool GetComPort(out string? comPort)
+        {
             int? c = ComPortHelper.GetComPortForPnpDeviceId(PnpDeviceId);
-            if (c == null) {
+            if (c == null)
+            {
                 comPort = null;
                 return false;
             }
             comPort = $"COM{c}";
+            _CurrentComPort = comPort;
             return true;
         }
 
@@ -97,6 +106,22 @@ namespace ProgrammingHelper
             }
         }
         private string _PnpDeviceId;
+
+        private void buttonCtlBracket_Click(object sender, EventArgs e)
+        {
+            ConsoleBridge.SendControlPlusBracket();
+        }
+        private void buttonCtlPlusC_Click(object sender, EventArgs e)
+        {
+            ConsoleBridge.SendControlPlusC();
+        }
+
+        private void buttonUpdateComPort_Click(object sender, EventArgs e)
+        {
+            _CurrentComPort = null;
+            GetComPort(out string? ignore);
+        }
+
         [Category("Custom")]
         [Description("The PNPDeviceId")]
         public string PnpDeviceId

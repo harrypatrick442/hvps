@@ -41,14 +41,14 @@ void Flash::initialize() {
 // Store a double in NVS
 bool Flash::setDouble(const char* namespaceName, const char* key, double value) {
     if (!_isInitialized) {
-        Aborter::safeAbort(TAG, "NVS not initialized");
+        Aborter::safeAbort(TAG, NVS_NOT_INITIALIZED);
         return false;
     }
 
     nvs_handle_t handle;
     esp_err_t err = nvs_open(namespaceName, NVS_READWRITE, &handle);
     if (err != ESP_OK) {
-        Log::Warn(TAG, "Failed to open NVS namespace for setDouble: %s", esp_err_to_name(err));
+        Log::Warn(TAG, FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
         return false;
     }
 
@@ -73,17 +73,21 @@ bool Flash::setDouble(const char* namespaceName, const char* key, double value) 
     return true;
 }
 
+
 // Retrieve a double from NVS
 bool Flash::getDouble(const char* namespaceName, const char* key, double &outValue) {
     if (!_isInitialized) {
-        Aborter::safeAbort(TAG, "NVS not initialized");
+        Aborter::safeAbort(TAG, NVS_NOT_INITIALIZED);
         return false;
     }
 
     nvs_handle_t handle;
     esp_err_t err = nvs_open(namespaceName, NVS_READONLY, &handle);
+    if (err == ESP_ERR_NVS_NOT_FOUND) {
+        return false;
+    }
     if (err != ESP_OK) {
-        //Aborter::safeAbort(TAG, "Failed to open NVS namespace for getDouble: %s", esp_err_to_name(err));
+        Log::Warn(TAG, FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
         return false;
     }
 
@@ -103,3 +107,137 @@ bool Flash::getDouble(const char* namespaceName, const char* key, double &outVal
     std::memcpy(&outValue, &raw, sizeof(double));
     return true;
 }
+
+
+// Store a string in NVS.
+// If the value is empty and allowEmptyErase is true, the key will be erased.
+bool Flash::setString(const char* namespaceName, const char* key,
+                      const std::string& value,
+                      bool allowEmptyErase /* = true */)
+{
+    if (!_isInitialized) {
+        Aborter::safeAbort(TAG, NVS_NOT_INITIALIZED);
+        return false;
+    }
+
+    nvs_handle_t handle;
+    esp_err_t err = nvs_open(namespaceName, NVS_READWRITE, &handle);
+    if (err != ESP_OK) {
+        Log::Warn(TAG, FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
+        return false;
+    }
+
+    // Handle empty string case — optionally erase key
+    if (value.empty() && allowEmptyErase) {
+        err = nvs_erase_key(handle, key);
+        if (err == ESP_ERR_NVS_NOT_FOUND) {
+            Log::Info(TAG, "Key '%s' already absent, nothing to erase", key);
+            err = ESP_OK;
+        } else if (err != ESP_OK) {
+            Log::Warn(TAG, "Failed to erase key '%s': %s", key, esp_err_to_name(err));
+            nvs_close(handle);
+            return false;
+        }
+        Log::Info(TAG, "Erased key '%s' successfully", key);
+    } 
+    else {
+        // Store normally
+        err = nvs_set_str(handle, key, value.c_str());
+        if (err != ESP_OK) {
+            nvs_close(handle);
+            Log::Warn(TAG, "Failed to set string for key '%s': %s",
+                      key, esp_err_to_name(err));
+            return false;
+        }
+
+        Log::Info(TAG, "String value stored successfully for key '%s'", key);
+    }
+
+    // Commit the changes
+    err = nvs_commit(handle);
+    nvs_close(handle);
+    if (err != ESP_OK) {
+        Log::Warn(TAG, "Failed to commit NVS changes for key '%s': %s",
+                  key, esp_err_to_name(err));
+        return false;
+    }
+
+    return true;
+}
+
+
+// Retrieve a string from NVS into std::string.
+// If maxLength is 0, the full string is read regardless of size.
+// If maxLength > 0 and the stored string is longer, it is truncated safely.
+bool Flash::getString(const char* namespaceName, const char* key,
+    std::string& outValue, size_t maxLength /* = 0 */, bool allowTruncate /* = true */)
+{
+    if (!_isInitialized) {
+        Aborter::safeAbort(TAG, NVS_NOT_INITIALIZED);
+        return false;
+    }
+
+    nvs_handle_t handle;
+    esp_err_t err = nvs_open(namespaceName, NVS_READWRITE, &handle);
+    if (err == ESP_ERR_NVS_NOT_FOUND) {
+        return false; // namespace never created
+    }
+    if (err != ESP_OK) {
+        Log::Warn(TAG, FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
+        return false;
+    }
+
+    // Step 1: find out how big the stored string is
+    size_t requiredSize = 0;
+    err = nvs_get_str(handle, key, nullptr, &requiredSize);
+    if (err == ESP_ERR_NVS_NOT_FOUND) {
+        nvs_close(handle);
+        return false; // key missing
+    }
+    if (err != ESP_OK) {
+        nvs_close(handle);
+        Log::Warn(TAG, "Failed to determine string length for key '%s': %s",
+                  key, esp_err_to_name(err));
+        return false;
+    }
+
+    // Handle empty string (NVS stores '\0')
+    if (requiredSize <= 1) {
+        outValue.clear();
+        nvs_close(handle);
+        return true;
+    }
+
+    // Step 2: allocate buffer
+    size_t bufferSize = requiredSize;
+    if (maxLength > 0 && requiredSize > maxLength) {
+        if (!allowTruncate) {
+            Log::Warn(TAG, "String for key '%s' was too long (%zu > %zu bytes) and allowTruncate was false.",
+                      key, requiredSize, maxLength);
+            nvs_close(handle);
+            return false;
+        }
+        Log::Warn(TAG, "Stored string too long for key '%s' (%zu > %zu bytes). Truncating.",
+                  key, requiredSize, maxLength);
+        bufferSize = maxLength;
+    }
+
+    std::vector<char> buffer(bufferSize);
+    err = nvs_get_str(handle, key, buffer.data(), &bufferSize);
+    nvs_close(handle);
+
+    if (err != ESP_OK) {
+        Log::Warn(TAG, "Failed to read string for key '%s': %s",
+                  key, esp_err_to_name(err));
+        return false;
+    }
+
+    // Defensive: ensure null termination
+    if (!buffer.empty())
+        buffer.back() = '\0';
+
+    outValue.assign(buffer.data());
+    return true;
+}
+
+

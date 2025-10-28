@@ -49,48 +49,51 @@
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(296, 170);
+            tableLayoutPanel1.Size = new Size(584, 170);
             tableLayoutPanel1.TabIndex = 0;
             tableLayoutPanel1.Paint += tableLayoutPanel1_Paint;
             // 
             // projectOptions3
             // 
+            projectOptions3.BorderStyle = BorderStyle.FixedSingle;
             projectOptions3.Dock = DockStyle.Fill;
-            projectOptions3.Location = new Point(199, 3);
+            projectOptions3.Location = new Point(391, 3);
             projectOptions3.Name = "projectOptions3";
             projectOptions3.PnpDeviceId = "USB\\VID_10C4&PID_EA60\\0012";
             projectOptions3.ProjectName = "Output Voltage Feedback Module";
             projectOptions3.ProjectRelativePath = "../../../../../C++/OutputVoltageFeedbackModule";
-            projectOptions3.Size = new Size(94, 164);
+            projectOptions3.Size = new Size(190, 164);
             projectOptions3.TabIndex = 2;
             // 
             // projectOptions2
             // 
+            projectOptions2.BorderStyle = BorderStyle.FixedSingle;
             projectOptions2.Dock = DockStyle.Fill;
-            projectOptions2.Location = new Point(101, 3);
+            projectOptions2.Location = new Point(197, 3);
             projectOptions2.Name = "projectOptions2";
             projectOptions2.PnpDeviceId = "USB\\VID_10C4&PID_EA60\\0011";
             projectOptions2.ProjectName = "First Stage Voltage Feedback Module";
             projectOptions2.ProjectRelativePath = "../../../../../C++/FirstStageVoltageFeedbackModule";
-            projectOptions2.Size = new Size(92, 164);
+            projectOptions2.Size = new Size(188, 164);
             projectOptions2.TabIndex = 1;
             // 
             // projectOptions1
             // 
+            projectOptions1.BorderStyle = BorderStyle.FixedSingle;
             projectOptions1.Dock = DockStyle.Fill;
             projectOptions1.Location = new Point(3, 3);
             projectOptions1.Name = "projectOptions1";
             projectOptions1.PnpDeviceId = "USB\\VID_10C4&PID_EA60\\0033";
             projectOptions1.ProjectName = "HVPS Controller";
             projectOptions1.ProjectRelativePath = "../../../../../C++/HVPSController";
-            projectOptions1.Size = new Size(92, 164);
+            projectOptions1.Size = new Size(188, 164);
             projectOptions1.TabIndex = 0;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(296, 170);
+            ClientSize = new Size(584, 170);
             Controls.Add(tableLayoutPanel1);
             Name = "Form1";
             Text = "Form1";
