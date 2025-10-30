@@ -12,10 +12,13 @@
 #include <optional>
 #include <memory>
 #include <mutex>
+#include <atomic>
 #include "ReverseVoltageToRawLookup.hpp"
 #include "MonitorVoltageThresholdHandle.hpp"
 #include "IMonitorCurrentAndPowerHandle.hpp"
 #include "MonitorCurrentAndPowerHandle.hpp"
+#include "ADCSession.hpp"
+#include "IADCSession.hpp"
 
 // ------------------ configuration constants (change as needed) -------------
 #define DEFAULT_VREF                          1100        // mV (fallback)
@@ -30,10 +33,12 @@
 #define MAX_STORE_BUF_BYTES                   16         /* internal ring (driver copies out fast).
  Kept small for quick read to clear since we dont need long samples just latest values*/
 
-class ADC {
+class ADC : public IADCSession{
 private:
     static const char* TAG;
     static bool _initialized;
+	static ADC* _instance;
+    static std::atomic<bool> _inUse;
 	static ReverseVoltageToRawLookup* _reverseLookup;
     // --- ADC continuous driver handle
     static adc_continuous_handle_t _adc_hdl;
@@ -53,25 +58,27 @@ public:
     // life-cycle
     static void initialize();
 
+    static void use(const std::function<void(IADCSession&&)>& fn);
+	static void use(adc_channel_t ch, const std::function<void(IADCSession&&)>& fn);
     // raw helpers
-    static uint16_t singleRawLatestSampleSelectedChannel();
-    static uint16_t averagedRawSampleSelectedChannel(int nSamples = 32);
+    uint16_t singleRawLatestSampleSelectedChannel();
+    uint16_t averagedRawSampleSelectedChannel(int nSamples = 32);
 
-    static double   singleCorrectedVoltageSampleSelectedChannel();
-    static double   averagedCorrectedVoltageSampleSelectedChannel(int nSamples = 32);
+    double   singleCorrectedVoltageSampleSelectedChannel();
+    double   averagedCorrectedVoltageSampleSelectedChannel(int nSamples = 32);
 
     static double   convertRawToVoltage(uint16_t raw);
     static uint16_t convertVoltageToApproximateRaw(double voltage);
 
-    static void setChannel(adc_channel_t ch);
-    static double   getCorrection();
-    static double   getVoltage();
-	static void measureNReadsPerSecond();
-	static std::shared_ptr<MonitorVoltageThresholdHandle> monitorVoltageThresholdWithNewPriorityTask(
+    void setChannel(adc_channel_t ch);
+    double   getCorrection();
+    double   getVoltage();
+	void measureNReadsPerSecond();
+	std::shared_ptr<MonitorVoltageThresholdHandle> monitorVoltageThresholdWithNewPriorityTask(
 		double initialVoltage, 
 		std::function<void(bool)> callback
 	);
-	static std::shared_ptr<IMonitorCurrentAndPowerHandle> monitorCurrentAndPower(
+	std::shared_ptr<IMonitorCurrentAndPowerHandle> monitorCurrentAndPower(
 		double senseResistanceOhms, 
 		double outputCurrentLimitingResistanceOhms,
 		double cumulativeEnergyThresholdJ,
@@ -80,6 +87,8 @@ public:
 	);
 	static double getMinimumVoltageCanRead();
 private:
+    static void start();
+    static void stop();
 	static void _monitorVoltageThreshold(std::shared_ptr<MonitorVoltageThresholdHandle> handle);
 	static void _monitorCurrentAndPower(
 		std::shared_ptr<MonitorCurrentAndPowerHandle> handle

@@ -2,6 +2,8 @@
 #define INPUTS_HPP
 
 #include "driver/gpio.h"
+#include "ADC/IADCSession.hpp"
+#include <functional>
 #include <optional>
 class Inputs {
 	private:
@@ -17,11 +19,10 @@ class Inputs {
 		static void checkInitialized();
 		
 		
-		static void selectADCReferenceVoltageChannel();
-		static void selectADCSnubberVoltageFeedbackChannel();
-		static void selectADCPrimaryCurrentFeedbackChannel();
-		static void    	selectADCPowerSupplyVoltageFeedbackChannel();
-		static double getADCVoltage();
+		static void useADCReferenceVoltageChannel(const std::function<void(IADCSession&&)>& fn);
+		static void useADCSnubberVoltageFeedbackChannel(const std::function<void(IADCSession&&)>& fn);
+		static void useADCPrimaryCurrentFeedbackChannel(const std::function<void(IADCSession&&)>& fn);
+		static void useADCPowerSupplyVoltageFeedbackChannel(const std::function<void(IADCSession&&)>& fn);
 };
 
 #endif // INPUTS_HPP

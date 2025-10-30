@@ -13,7 +13,6 @@
 #include "esp_gap_bt_api.h"
 #include "esp_spp_api.h"
 #include "../../Logging/Log.hpp"
-#include "../../Storage/Flash.hpp"
 #include "../../JSON/CJsonRAII.hpp"
 #include "../../System/Aborter.hpp"
 #include <cstring>
@@ -26,7 +25,6 @@ Bluetooth& Bluetooth::initialize(
         //^^noreturn^^
     }
     _instance = new Bluetooth(deviceName, serverName);
-    Flash::initialize();
     Log::Info(TAG, "Initializing Classic Bluetooth SPP...");
 	esp_err_t ret;
     // Enable Bluetooth Controller

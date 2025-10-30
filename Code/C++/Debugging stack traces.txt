@@ -1,0 +1,106 @@
+Totally fair — that’s one of those “deep end of the pool” topics in embedded debugging. Let’s go slow and make it make sense.
+
+---
+
+## 🧩 1️⃣  What the **stack** actually is
+
+Every time a function is called, the CPU stores a few things on a memory region called *the stack*:
+
+* the address it should return to,
+* local variables,
+* sometimes saved registers.
+
+The **stack pointer (SP)** is a register that tells the CPU *where the current top of that stack is*.
+The **program counter (PC)** is the address of the instruction currently being executed.
+
+When a crash happens:
+
+* the PC points to the instruction that faulted (or just after it),
+* the SP points to the frame of the function that was running at that time,
+* the area above SP in RAM still contains the return addresses of the functions that led there.
+  That sequence of return addresses is the *backtrace* or *stack trace*.
+
+---
+
+## 🧩 2️⃣  How you turn that into human information
+
+When you build your firmware, the compiler puts **symbol and line number information** into the `.elf` file.
+Those symbols let you translate an address in flash (“0x400d3b18”) into “`Aborter::safeAbort()` line 57”.
+
+So:
+
+1. You record the crash’s PC (and a few return addresses from the stack).
+2. After reboot you look at those numbers.
+3. On your development PC, run the tool:
+
+   ```bash
+   xtensa-esp32-elf-addr2line -pfiaC -e build/your_project.elf 0x400d3b18
+   ```
+
+   It prints:
+
+   ```
+   Aborter::safeAbort() at /src/Core/Aborter.tpp:57
+   ```
+
+   which tells you exactly where it crashed.
+
+---
+
+## 🧩 3️⃣  How to grab a few addresses from the stack
+
+You don’t need a full “stack unwinder.”
+Just copy a few 32-bit words starting from the current SP into your `CrashRecord`:
+
+```cpp
+uint32_t* sp = (uint32_t*)sp_reg;
+for (int i = 0; i < 8; ++i) {
+    crashRecord.trace[i] = sp[i];
+}
+```
+
+Later, you decode each of those numbers with `addr2line`.
+If they land on your code, you’ll see the call chain that led to the crash.
+
+---
+
+## 🧩 4️⃣  Putting it together
+
+Example workflow:
+
+1. Panic occurs →
+   PC = 0x400d3b18
+   trace[0..3] = {0x400d29a4, 0x400d2f60, 0x400d3210, 0x400d3b18}
+
+2. After reboot, you print those addresses.
+
+3. On your computer:
+
+   ```bash
+   xtensa-esp32-elf-addr2line -pfiaC -e build/firmware.elf 0x400d3b18 0x400d3210 0x400d2f60 0x400d29a4
+   ```
+
+4. You get output like:
+
+   ```
+   CrashReporter::onPanic() at src/Core/CrashReporter.cpp:105
+   Aborter::safeAbort() at src/Core/Aborter.tpp:57
+   VoltageMonitor::update() at src/Modules/VoltageMonitor.cpp:72
+   mainLoop() at src/Main.cpp:215
+   ```
+
+Now you know *which call chain* led to the fault.
+
+---
+
+## 🧩 5️⃣  If you ever want to dig deeper
+
+* Look at Espressif’s **core-dump component** — it automates this process (captures registers + full stack to flash or UART).
+* But your lightweight RTC method is often enough for field debugging.
+* You can even automate `addr2line` decoding in a script on your PC or your controller UI if you ship the ELF alongside firmware releases.
+
+---
+
+So the **stack pointer** and those few captured words aren’t useful by themselves — they’re just raw addresses — but they become meaningful when cross-referenced with your ELF file.
+
+If you’d like, I can show you a short snippet that reads SP, copies a handful of return addresses, and prints the decoded call chain on your PC.

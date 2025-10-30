@@ -4,15 +4,19 @@
 #include "esp_log.h"
 #include <cstring>
 #include "freertos/FreeRTOS.h"
-#include "../../../Shared/Timing/Delay.hpp"
-#include "../../../Shared/Logging/Log.hpp"
-#include "../../../Shared/System/Aborter.hpp"
+#include "Timing/Delay.hpp"
+#include "Logging/Log.hpp"
+#include "System/Aborter.hpp"
 #include "esp_timer.h"
-#include "../../../Shared/Tasks/TaskFactory.hpp"
+#include "Tasks/TaskFactory.hpp"
+#include "Tasks/TaskFactory.hpp"
+#include "Core/CleanupBucket.hpp"
 
 
 const char* ADC::TAG = "ADC";
 bool  ADC::_initialized    = false;
+ADC* ADC::_instance = new ADC();
+std::atomic<bool> ADC::_inUse(false);
 adc_continuous_handle_t ADC::_adc_hdl = nullptr;
 esp_adc_cal_characteristics_t* ADC::_adc_chars = nullptr;
 double ADC::_correctionFactor = 1.0;
@@ -90,10 +94,43 @@ void ADC::setChannel(adc_channel_t ch)
         ));
     }
 
-    errorCheck(adc_continuous_start(_adc_hdl)); // (adc_continuous_handle_t handle)
     _currentChannel = ch;
 }
+void ADC::use(adc_channel_t ch, const std::function<void(IADCSession&&)>& fn) {
+    ADC::use([ch, &fn](IADCSession&& session) {
+        session.setChannel(ch);  // Set desired channel first
+        fn(std::move(session));   // Pass on the session to caller
+    });
+}
+void ADC::use(const std::function<void(IADCSession&&)>& fn) {
+    bool expected = false;
+    if (!_inUse.compare_exchange_strong(expected, true)) {
+        Aborter::safeAbort(TAG, "ADC::use() called while already in use");
+        return;
+    }
 
+    CleanupBucket cleanup;
+    cleanup.addCallback([&]() noexcept {
+        _inUse.store(false);
+        stop();
+    });
+
+    start();
+
+    ADCSession proxy(static_cast<IADCSession*>(_instance));
+
+    fn(std::move(proxy));  // pass it to closure
+
+    // Invalidate after call
+    proxy.invalidate();  // ensures no external code kept it
+}
+
+void ADC::start(){
+    errorCheck(adc_continuous_start(_adc_hdl)); // (adc_continuous_handle_t handle)
+}
+void ADC::stop(){
+    errorCheck(adc_continuous_stop(_adc_hdl)); // (adc_continuous_handle_t handle)
+}
 // -------------------- RAW sample helpers ---------------------------------
 uint16_t ADC::singleRawLatestSampleSelectedChannel()
 {
@@ -189,7 +226,7 @@ double ADC::getCorrection()
     return _correctionFactor;
 }
 double ADC::getMinimumVoltageCanRead(){
-	return ADC::convertRawToVoltage(0);
+	return convertRawToVoltage(0);
 }
 std::shared_ptr<MonitorVoltageThresholdHandle> ADC::monitorVoltageThresholdWithNewPriorityTask(
 		double initialVoltage, 

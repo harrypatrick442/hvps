@@ -6,7 +6,6 @@
 #include "ADCChannels.hpp"
 #include <stdio.h>
 
-const char* Inputs::TAG = "Inputs";
 bool Inputs::_initialized = false;
 
 void Inputs::initialize() {
@@ -35,10 +34,6 @@ int Inputs::readReceiver() {
 	return gpio_get_level((gpio_num_t)RECEIVER_INPUT_PIN);
 }
 
-void Inputs::selectADCVoltageDividerInputAsChannel(){
-    ADC::setChannel(ADCChannels::VOLTAGE_DIVIDER_INPUT);
-}
-double Inputs::getADCVoltage()
-{
-    return ADC::getVoltage();
+void Inputs::useADCVoltageDividerChannel(const std::function<void(IADCSession&&)>& fn){
+    ADC::use(ADCChannels::VOLTAGE_DIVIDER_INPUT, fn);
 }

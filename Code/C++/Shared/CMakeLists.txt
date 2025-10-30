@@ -2,6 +2,7 @@ idf_component_register(
     SRCS 
 	"ADC/ADC.cpp"
 	"ADC/MonitorVoltageThresholdHandle.cpp"
+	"ADC/MonitorCurrentAndPowerHandle.cpp"
 	"ADC/ReverseVoltageToRawLookup.cpp"
 	"cJSON/cJSON.c"
 	"Communication/FiberOptic/TOSLINKDuplexChannel.cpp"

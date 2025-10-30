@@ -6,6 +6,7 @@
 #include "IO/SoftStartHandler.hpp"
 #include "IO/Inputs.hpp"
 #include "IO/Outputs.hpp"
+#include "Storage/Flash.hpp"
 #include "Ports/Port_ControllingMachine.hpp"
 #include "Ports/Port_FirstStageVoltageFeedback.hpp"
 #include "Ports/Port_OutputVoltageFeedback.hpp"
@@ -14,6 +15,7 @@
 #include "Generated/HVPSConfiguration.hpp"
 #include "Generated/HVPSConfig.hpp"
 #include "Timing/Delay.hpp"
+#include "System/CrashReporter.hpp"
 
 #define WATCHDOG_TIMEOUT_MILLISECONDS 10000
 
@@ -21,24 +23,28 @@ static const char *TAG = "HVPS";
 
 extern "C" void app_main(void)
 {
-	Delay::ms(1000);
 	Aborter::setToSafe(&Outputs::toSafe);
+	Outputs::initialize();
+	Outputs::toSafeReversible();
+	CrashReporter::initialize();
+	Log::Info(TAG, "Starting HVPSController....");
+	Delay::ms(1000);
+    Flash::initialize();
 	esp_wifi_stop();
 	esp_wifi_deinit();
     esp_log_set_vprintf(vprintf);
     esp_log_level_set("*", ESP_LOG_VERBOSE);
     ESP_LOGI(TAG, "Starting HVPSController...");
     StayTheFuckAwake::initialize();
-	Outputs::initialize();
-	Outputs::toSafeReversible();
 	validateConfiguration();
 	ADC::initialize();
 	SoftStartHandler::doSoftStart(Config1, Config2);
+	Log::Info(TAG, "Did soft start");
 	Inputs::initialize();
-	
+	Log::Info(TAG, "Initialized inputs");
     // Initialize the I2C bus
-	I2CConfiguration i2cConfiguration;//Default
-    I2C::initialize(i2cConfiguration);
+	//I2CConfiguration i2cConfiguration;//Default
+    //I2C::initialize(i2cConfiguration);
     //I2C& i2c = I2C::getInstance();
     WatchdogFeeder
         ::initialize(WATCHDOG_TIMEOUT_MILLISECONDS);
@@ -63,6 +69,11 @@ extern "C" void app_main(void)
 		= Port_ControllingMachine::initialize(bluetooth, highSpeedCore);
 							 
 	LiveDataBroadcaster::initialize(liveDataCache, portControllingMachine);
+	Log::Info(TAG, "At end");
+	while(true){
+		Delay::ms(1000);
+	Log::Info(TAG, "end loop");
+	}
 	vTaskDelete(NULL); // Delete the current task*/
 }  
 

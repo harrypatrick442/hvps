@@ -1,0 +1,62 @@
+
+	/* OLD 
+	
+	static inline void IRAM_ATTR onPanic(void* frame, int core_id, bool is_abort)
+	{
+		crashRecord.magic  = CRASH_MAGIC;
+		crashRecord.reason = ESP_RST_PANIC;
+
+		// Capture program counter and stack pointer
+		register uint32_t pc_reg __asm__("a0");
+		register uint32_t sp_reg __asm__("a1");
+		crashRecord.pc = pc_reg;
+		crashRecord.sp = sp_reg;
+
+		// Capture basic exception cause if available
+	#if CONFIG_IDF_TARGET_ESP32
+		uint32_t exc_cause;
+		__asm__ volatile("rsr.exccause %0" : "=a"(exc_cause));
+		crashRecord.excCause = exc_cause;
+	#else
+		crashRecord.excCause = 0;
+	#endif
+
+		// --------------------------------------------------------
+		//  Portable memory-range guard using linker symbols
+		// --------------------------------------------------------
+		extern uint8_t _iram_start, _iram_end;
+		extern uint8_t _data_start, _data_end;
+		extern uint8_t _bss_start, _bss_end;
+		extern uint8_t _heap_start, _heap_end;
+
+		auto isValidStackAddr = [](uintptr_t addr) -> bool {
+			return (addr >= (uintptr_t)&_iram_start && addr < (uintptr_t)&_iram_end) ||
+				   (addr >= (uintptr_t)&_data_start && addr < (uintptr_t)&_data_end) ||
+				   (addr >= (uintptr_t)&_bss_start  && addr < (uintptr_t)&_bss_end)  ||
+				   (addr >= (uintptr_t)&_heap_start && addr < (uintptr_t)&_heap_end);
+		};
+
+		// --------------------------------------------------------
+		//  Copy up to 8 words from stack (best-effort)
+		// --------------------------------------------------------
+		uint32_t* sp = reinterpret_cast<uint32_t*>(sp_reg);
+		for (int i = 0; i < 8; ++i) {
+			uintptr_t addr = reinterpret_cast<uintptr_t>(&sp[i]);
+			if (isValidStackAddr(addr)) {
+				crashRecord.trace[i] = sp[i];
+			} else {
+				crashRecord.trace[i] = 0;
+			}
+		}
+
+		// --------------------------------------------------------
+		//  Message and restart
+		// --------------------------------------------------------
+		strncpy(crashRecord.message,
+				"PANIC: CPU exception or watchdog",
+				sizeof(crashRecord.message));
+		crashRecord.message[sizeof(crashRecord.message) - 1] = '\0';
+
+		esp_restart();
+	}
+	*/

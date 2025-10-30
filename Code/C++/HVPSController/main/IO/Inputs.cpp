@@ -70,23 +70,16 @@ void Inputs::checkInitialized(){
         Aborter::safeAbort(TAG, "Not Initialized!");
 	}
 }
-double Inputs::getADCVoltage()
-{
-    return ADC::getVoltage();
+
+void Inputs::useADCReferenceVoltageChannel(const std::function<void(IADCSession&&)>& fn){
+    ADC::use(ADCChannels::REFERENCE_VOLTAGE, fn);
 }
-void Inputs::selectADCReferenceVoltageChannel()
-{
-    ADC::setChannel(ADCChannels::REFERENCE_VOLTAGE);
+void Inputs::useADCSnubberVoltageFeedbackChannel(const std::function<void(IADCSession&&)>& fn){
+    ADC::use(ADCChannels::SNUBBER_VOLTAGE_FEEDBACK, fn);
 }
-void Inputs::selectADCSnubberVoltageFeedbackChannel()
-{
-    ADC::setChannel(ADCChannels::SNUBBER_VOLTAGE_FEEDBACK);
+void Inputs::useADCPrimaryCurrentFeedbackChannel(const std::function<void(IADCSession&&)>& fn){
+    ADC::use(ADCChannels::PRIMARY_CURRENT_FEEDBACK, fn);
 }
-void Inputs::selectADCPrimaryCurrentFeedbackChannel()
-{
-    ADC::setChannel(ADCChannels::PRIMARY_CURRENT_FEEDBACK);
-}
-void Inputs::selectADCPowerSupplyVoltageFeedbackChannel()
-{
-    ADC::setChannel(ADCChannels::POWER_SUPPLY_VOLTAGE_FEEDBACK);
+void Inputs::useADCPowerSupplyVoltageFeedbackChannel(const std::function<void(IADCSession&&)>& fn){
+    ADC::use(ADCChannels::POWER_SUPPLY_VOLTAGE_FEEDBACK, fn);
 }

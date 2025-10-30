@@ -1,4 +1,4 @@
-
+#include <string>
 class Flash{
     public:
         static void initialize();
@@ -7,19 +7,12 @@ class Flash{
 			const char* namespaceName, const char* key, double &outValue);
 		static bool setDouble(
 			const char* namespaceName, const char* key, double value);
-		static bool setString(
-			const char* namespaceName,
-			const char* key,
-			const std::string& value,
-			size_t maxLength = 256);
-
-		static bool Flash::getString(const char* namespaceName, const char* key,
+		static bool getString(const char* namespaceName, const char* key,
 			std::string& outValue, size_t maxLength  = 0, bool allowTruncate = true);
-		static bool setString(
-			const char* namespaceName,
-			const char* key,
-			const char* value,
-			size_t maxLength = 256);
+		bool setString(const char* namespaceName, const char* key,
+                      const std::string& value,
+                      bool allowEmptyErase = true);
+
 		static bool getString(
 			const char* namespaceName,
 			const char* key,
@@ -28,8 +21,9 @@ class Flash{
     private:
 		static inline constexpr const char* TAG = "Flash";
 		static inline constexpr const char* STRING_VALUE_NOT_FOUND_FOR_KEY 
-					= "String value not found for key '%s'",
-			NVS_NOT_INITIALIZED = "NVS not initialized",
-			FAILED_OPEN_NAMESPACE = "Failed to open NVS namespace: %s";
+					= "String value not found for key '%s'";
+		static inline constexpr const char* NVS_NOT_INITIALIZED = "NVS not initialized";
+		static inline constexpr const char*	FAILED_OPEN_NAMESPACE 
+			= "Failed to open NVS namespace: %s";
         static bool _isInitialized;
 };

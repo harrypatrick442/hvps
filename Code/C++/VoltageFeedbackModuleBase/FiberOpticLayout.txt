@@ -1,0 +1,4 @@
+ Voltage feedback module
+ +  -   blank
+TR2 RC  TR1
+ ^^ ^^ ^^ 
