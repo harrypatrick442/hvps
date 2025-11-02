@@ -9,6 +9,7 @@
 #include "Generated/Messages/HVPSStartMessage.hpp"
 #include "Generated/Messages/HVPSStopMessage.hpp"
 #include "Generated/Messages/HVPSStateChangedMessage.hpp"
+#include "Generated/Messages/PingMessage.hpp"
 //#include "Generated/Messages/SetVoltageThresholdRequest.hpp"
 #include <cstring>
 Port_ControllingMachine::Port_ControllingMachine(
@@ -83,5 +84,9 @@ void Port_ControllingMachine::handleStopMessage(cJSON* message){
 void Port_ControllingMachine::handleStateChanged(SystemState systemState){		
 	HVPSStateChangedMessage hvpsStateChangedMessage((int32_t)systemState);
 	_channel.sendMessage(hvpsStateChangedMessage.toJSON());
+}
+void Port_ControllingMachine::sendPing(){	
+	PingMessage pingMessage;
+	_channel.sendMessage(pingMessage.toJSON());
 }
 

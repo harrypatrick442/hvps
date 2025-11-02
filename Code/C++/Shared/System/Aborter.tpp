@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../Logging/Log.hpp"
-#include "../CrashReporter/CrashReporter.h"  // for save_last_error_message
+#include "CrashReporter.hpp"  // for save_last_error_message
 #include "esp_system.h"
 #include <utility>
 #include <cstdio>
@@ -23,7 +23,7 @@ template<typename... Args>
     Log::Fatal(tag, "%s", formatted);
 
     // 4) Persist the formatted message to flash for post-mortem
-    CrashReporter::saveLastErrorMessage("Aborter::safeAbort [%s]: %s", tag, formatted);
+    //CrashReporter::saveLastErrorMessage("Aborter::safeAbort [%s]: %s", tag, formatted);
 
     // Optional: small delay to allow UART flush if needed
     // vTaskDelay(pdMS_TO_TICKS(10));

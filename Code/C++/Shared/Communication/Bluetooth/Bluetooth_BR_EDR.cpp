@@ -220,10 +220,12 @@ void Bluetooth::esp_spp_callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *p
 			_mutexWrite.lock();
 			_writeInProgress = false;
 			_mutexWrite.unlock();
+			dispatchOnOpened();
 			tryFlushSendQueue();
             break;
 
         case ESP_SPP_CLOSE_EVT:
+			dispatchOnClosed();
             Log::Info(TAG, "Client Disconnected");
             break;
 

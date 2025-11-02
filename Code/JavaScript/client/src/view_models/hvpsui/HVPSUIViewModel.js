@@ -180,6 +180,8 @@ export default class HVPSUIViewModel{
 		try{
 			HVPSUIAPI.getAvailableBluetoothDevices()
 			.then(res=>{
+				console.log('res was: ');
+				console.log(res);
 				res.devices.splice(0, 0, this._notSelectedDevice);
 				this._setDevices(res.devices);
 			}).catch(err=>{

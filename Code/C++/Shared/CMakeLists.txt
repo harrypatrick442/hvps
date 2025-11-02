@@ -44,6 +44,8 @@ idf_component_register(
 	"Generated/Messages/SetVoltageThresholdResponse.cpp"
 	"Generated/Messages/VoltageMessage.cpp"
     PRIV_REQUIRES spi_flash driver bt nvs_flash esp_adc
+	REQUIRES
+		espcoredump
     INCLUDE_DIRS
-        .       # lets you #include "Core/Event.hpp" or "Utils/Foo.hpp"
+        "."       # lets you #include "Core/Event.hpp" or "Utils/Foo.hpp"
 )

@@ -1,161 +1,91 @@
 #pragma once
+#include "esp_spi_flash.h"
 #include "esp_system.h"
 #include "esp_log.h"
 #include "esp_core_dump.h"
 #include "CrashRecord.h"
 #include "../Logging/Log.hpp"
+#include "StackSamplerHelper.hpp"
 #include <cstring>
 
-class Aborter;
-extern "C" void IRAM_ATTR my_panic_handler(void* frame, int core_id, bool is_abort);
-extern "C" void abort(void);
 
-//----------------------------------------------------
-// CrashReporter — now using RTC slow memory only
-// Survives software resets and panics, but cleared on power loss
-//----------------------------------------------------
+//YOU MUST ENABLE DUMPING TO FLASH FOR THIS TO WORK. MR WOBOT LOVES DUMPING AND FLASHING!🤖<(grrr)
+class Aborter;
+
 class CrashReporter {
 private:
-    // Lives in RTC slow memory, survives soft resets
-    static volatile CrashRecord _crashRecord;
 
     static inline constexpr const char* TAG = "CrashReporter";
-    static inline constexpr uint32_t CRASH_MAGIC  = 0xC0DEBEEF;
-    static inline constexpr size_t N_WORDS_FROM_STACK  = 8;
-    static inline bool inAbort = false;
 
 public:
-
     static inline void initialize() {
-        static bool initialized = false;   // persists across calls
+        static bool initialized = false;
         if (initialized) {
-            // already initialized — this is a fatal logic error
             Aborter::safeAbort(TAG, "CrashReporter already initialized!");
         }
-		
-		//Ensures garbage in RTC RAM after brownouts doesn’t get misread as a valid crash.
-		if (_crashRecord.magic != CRASH_MAGIC)
-		{
-			clearCrashRecordStruct();
-		}
-		
-        //Before you cheeky gits assume this was all AI generated. We did it together lol.
-        //Part him part me until it was perfect.
-        esp_set_panic_handler(my_panic_handler);
         initialized = true;
     }
+	static inline bool getRecord(CrashRecord& crashRecord) {
+		esp_err_t err = esp_core_dump_image_check();
+		if(err==ESP_ERR_NOT_FOUND) {
+			return false;
+		}
+		if(err==ESP_ERR_INVALID_SIZE){
+			Log::Warn(TAG, "Core dump was present but had invalid size!");
+			return false;
+		}
+		if(err==ESP_ERR_INVALID_CRC){
+			Log::Warn(TAG, "Core dump but was corrupted!");
+			return false;
+		}
 
-    //----------------------------------------------------
-    // Save last known software error (safe anywhere)
-    //----------------------------------------------------
-    static inline void __attribute__((always_inline)) IRAM_ATTR saveLastErrorMessage(const char* fmt, ...)
-    {
-		clearCrashRecordStruct();
-        va_list args;
-        va_start(args, fmt);
-        vsnprintf(_crashRecord.message, sizeof(_crashRecord.message), fmt, args);
-        va_end(args);
-		_crashRecord.magic  = CRASH_MAGIC;
-		_crashRecord.reason = esp_reset_reason();
-		StackSamplerHelper::storePcSpExec(_crashRecord.pc, _crashRecord.sp, _crashRecord.excCause);
-		StackSamplerHelper::sampleStackWords(_crashRecord.sp, _crashRecord.trace, N_WORDS_FROM_STACK);
-    }
+		size_t dumpAddr = 0;
+		size_t dumpLen  = 0;
+		err = esp_core_dump_image_get(&dumpAddr, &dumpLen);
+		crashRecord.reason = esp_reset_reason();
 
-    //----------------------------------------------------
-    // Retrieve previous crash record (after soft reset)
-    //----------------------------------------------------
-    static inline bool getRecord(CrashRecord& rec) {
-        if (_crashRecord.magic != CRASH_MAGIC)
-            return false;
+		if (err != ESP_OK) {
+			const char* errName = esp_err_to_name(err);
+			char buf[128];
+			snprintf(buf, sizeof(buf),
+					 "Failed to read core dump (err=%s).", errName);
+			crashRecord.message = buf;
+			return true;
+		}
 
-        rec = _crashRecord;
-        return true;
-    }
+		if (dumpLen == 0) {
+			crashRecord.message = "Failed to read core dump (dumpLen=0).";
+			return true;
+		}
 
-    //----------------------------------------------------
-    // Clear previous crash record (mark as processed)
-    //----------------------------------------------------
+		const void* mapped = nullptr;
+		spi_flash_mmap_handle_t handle;
+		err = spi_flash_mmap(dumpAddr, dumpLen,
+							 SPI_FLASH_MMAP_DATA,
+							 &mapped, &handle);
+		if (err != ESP_OK) {
+			crashRecord.message =
+				std::string("spi_flash_mmap failed: ") + esp_err_to_name(err);
+			return true;
+		}
+
+		crashRecord.dump.assign(
+			reinterpret_cast<const uint8_t*>(mapped),
+			reinterpret_cast<const uint8_t*>(mapped) + dumpLen);
+
+		spi_flash_munmap(handle);
+
+		crashRecord.message = "Core dump retrieved.";
+		//Log::Info(TAG, "Core dump length: %lu bytes", (unsigned long)dumpLen);
+
+		return true;
+	}
     static inline void clearRecord() {
-		clearCrashRecordStruct();
-        _crashRecord.magic = 0;//Not really needed but making it clear that it's doing this.
-        return true;
+        esp_core_dump_image_erase();
     }
-
-    //----------------------------------------------------
-    // Print previous crash (if any)
-    //----------------------------------------------------
-    static inline void printRecord() {
-        CrashRecord rec;
-        if (!getRecord(rec)) {
-            Log::Info(TAG, "There was no previous crash record :)");
-            return;
-        }
-        Log::Warn(TAG, "Previous crash detected:");
-        Log::Warn(TAG, "Reason: %d", rec.reason);
-        Log::Warn(TAG, "Message: %s", rec.message);
-    }
-
-    //----------------------------------------------------
-    // Called by ESP-IDF panic handler
-    //----------------------------------------------------
-	static inline __attribute__((always_inline)) void IRAM_ATTR onPanic(void* /*frame*/, int /*core_id*/, bool /*is_abort*/)
-	{
-		/*clearCrashRecordStruct(); Do not clear here as tight watchdog budget. Clearing is more about
-		safeguarding crossover values from multiple errors if future additions are made and we forget to overwrite them
-		*/
-		_crashRecord.magic  = CRASH_MAGIC;
-		_crashRecord.reason = ESP_RST_PANIC;
-
-		// PC/SP/EXC (portable across Xtensa/RISC-V)
-		StackSamplerHelper::storePcSpExec(_crashRecord.pc, _crashRecord.sp, _crashRecord.excCause);
-
-		// Grab up to N_WORDS_FROM_STACK words from the current stack (addresses to decode later)
-		StackSamplerHelper::sampleStackWords(_crashRecord.sp, _crashRecord.trace, N_WORDS_FROM_STACK);
-
-		// Message without libc
-		copyConstMsg(_crashRecord.message, sizeof(_crashRecord.message),
-					   "PANIC: CPU exception or watchdog");
-
-		// No OS services here; use the no-OS restart path
-		esp_restart_noos();
-		while (true) { } // Should not return; belt-and-braces
+	static inline void causePanicOnPurpose() {
+		ESP_ERROR_CHECK(ESP_FAIL);  // triggers panic handler
+		// or:
+		//abort();                     // triggers core dump too
 	}
-
-    //----------------------------------------------------
-    // Safe abort for controlled shutdowns
-    //----------------------------------------------------
-    static inline void IRAM_ATTR abort() {        
-        if (inAbort)
-            esp_restart();
-
-        inAbort = true;
-        saveLastErrorMessage("Abort called");
-        esp_restart();
-    }
-private:
-	static inline __attribute__((always_inline)) void IRAM_ATTR copyConstMsg(char* dst, size_t dst_sz, const char* src) {
-		if (dst_sz == 0) return;
-		size_t i = 0;
-		for (; src[i] && i + 1 < dst_sz; ++i) dst[i] = src[i];
-		dst[i++] = '\0';
-	}
-    static inline __attribute__((always_inline)) void IRAM_ATTR clearCrashRecordStruct() {
-        // Zero entire record, ensuring message and trace are clean
-        uint8_t* p = reinterpret_cast<uint8_t*>(&_crashRecord);
-        for (size_t i = 0; i < sizeof(_crashRecord); ++i)
-            p[i] = 0;
-    }
 };
-
-//----------------------------------------------------
-// C-linkage stubs required by ESP-IDF
-//----------------------------------------------------
-extern "C" void IRAM_ATTR my_panic_handler(void* frame, int core_id, bool is_abort)
-{
-    CrashReporter::onPanic(frame, core_id, is_abort);
-}
-
-extern "C" void abort(void)
-{
-    CrashReporter::abort();
-}

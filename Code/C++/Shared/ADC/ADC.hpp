@@ -57,8 +57,6 @@ private:
 public:
     // life-cycle
     static void initialize();
-
-    static void use(const std::function<void(IADCSession&&)>& fn);
 	static void use(adc_channel_t ch, const std::function<void(IADCSession&&)>& fn);
     // raw helpers
     uint16_t singleRawLatestSampleSelectedChannel();

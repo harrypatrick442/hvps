@@ -1,4 +1,3 @@
-#pragma once
 #include <memory>
 #include "SystemChecks.hpp"
 #include "../Ports/Port_VoltageFeedbackBase.hpp"

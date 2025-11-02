@@ -4,13 +4,13 @@
 #include "esp_log.h"
 #include <cstring>
 #include "freertos/FreeRTOS.h"
-#include "Timing/Delay.hpp"
-#include "Logging/Log.hpp"
-#include "System/Aborter.hpp"
+#include "../Timing/Delay.hpp"
+#include "../Logging/Log.hpp"
+#include "../System/Aborter.hpp"
 #include "esp_timer.h"
-#include "Tasks/TaskFactory.hpp"
-#include "Tasks/TaskFactory.hpp"
-#include "Core/CleanupBucket.hpp"
+#include "../Tasks/TaskFactory.hpp"
+#include "../Tasks/TaskFactory.hpp"
+#include "../Core/CleanupBucket.hpp"
 
 
 const char* ADC::TAG = "ADC";
@@ -97,17 +97,13 @@ void ADC::setChannel(adc_channel_t ch)
     _currentChannel = ch;
 }
 void ADC::use(adc_channel_t ch, const std::function<void(IADCSession&&)>& fn) {
-    ADC::use([ch, &fn](IADCSession&& session) {
-        session.setChannel(ch);  // Set desired channel first
-        fn(std::move(session));   // Pass on the session to caller
-    });
-}
-void ADC::use(const std::function<void(IADCSession&&)>& fn) {
+	Log::Info(TAG, "ADC::use");
     bool expected = false;
     if (!_inUse.compare_exchange_strong(expected, true)) {
         Aborter::safeAbort(TAG, "ADC::use() called while already in use");
         return;
     }
+	Log::Info(TAG, "ADC::use2");
 
     CleanupBucket cleanup;
     cleanup.addCallback([&]() noexcept {
@@ -115,14 +111,22 @@ void ADC::use(const std::function<void(IADCSession&&)>& fn) {
         stop();
     });
 
+	Log::Info(TAG, "ADC::use3");
+    _instance->setChannel(ch);  // Set desired channel first
+	Log::Info(TAG, "ADC::use3");
     start();
+	Log::Info(TAG, "ADC::use4");
 
+	Log::Info(TAG, "ADC::use5");
     ADCSession proxy(static_cast<IADCSession*>(_instance));
 
+	Log::Info(TAG, "ADC::use6");
     fn(std::move(proxy));  // pass it to closure
 
+	Log::Info(TAG, "ADC::use7");
     // Invalidate after call
     proxy.invalidate();  // ensures no external code kept it
+	Log::Info(TAG, "ADC::use8");
 }
 
 void ADC::start(){

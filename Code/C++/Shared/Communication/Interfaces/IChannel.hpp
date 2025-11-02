@@ -1,12 +1,10 @@
-#ifndef ICHANNEL_HPP
-#define ICHANNEL_HPP
+#pragma once
 
 #include "IMessageSender.hpp"
 #include "IMessageReceiver.hpp"
+#include "IChannelEvents.hpp"
 
-class IChannel : public IMessageSender, public IMessageReceiver {
+class IChannel : public IMessageSender, public IMessageReceiver, public IChannelEvents {
 public:
     virtual ~IChannel() = default;
 };
-
-#endif // ICHANNEL_HPP

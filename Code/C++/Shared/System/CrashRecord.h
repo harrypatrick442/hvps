@@ -1,10 +1,48 @@
+#pragma once
+#include "esp_system.h"
+#include "esp_err.h"
+#include <vector>
+#include <string>
+#include <sstream>
+
 struct CrashRecord {
-    uint32_t magic;
-    esp_reset_reason_t reason;
-    uint32_t pc;          // program counter
-    uint32_t sp;          // stack pointer
-    uint32_t excCause;    // exception cause if available
-    uint32_t trace[8];    // up to 8 return addresses (optional)
-    char message[128];
+    esp_reset_reason_t reason;     // Reset cause
+    std::vector<uint8_t> dump;     // Raw core dump bytes
+    std::string message;           // Description or error message
+
+    std::string toJSONString() const {
+        std::ostringstream oss;
+
+        oss << "{";
+
+        // reason
+        oss << "\"reason\":" << static_cast<int>(reason) << ",";
+
+        // message (with minimal escaping)
+        oss << "\"message\":\"";
+        for (char c : message) {
+            switch (c) {
+                case '"':  oss << "\\\""; break;
+                case '\\': oss << "\\\\"; break;
+                case '\n': oss << "\\n";  break;
+                case '\r': oss << "\\r";  break;
+                case '\t': oss << "\\t";  break;
+                default:   oss << c; break;
+            }
+        }
+        oss << "\",";
+
+        // dump as JSON array of bytes
+        oss << "\"dump\":[";
+        for (size_t i = 0; i < dump.size(); ++i) {
+            oss << static_cast<unsigned int>(dump[i]);
+            if (i + 1 < dump.size()) oss << ",";
+        }
+        oss << "]";
+
+        oss << "}";
+
+        return oss.str();
+    }
+
 };
-static_assert(sizeof(CrashRecord) % 4 == 0, "CrashRecord must be 4-byte aligned");

@@ -7,6 +7,7 @@
 #include "IO/Inputs.hpp"
 #include "IO/Outputs.hpp"
 #include "Storage/Flash.hpp"
+#include "System/CrashRecord.h"
 #include "Ports/Port_ControllingMachine.hpp"
 #include "Ports/Port_FirstStageVoltageFeedback.hpp"
 #include "Ports/Port_OutputVoltageFeedback.hpp"
@@ -27,6 +28,16 @@ extern "C" void app_main(void)
 	Outputs::initialize();
 	Outputs::toSafeReversible();
 	CrashReporter::initialize();
+	CrashRecord crashRecord;
+	if(CrashReporter::getRecord(crashRecord)){
+		Log::Info(TAG, "Found crash record");
+		Log::Info(TAG, crashRecord.message.c_str());
+	}
+	else{
+		Log::Info(TAG, "Did not find crash record");
+	}
+	CrashReporter::clearRecord();
+	Delay::ms(10000);
 	Log::Info(TAG, "Starting HVPSController....");
 	Delay::ms(1000);
     Flash::initialize();
@@ -70,10 +81,6 @@ extern "C" void app_main(void)
 							 
 	LiveDataBroadcaster::initialize(liveDataCache, portControllingMachine);
 	Log::Info(TAG, "At end");
-	while(true){
-		Delay::ms(1000);
-	Log::Info(TAG, "end loop");
-	}
 	vTaskDelete(NULL); // Delete the current task*/
 }  
 

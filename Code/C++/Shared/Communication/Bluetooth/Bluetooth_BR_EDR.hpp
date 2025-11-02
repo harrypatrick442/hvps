@@ -12,12 +12,14 @@
 #include <esp_gap_bt_api.h>
 #include <esp_spp_api.h>
 #include <esp_log.h>
+#include "Core/Event.hpp"
 #include "../../Communication/Interfaces/IChannel.hpp"
 #include "../../Communication/Interfaces/IIncomingMessageHandler.hpp"
+#include "../../Communication/Events/ChannelEvents.hpp"
 #include "../../cJSON/cJSON.h"
 #include <queue>
 #include <mutex>
-class Bluetooth : public IChannel{
+class Bluetooth : public IChannel, public ChannelEvents{
     public:
         static Bluetooth& initialize(
             const char* deviceName, 
@@ -27,6 +29,7 @@ class Bluetooth : public IChannel{
         static Bluetooth& getInstance();
         void setIncomingMessageHandler(IIncomingMessageHandler* incomingMessageHandler) override;
 			void sendMessage(cJSON* message, bool deleteMessageAfter = true) override;
+	
     private:
         Bluetooth(
             const char* deviceName, 
@@ -50,6 +53,8 @@ class Bluetooth : public IChannel{
         void esp_gap_callback(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *param);
         
 		void tryFlushSendQueue();
+		void dispatchOnOpened();
+		void dispatchOnClosed();
 };
 #endif
 #endif // Bluetooth_BR_EDR_hpp
