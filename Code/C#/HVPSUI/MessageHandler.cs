@@ -7,7 +7,7 @@ using HVPSUIMessages.Responses;
 using Native.Messages;
 using Native.Messaging;
 using Native.WebViewInterface;
-using HVPSMessages.Messages;
+using HVPSAPI.Messages;
 
 namespace HVPSUI
 {
@@ -21,7 +21,11 @@ namespace HVPSUI
         public MessageHandler(WebViewMessagingInterface webViewMessagingInterface) {
             _WebViewMessagingInterface = webViewMessagingInterface;
             _DeviceRegistrationMessageHandler = new RegistrationMessageHandler(null);
-            _PingDisconnectDetector = new PingDisconnectDetector(_DeviceRegistrationMessageHandler, DeviceDisconnected);
+            _PingDisconnectDetector = new PingDisconnectDetector(
+                _DeviceRegistrationMessageHandler,
+                DeviceDisconnected,
+                HVPSConstants.Constants.PingTimeoutMilliseconds
+            );
             _WebViewMessagingInterface.OnMessage += HandleMessageFromJavaScript;
             _WebViewMessagingInterface.RegisterMethod<
                 GetAvailableBluetoothDevicesRequest, GetAvailableBluetoothDevicesResponse>(
@@ -30,17 +34,20 @@ namespace HVPSUI
                 ConnectToBluetoothDeviceRequest, ConnectToBluetoothDeviceResponse>(
                 HVPSUIMessages.MessageTypes.ConnectToBluetoothDevice, HandleConnectToBluetoothDevice);
             _WebViewMessagingInterface.RegisterMethod<
-                HVPSStartMessage>(
-                HVPSMessages.MessageTypes.HVPSUIStart, HandleHVPSStartMessage);
+                StartMessage>(
+                HVPSAPI.MessageTypes.Start, HandleHVPSStartMessage);
             _WebViewMessagingInterface.RegisterMethod<
-                HVPSStopMessage>(
-                HVPSMessages.MessageTypes.HVPSUIStop, HandleHVPSStopMessage);
+                StopMessage>(
+                HVPSAPI.MessageTypes.Stop, HandleHVPSStopMessage);
             _WebViewMessagingInterface.RegisterMethod<
-                HVPSShutDownMessage>(
-                HVPSMessages.MessageTypes.HVPSUIShutDown, HandleHVPSShutDownMessage);
+                ShutDownMessage>(
+                HVPSAPI.MessageTypes.ShutDown, HandleHVPSShutDownMessage);
             _WebViewMessagingInterface.RegisterMethod<
-                HVPSRunSystemChecksOnlyMessage>(
-                HVPSMessages.MessageTypes.HVPSUIRunSystemChecksOnly, HandleHVPSRunSystemChecksOnlyMessage);
+                RunSystemChecksOnlyMessage>(
+                HVPSAPI.MessageTypes.RunSystemChecksOnly, HandleHVPSRunSystemChecksOnlyMessage);
+            _DeviceRegistrationMessageHandler.RegisterMethod<
+                ErrorMessage>(
+                HVPSAPI.MessageTypes.Error, HandleError);
             _DeviceRegistrationMessageHandler.RegisterMethod<
                 ConsoleMessage>(
                     Native.MessageTypes.ConsoleMessage,
@@ -49,24 +56,29 @@ namespace HVPSUI
             _DeviceRegistrationMessageHandler.OnMessage += (o, e) => _PingDisconnectDetector.Received();
         }
         private void HandleHVPSStartMessage(
-            HVPSStartMessage message)
+            StartMessage message)
         {
-            SendToBluetoothDevice(new HVPSAPI.Messages.StartMessage());
+            SendToBluetoothDevice(message);
         }
         private void HandleHVPSStopMessage(
-            HVPSStopMessage message)
+            StopMessage message)
         {
-            SendToBluetoothDevice(new HVPSAPI.Messages.StopMessage());
+            SendToBluetoothDevice(message);
         }
         private void HandleHVPSShutDownMessage(
-            HVPSShutDownMessage message)  
+            ShutDownMessage message)  
         {
-            SendToBluetoothDevice(new HVPSAPI.Messages.ShutDownMessage());
+            SendToBluetoothDevice(message);
         }
         private void HandleHVPSRunSystemChecksOnlyMessage(
-            HVPSRunSystemChecksOnlyMessage message)
+            RunSystemChecksOnlyMessage message)
         {
-            SendToBluetoothDevice(new HVPSAPI.Messages.RunSystemChecksOnlyMessage());
+            SendToBluetoothDevice(message);
+        }
+        private void HandleError(
+            ErrorMessage message)
+        {
+            _WebViewMessagingInterface.Send(message);
         }
         private void HandleConsoleMessage(
             ConsoleMessage message)

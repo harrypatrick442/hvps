@@ -9,25 +9,26 @@ import {
 	GetAvailableBluetoothDevicesResponse,
 	ConnectToBluetoothDeviceRequest,
 	ConnectToBluetoothDeviceResponse,
-	HVPSStartMessage,
-	HVPSStopMessage,
-	HVPSShutDownMessage,
-	HVPSRunSystemChecksOnlyMessage,
+	StartMessage,
+	StopMessage,
+	ShutDownMessage,
+	RunSystemChecksOnlyMessage,
 	ConsoleMessage,
+	ErrorMessage,
 	DisconnectedMessage
 	} from '../messages';
 class HVPSUIAPI{
 	static shutDown(){
-		NativeAPI.send(HVPSShutDownMessage.toJSON());
+		NativeAPI.send(ShutDownMessage.toJSON());
 	}
 	static start(){
-		NativeAPI.send(HVPSStartMessage.toJSON());
+		NativeAPI.send(StartMessage.toJSON());
 	}
 	static stop(){
-		NativeAPI.send(HVPSStopMessage.toJSON());
+		NativeAPI.send(StopMessage.toJSON());
 	}
 	static runSystemChecksOnly(){
-		NativeAPI.send(HVPSRunSystemChecksOnlyMessage.toJSON());
+		NativeAPI.send(RunSystemChecksOnlyMessage.toJSON());
 	}
 	static getAvailableBluetoothDevices(){
 		return NativeAPI.ticketedSend(GetAvailableBluetoothDevicesRequest.toJSON(), 30000)
@@ -46,6 +47,12 @@ class HVPSUIAPI{
 			case MessageTypes.consoleMessage:
 				var consoleMessage = ConsoleMessage.fromJSON(message);
 				HVPSUIAPI.dispatchEvent({type:'consoleMessage', consoleMessage});
+				break;
+			case MessageTypes.error:
+				HVPSUIAPI.dispatchEvent({
+					type:'errorMessage',
+					errorMessage:ErrorMessage.fromJSON(message)
+				});
 				break;
 		}
 	}

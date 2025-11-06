@@ -10,12 +10,13 @@ class GetAvailableBluetoothDevicesResponse
    public:
        static const char* TYPE;
    private:
-        std::optional<int32_t> _failedReason;
+                std::optional<int32_t> _failedReason;
         uint64_t _ticket;
    public:
-        std::optional<int32_t> getFailedReason() noexcept;
+                std::optional<int32_t> getFailedReason() noexcept;
         uint64_t getTicket() noexcept;
         GetAvailableBluetoothDevicesResponse(
+           , 
            std::optional<int32_t> failedReason, 
            uint64_t ticket) noexcept;
         ~GetAvailableBluetoothDevicesResponse();

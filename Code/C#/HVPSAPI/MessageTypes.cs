@@ -2,8 +2,6 @@ namespace HVPSAPI
 {
     public static class MessageTypes
     {
-        public const string GetAvaialbleBluetoothDevices = "gabd";
-        public const string ConnectToBluetoothDevice = "ctbd";
         public const string Start = "start";
         public const string Stop = "stop";
         public const string ShutDown = "sd";
@@ -13,5 +11,6 @@ namespace HVPSAPI
         public const string Message = "m";
         public const string Error = "e";
         public const string RanSystemChecks = "cm";
+        public const string CoreDump = "cd";
     }
 }

@@ -6,9 +6,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="DataMemberNames\Messages\" />
-    <Folder Include="DataMemberNames\Requests\" />
-    <Folder Include="DataMemberNames\Responses\" />
+    <Folder Include="Messages\" />
     <Folder Include="Requests\" />
     <Folder Include="Responses\" />
   </ItemGroup>

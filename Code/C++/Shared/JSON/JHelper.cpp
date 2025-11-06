@@ -1,5 +1,6 @@
 	#include "JHelper.hpp"
 	#include <string.h>
+	
 	std::shared_ptr<cJSON> JHelper::toSharedPtr(cJSON* raw) {
 		return std::shared_ptr<cJSON>(raw, cJSON_Delete); // custom deleter
 	}
@@ -403,36 +404,157 @@
 		}
 		cJSON_AddBoolToObject(obj, key, *value);
 	}
-void JHelper::printJsonKeysAndValues(cJSON* json) {
-    if (!json || !cJSON_IsObject(json)) {
-        printf("Not a JSON object.\n");
-        return;
-    }
 
-    for (cJSON* item = json->child; item != NULL; item = item->next) {
-        const char* key = (item->string ? item->string : "<no-key>");
+	// --------------------------
+	// Add a C-style array
+	// --------------------------
+	template<typename T>
+	void JHelper::addArray(cJSON* parent, const char* key, const T* values, size_t count)
+	{
+		static_assert(std::is_arithmetic<T>::value, "T must be a numeric type");
+		if (!parent || !key || !values) return;
 
-        if (cJSON_IsString(item)) {
-            const char* val = (item->valuestring ? item->valuestring : "<null>");
-            printf("Key: %s, Value (string): %s\n", key, val);
-        }
-        else if (cJSON_IsNumber(item)) {
-            // Note: on ESP-IDF, enable float printf if needed (CONFIG_NEWLIB_STDOUT_FLOAT)
-            printf("Key: %s, Value (number): %f\n", key, item->valuedouble);
-        }
-        else if (cJSON_IsBool(item)) {
-            printf("Key: %s, Value (bool): %s\n", key, cJSON_IsTrue(item) ? "true" : "false");
-        }
-        else if (cJSON_IsArray(item)) {
-            printf("Key: %s, Value (array)\n", key);
-        }
-        else if (cJSON_IsObject(item)) {
-            printf("Key: %s, Value (object)\n", key);
-        }
-        else if (cJSON_IsNull(item)) {
-            printf("Key: %s, Value: null\n", key);
-        } else {
-            printf("Key: %s, Value: <unknown type>\n", key);
-        }
-    }
-}
+		cJSON* arr = cJSON_CreateArray();
+		if (!arr) return;
+
+		for (size_t i = 0; i < count; ++i)
+		{
+			cJSON_AddItemToArray(arr, cJSON_CreateNumber(static_cast<double>(values[i])));
+		}
+
+		cJSON_AddItemToObject(parent, key, arr);
+	}
+
+	// --------------------------
+	// Add an std::vector
+	// --------------------------
+	template<typename T>
+	void JHelper::addVector(cJSON* parent, const char* key, const std::vector<T>& vec)
+	{
+		static_assert(std::is_arithmetic<T>::value, "T must be a numeric type");
+		if (!parent || !key) return;
+
+		cJSON* arr = cJSON_CreateArray();
+		if (!arr) return;
+
+		for (const auto& val : vec)
+		{
+			cJSON_AddItemToArray(arr, cJSON_CreateNumber(static_cast<double>(val)));
+		}
+
+		cJSON_AddItemToObject(parent, key, arr);
+	}
+	
+	template<typename T>
+	T* JHelper::getArray(const cJSON* parent, const char* key, size_t& outLength)
+	{
+		static_assert(std::is_arithmetic_v<T>, "T must be a numeric type");
+
+		T* outBuffer = nullptr;
+		outLength = 0;
+
+		if (!parent || !key)
+			return outBuffer;
+
+		const cJSON* arr = cJSON_GetObjectItemCaseSensitive(parent, key);
+		if (!cJSON_IsArray(arr))
+			return outBuffer;
+
+		// Count number of numeric elements
+		size_t count = 0;
+		const cJSON* item = nullptr;
+		cJSON_ArrayForEach(item, arr)
+		{
+			if (cJSON_IsNumber(item))
+				++count;
+		}
+
+		if (count == 0)
+			return outBuffer; // empty array, still success
+
+		// Allocate the buffer
+		outBuffer = new (std::nothrow) T[count];
+		if (!outBuffer)
+			return outBuffer; // allocation failed
+
+		// Fill it
+		size_t index = 0;
+		cJSON_ArrayForEach(item, arr)
+		{
+			if (!cJSON_IsNumber(item)) continue;
+			outBuffer[index++] = static_cast<T>(item->valuedouble);
+		}
+
+		outLength = index;
+		return outBuffer;
+	}
+	
+	// --------------------------
+	// Parse JSON array → std::vector<T>
+	// --------------------------
+	template<typename T>
+	bool JHelper::getVector(const cJSON* parent, const char* key, std::vector<T>& outVec)
+	{
+		static_assert(std::is_arithmetic<T>::value, "T must be a numeric type");
+		if (!parent || !key) return false;
+
+		const cJSON* arr = cJSON_GetObjectItemCaseSensitive(parent, key);
+		if (!cJSON_IsArray(arr)) return false;
+
+		outVec.clear();
+		const cJSON* item = nullptr;
+		cJSON_ArrayForEach(item, arr)
+		{
+			if (!cJSON_IsNumber(item)) return false;
+			outVec.push_back(static_cast<T>(item->valuedouble));
+		}
+
+		return true;
+	}
+
+	void JHelper::printJsonKeysAndValues(cJSON* json) {
+		if (!json || !cJSON_IsObject(json)) {
+			printf("Not a JSON object.\n");
+			return;
+		}
+
+		for (cJSON* item = json->child; item != NULL; item = item->next) {
+			const char* key = (item->string ? item->string : "<no-key>");
+
+			if (cJSON_IsString(item)) {
+				const char* val = (item->valuestring ? item->valuestring : "<null>");
+				printf("Key: %s, Value (string): %s\n", key, val);
+			}
+			else if (cJSON_IsNumber(item)) {
+				// Note: on ESP-IDF, enable float printf if needed (CONFIG_NEWLIB_STDOUT_FLOAT)
+				printf("Key: %s, Value (number): %f\n", key, item->valuedouble);
+			}
+			else if (cJSON_IsBool(item)) {
+				printf("Key: %s, Value (bool): %s\n", key, cJSON_IsTrue(item) ? "true" : "false");
+			}
+			else if (cJSON_IsArray(item)) {
+				printf("Key: %s, Value (array)\n", key);
+			}
+			else if (cJSON_IsObject(item)) {
+				printf("Key: %s, Value (object)\n", key);
+			}
+			else if (cJSON_IsNull(item)) {
+				printf("Key: %s, Value: null\n", key);
+			} else {
+				printf("Key: %s, Value: <unknown type>\n", key);
+			}
+		}
+	}
+	
+	void JHelper::escapeForJson(const std::string& str, std::ostream& out) {
+		for (char c : str) {
+			switch (c) {
+				case '"':  out << "\\\""; break;
+				case '\\': out << "\\\\"; break;
+				case '\n': out << "\\n";  break;
+				case '\r': out << "\\r";  break;
+				case '\t': out << "\\t";  break;
+				default:   out << c; break;
+			}
+		}
+	}

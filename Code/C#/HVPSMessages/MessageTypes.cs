@@ -10,5 +10,6 @@ namespace HVPSMessages
         public const string HVPSUILiveData = "ld";
         public const string HVPSUIConsoleMessage = "come";
         public const string HVPSUIRanSystemChecks = "rsc";
+        public const string HVPSLastError = "le";
     }
 }

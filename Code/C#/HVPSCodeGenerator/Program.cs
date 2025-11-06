@@ -27,7 +27,7 @@ namespace HVPSCodeGenerator
                 typeof(VirtualSockets.DataMemberNames.NewVirtualSocket2DataMemberNames),
                 typeof(Bluetooth.DataMemberNames.Messages.BluetoothDeviceDataMemberNames),
                 typeof(VoltageFeedbackMessages.DataMemberNames.Requests.SetVoltageThresholdRequestDataMemberNames),
-                typeof(HVPSMessages.DataMemberNames.Messages.HVPSStartMessageDataMemberNames),
+                typeof(HVPSAPI.DataMemberNames.Messages.StartMessageDataMemberNames),
                 typeof(HVPSUIMessages.DataMemberNames.Requests.ConnectToBluetoothDeviceRequestDataMemberNames),
             };
             JavaScriptConstantsBuilderHelper.Run(

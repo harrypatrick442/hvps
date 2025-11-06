@@ -8,23 +8,36 @@
 #include "TaskFactory.hpp"
 #include "../Logging/Log.hpp"
 
-class TransientWorker : public std::enable_shared_from_this<TransientWorker> {
+class TransientWorker : public std::enable_shared_from_this<TransientWorker> 
+/* Keep self alive during task execution*/
+{
 public:
     using Job = std::function<void()>;
-
-    explicit TransientWorker(uint32_t idleTimeoutMs = 2000);
+/**
+ * @brief Constructs a new TransientWorker. Also known as a sequential scheduler by me.
+ *
+ * @param maxQueueLength Maximum number of jobs that can be enqueued.
+ * @param idleTimeoutMs Time in milliseconds before the worker auto-exits when idle.
+ * @param abortOnQueueOverflow Whether to abort if the queue is full.
+ */
+    explicit TransientWorker(
+		UBaseType_t maxQueueLength=32, 
+		uint32_t idleTimeoutMs=500, 
+		bool abortOnQueueOverflow = true);
     ~TransientWorker();
 
-    void enqueue(Job job);
+    bool enqueue(Job job);
 
 private:
-    static constexpr const char* TAG = "TransientWorker";
-    static constexpr size_t kQueueDepth = 16;
-
+	static inline constexpr const char* TAG = "TransientWorker";
+    const uint32_t _idleTimeoutMs;
+	const bool _abortOnQueueOverflow;
     QueueHandle_t _queue;
     SemaphoreHandle_t _mutex;
     std::atomic<bool> _alive;
-    const uint32_t _idleTimeoutMs;
-
+	TickType_t _idleTicks;
     void taskLoop();
+	static void runTask(std::shared_ptr<TransientWorker> selfPtr);
+	void takeSemaphore();
+	void giveSemaphore();
 };

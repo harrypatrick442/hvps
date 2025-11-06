@@ -2,9 +2,10 @@
 #include "../interfaces/IChannelEvents.hpp"
 #include "Core/Event.hpp"
 #include "ChannelEventArgs.hpp"
-class ChannelEvents: public IChannelEvents{
+#include "Tasks/TransientWorker.hpp"
+class ChannelEvents: public virtual IChannelEvents{
 	private:
-		std::shared_ptr<TransientWorker> _worker{ std::make_shared<TransientWorker>(1000) };
+		std::shared_ptr<TransientWorker> _worker{ std::make_shared<TransientWorker>(32, 1000, true) };
 		Event<ChannelEventArgs> onOpened;
 		Event<ChannelEventArgs> onClosed;
 	public:

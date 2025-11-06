@@ -18,6 +18,7 @@
     <ProjectReference Include="..\..\..\..\shared-public\Native\CSharp\Native.csproj" />
     <ProjectReference Include="..\..\..\..\shared-public\Bluetooth\CSharp\Bluetooth.csproj" />
     <ProjectReference Include="..\HVPSAPI\HVPSAPI.csproj" />
+    <ProjectReference Include="..\HVPSConstants\HVPSConstants.csproj" />
     <ProjectReference Include="..\HVPSMessages\HVPSMessages.csproj" />
     <ProjectReference Include="..\HVPSUIMessages\HVPSUIMessages.csproj" />
   </ItemGroup>

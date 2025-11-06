@@ -19,7 +19,7 @@
 #include "../../cJSON/cJSON.h"
 #include <queue>
 #include <mutex>
-class Bluetooth : public IChannel, public ChannelEvents{
+class Bluetooth : public virtual IChannel, public virtual ChannelEvents{
     public:
         static Bluetooth& initialize(
             const char* deviceName, 
@@ -53,8 +53,6 @@ class Bluetooth : public IChannel, public ChannelEvents{
         void esp_gap_callback(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *param);
         
 		void tryFlushSendQueue();
-		void dispatchOnOpened();
-		void dispatchOnClosed();
 };
 #endif
 #endif // Bluetooth_BR_EDR_hpp

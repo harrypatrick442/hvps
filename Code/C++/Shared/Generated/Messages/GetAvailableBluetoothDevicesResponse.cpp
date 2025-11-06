@@ -1,6 +1,7 @@
 #include "./GetAvailableBluetoothDevicesResponse.hpp"
 const char* GetAvailableBluetoothDevicesResponse::TYPE = "tkd";
 GetAvailableBluetoothDevicesResponse::GetAvailableBluetoothDevicesResponse(
+    , 
     std::optional<int32_t> failedReason, 
     uint64_t ticket):
         _failedReason(failedReason),
@@ -23,7 +24,7 @@ std::shared_ptr<GetAvailableBluetoothDevicesResponse> GetAvailableBluetoothDevic
     bool s = true;
     std::optional<int32_t> failedReason = JHelper::getNullableInt32(j, "s", s);
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    return std::make_shared<GetAvailableBluetoothDevicesResponse>(failedReason, ticket);
+    return std::make_shared<GetAvailableBluetoothDevicesResponse>(devices, failedReason, ticket);
 }
 GetAvailableBluetoothDevicesResponse::~GetAvailableBluetoothDevicesResponse(){
 }

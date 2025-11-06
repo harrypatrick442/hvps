@@ -20,6 +20,7 @@ namespace HVPSConfigurationGenerator
         [FieldOffset(55)] private byte pad7;
         [FieldOffset(56)] public double broadcastFrequencyHz;
         [FieldOffset(64)] public double vPsOverVadcRatio;
+        [FieldOffset(72)] public ulong pingTimeoutMilliseconds;
 
     }
 

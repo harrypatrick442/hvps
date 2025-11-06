@@ -3,7 +3,7 @@
 #include "esp_system.h"
 #include "esp_log.h"
 #include "esp_core_dump.h"
-#include "CrashRecord.h"
+#include "CrashRecord.hpp"
 #include "../Logging/Log.hpp"
 #include "StackSamplerHelper.hpp"
 #include <cstring>
@@ -25,6 +25,23 @@ public:
         }
         initialized = true;
     }
+
+static inline void getRecordAndPrint() {
+    esp_core_dump_summary_t summary{};
+    if (esp_core_dump_get_summary(&summary) == ESP_OK) {
+        const auto &bt = summary.exc_bt_info;
+        Log::Info(TAG, "Crash task: %s  PC=0x%08" PRIx32, summary.exc_task, summary.exc_pc);
+        Log::Info(TAG, "BT depth=%u  corrupted=%u", (unsigned)bt.depth, (unsigned)bt.corrupted);
+
+        for (uint32_t i = 0; i < bt.depth; ++i) {
+            Log::Info(TAG, "  #%u 0x%08" PRIxPTR, (unsigned)i, (uintptr_t)bt.bt[i]);
+        }
+    } else {
+        Log::Info(TAG, "No valid core dump summary (or not ELF-to-flash).");
+    }
+}
+
+
 	static inline bool getRecord(CrashRecord& crashRecord) {
 		esp_err_t err = esp_core_dump_image_check();
 		if(err==ESP_ERR_NOT_FOUND) {

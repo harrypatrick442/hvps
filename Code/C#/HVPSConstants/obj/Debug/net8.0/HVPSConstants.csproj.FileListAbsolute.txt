@@ -1,0 +1,12 @@
+C:\repos\hvps\Code\C#\HVPSConstants\bin\Debug\net8.0\HVPSConstants.deps.json
+C:\repos\hvps\Code\C#\HVPSConstants\bin\Debug\net8.0\HVPSConstants.dll
+C:\repos\hvps\Code\C#\HVPSConstants\bin\Debug\net8.0\HVPSConstants.pdb
+C:\repos\hvps\Code\C#\HVPSConstants\obj\Debug\net8.0\HVPSConstants.GeneratedMSBuildEditorConfig.editorconfig
+C:\repos\hvps\Code\C#\HVPSConstants\obj\Debug\net8.0\HVPSConstants.AssemblyInfoInputs.cache
+C:\repos\hvps\Code\C#\HVPSConstants\obj\Debug\net8.0\HVPSConstants.AssemblyInfo.cs
+C:\repos\hvps\Code\C#\HVPSConstants\obj\Debug\net8.0\HVPSConstants.csproj.CoreCompileInputs.cache
+C:\repos\hvps\Code\C#\HVPSConstants\obj\Debug\net8.0\HVPSConstants.sourcelink.json
+C:\repos\hvps\Code\C#\HVPSConstants\obj\Debug\net8.0\HVPSConstants.dll
+C:\repos\hvps\Code\C#\HVPSConstants\obj\Debug\net8.0\refint\HVPSConstants.dll
+C:\repos\hvps\Code\C#\HVPSConstants\obj\Debug\net8.0\HVPSConstants.pdb
+C:\repos\hvps\Code\C#\HVPSConstants\obj\Debug\net8.0\ref\HVPSConstants.dll

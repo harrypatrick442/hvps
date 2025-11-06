@@ -1,62 +1,84 @@
 #include "TransientWorker.hpp"
-
-TransientWorker::TransientWorker(uint32_t idleTimeoutMs)
-    : _queue(xQueueCreate(kQueueDepth, sizeof(Job*))),
-      _mutex(xSemaphoreCreateMutex()),
-      _alive(false),
-      _idleTimeoutMs(idleTimeoutMs) {}
+#include "../System/Aborter.hpp";
+#include "TaskFactory.hpp";
+TransientWorker::TransientWorker(
+	UBaseType_t maxQueueLength,
+	uint32_t idleTimeoutMs,
+	bool abortOnQueueOverflow
+)
+    : 
+	_idleTimeoutMs(idleTimeoutMs),
+	_abortOnQueueOverflow(abortOnQueueOverflow),
+	_queue(xQueueCreate(maxQueueLength, sizeof(Job*))),
+	_mutex(xSemaphoreCreateMutex()),
+	_alive(false),
+	_idleTicks(pdMS_TO_TICKS(idleTimeoutMs)){
+		if (!_queue || !_mutex) {
+			Aborter::safeAbort(TAG, "Failed to initialize TransientWorker resources");
+		}
+	}
 
 TransientWorker::~TransientWorker() {
-    if (_queue) vQueueDelete(_queue);
+    if (_queue){
+		vQueueDelete(_queue);
+	}
     if (_mutex) vSemaphoreDelete(_mutex);
 }
 
-void TransientWorker::enqueue(Job job) {
-    Job* j = new Job(std::move(job));
-
+bool TransientWorker::enqueue(Job job) {
+	Job* j = new (std::nothrow) Job(std::move(job));
     if (xQueueSend(_queue, &j, 0) != pdPASS) {
+		if(_abortOnQueueOverflow){
+			Aborter::safeAbort(TAG, "Queue overflowed");
+			return false;
+		}
         Log::Warn(TAG, "TransientWorker queue full; dropping job.");
         delete j;
-        return;
+        return false;
     }
-
-    xSemaphoreTake(_mutex, portMAX_DELAY);
-    if (!_alive) {
-        _alive = true;
-        auto self = shared_from_this();
-        TaskFactory::createNonPriorityTask<std::shared_ptr<TransientWorker>>(
-            [](std::shared_ptr<TransientWorker> selfPtr) {
-                selfPtr->taskLoop();
-            },
-            self,
-            "TransientWorker"
-        );
-    }
-    xSemaphoreGive(_mutex);
+	takeSemaphore();
+    if (_alive) {
+		giveSemaphore();
+		return true;
+	}
+	_alive = true;
+    giveSemaphore();
+	auto self = shared_from_this();
+	TaskFactory::createNonPriorityTask<TransientWorker>(
+		TransientWorker::runTask,
+		self,
+		TAG
+	);
+	return true;
+}
+void TransientWorker::runTask(std::shared_ptr<TransientWorker> selfPtr) {
+	selfPtr->taskLoop();
 }
 
 void TransientWorker::taskLoop() {
-    Log::Info(TAG, "Worker started on low-speed core");
-    Job* jobPtr = nullptr;
-    TickType_t idleTicks = pdMS_TO_TICKS(_idleTimeoutMs);
-
-    for (;;) {
-        if (xQueueReceive(_queue, &jobPtr, idleTicks) == pdTRUE) {
-            std::unique_ptr<Job> job(jobPtr);
-            try {
-                (*job)();
-            } catch (...) {
-                Log::Error(TAG, "Exception in transient job");
-            }
-        } else {
-            break; // idle timeout
-        }
-    }
-
-    xSemaphoreTake(_mutex, portMAX_DELAY);
-    _alive = false;
-    xSemaphoreGive(_mutex);
-
-    Log::Info(TAG, "Worker exiting after idle timeout");
-    vTaskDelete(nullptr);
+	Job* jobPtr = nullptr;
+	while(true) {
+		if (xQueueReceive(_queue, &jobPtr, _idleTicks) == pdTRUE) {
+			std::unique_ptr<Job> job(jobPtr);
+			(*job)();
+			continue;
+		}
+		takeSemaphore();
+		if (uxQueueMessagesWaiting(_queue) <= 0) {
+			_alive = false;
+			giveSemaphore();
+			break;
+		}
+		giveSemaphore();
+	}
+	Log::Info(TAG, "Worker exiting after idle timeout");
+	vTaskDelete(nullptr);
+}
+void TransientWorker::takeSemaphore(){
+	if(xSemaphoreTake(_mutex, portMAX_DELAY)!=pdTRUE){
+		Aborter::safeAbort(TAG, "Failed to take semaphore");
+	}
+}
+void TransientWorker::giveSemaphore(){
+	xSemaphoreGive(_mutex);
 }

@@ -12,6 +12,7 @@ import Handles  from '../../core/Handles';
 import BluetoothFailedReason  from '../../enums/BluetoothFailedReason';
 import HVPSUIDialog from '../../components/hvpsui/HVPSUIDialog';
 import ConsoleMessageType from '../../enums/ConsoleMessageType';
+import ErrorViewModel from './ErrorViewModel';
 export default class HVPSUIViewModel{
 	constructor(){
 		eventEnable(this);
@@ -26,6 +27,7 @@ export default class HVPSUIViewModel{
 		this._setShowBluetoothReconnect = this._setShowBluetoothReconnect.bind(this);
 		this._setRefreshingBluetooth = this._setRefreshingBluetooth.bind(this);
 		this._handleConsoleMessage = this._handleConsoleMessage.bind(this);
+		this._handleErrorMessage = this._handleErrorMessage.bind(this);
 		this._consoleClear = this._consoleClear.bind(this);
 		this._consoleAppendLine = this._consoleAppendLine.bind(this);
 		this.refreshBluetoothDevices = this.refreshBluetoothDevices.bind(this);
@@ -65,6 +67,7 @@ export default class HVPSUIViewModel{
 		exposeBinding(this, 'showBluetoothReconnect', ()=>this.showBluetoothReconnect);
 		disposes.push(HVPSUIAPI.addEventListener('disconnected', this._handleDisconnected));
 		disposes.push(HVPSUIAPI.addEventListener('consoleMessage', this._handleConsoleMessage));
+		disposes.push(HVPSUIAPI.addEventListener('errorMessage', this._handleErrorMessage));
 		this.refreshBluetoothDevices();
 		
 	}
@@ -261,6 +264,10 @@ export default class HVPSUIViewModel{
 			consoleMessage.message,
 			consoleMessage.isError?ConsoleMessageType.Error:ConsoleMessageType.Info)
 		;
+	}
+	_handleErrorMessage({errorMessage}){
+		console.log("GOT ERROR MESSAGE");
+		this.dispatchEvent({type:'error', error:new ErrorViewModel({errorMessage})});
 	}
 	_consoleClear(){
 		this.dispatchEvent({type:'consoleClear'});

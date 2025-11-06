@@ -6,6 +6,9 @@
 #include <optional>
 #include <cstdint>
 #include "../cJSON/cJSON.h"
+#include <vector>
+#include <type_traits>
+#include <cstddef>  // for size_t
 
 class JHelper {
 public:
@@ -82,7 +85,17 @@ public:
     static void addNullableUInt64(cJSON* obj, const char* key, std::optional<uint64_t> value);
     static void addNullableDouble(cJSON* obj, const char* key, std::optional<double> value);
     static void addNullableBool(cJSON* obj, const char* key, std::optional<bool> value);
+	
+	
+	
+	template<typename T>
+	static void addArray(cJSON* parent, const char* key, const T* values, size_t count);
+	
+	template<typename T>
+	static void addVector(cJSON* parent, const char* key, const std::vector<T>& vec);
+	
 	static void printJsonKeysAndValues(cJSON* json);
+	static void escapeForJson(const std::string& str, std::ostream& out);
 };
 
 #endif // JHELPER_HPP

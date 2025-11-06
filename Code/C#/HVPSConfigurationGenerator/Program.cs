@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using HVPSConstants;
 namespace HVPSConfigurationGenerator
 {
     class Program
@@ -64,7 +65,8 @@ namespace HVPSConfigurationGenerator
                 firstStageVoltageThreshold = firstStageVoltageThreshold,
                 maxAverageOutputPower = Constants.MaximumCompositeOutputCurrentLimitingResistorAveragePower,
                 nStages = Constants.NStages,
-                vPsOverVadcRatio=Constants.PowerSupplyVoltageFeedbackPotentialDividerRatio
+                vPsOverVadcRatio = Constants.PowerSupplyVoltageFeedbackPotentialDividerRatio,
+                pingTimeoutMilliseconds = Constants.PingTimeoutMilliseconds
             };
             AlreadyWroteWatcher alreadyWroteWatcher = new AlreadyWroteWatcher();
             ConfigurationWriter.WriteConfigurationStructFile<HVPSConfig>(Path.Combine(

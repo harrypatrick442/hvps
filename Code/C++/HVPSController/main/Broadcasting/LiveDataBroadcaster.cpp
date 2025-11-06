@@ -1,5 +1,5 @@
 #include "LiveDataBroadcaster.hpp"
-#include "Generated/Messages/HVPSLiveDataMessage.hpp"
+#include "Generated/Messages/LiveDataMessage.hpp"
 LiveDataBroadcaster::LiveDataBroadcaster(
 	LiveDataCache& liveDataCache, 
 	Port_ControllingMachine& portControllingMachine
@@ -19,11 +19,11 @@ void LiveDataBroadcaster::stop(){
 	_timer.stop();
 }
 void LiveDataBroadcaster::_run(){
-	HVPSLiveDataMessage hvpsLiveDataMessage(
+	LiveDataMessage liveDataMessage(
 		_liveDataCache.getFirstStageVoltage().d, 
 		_liveDataCache.getOutputCurrent().d, 
 		_liveDataCache.getOutputVoltage().d, 
 		_liveDataCache.getPeakPrimaryCurrent().d, 
 		_liveDataCache.getTotalOutputEnergy().d);
-	_portControllingMachine.sendHVPSLiveData(hvpsLiveDataMessage);
+	_portControllingMachine.sendLiveData(liveDataMessage);
 }
