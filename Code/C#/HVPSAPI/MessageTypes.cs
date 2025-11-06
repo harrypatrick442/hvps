@@ -11,6 +11,6 @@ namespace HVPSAPI
         public const string Message = "m";
         public const string Error = "e";
         public const string RanSystemChecks = "cm";
-        public const string CoreDump = "cd";
+        public const string CoreDumpSummary = "cd";
     }
 }

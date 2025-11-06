@@ -5,6 +5,7 @@
 #include "esp_core_dump.h"
 #include "CrashRecord.hpp"
 #include "../Logging/Log.hpp"
+#include "../Core/CleanupBucket.hpp"
 #include "StackSamplerHelper.hpp"
 #include <cstring>
 
@@ -26,22 +27,65 @@ public:
         initialized = true;
     }
 
-static inline void getRecordAndPrint() {
-    esp_core_dump_summary_t summary{};
-    if (esp_core_dump_get_summary(&summary) == ESP_OK) {
-        const auto &bt = summary.exc_bt_info;
-        Log::Info(TAG, "Crash task: %s  PC=0x%08" PRIx32, summary.exc_task, summary.exc_pc);
-        Log::Info(TAG, "BT depth=%u  corrupted=%u", (unsigned)bt.depth, (unsigned)bt.corrupted);
+	static inline std::shared_ptr<CoreDumpSummaryMessage> getCoreDumpSummary(CleanupBucket& cleanupBucket) {
+		esp_core_dump_summary_t* summary = new esp_core_dump_summary_t();
+		cleanupBucket.addDelete(summary);
+		if (esp_core_dump_get_summary(summary) != ESP_OK) {
+			Log::Info(TAG, "No valid core dump summary (or not ELF-to-flash).");
+			return nullptr;
+		}
+		printUsefulSummaryInfo();
+		esp_core_dump_bt_info_t backtrace_info = summary->exc_bt_info;
+		esp_core_dump_summary_extra_info_t extra_info = summary->ex_info;
+		const char* crashingApplicationsSHA256SumAsAString = convert_sha256_to_hex_cstr(summary->app_elf_sha256, cleanupBucket);
+		
+		char* taskName = new char[17];
+		cleanupBucket.addDeleteArray(taskName);
+		memcpy(taskName, summary->exc_task, 16); // copy exactly 16 bytes
+		taskName[16] = '\0'; 
+		
+		return std::make_shared<CoreDumpSummaryMessage>(
+			   extra_info.exc_a/*aRegisterSetWhenTheExceptionCaused*/,
+			   16/*aRegisterSetWhenTheExceptionCausedLength*/,
+			   uint32_t* backtrace_info.bt/*backtrace*/,
+			   backtrace_info.depth/*backtraceLength*/,
+			   backtrace_info.corrupted/*!< Status flag for backtrace is corrupt or not */,
+			   extra_info.epcx_reg_bits/*bitMaskOfAvailableEPCxRegisters*/,
+			   extra_info.exc_cause/*causeOfException*/,
+			   crashingApplicationsSHA256SumAsAString, 
+			   extra_info.epcx/*pCRegisterAddressAtExceptionLevel1To7*/,
+			   EPCx_REGISTER_COUNT/*pCRegisterAddressAtExceptionLevel1To7Length*/,
+			   summary->exc_pc/*programCounterForException*/, 
+			   taskName,
+			   summary->exc_tcb/*taskPointer*/,
+			   summary->core_dump_version, 
+			   extra_info.exc_vaddr/*virtualAddressOfException*/) ;
+	}
+	static inline const char* convert_sha256_to_hex_cstr(const uint8_t* hash, CleanupBucket& cleanupBucket) {
+		static_assert(APP_ELF_SHA256_SZ == 32, "Expected SHA256 length");
+		// 2 chars per byte + 1 null terminator
+		size_t outputLength = APP_ELF_SHA256_SZ * 2 + 1;
+		char* result = new char[outputLength];
+		cleanupBucket.addDeleteArray(result);
+		const char* hexDigits = "0123456789abcdef";
+		
+		for (size_t i = 0; i < APP_ELF_SHA256_SZ; ++i) {
+			result[i * 2]     = hexDigits[(hash[i] >> 4) & 0xF]; // high nibble
+			result[i * 2 + 1] = hexDigits[hash[i] & 0xF];        // low nibble
+		}
 
-        for (uint32_t i = 0; i < bt.depth; ++i) {
-            Log::Info(TAG, "  #%u 0x%08" PRIxPTR, (unsigned)i, (uintptr_t)bt.bt[i]);
-        }
-    } else {
-        Log::Info(TAG, "No valid core dump summary (or not ELF-to-flash).");
-    }
-}
-
-
+		result[outputLength - 1] = '\0'; // null terminator
+		return result;
+	}
+	static inline void printUsefulSummaryInfo(esp_core_dump_summary_t* summary){
+		esp_core_dump_bt_info_t backtrace_info = summary->exc_bt_info;
+		Log::Info(TAG, "Crash task: %s  PC=0x%08" PRIx32, summary->exc_task, summary->exc_pc);
+		Log::Info(TAG, "Backtrace depth=%u  corrupted=%u", (unsigned)backtrace_info.depth, (unsigned)backtrace_info.corrupted);
+		for (uint32_t i = 0; i < backtrace_info.depth; ++i) {
+			Log::Info(TAG, "  #%u 0x%08" PRIxPTR, (unsigned)i, (uintptr_t)backtrace_info.bt[i]);
+		}
+	}
+/*
 	static inline bool getRecord(CrashRecord& crashRecord) {
 		esp_err_t err = esp_core_dump_image_check();
 		if(err==ESP_ERR_NOT_FOUND) {
@@ -96,7 +140,7 @@ static inline void getRecordAndPrint() {
 		//Log::Info(TAG, "Core dump length: %lu bytes", (unsigned long)dumpLen);
 
 		return true;
-	}
+	}*/
     static inline void clearRecord() {
         esp_core_dump_image_erase();
     }

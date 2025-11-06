@@ -1,9 +1,10 @@
-#include "./CoreDumpMessage.hpp"
-const char* CoreDumpMessage::TYPE = "cd";
-CoreDumpMessage::CoreDumpMessage(
+#include "./CoreDumpSummaryMessage.hpp"
+const char* CoreDumpSummaryMessage::TYPE = "cd";
+CoreDumpSummaryMessage::CoreDumpSummaryMessage(
     uint32_t* aRegisterSetWhenTheExceptionCaused, size_t aRegisterSetWhenTheExceptionCausedLength, 
     uint32_t* backtrace, size_t backtraceLength, 
-    int16_t bitMaskOfAvailableEPCxRegisters, 
+    bool backtraceCorrupted, 
+    uint8_t bitMaskOfAvailableEPCxRegisters, 
     uint32_t causeOfException, 
     const char* crashingApplicationsSHA256SumAsAString, 
     uint32_t* pCRegisterAddressAtExceptionLevel1To7, size_t pCRegisterAddressAtExceptionLevel1To7Length, 
@@ -16,6 +17,7 @@ CoreDumpMessage::CoreDumpMessage(
         _aRegisterSetWhenTheExceptionCausedLength(aRegisterSetWhenTheExceptionCausedLength),
         _backtrace(backtrace),
         _backtraceLength(backtraceLength),
+        _backtraceCorrupted(backtraceCorrupted),
         _bitMaskOfAvailableEPCxRegisters(bitMaskOfAvailableEPCxRegisters),
         _causeOfException(causeOfException),
         _crashingApplicationsSHA256SumAsAString(crashingApplicationsSHA256SumAsAString),
@@ -27,47 +29,51 @@ CoreDumpMessage::CoreDumpMessage(
         _version(version),
         _virtualAddressOfException(virtualAddressOfException){
 }
-uint32_t* CoreDumpMessage::getARegisterSetWhenTheExceptionCaused(size_t& length){
+uint32_t* CoreDumpSummaryMessage::getARegisterSetWhenTheExceptionCaused(size_t& length){
     length = _aRegisterSetWhenTheExceptionCausedLength;
     return this->_aRegisterSetWhenTheExceptionCaused;
 }
-uint32_t* CoreDumpMessage::getBacktrace(size_t& length){
+uint32_t* CoreDumpSummaryMessage::getBacktrace(size_t& length){
     length = _backtraceLength;
     return this->_backtrace;
 }
-int16_t CoreDumpMessage::getBitMaskOfAvailableEPCxRegisters(){
+bool CoreDumpSummaryMessage::getBacktraceCorrupted(){
+    return this->_backtraceCorrupted;
+}
+uint8_t CoreDumpSummaryMessage::getBitMaskOfAvailableEPCxRegisters(){
     return this->_bitMaskOfAvailableEPCxRegisters;
 }
-uint32_t CoreDumpMessage::getCauseOfException(){
+uint32_t CoreDumpSummaryMessage::getCauseOfException(){
     return this->_causeOfException;
 }
-const char* CoreDumpMessage::getCrashingApplicationsSHA256SumAsAString(){
+const char* CoreDumpSummaryMessage::getCrashingApplicationsSHA256SumAsAString(){
     return this->_crashingApplicationsSHA256SumAsAString;
 }
-uint32_t* CoreDumpMessage::getPCRegisterAddressAtExceptionLevel1To7(size_t& length){
+uint32_t* CoreDumpSummaryMessage::getPCRegisterAddressAtExceptionLevel1To7(size_t& length){
     length = _pCRegisterAddressAtExceptionLevel1To7Length;
     return this->_pCRegisterAddressAtExceptionLevel1To7;
 }
-uint32_t CoreDumpMessage::getProgramCounterForException(){
+uint32_t CoreDumpSummaryMessage::getProgramCounterForException(){
     return this->_programCounterForException;
 }
-const char* CoreDumpMessage::getTaskName(){
+const char* CoreDumpSummaryMessage::getTaskName(){
     return this->_taskName;
 }
-uint32_t CoreDumpMessage::getTaskPointer(){
+uint32_t CoreDumpSummaryMessage::getTaskPointer(){
     return this->_taskPointer;
 }
-uint32_t CoreDumpMessage::getVersion(){
+uint32_t CoreDumpSummaryMessage::getVersion(){
     return this->_version;
 }
-uint32_t CoreDumpMessage::getVirtualAddressOfException(){
+uint32_t CoreDumpSummaryMessage::getVirtualAddressOfException(){
     return this->_virtualAddressOfException;
 }
-cJSON* CoreDumpMessage::toJSON(){
+cJSON* CoreDumpSummaryMessage::toJSON(){
     cJSON *j = cJSON_CreateObject();
     JHelper::addArray<uint32_t>(j, "areg", _aRegisterSetWhenTheExceptionCaused, _aRegisterSetWhenTheExceptionCausedLength);
     JHelper::addArray<uint32_t>(j, "b", _backtrace, _backtraceLength);
-    JHelper::addInt16(j, "bitm", this->_bitMaskOfAvailableEPCxRegisters);
+    JHelper::addBool(j, "bcpt", this->_backtraceCorrupted);
+    JHelper::addUInt8(j, "bitm", this->_bitMaskOfAvailableEPCxRegisters);
     JHelper::addUInt32(j, "coe", this->_causeOfException);
     JHelper::addString(j, "casha", this->_crashingApplicationsSHA256SumAsAString);
     JHelper::addArray<uint32_t>(j, "pcreg", _pCRegisterAddressAtExceptionLevel1To7, _pCRegisterAddressAtExceptionLevel1To7Length);
@@ -79,13 +85,14 @@ cJSON* CoreDumpMessage::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<CoreDumpMessage> CoreDumpMessage::fromJSON(cJSON* j){
+std::shared_ptr<CoreDumpSummaryMessage> CoreDumpSummaryMessage::fromJSON(cJSON* j){
     bool s = true;
     size_t aRegisterSetWhenTheExceptionCausedLength;
     uint32_t* aRegisterSetWhenTheExceptionCaused = JHelper::getArray<uint32_t>(j, "areg", aRegisterSetWhenTheExceptionCausedLength);
     size_t backtraceLength;
     uint32_t* backtrace = JHelper::getArray<uint32_t>(j, "b", backtraceLength);
-    int16_t bitMaskOfAvailableEPCxRegisters = JHelper::getInt16(j, "bitm", s);
+    bool backtraceCorrupted = JHelper::getBool(j, "bcpt", s);
+    uint8_t bitMaskOfAvailableEPCxRegisters = JHelper::getUInt8(j, "bitm", s);
     uint32_t causeOfException = JHelper::getUInt32(j, "coe", s);
     const char* crashingApplicationsSHA256SumAsAString = JHelper::getString(j, "casha", s);
     size_t pCRegisterAddressAtExceptionLevel1To7Length;
@@ -95,9 +102,9 @@ std::shared_ptr<CoreDumpMessage> CoreDumpMessage::fromJSON(cJSON* j){
     uint32_t taskPointer = JHelper::getUInt32(j, "tp", s);
     uint32_t version = JHelper::getUInt32(j, "v", s);
     uint32_t virtualAddressOfException = JHelper::getUInt32(j, "va", s);
-    return std::make_shared<CoreDumpMessage>(aRegisterSetWhenTheExceptionCaused, aRegisterSetWhenTheExceptionCausedLength, backtrace, backtraceLength, bitMaskOfAvailableEPCxRegisters, causeOfException, crashingApplicationsSHA256SumAsAString, pCRegisterAddressAtExceptionLevel1To7, pCRegisterAddressAtExceptionLevel1To7Length, programCounterForException, taskName, taskPointer, version, virtualAddressOfException);
+    return std::make_shared<CoreDumpSummaryMessage>(aRegisterSetWhenTheExceptionCaused, aRegisterSetWhenTheExceptionCausedLength, backtrace, backtraceLength, backtraceCorrupted, bitMaskOfAvailableEPCxRegisters, causeOfException, crashingApplicationsSHA256SumAsAString, pCRegisterAddressAtExceptionLevel1To7, pCRegisterAddressAtExceptionLevel1To7Length, programCounterForException, taskName, taskPointer, version, virtualAddressOfException);
 }
-CoreDumpMessage::~CoreDumpMessage(){
+CoreDumpSummaryMessage::~CoreDumpSummaryMessage(){
      if(_aRegisterSetWhenTheExceptionCaused!=nullptr)delete[] _aRegisterSetWhenTheExceptionCaused;
      if(_backtrace!=nullptr)delete[] _backtrace;
      if(_pCRegisterAddressAtExceptionLevel1To7!=nullptr)delete[] _pCRegisterAddressAtExceptionLevel1To7;

@@ -2,8 +2,8 @@ using MessageTypes.Attributes;
 
 namespace HVPSAPI.DataMemberNames.Messages
 {
-    [MessageType(MessageTypes.CoreDump)]
-    public static class CoreDumpMessageDataMemberNames
+    [MessageType(MessageTypes.CoreDumpSummary)]
+    public static class CoreDumpSummaryMessageDataMemberNames
     {
         public const string TaskName = "tn";
         public const string TaskPointer = "tp";
@@ -12,6 +12,7 @@ namespace HVPSAPI.DataMemberNames.Messages
         public const string Version = "v";
         public const string CrashingApplicationsSHA256SumAsAString = "casha";
         public const string Backtrace = "b";
+        public const string BacktraceCorrupted = "bcpt";
         public const string CauseOfException = "coe";
         public const string ARegisterSetWhenTheExceptionCaused = "areg";
         public const string PCRegisterAddressAtExceptionLevel1To7 = "pcreg";

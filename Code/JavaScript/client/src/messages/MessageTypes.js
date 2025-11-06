@@ -40,7 +40,7 @@ const MessageTypes ={
      message:"m",
      error:"e",
      ranSystemChecks:"cm",
-     coreDump:"cd",
+     coreDumpSummary:"cd",
      getAvaialbleBluetoothDevices:"gabd",
      connectToBluetoothDevice:"ctbd"
 }

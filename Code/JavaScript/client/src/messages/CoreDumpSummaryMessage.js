@@ -1,4 +1,4 @@
-export default class CoreDumpMessage
+export default class CoreDumpSummaryMessage
 {
  static toJSON(o){ 
     const r = {};
@@ -10,6 +10,7 @@ export default class CoreDumpMessage
     r["v"]=o.version;
     r["casha"]=o.crashingApplicationsSHA256SumAsAString;
     r["b"]=o.backtrace;
+    r["bcpt"]=o.backtraceCorrupted;
     r["coe"]=o.causeOfException;
     r["areg"]=o.aRegisterSetWhenTheExceptionCaused;
     r["pcreg"]=o.pCRegisterAddressAtExceptionLevel1To7;
@@ -25,6 +26,7 @@ export default class CoreDumpMessage
     r.version=o["v"];
     r.crashingApplicationsSHA256SumAsAString=o["casha"];
     r.backtrace=o["b"];
+    r.backtraceCorrupted=o["bcpt"];
     r.causeOfException=o["coe"];
     r.aRegisterSetWhenTheExceptionCaused=o["areg"];
     r.pCRegisterAddressAtExceptionLevel1To7=o["pcreg"];
