@@ -15,7 +15,9 @@ import {
 	RunSystemChecksOnlyMessage,
 	ConsoleMessage,
 	ErrorMessage,
-	DisconnectedMessage
+	DisconnectedMessage,
+	CoreDumpSummaryMessage,
+	LastAbortMessage
 	} from '../messages';
 class HVPSUIAPI{
 	static shutDown(){
@@ -52,6 +54,18 @@ class HVPSUIAPI{
 				HVPSUIAPI.dispatchEvent({
 					type:'errorMessage',
 					errorMessage:ErrorMessage.fromJSON(message)
+				});
+				break;
+			case MessageTypes.coreDumpSummary:
+				HVPSUIAPI.dispatchEvent({
+					type:'coreDumpSummaryMessage',
+					errorMessage:CoreDumpSummaryMessage.fromJSON(message)
+				});
+				break;
+			case MessageTypes.lastAbort:
+				HVPSUIAPI.dispatchEvent({
+					type:'lastAbortMessage',
+					errorMessage:LastAbortMessage.fromJSON(message)
 				});
 				break;
 		}

@@ -7,6 +7,7 @@
 #include <cstdio>
 #include <cstdarg>
 
+
 template<typename... Args>
 [[noreturn]] void Aborter::safeAbort(const char* tag, const char* format, Args&&... args)
 {
@@ -18,6 +19,10 @@ template<typename... Args>
     // 2) Format the message for crash storage
     char formatted[128];//TODO long enough?
     std::snprintf(formatted, sizeof(formatted), format, std::forward<Args>(args)...);
+	 // Copy to IRAM buffer for later retrieval (even if flash/heap are unavailable)
+	std::strncpy(_reasonBuffer, formatted, sizeof(_reasonBuffer) - 1);
+	_reasonBuffer[sizeof(_reasonBuffer) - 1] = '\0';
+	_hasReason = true;
 
     // 3) Log the fault normally (non-throwing)
     Log::Fatal(tag, "%s", formatted);

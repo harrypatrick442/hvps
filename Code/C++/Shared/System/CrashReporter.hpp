@@ -3,11 +3,11 @@
 #include "esp_system.h"
 #include "esp_log.h"
 #include "esp_core_dump.h"
-#include "CrashRecord.hpp"
 #include "../Logging/Log.hpp"
 #include "../Core/CleanupBucket.hpp"
 #include "StackSamplerHelper.hpp"
 #include <cstring>
+#include "Generated/Messages/CoreDumpSummaryMessage.hpp"
 
 
 //YOU MUST ENABLE DUMPING TO FLASH FOR THIS TO WORK. MR WOBOT LOVES DUMPING AND FLASHING!🤖<(grrr)
@@ -34,10 +34,10 @@ public:
 			Log::Info(TAG, "No valid core dump summary (or not ELF-to-flash).");
 			return nullptr;
 		}
-		printUsefulSummaryInfo();
+		printUsefulSummaryInfo(summary);
 		esp_core_dump_bt_info_t backtrace_info = summary->exc_bt_info;
 		esp_core_dump_summary_extra_info_t extra_info = summary->ex_info;
-		const char* crashingApplicationsSHA256SumAsAString = convert_sha256_to_hex_cstr(summary->app_elf_sha256, cleanupBucket);
+		const char* crashingApplicationsSHA256SumAsAString = convertSha256ToHexCstr(summary->app_elf_sha256, cleanupBucket);
 		
 		char* taskName = new char[17];
 		cleanupBucket.addDeleteArray(taskName);
@@ -47,7 +47,7 @@ public:
 		return std::make_shared<CoreDumpSummaryMessage>(
 			   extra_info.exc_a/*aRegisterSetWhenTheExceptionCaused*/,
 			   16/*aRegisterSetWhenTheExceptionCausedLength*/,
-			   uint32_t* backtrace_info.bt/*backtrace*/,
+			   backtrace_info.bt/*backtrace*/,
 			   backtrace_info.depth/*backtraceLength*/,
 			   backtrace_info.corrupted/*!< Status flag for backtrace is corrupt or not */,
 			   extra_info.epcx_reg_bits/*bitMaskOfAvailableEPCxRegisters*/,
@@ -61,8 +61,7 @@ public:
 			   summary->core_dump_version, 
 			   extra_info.exc_vaddr/*virtualAddressOfException*/) ;
 	}
-	static inline const char* convert_sha256_to_hex_cstr(const uint8_t* hash, CleanupBucket& cleanupBucket) {
-		static_assert(APP_ELF_SHA256_SZ == 32, "Expected SHA256 length");
+	static inline const char* convertSha256ToHexCstr(const uint8_t* hash, CleanupBucket& cleanupBucket) {
 		// 2 chars per byte + 1 null terminator
 		size_t outputLength = APP_ELF_SHA256_SZ * 2 + 1;
 		char* result = new char[outputLength];

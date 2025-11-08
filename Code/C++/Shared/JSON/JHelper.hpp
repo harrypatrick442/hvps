@@ -94,8 +94,15 @@ public:
 	template<typename T>
 	static void addVector(cJSON* parent, const char* key, const std::vector<T>& vec);
 	
+	template<typename T>
+	static T* getArray(const cJSON* parent, const char* key, size_t& outLength);
+	
+	template<typename T>
+	static bool getVector(const cJSON* parent, const char* key, std::vector<T>& outVec);
+	
 	static void printJsonKeysAndValues(cJSON* json);
 	static void escapeForJson(const std::string& str, std::ostream& out);
 };
+#include "JHelper.tpp"
 
 #endif // JHELPER_HPP

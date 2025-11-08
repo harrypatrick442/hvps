@@ -46,13 +46,19 @@ namespace HVPSUI
                 RunSystemChecksOnlyMessage>(
                 HVPSAPI.MessageTypes.RunSystemChecksOnly, HandleHVPSRunSystemChecksOnlyMessage);
             _DeviceRegistrationMessageHandler.RegisterMethod<
-                ErrorMessage>(
-                HVPSAPI.MessageTypes.Error, HandleError);
-            _DeviceRegistrationMessageHandler.RegisterMethod<
                 ConsoleMessage>(
                     Native.MessageTypes.ConsoleMessage,
                     HandleConsoleMessage
                 );
+            _DeviceRegistrationMessageHandler.RegisterMethod<
+                ErrorMessage>(
+                HVPSAPI.MessageTypes.Error, HandleError);
+            _DeviceRegistrationMessageHandler.RegisterMethod<
+                CoreDumpSummaryMessage>(
+                HVPSAPI.MessageTypes.CoreDumpSummary, HandleCoreDumpSummaryMessage);
+            _DeviceRegistrationMessageHandler.RegisterMethod<
+                LastAbortMessage>(
+                HVPSAPI.MessageTypes.LastAbort, HandleLastAbortMessage);
             _DeviceRegistrationMessageHandler.OnMessage += (o, e) => _PingDisconnectDetector.Received();
         }
         private void HandleHVPSStartMessage(
@@ -77,6 +83,16 @@ namespace HVPSUI
         }
         private void HandleError(
             ErrorMessage message)
+        {
+            _WebViewMessagingInterface.Send(message);
+        }
+        private void HandleCoreDumpSummaryMessage(
+            CoreDumpSummaryMessage message)
+        {
+            _WebViewMessagingInterface.Send(message);
+        }
+        private void HandleLastAbortMessage(
+            LastAbortMessage message)
         {
             _WebViewMessagingInterface.Send(message);
         }

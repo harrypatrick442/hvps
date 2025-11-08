@@ -25,9 +25,9 @@ idf_component_register(
 	"JSON/JHelper.cpp"
 	"Logging/Log.cpp"
 	"Storage/Flash.cpp"
+	"System/Aborter.cpp"
 	"System/WatchdogFeeder.cpp"
 	"System/StayTheFuckAwake.cpp"
-	"System/CrashRecord.cpp"
 	"Tasks/TransientWorker.cpp"
 	"Ticketing/TicketedSender.cpp"
 	"Ticketing/TicketedSender.cpp"
@@ -49,6 +49,8 @@ idf_component_register(
 	"Generated/Messages/SetVoltageThresholdRequest.cpp"
 	"Generated/Messages/SetVoltageThresholdResponse.cpp"
 	"Generated/Messages/VoltageMessage.cpp"
+	"Generated/Messages/CoreDumpSummaryMessage.cpp"
+	"Generated/Messages/LastAbortMessage.cpp"
     PRIV_REQUIRES spi_flash driver bt nvs_flash esp_adc
 	REQUIRES
 		espcoredump

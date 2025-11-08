@@ -11,9 +11,9 @@
 #include "Generated/Messages/StopMessage.hpp"
 #include "Generated/Messages/StateChangedMessage.hpp"
 #include "Generated/Messages/PingMessage.hpp"
-#include "Generated/Messages/ErrorMessage.hpp"
+#include "Generated/Messages/CoreDumpSummaryMessage.hpp"
+#include "Generated/Messages/LastAbortMessage.hpp"
 #include "System/CrashReporter.hpp"
-#include "System/CrashRecord.hpp"
 #include "Core/CleanupBucket.hpp"
 #include "Enums/ErrorType.hpp"
 //#include "Generated/Messages/SetVoltageThresholdRequest.hpp"
@@ -117,34 +117,22 @@ void Port_ControllingMachine::handleOnClosed(){
 	_timerSendPing.stop();
 }
 void Port_ControllingMachine::sendErrors(){
-	CrashRecord crashRecord;
-	CrashReporter::getRecordAndPrint();
-	CrashReporter::causePanicOnPurpose();
-	return;
-	if(CrashReporter::getRecord(crashRecord)){
-		
-		CleanupBucket cleanupBucket;
-		size_t crashRecordLength;
-		const char* crashJSON = crashRecord.toJSONString(cleanupBucket, crashRecordLength);
-		ErrorMessage errorMessage(
-			(int32_t)ErrorType::Panic, 
-			crashJSON
-		);
-		Log::Info(TAG, "crash json is: ");
-		Log::Info(TAG, crashJSON);
-		
-		CrashReporter::causePanicOnPurpose();
-		while(true){
-			Delay::ms(10000);
-		}
-		_channel.sendMessage(errorMessage.toJSON());
+	CleanupBucket cleanupBucket;
+	bool doCausePanic = false;
+	std::shared_ptr<CoreDumpSummaryMessage> coreDumpSummaryMessage = CrashReporter::getCoreDumpSummary(cleanupBucket);
+	if(coreDumpSummaryMessage){
+		_channel.sendMessage(coreDumpSummaryMessage->toJSON());
 		CrashReporter::clearRecord();
 		Log::Info(TAG, "sent reason");
-		return;
+		doCausePanic =true;
 	}
-	else{
-		
-		Delay::ms(10000);
+	const char* lastAbortReason = Aborter::getLastAbortReason();
+	if(lastAbortReason){
+		LastAbortMessage lastAbortMessage(lastAbortReason);
+		_channel.sendMessage(lastAbortMessage.toJSON());
+	}
+	if(doCausePanic){
+		Delay::ms(30000);
 		CrashReporter::causePanicOnPurpose();
 	}
 }
