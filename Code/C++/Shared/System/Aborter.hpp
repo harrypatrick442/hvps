@@ -7,6 +7,8 @@
 #include "Aborter.hpp"
 #include "esp_attr.h"
 #include <string>
+#include "../Generated/Messages/LastAbortMessage.hpp"
+#include "../Core/CleanupBucket.hpp"
 class Aborter {
 private: 
 	static inline constexpr const char* TAG = "Aborter";
@@ -18,7 +20,8 @@ public:
 	}
     template<typename... Args>
     [[noreturn]] static void safeAbort(const char* tag, const char* format, Args&&... args);
-	static bool getLastAbortReason(std::string& reason);
+	static LastAbortMessage* getLastAbortReason(
+			CleanupBucket& cleanupBucket);
 	static void clearLastAbortReason();
 private:
     static inline std::function<void()> _toSafe = nullptr;

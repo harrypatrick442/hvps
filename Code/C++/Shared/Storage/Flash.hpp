@@ -9,6 +9,13 @@ class Flash{
 			const char* namespaceName, const char* key, double &outValue);
 		static bool setDouble(
 			const char* namespaceName, const char* key, double value);
+			
+		template<typename T>
+		static bool setNumber(const char* namespaceName, const char* key, T value);
+
+		template<typename T>
+		static bool getNumber(const char* namespaceName, 
+			const char* key, T& outValue);
 		
 		static bool getString(const char* namespaceName, const char* key,
 			std::string& outValue, size_t maxLength  = 0, bool allowTruncate = true);
@@ -16,6 +23,14 @@ class Flash{
 		static bool setString(const char* namespaceName, const char* key,
                       const std::string& value,
                       bool allowEmptyErase = true);
+					  
+		static bool getCharStringOnHeap(
+			const char* namespaceName,
+			const char* key,
+			char*& outStr,
+			CleanupBucket& cleanupBucket,
+			size_t maxLength = 0,
+			bool allowTruncate = true);
 					
 		template <typename T>
 		static bool getArray(const char* namespaceName, const char* key,

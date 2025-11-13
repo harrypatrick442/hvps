@@ -241,6 +241,84 @@ bool Flash::getString(const char* namespaceName, const char* key,
     outValue.assign(buffer.data());
     return true;
 }
+bool Flash::getCharStringOnHeap(
+    const char* namespaceName,
+    const char* key,
+    char*& outStr,
+    CleanupBucket& cleanupBucket,
+    size_t maxLength /*= 0*/,
+    bool allowTruncate /*= true*/)
+{
+    outStr = nullptr;
+
+    if (!_isInitialized) {
+        Aborter::safeAbort(TAG, NVS_NOT_INITIALIZED);
+        return false;
+    }
+
+    nvs_handle_t handle;
+    esp_err_t err = nvs_open(namespaceName, NVS_READWRITE, &handle);
+    if (err == ESP_ERR_NVS_NOT_FOUND) {
+        return false; // namespace never created
+    }
+    if (err != ESP_OK) {
+        Log::Warn(TAG, FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
+        return false;
+    }
+
+    // Step 1: Query required size (includes null terminator)
+    size_t requiredSize = 0;
+    err = nvs_get_str(handle, key, nullptr, &requiredSize);
+    if (err == ESP_ERR_NVS_NOT_FOUND) {
+        nvs_close(handle);
+        return false; // key missing
+    }
+    if (err != ESP_OK) {
+        nvs_close(handle);
+        Log::Warn(TAG, "Failed to determine string length for key '%s': %s",
+                  key, esp_err_to_name(err));
+        return false;
+    }
+
+    if (requiredSize <= 1) {
+        // Empty string
+        outStr = new char[1];
+        outStr[0] = '\0';
+        cleanupBucket.addDeleteArray(outStr);
+        nvs_close(handle);
+        return true;
+    }
+
+    size_t bufferSize = requiredSize;
+    if (maxLength > 0 && bufferSize > maxLength) {
+        if (!allowTruncate) {
+            Log::Warn(TAG, "Stored string too long for key '%s' (%zu > %zu bytes) and allowTruncate is false",
+                      key, bufferSize, maxLength);
+            nvs_close(handle);
+            return false;
+        }
+        Log::Warn(TAG, "Truncating stored string for key '%s' from %zu to %zu bytes",
+                  key, bufferSize, maxLength);
+        bufferSize = maxLength;
+    }
+
+    outStr = new char[bufferSize]; // includes space for null terminator
+    cleanupBucket.addDeleteArray(outStr);
+
+    err = nvs_get_str(handle, key, outStr, &bufferSize);
+    nvs_close(handle);
+
+    if (err != ESP_OK) {
+        Log::Warn(TAG, "Failed to read string for key '%s': %s",
+                  key, esp_err_to_name(err));
+        return false;
+    }
+
+    // Defensive: ensure null termination
+    outStr[bufferSize - 1] = '\0';
+    return true;
+}
+
 bool Flash::erase(const char* namespaceName, const char* key)
 {
     if (!_isInitialized) {

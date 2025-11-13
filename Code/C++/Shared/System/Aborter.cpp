@@ -1,13 +1,22 @@
 #include "Aborter.hpp"
 #include "../Storage/Flash.hpp"
 #include "esp_attr.h"
-bool Aborter::getLastAbortReason(std::string& reason){
+LastAbortMessage* Aborter::getLastAbortReason(
+	CleanupBucket& cleanupBucket){
 	if(!Flash::getIsInitialized()){
 		Log::Warn(TAG, "Flash was not initialized when calling getLastAbortReason");
-		return false;
+		return nullptr;
 	}
-	return Flash::getString(TAG, REASON_KEY,
-			reason);
+	char* reason = nullptr;
+	Flash::getCharStringOnHeap(TAG, REASON_KEY, reason, cleanupBucket);
+	uint32_t* backtrace = nullptr;
+	size_t backtraceLength = 0;
+	Flash::getArray(TAG, BACKTRACE_KEY, backtrace, backtraceLength, 
+							 cleanupBucket);
+	LastAbortMessage* lastAbortMessage = new LastAbortMessage(
+		backtrace, backtraceLength, reason);
+	cleanupBucket.addDelete(lastAbortMessage);
+	return lastAbortMessage;
 }
 void Aborter::clearLastAbortReason(){
 	if(!Flash::getIsInitialized()){

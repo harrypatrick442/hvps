@@ -29,15 +29,12 @@ template<typename... Args>
     uint32_t backtrace[BACKTRACE_DEPTH] = {0};
     size_t backtraceLength = BacktraceHelper::getBacktrace(
 		backtrace, nullptr, BACKTRACE_DEPTH);
-    for (int i = 0; i < backtraceLength; ++i) {
-        Log::Info("Backtrace", "[%02d] 0x%08X", i, backtrace[i]);
-    }
     // 4) Persist the formatted message to flash for post-mortem
 	if(Flash::getIsInitialized()){
 		Flash::setString(TAG, REASON_KEY,
 			formatted);
 		Flash::setArray(TAG, BACKTRACE_KEY,
-				backtrace, backtraceLength);
+			backtrace, backtraceLength);
 	}
 	else{
 		Log::Warn(TAG, "Flash was not initialized when trying to set last abort reason");

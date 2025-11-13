@@ -119,15 +119,16 @@ void Port_ControllingMachine::handleOnClosed(){
 void Port_ControllingMachine::sendErrors(){
 	CleanupBucket cleanupBucket;
 	bool doCausePanic = true;
-	std::shared_ptr<CoreDumpSummaryMessage> coreDumpSummaryMessage = CrashReporter::getCoreDumpSummary(cleanupBucket);
+	std::shared_ptr<CoreDumpSummaryMessage> coreDumpSummaryMessage 
+		= CrashReporter::getCoreDumpSummary(cleanupBucket);
 	if(coreDumpSummaryMessage){
 		_channel.sendMessage(coreDumpSummaryMessage->toJSON());
 		CrashReporter::clearRecord();
 	}
-	std::string lastAbortReason;
-	if(Aborter::getLastAbortReason(lastAbortReason)){
-		LastAbortMessage lastAbortMessage(lastAbortReason.c_str());
-		_channel.sendMessage(lastAbortMessage.toJSON());
+	LastAbortMessage* lastAbortMessage = 
+		Aborter::getLastAbortReason(cleanupBucket);
+	if(lastAbortMessage){
+		_channel.sendMessage(lastAbortMessage->toJSON());
 		Log::Info(TAG, "Last abort reason sent!");
 	}
 	else{

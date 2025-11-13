@@ -12,7 +12,10 @@ namespace HVPSAPI.Messages
     [DataContract]
     public class LastAbortMessage : TypedMessageBase
     {
-
+        [JsonPropertyName(LastAbortMessageDataMemberNames.Backtrace)]
+        [JsonInclude]
+        [DataMember(Name = LastAbortMessageDataMemberNames.Backtrace)]
+        public UInt32[] Backtrace { get; protected set; }
         [JsonPropertyName(LastAbortMessageDataMemberNames.Reason)]
         [JsonInclude]
         [DataMember(Name = LastAbortMessageDataMemberNames.Reason)]

@@ -6,5 +6,6 @@ namespace HVPSAPI.DataMemberNames.Messages
     public static class LastAbortMessageDataMemberNames
     {
         public const string Reason = "r";
+        public const string Backtrace = "bt";
     }
 }

@@ -5,6 +5,126 @@
 #include "nvs_flash.h" // Ensure ESP-IDF include path is set correctly
 #include <cstring>
 
+template<typename T>
+bool Flash::setNumber(const char* namespaceName, const char* key, T value) {
+	if (!_isInitialized) {
+		Aborter::safeAbort(TAG, NVS_NOT_INITIALIZED);
+		return false;
+	}
+
+
+	nvs_handle_t handle;
+	esp_err_t err = nvs_open(namespaceName, NVS_READWRITE, &handle);
+	if (err != ESP_OK) {
+		Log::Warn(TAG, FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
+		return false;
+	}
+
+
+	esp_err_t writeErr = ESP_OK;
+	if constexpr (std::is_same_v<T, uint8_t>) {
+		writeErr = nvs_set_u8(handle, key, value);
+	} else if constexpr (std::is_same_v<T, int8_t>) {
+		writeErr = nvs_set_i8(handle, key, value);
+	} else if constexpr (std::is_same_v<T, uint16_t>) {
+		writeErr = nvs_set_u16(handle, key, value);
+	} else if constexpr (std::is_same_v<T, int16_t>) {
+		writeErr = nvs_set_i16(handle, key, value);
+	} else if constexpr (std::is_same_v<T, uint32_t>) {
+		writeErr = nvs_set_u32(handle, key, value);
+	} else if constexpr (std::is_same_v<T, int32_t>) {
+		writeErr = nvs_set_i32(handle, key, value);
+	} else if constexpr (std::is_same_v<T, uint64_t>) {
+		writeErr = nvs_set_u64(handle, key, value);
+	} else if constexpr (std::is_same_v<T, int64_t>) {
+		writeErr = nvs_set_i64(handle, key, value);
+	} else if constexpr (std::is_same_v<T, float>) {
+		writeErr = nvs_set_u32(handle, key, *reinterpret_cast<uint32_t*>(&value));
+	} else if constexpr (std::is_same_v<T, double>) {
+		uint64_t raw;
+		std::memcpy(&raw, &value, sizeof(double));
+		writeErr = nvs_set_u64(handle, key, raw);
+	} else {
+		static_assert(!sizeof(T*), "Unsupported type in setNumber()");
+	}
+
+
+	if (writeErr != ESP_OK) {
+		nvs_close(handle);
+		Log::Warn(TAG, "Failed to set number: %s", esp_err_to_name(writeErr));
+		return false;
+	}
+
+
+	err = nvs_commit(handle);
+	nvs_close(handle);
+	if (err != ESP_OK) {
+		Log::Warn(TAG, "Failed to commit NVS number: %s", esp_err_to_name(err));
+		return false;
+	}
+
+
+	return true;
+}
+template<typename T>
+bool Flash::getNumber(const char* namespaceName, const char* key, T& outValue) {
+	if (!_isInitialized) {
+		Aborter::safeAbort(TAG, NVS_NOT_INITIALIZED);
+		return false;
+	}
+
+
+	nvs_handle_t handle;
+	esp_err_t err = nvs_open(namespaceName, NVS_READONLY, &handle);
+	if (err != ESP_OK) {
+		Log::Warn(TAG, FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
+		return false;
+	}
+
+	esp_err_t readErr = ESP_OK;
+	if constexpr (std::is_same_v<T, uint8_t>) {
+		readErr = nvs_get_u8(handle, key, &outValue);
+	} else if constexpr (std::is_same_v<T, int8_t>) {
+		readErr = nvs_get_i8(handle, key, &outValue);
+	} else if constexpr (std::is_same_v<T, uint16_t>) {
+		readErr = nvs_get_u16(handle, key, &outValue);
+	} else if constexpr (std::is_same_v<T, int16_t>) {
+		readErr = nvs_get_i16(handle, key, &outValue);
+	} else if constexpr (std::is_same_v<T, uint32_t>) {
+		readErr = nvs_get_u32(handle, key, &outValue);
+	} else if constexpr (std::is_same_v<T, int32_t>) {
+		readErr = nvs_get_i32(handle, key, &outValue);
+	} else if constexpr (std::is_same_v<T, uint64_t>) {
+		readErr = nvs_get_u64(handle, key, &outValue);
+	} else if constexpr (std::is_same_v<T, int64_t>) {
+		readErr = nvs_get_i64(handle, key, &outValue);
+	} else if constexpr (std::is_same_v<T, float>) {
+		uint32_t raw;
+		readErr = nvs_get_u32(handle, key, &raw);
+		std::memcpy(&outValue, &raw, sizeof(float));
+	} else if constexpr (std::is_same_v<T, double>) {
+		uint64_t raw;
+		readErr = nvs_get_u64(handle, key, &raw);
+		std::memcpy(&outValue, &raw, sizeof(double));
+	} else {
+		static_assert(!sizeof(T*), "Unsupported type in getNumber()");
+	}
+
+
+	nvs_close(handle);
+
+
+	if (readErr == ESP_ERR_NVS_NOT_FOUND) 
+		return false;
+	if (readErr != ESP_OK) {
+		Log::Warn(TAG, "Failed to get number: %s", esp_err_to_name(readErr));
+		return false;
+	}
+
+
+	return true;
+}
+
 template <typename T>
 bool Flash::getArray(const char* namespaceName, const char* key,
                      T*& outArray, size_t& outCount, 
