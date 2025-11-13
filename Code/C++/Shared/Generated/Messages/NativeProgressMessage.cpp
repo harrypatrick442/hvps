@@ -10,7 +10,8 @@ cJSON* NativeProgressMessage::toJSON(){
 }
 std::shared_ptr<NativeProgressMessage> NativeProgressMessage::fromJSON(cJSON* j){
     bool s = true;
-    return std::make_shared<NativeProgressMessage>();
+    auto r = std::make_shared<NativeProgressMessage>();
+return r;
 }
 NativeProgressMessage::~NativeProgressMessage(){
 }

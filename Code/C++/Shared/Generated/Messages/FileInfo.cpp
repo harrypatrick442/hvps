@@ -29,7 +29,8 @@ std::shared_ptr<FileInfo> FileInfo::fromJSON(cJSON* j){
     const char* name = JHelper::getString(j, "n", s);
     int64_t size = JHelper::getInt64(j, "s", s);
     const char* type = JHelper::getString(j, "t", s);
-    return std::make_shared<FileInfo>(name, size, type);
+    auto r = std::make_shared<FileInfo>(name, size, type);
+return r;
 }
 FileInfo::~FileInfo(){
 }

@@ -39,7 +39,7 @@ export default class HVPSUI{
 			model, 
 			eventNameAppendLine:'consoleAppendLine', 
 			eventNameClear:'consoleClear',
-			maxNLines:30
+			maxNLines:500
 		});
 		const controlButtonsElement = E.div('control-buttons');
 		this._deviceSpecificElement = E.div('device-specific');

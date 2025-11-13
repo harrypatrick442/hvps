@@ -23,7 +23,8 @@ std::shared_ptr<GetVoltageThresholdResponse> GetVoltageThresholdResponse::fromJS
     bool s = true;
     double voltage = JHelper::getDouble(j, "v", s);
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    return std::make_shared<GetVoltageThresholdResponse>(voltage, ticket);
+    auto r = std::make_shared<GetVoltageThresholdResponse>(voltage, ticket);
+return r;
 }
 GetVoltageThresholdResponse::~GetVoltageThresholdResponse(){
 }

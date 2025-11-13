@@ -1,14 +1,12 @@
-export default class LastAbortMessage
+export default class TestMessage
 {
  static toJSON(o){ 
     const r = {};
-   r["tpe"]="la";
-    r["r"]=o.reason;
+   r["tpe"]="test";
     return r;
  }
  static fromJSON(o){
     const r = {};
-    r.reason=o["r"];
    return r;
  }
 }

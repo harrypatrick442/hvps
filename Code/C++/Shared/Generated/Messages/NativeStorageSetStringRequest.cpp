@@ -30,7 +30,8 @@ std::shared_ptr<NativeStorageSetStringRequest> NativeStorageSetStringRequest::fr
     const char* key = JHelper::getString(j, "k", s);
     const char* value = JHelper::getString(j, "v", s);
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    return std::make_shared<NativeStorageSetStringRequest>(key, value, ticket);
+    auto r = std::make_shared<NativeStorageSetStringRequest>(key, value, ticket);
+return r;
 }
 NativeStorageSetStringRequest::~NativeStorageSetStringRequest(){
 }

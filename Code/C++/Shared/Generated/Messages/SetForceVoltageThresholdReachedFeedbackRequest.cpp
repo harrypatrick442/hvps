@@ -23,7 +23,8 @@ std::shared_ptr<SetForceVoltageThresholdReachedFeedbackRequest> SetForceVoltageT
     bool s = true;
     bool force = JHelper::getBool(j, "f", s);
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    return std::make_shared<SetForceVoltageThresholdReachedFeedbackRequest>(force, ticket);
+    auto r = std::make_shared<SetForceVoltageThresholdReachedFeedbackRequest>(force, ticket);
+return r;
 }
 SetForceVoltageThresholdReachedFeedbackRequest::~SetForceVoltageThresholdReachedFeedbackRequest(){
 }

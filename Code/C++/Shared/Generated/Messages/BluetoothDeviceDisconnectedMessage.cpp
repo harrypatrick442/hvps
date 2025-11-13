@@ -11,7 +11,8 @@ cJSON* BluetoothDeviceDisconnectedMessage::toJSON(){
 }
 std::shared_ptr<BluetoothDeviceDisconnectedMessage> BluetoothDeviceDisconnectedMessage::fromJSON(cJSON* j){
     bool s = true;
-    return std::make_shared<BluetoothDeviceDisconnectedMessage>();
+    auto r = std::make_shared<BluetoothDeviceDisconnectedMessage>();
+return r;
 }
 BluetoothDeviceDisconnectedMessage::~BluetoothDeviceDisconnectedMessage(){
 }

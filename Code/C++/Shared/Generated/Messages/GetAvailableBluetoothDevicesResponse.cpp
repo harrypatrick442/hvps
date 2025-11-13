@@ -24,7 +24,8 @@ std::shared_ptr<GetAvailableBluetoothDevicesResponse> GetAvailableBluetoothDevic
     bool s = true;
     std::optional<int32_t> failedReason = JHelper::getNullableInt32(j, "s", s);
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    return std::make_shared<GetAvailableBluetoothDevicesResponse>(devices, failedReason, ticket);
+    auto r = std::make_shared<GetAvailableBluetoothDevicesResponse>(devices, failedReason, ticket);
+return r;
 }
 GetAvailableBluetoothDevicesResponse::~GetAvailableBluetoothDevicesResponse(){
 }

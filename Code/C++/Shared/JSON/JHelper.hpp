@@ -100,6 +100,9 @@ public:
 	template<typename T>
 	static bool getVector(const cJSON* parent, const char* key, std::vector<T>& outVec);
 	
+	template <typename T>
+	static constexpr double toDoubleSafe(T value) noexcept;
+	
 	static void printJsonKeysAndValues(cJSON* json);
 	static void escapeForJson(const std::string& str, std::ostream& out);
 };

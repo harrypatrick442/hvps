@@ -16,7 +16,8 @@ cJSON* NativeOpenDirectoryRequest::toJSON(){
 std::shared_ptr<NativeOpenDirectoryRequest> NativeOpenDirectoryRequest::fromJSON(cJSON* j){
     bool s = true;
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    return std::make_shared<NativeOpenDirectoryRequest>(ticket);
+    auto r = std::make_shared<NativeOpenDirectoryRequest>(ticket);
+return r;
 }
 NativeOpenDirectoryRequest::~NativeOpenDirectoryRequest(){
 }

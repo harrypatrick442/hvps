@@ -16,7 +16,8 @@ cJSON* NativePickFileResponse::toJSON(){
 std::shared_ptr<NativePickFileResponse> NativePickFileResponse::fromJSON(cJSON* j){
     bool s = true;
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    return std::make_shared<NativePickFileResponse>(ticket);
+    auto r = std::make_shared<NativePickFileResponse>(ticket);
+return r;
 }
 NativePickFileResponse::~NativePickFileResponse(){
 }

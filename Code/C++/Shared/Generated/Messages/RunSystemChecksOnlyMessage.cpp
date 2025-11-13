@@ -11,7 +11,8 @@ cJSON* RunSystemChecksOnlyMessage::toJSON(){
 }
 std::shared_ptr<RunSystemChecksOnlyMessage> RunSystemChecksOnlyMessage::fromJSON(cJSON* j){
     bool s = true;
-    return std::make_shared<RunSystemChecksOnlyMessage>();
+    auto r = std::make_shared<RunSystemChecksOnlyMessage>();
+return r;
 }
 RunSystemChecksOnlyMessage::~RunSystemChecksOnlyMessage(){
 }

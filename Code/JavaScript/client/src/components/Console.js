@@ -7,7 +7,7 @@ export default class Console{
 			model, 
 			eventNameAppendLine, 
 			eventNameClear,
-			maxNLines
+			maxNLines = 500
 		}){
 		this._model = model;
 		console.log(model);

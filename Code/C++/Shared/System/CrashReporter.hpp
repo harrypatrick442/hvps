@@ -34,9 +34,9 @@ public:
 			Log::Info(TAG, "No valid core dump summary (or not ELF-to-flash).");
 			return nullptr;
 		}
-		printUsefulSummaryInfo(summary);
-		esp_core_dump_bt_info_t backtrace_info = summary->exc_bt_info;
-		esp_core_dump_summary_extra_info_t extra_info = summary->ex_info;
+		//printUsefulSummaryInfo(summary);
+		esp_core_dump_bt_info_t& backtrace_info = summary->exc_bt_info;
+		esp_core_dump_summary_extra_info_t& extra_info = summary->ex_info;
 		const char* crashingApplicationsSHA256SumAsAString = convertSha256ToHexCstr(summary->app_elf_sha256, cleanupBucket);
 		
 		char* taskName = new char[17];
@@ -59,7 +59,8 @@ public:
 			   taskName,
 			   summary->exc_tcb/*taskPointer*/,
 			   summary->core_dump_version, 
-			   extra_info.exc_vaddr/*virtualAddressOfException*/) ;
+			   extra_info.exc_vaddr/*virtualAddressOfException*/
+		);
 	}
 	static inline const char* convertSha256ToHexCstr(const uint8_t* hash, CleanupBucket& cleanupBucket) {
 		// 2 chars per byte + 1 null terminator
@@ -77,11 +78,14 @@ public:
 		return result;
 	}
 	static inline void printUsefulSummaryInfo(esp_core_dump_summary_t* summary){
-		esp_core_dump_bt_info_t backtrace_info = summary->exc_bt_info;
+		esp_core_dump_bt_info_t& backtrace_info = summary->exc_bt_info;
 		Log::Info(TAG, "Crash task: %s  PC=0x%08" PRIx32, summary->exc_task, summary->exc_pc);
 		Log::Info(TAG, "Backtrace depth=%u  corrupted=%u", (unsigned)backtrace_info.depth, (unsigned)backtrace_info.corrupted);
 		for (uint32_t i = 0; i < backtrace_info.depth; ++i) {
 			Log::Info(TAG, "  #%u 0x%08" PRIxPTR, (unsigned)i, (uintptr_t)backtrace_info.bt[i]);
+		}
+		for (uint32_t i = 0; i < 16; ++i) {
+			Log::Info(TAG, "A[%u] = 0x%08" PRIx32, i, summary->ex_info.exc_a[i]);
 		}
 	}
 /*

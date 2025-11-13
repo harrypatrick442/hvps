@@ -26,6 +26,7 @@ idf_component_register(
 	"Logging/Log.cpp"
 	"Storage/Flash.cpp"
 	"System/Aborter.cpp"
+	"System/BacktraceHelper.cpp"
 	"System/WatchdogFeeder.cpp"
 	"System/StayTheFuckAwake.cpp"
 	"Tasks/TransientWorker.cpp"

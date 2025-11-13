@@ -23,7 +23,8 @@ std::shared_ptr<ConnectToBluetoothDeviceRequest> ConnectToBluetoothDeviceRequest
     bool s = true;
     const char* address = JHelper::getString(j, "a", s);
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    return std::make_shared<ConnectToBluetoothDeviceRequest>(address, ticket);
+    auto r = std::make_shared<ConnectToBluetoothDeviceRequest>(address, ticket);
+return r;
 }
 ConnectToBluetoothDeviceRequest::~ConnectToBluetoothDeviceRequest(){
 }

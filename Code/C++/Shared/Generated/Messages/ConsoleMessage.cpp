@@ -23,7 +23,8 @@ std::shared_ptr<ConsoleMessage> ConsoleMessage::fromJSON(cJSON* j){
     bool s = true;
     bool isError = JHelper::getBool(j, "e", s);
     const char* message = JHelper::getString(j, "m", s);
-    return std::make_shared<ConsoleMessage>(isError, message);
+    auto r = std::make_shared<ConsoleMessage>(isError, message);
+return r;
 }
 ConsoleMessage::~ConsoleMessage(){
 }

@@ -23,7 +23,8 @@ std::shared_ptr<NativeStorageGetStringResponse> NativeStorageGetStringResponse::
     bool s = true;
     const char* value = JHelper::getString(j, "v", s);
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    return std::make_shared<NativeStorageGetStringResponse>(value, ticket);
+    auto r = std::make_shared<NativeStorageGetStringResponse>(value, ticket);
+return r;
 }
 NativeStorageGetStringResponse::~NativeStorageGetStringResponse(){
 }

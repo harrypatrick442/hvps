@@ -30,7 +30,8 @@ std::shared_ptr<VirtualSocketMessage> VirtualSocketMessage::fromJSON(cJSON* j){
     int64_t id = JHelper::getInt64(j, "i", s);
     const char* internalType = JHelper::getString(j, "u", s);
     const char* payload = JHelper::getString(j, "p", s);
-    return std::make_shared<VirtualSocketMessage>(id, internalType, payload);
+    auto r = std::make_shared<VirtualSocketMessage>(id, internalType, payload);
+return r;
 }
 VirtualSocketMessage::~VirtualSocketMessage(){
 }

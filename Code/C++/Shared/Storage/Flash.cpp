@@ -68,8 +68,6 @@ bool Flash::setDouble(const char* namespaceName, const char* key, double value) 
         Log::Warn(TAG, "Failed to commit double: %s", esp_err_to_name(err));
         return false;
     }
-
-    Log::Info(TAG, "Double value stored successfully");
     return true;
 }
 
@@ -130,28 +128,33 @@ bool Flash::setString(const char* namespaceName, const char* key,
     // Handle empty string case — optionally erase key
     if (value.empty() && allowEmptyErase) {
         err = nvs_erase_key(handle, key);
+		if (err == ESP_OK) {
+			err = nvs_commit(handle);
+            nvs_close(handle);
+			if (err != ESP_OK) {
+				Log::Warn(TAG, "Failed to commit NVS changes for key '%s': %s",
+						  key, esp_err_to_name(err));
+				return false;
+			}
+			return true;
+		}
         if (err == ESP_ERR_NVS_NOT_FOUND) {
-            Log::Info(TAG, "Key '%s' already absent, nothing to erase", key);
-            err = ESP_OK;
-        } else if (err != ESP_OK) {
-            Log::Warn(TAG, "Failed to erase key '%s': %s", key, esp_err_to_name(err));
-            nvs_close(handle);
-            return false;
+			nvs_close(handle);
+			return true;
         }
-        Log::Info(TAG, "Erased key '%s' successfully", key);
+		nvs_close(handle);
+		Log::Warn(TAG, "Failed to erase key '%s': %s", key, esp_err_to_name(err));
+		return false;
     } 
-    else {
-        // Store normally
-        err = nvs_set_str(handle, key, value.c_str());
-        if (err != ESP_OK) {
-            nvs_close(handle);
-            Log::Warn(TAG, "Failed to set string for key '%s': %s",
-                      key, esp_err_to_name(err));
-            return false;
-        }
-
-        Log::Info(TAG, "String value stored successfully for key '%s'", key);
-    }
+	
+    // Store normally
+	err = nvs_set_str(handle, key, value.c_str());
+	if (err != ESP_OK) {
+		nvs_close(handle);
+		Log::Warn(TAG, "Failed to set string for key '%s': %s",
+				  key, esp_err_to_name(err));
+		return false;
+	}
 
     // Commit the changes
     err = nvs_commit(handle);
@@ -161,7 +164,6 @@ bool Flash::setString(const char* namespaceName, const char* key,
                   key, esp_err_to_name(err));
         return false;
     }
-
     return true;
 }
 
@@ -239,5 +241,36 @@ bool Flash::getString(const char* namespaceName, const char* key,
     outValue.assign(buffer.data());
     return true;
 }
+bool Flash::erase(const char* namespaceName, const char* key)
+{
+    if (!_isInitialized) {
+        Aborter::safeAbort(TAG, NVS_NOT_INITIALIZED);
+        return false;
+    }
+    nvs_handle_t handle;
+    esp_err_t err = nvs_open(namespaceName, NVS_READWRITE, &handle);
+    if (err != ESP_OK) {
+        Log::Warn(TAG, FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
+        return false;
+    }
+	err = nvs_erase_key(handle, key);
+	if (err == ESP_ERR_NVS_NOT_FOUND) {
+		nvs_close(handle);
+		return true;
+	}
+	if (err != ESP_OK) {
+		nvs_close(handle);
+		Log::Warn(TAG, "Failed to erase key '%s': %s", key, esp_err_to_name(err));
+		return false;
+	}
+	err = nvs_commit(handle);
+	nvs_close(handle);
+	if (err != ESP_OK) {
+		Log::Warn(TAG, "Failed to commit NVS changes for key '%s': %s",
+				  key, esp_err_to_name(err));
+		return false;
+	}
+	return true;
+} 
 
 

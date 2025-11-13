@@ -16,7 +16,8 @@ cJSON* Message::toJSON(){
 std::shared_ptr<Message> Message::fromJSON(cJSON* j){
     bool s = true;
     const char* content = JHelper::getString(j, "c", s);
-    return std::make_shared<Message>(content);
+    auto r = std::make_shared<Message>(content);
+return r;
 }
 Message::~Message(){
 }

@@ -23,7 +23,8 @@ std::shared_ptr<NativeStorageGetStringRequest> NativeStorageGetStringRequest::fr
     bool s = true;
     const char* key = JHelper::getString(j, "k", s);
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    return std::make_shared<NativeStorageGetStringRequest>(key, ticket);
+    auto r = std::make_shared<NativeStorageGetStringRequest>(key, ticket);
+return r;
 }
 NativeStorageGetStringRequest::~NativeStorageGetStringRequest(){
 }

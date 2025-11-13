@@ -23,7 +23,8 @@ std::shared_ptr<ErrorMessage> ErrorMessage::fromJSON(cJSON* j){
     bool s = true;
     int32_t errorType = JHelper::getInt32(j, "t", s);
     const char* serializedError = JHelper::getString(j, "s", s);
-    return std::make_shared<ErrorMessage>(errorType, serializedError);
+    auto r = std::make_shared<ErrorMessage>(errorType, serializedError);
+return r;
 }
 ErrorMessage::~ErrorMessage(){
 }

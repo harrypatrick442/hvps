@@ -11,7 +11,8 @@ cJSON* StopMessage::toJSON(){
 }
 std::shared_ptr<StopMessage> StopMessage::fromJSON(cJSON* j){
     bool s = true;
-    return std::make_shared<StopMessage>();
+    auto r = std::make_shared<StopMessage>();
+return r;
 }
 StopMessage::~StopMessage(){
 }

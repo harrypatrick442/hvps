@@ -30,7 +30,8 @@ std::shared_ptr<ConnectToBluetoothDeviceResponse> ConnectToBluetoothDeviceRespon
     const char* address = JHelper::getString(j, "a", s);
     std::optional<int32_t> failedReason = JHelper::getNullableInt32(j, "s", s);
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    return std::make_shared<ConnectToBluetoothDeviceResponse>(address, failedReason, ticket);
+    auto r = std::make_shared<ConnectToBluetoothDeviceResponse>(address, failedReason, ticket);
+return r;
 }
 ConnectToBluetoothDeviceResponse::~ConnectToBluetoothDeviceResponse(){
 }

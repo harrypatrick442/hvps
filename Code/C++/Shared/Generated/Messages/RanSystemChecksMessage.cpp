@@ -11,7 +11,8 @@ cJSON* RanSystemChecksMessage::toJSON(){
 }
 std::shared_ptr<RanSystemChecksMessage> RanSystemChecksMessage::fromJSON(cJSON* j){
     bool s = true;
-    return std::make_shared<RanSystemChecksMessage>();
+    auto r = std::make_shared<RanSystemChecksMessage>();
+return r;
 }
 RanSystemChecksMessage::~RanSystemChecksMessage(){
 }

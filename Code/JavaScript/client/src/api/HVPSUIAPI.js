@@ -17,7 +17,8 @@ import {
 	ErrorMessage,
 	DisconnectedMessage,
 	CoreDumpSummaryMessage,
-	LastAbortMessage
+	LastAbortMessage,
+	TestMessage
 	} from '../messages';
 class HVPSUIAPI{
 	static shutDown(){
@@ -40,6 +41,9 @@ class HVPSUIAPI{
 		return NativeAPI.ticketedSend(ConnectToBluetoothDeviceRequest.toJSON({address}), 30000)
 		.then(res=>ConnectToBluetoothDeviceResponse.fromJSON(res));
 	}
+	static test(params){
+		NativeAPI.send(TestMessage.toJSON(params));
+	}
 	static _handleIncomingMessage({message}){
 		console.log(message);
 		switch(message[MessageTypes.type]){
@@ -59,18 +63,20 @@ class HVPSUIAPI{
 			case MessageTypes.coreDumpSummary:
 				HVPSUIAPI.dispatchEvent({
 					type:'coreDumpSummaryMessage',
-					errorMessage:CoreDumpSummaryMessage.fromJSON(message)
+					coreDumpSummaryMessage:CoreDumpSummaryMessage.fromJSON(message)
 				});
 				break;
 			case MessageTypes.lastAbort:
 				HVPSUIAPI.dispatchEvent({
 					type:'lastAbortMessage',
-					errorMessage:LastAbortMessage.fromJSON(message)
+					lastAbortMessage:LastAbortMessage.fromJSON(message)
 				});
 				break;
 		}
 	}
+	
 }
 eventEnable(HVPSUIAPI);
 NativeAPI.addEventListener('message', HVPSUIAPI._handleIncomingMessage);
+window.sendTestMessage = HVPSUIAPI.test;
 export default HVPSUIAPI;

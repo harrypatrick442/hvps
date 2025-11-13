@@ -1,5 +1,5 @@
 #include "./LastAbortMessage.hpp"
-const char* LastAbortMessage::TYPE = "cd";
+const char* LastAbortMessage::TYPE = "la";
 LastAbortMessage::LastAbortMessage(
     const char* reason):
         _reason(reason){
@@ -16,7 +16,8 @@ cJSON* LastAbortMessage::toJSON(){
 std::shared_ptr<LastAbortMessage> LastAbortMessage::fromJSON(cJSON* j){
     bool s = true;
     const char* reason = JHelper::getString(j, "r", s);
-    return std::make_shared<LastAbortMessage>(reason);
+    auto r = std::make_shared<LastAbortMessage>(reason);
+return r;
 }
 LastAbortMessage::~LastAbortMessage(){
 }

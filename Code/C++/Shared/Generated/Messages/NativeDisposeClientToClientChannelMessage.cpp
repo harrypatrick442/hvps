@@ -11,7 +11,8 @@ cJSON* NativeDisposeClientToClientChannelMessage::toJSON(){
 }
 std::shared_ptr<NativeDisposeClientToClientChannelMessage> NativeDisposeClientToClientChannelMessage::fromJSON(cJSON* j){
     bool s = true;
-    return std::make_shared<NativeDisposeClientToClientChannelMessage>();
+    auto r = std::make_shared<NativeDisposeClientToClientChannelMessage>();
+return r;
 }
 NativeDisposeClientToClientChannelMessage::~NativeDisposeClientToClientChannelMessage(){
 }

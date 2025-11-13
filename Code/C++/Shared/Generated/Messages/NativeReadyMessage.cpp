@@ -11,7 +11,8 @@ cJSON* NativeReadyMessage::toJSON(){
 }
 std::shared_ptr<NativeReadyMessage> NativeReadyMessage::fromJSON(cJSON* j){
     bool s = true;
-    return std::make_shared<NativeReadyMessage>();
+    auto r = std::make_shared<NativeReadyMessage>();
+return r;
 }
 NativeReadyMessage::~NativeReadyMessage(){
 }

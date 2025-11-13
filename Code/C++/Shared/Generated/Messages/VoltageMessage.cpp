@@ -16,7 +16,8 @@ cJSON* VoltageMessage::toJSON(){
 std::shared_ptr<VoltageMessage> VoltageMessage::fromJSON(cJSON* j){
     bool s = true;
     double voltage = JHelper::getDouble(j, "v", s);
-    return std::make_shared<VoltageMessage>(voltage);
+    auto r = std::make_shared<VoltageMessage>(voltage);
+return r;
 }
 VoltageMessage::~VoltageMessage(){
 }

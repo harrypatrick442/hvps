@@ -23,7 +23,8 @@ std::shared_ptr<GetVoltageResponse> GetVoltageResponse::fromJSON(cJSON* j){
     bool s = true;
     double voltage = JHelper::getDouble(j, "v", s);
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    return std::make_shared<GetVoltageResponse>(voltage, ticket);
+    auto r = std::make_shared<GetVoltageResponse>(voltage, ticket);
+return r;
 }
 GetVoltageResponse::~GetVoltageResponse(){
 }

@@ -1,12 +1,18 @@
 #include "Aborter.hpp"
+#include "../Storage/Flash.hpp"
 #include "esp_attr.h"
-#include <cstring>
-IRAM_ATTR char Aborter::_reasonBuffer[128] = {0};
-IRAM_ATTR bool Aborter::_hasReason = false;
-const char* Aborter::getLastAbortReason(){
-    return _hasReason?_reasonBuffer:nullptr;
+bool Aborter::getLastAbortReason(std::string& reason){
+	if(!Flash::getIsInitialized()){
+		Log::Warn(TAG, "Flash was not initialized when calling getLastAbortReason");
+		return false;
+	}
+	return Flash::getString(TAG, REASON_KEY,
+			reason);
 }
 void Aborter::clearLastAbortReason(){
-    std::memset(_reasonBuffer, 0, sizeof(_reasonBuffer));
-	_hasReason = false;
+	if(!Flash::getIsInitialized()){
+		Log::Warn(TAG, "Flash was not initialized when calling clearLastAbortReason");
+		return;
+	}
+	Flash::erase(TAG, REASON_KEY);
 }

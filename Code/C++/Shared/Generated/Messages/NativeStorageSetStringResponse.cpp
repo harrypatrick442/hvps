@@ -16,7 +16,8 @@ cJSON* NativeStorageSetStringResponse::toJSON(){
 std::shared_ptr<NativeStorageSetStringResponse> NativeStorageSetStringResponse::fromJSON(cJSON* j){
     bool s = true;
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    return std::make_shared<NativeStorageSetStringResponse>(ticket);
+    auto r = std::make_shared<NativeStorageSetStringResponse>(ticket);
+return r;
 }
 NativeStorageSetStringResponse::~NativeStorageSetStringResponse(){
 }

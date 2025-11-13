@@ -11,7 +11,8 @@ cJSON* PingMessage::toJSON(){
 }
 std::shared_ptr<PingMessage> PingMessage::fromJSON(cJSON* j){
     bool s = true;
-    return std::make_shared<PingMessage>();
+    auto r = std::make_shared<PingMessage>();
+return r;
 }
 PingMessage::~PingMessage(){
 }

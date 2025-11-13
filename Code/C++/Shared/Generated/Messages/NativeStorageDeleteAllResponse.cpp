@@ -16,7 +16,8 @@ cJSON* NativeStorageDeleteAllResponse::toJSON(){
 std::shared_ptr<NativeStorageDeleteAllResponse> NativeStorageDeleteAllResponse::fromJSON(cJSON* j){
     bool s = true;
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    return std::make_shared<NativeStorageDeleteAllResponse>(ticket);
+    auto r = std::make_shared<NativeStorageDeleteAllResponse>(ticket);
+return r;
 }
 NativeStorageDeleteAllResponse::~NativeStorageDeleteAllResponse(){
 }

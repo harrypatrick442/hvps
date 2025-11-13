@@ -11,7 +11,8 @@ cJSON* NativeGotNewTokenMessage::toJSON(){
 }
 std::shared_ptr<NativeGotNewTokenMessage> NativeGotNewTokenMessage::fromJSON(cJSON* j){
     bool s = true;
-    return std::make_shared<NativeGotNewTokenMessage>();
+    auto r = std::make_shared<NativeGotNewTokenMessage>();
+return r;
 }
 NativeGotNewTokenMessage::~NativeGotNewTokenMessage(){
 }

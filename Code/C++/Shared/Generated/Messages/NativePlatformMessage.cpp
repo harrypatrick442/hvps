@@ -16,7 +16,8 @@ cJSON* NativePlatformMessage::toJSON(){
 std::shared_ptr<NativePlatformMessage> NativePlatformMessage::fromJSON(cJSON* j){
     bool s = true;
     int32_t platform = JHelper::getInt32(j, "p", s);
-    return std::make_shared<NativePlatformMessage>(platform);
+    auto r = std::make_shared<NativePlatformMessage>(platform);
+return r;
 }
 NativePlatformMessage::~NativePlatformMessage(){
 }

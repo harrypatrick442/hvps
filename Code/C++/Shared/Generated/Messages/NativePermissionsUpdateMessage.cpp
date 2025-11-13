@@ -16,7 +16,8 @@ cJSON* NativePermissionsUpdateMessage::toJSON(){
 std::shared_ptr<NativePermissionsUpdateMessage> NativePermissionsUpdateMessage::fromJSON(cJSON* j){
     bool s = true;
     bool hasAllRequired = JHelper::getBool(j, "a", s);
-    return std::make_shared<NativePermissionsUpdateMessage>(hasAllRequired);
+    auto r = std::make_shared<NativePermissionsUpdateMessage>(hasAllRequired);
+return r;
 }
 NativePermissionsUpdateMessage::~NativePermissionsUpdateMessage(){
 }

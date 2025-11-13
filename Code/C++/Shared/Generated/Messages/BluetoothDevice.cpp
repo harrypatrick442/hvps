@@ -22,7 +22,8 @@ std::shared_ptr<BluetoothDevice> BluetoothDevice::fromJSON(cJSON* j){
     bool s = true;
     const char* address = JHelper::getString(j, "a", s);
     const char* name = JHelper::getString(j, "n", s);
-    return std::make_shared<BluetoothDevice>(address, name);
+    auto r = std::make_shared<BluetoothDevice>(address, name);
+return r;
 }
 BluetoothDevice::~BluetoothDevice(){
 }

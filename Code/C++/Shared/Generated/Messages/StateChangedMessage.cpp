@@ -16,7 +16,8 @@ cJSON* StateChangedMessage::toJSON(){
 std::shared_ptr<StateChangedMessage> StateChangedMessage::fromJSON(cJSON* j){
     bool s = true;
     int32_t state = JHelper::getInt32(j, "s", s);
-    return std::make_shared<StateChangedMessage>(state);
+    auto r = std::make_shared<StateChangedMessage>(state);
+return r;
 }
 StateChangedMessage::~StateChangedMessage(){
 }

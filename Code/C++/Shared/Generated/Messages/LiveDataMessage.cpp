@@ -44,7 +44,8 @@ std::shared_ptr<LiveDataMessage> LiveDataMessage::fromJSON(cJSON* j){
     double outputVoltage = JHelper::getDouble(j, "v", s);
     double peakPrimaryCurrent = JHelper::getDouble(j, "p", s);
     double totalOutputEnergy = JHelper::getDouble(j, "t", s);
-    return std::make_shared<LiveDataMessage>(firstStageVoltage, outputCurrent, outputVoltage, peakPrimaryCurrent, totalOutputEnergy);
+    auto r = std::make_shared<LiveDataMessage>(firstStageVoltage, outputCurrent, outputVoltage, peakPrimaryCurrent, totalOutputEnergy);
+return r;
 }
 LiveDataMessage::~LiveDataMessage(){
 }

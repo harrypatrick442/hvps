@@ -16,7 +16,8 @@ cJSON* GetVoltageRequest::toJSON(){
 std::shared_ptr<GetVoltageRequest> GetVoltageRequest::fromJSON(cJSON* j){
     bool s = true;
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    return std::make_shared<GetVoltageRequest>(ticket);
+    auto r = std::make_shared<GetVoltageRequest>(ticket);
+return r;
 }
 GetVoltageRequest::~GetVoltageRequest(){
 }

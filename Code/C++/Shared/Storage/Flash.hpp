@@ -1,4 +1,6 @@
+#pragma once
 #include <string>
+#include "../Core/CleanupBucket.hpp"
 class Flash{
     public:
         static void initialize();
@@ -7,17 +9,24 @@ class Flash{
 			const char* namespaceName, const char* key, double &outValue);
 		static bool setDouble(
 			const char* namespaceName, const char* key, double value);
+		
 		static bool getString(const char* namespaceName, const char* key,
 			std::string& outValue, size_t maxLength  = 0, bool allowTruncate = true);
-		bool setString(const char* namespaceName, const char* key,
+		
+		static bool setString(const char* namespaceName, const char* key,
                       const std::string& value,
                       bool allowEmptyErase = true);
-
-		static bool getString(
-			const char* namespaceName,
-			const char* key,
-			char* outValue,
-			size_t maxLength);
+					
+		template <typename T>
+		static bool getArray(const char* namespaceName, const char* key,
+							 T*& outArray, size_t& outCount, 
+							 CleanupBucket& cleanupBucket);
+							 
+		template <typename T>
+		static bool setArray(const char* namespaceName, const char* key,
+			const T* array, size_t count);
+		
+		static bool erase(const char* namespaceName, const char* key);
     private:
 		static inline constexpr const char* TAG = "Flash";
 		static inline constexpr const char* STRING_VALUE_NOT_FOUND_FOR_KEY 
@@ -27,3 +36,4 @@ class Flash{
 			= "Failed to open NVS namespace: %s";
         static bool _isInitialized;
 };
+#include "Flash.tpp"

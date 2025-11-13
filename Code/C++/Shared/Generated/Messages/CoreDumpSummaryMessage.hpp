@@ -25,6 +25,7 @@ class CoreDumpSummaryMessage
         uint32_t _taskPointer;
         uint32_t _version;
         uint32_t _virtualAddressOfException;
+        bool _freeMemoryInDeconstructor;
    public:
         uint32_t* getARegisterSetWhenTheExceptionCaused(size_t& length) noexcept;
         uint32_t* getBacktrace(size_t& length) noexcept;

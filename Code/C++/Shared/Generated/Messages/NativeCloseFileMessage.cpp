@@ -11,7 +11,8 @@ cJSON* NativeCloseFileMessage::toJSON(){
 }
 std::shared_ptr<NativeCloseFileMessage> NativeCloseFileMessage::fromJSON(cJSON* j){
     bool s = true;
-    return std::make_shared<NativeCloseFileMessage>();
+    auto r = std::make_shared<NativeCloseFileMessage>();
+return r;
 }
 NativeCloseFileMessage::~NativeCloseFileMessage(){
 }

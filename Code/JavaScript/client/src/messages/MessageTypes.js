@@ -42,6 +42,7 @@ const MessageTypes ={
      ranSystemChecks:"cm",
      coreDumpSummary:"cd",
      lastAbort:"la",
+     test:"test",
      getAvaialbleBluetoothDevices:"gabd",
      connectToBluetoothDevice:"ctbd"
 }

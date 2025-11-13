@@ -16,7 +16,8 @@ cJSON* SetVoltageThresholdResponse::toJSON(){
 std::shared_ptr<SetVoltageThresholdResponse> SetVoltageThresholdResponse::fromJSON(cJSON* j){
     bool s = true;
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    return std::make_shared<SetVoltageThresholdResponse>(ticket);
+    auto r = std::make_shared<SetVoltageThresholdResponse>(ticket);
+return r;
 }
 SetVoltageThresholdResponse::~SetVoltageThresholdResponse(){
 }

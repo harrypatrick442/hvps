@@ -2,7 +2,7 @@ using MessageTypes.Attributes;
 
 namespace HVPSAPI.DataMemberNames.Messages
 {
-    [MessageType(MessageTypes.CoreDumpSummary)]
+    [MessageType(MessageTypes.LastAbort)]
     public static class LastAbortMessageDataMemberNames
     {
         public const string Reason = "r";

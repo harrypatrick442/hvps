@@ -37,7 +37,8 @@ std::shared_ptr<VirtualSocket2Message> VirtualSocket2Message::fromJSON(cJSON* j)
     const char* payload = JHelper::getString(j, "p", s);
     const char* secret = JHelper::getString(j, "s", s);
     std::optional<int32_t> theirNodeId = JHelper::getNullableInt32(j, "n", s);
-    return std::make_shared<VirtualSocket2Message>(endpointId, payload, secret, theirNodeId);
+    auto r = std::make_shared<VirtualSocket2Message>(endpointId, payload, secret, theirNodeId);
+return r;
 }
 VirtualSocket2Message::~VirtualSocket2Message(){
 }

@@ -11,7 +11,8 @@ cJSON* StartMessage::toJSON(){
 }
 std::shared_ptr<StartMessage> StartMessage::fromJSON(cJSON* j){
     bool s = true;
-    return std::make_shared<StartMessage>();
+    auto r = std::make_shared<StartMessage>();
+return r;
 }
 StartMessage::~StartMessage(){
 }

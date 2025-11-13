@@ -11,7 +11,8 @@ cJSON* ShutDownMessage::toJSON(){
 }
 std::shared_ptr<ShutDownMessage> ShutDownMessage::fromJSON(cJSON* j){
     bool s = true;
-    return std::make_shared<ShutDownMessage>();
+    auto r = std::make_shared<ShutDownMessage>();
+return r;
 }
 ShutDownMessage::~ShutDownMessage(){
 }

@@ -27,7 +27,8 @@ CoreDumpSummaryMessage::CoreDumpSummaryMessage(
         _taskName(taskName),
         _taskPointer(taskPointer),
         _version(version),
-        _virtualAddressOfException(virtualAddressOfException){
+        _virtualAddressOfException(virtualAddressOfException),
+        _freeMemoryInDeconstructor(false){
 }
 uint32_t* CoreDumpSummaryMessage::getARegisterSetWhenTheExceptionCaused(size_t& length){
     length = _aRegisterSetWhenTheExceptionCausedLength;
@@ -102,9 +103,12 @@ std::shared_ptr<CoreDumpSummaryMessage> CoreDumpSummaryMessage::fromJSON(cJSON* 
     uint32_t taskPointer = JHelper::getUInt32(j, "tp", s);
     uint32_t version = JHelper::getUInt32(j, "v", s);
     uint32_t virtualAddressOfException = JHelper::getUInt32(j, "va", s);
-    return std::make_shared<CoreDumpSummaryMessage>(aRegisterSetWhenTheExceptionCaused, aRegisterSetWhenTheExceptionCausedLength, backtrace, backtraceLength, backtraceCorrupted, bitMaskOfAvailableEPCxRegisters, causeOfException, crashingApplicationsSHA256SumAsAString, pCRegisterAddressAtExceptionLevel1To7, pCRegisterAddressAtExceptionLevel1To7Length, programCounterForException, taskName, taskPointer, version, virtualAddressOfException);
+    auto r = std::make_shared<CoreDumpSummaryMessage>(aRegisterSetWhenTheExceptionCaused, aRegisterSetWhenTheExceptionCausedLength, backtrace, backtraceLength, backtraceCorrupted, bitMaskOfAvailableEPCxRegisters, causeOfException, crashingApplicationsSHA256SumAsAString, pCRegisterAddressAtExceptionLevel1To7, pCRegisterAddressAtExceptionLevel1To7Length, programCounterForException, taskName, taskPointer, version, virtualAddressOfException);
+r->_freeMemoryInDeconstructor = true;
+return r;
 }
 CoreDumpSummaryMessage::~CoreDumpSummaryMessage(){
+if(!_freeMemoryInDeconstructor)return;
      if(_aRegisterSetWhenTheExceptionCaused!=nullptr)delete[] _aRegisterSetWhenTheExceptionCaused;
      if(_backtrace!=nullptr)delete[] _backtrace;
      if(_pCRegisterAddressAtExceptionLevel1To7!=nullptr)delete[] _pCRegisterAddressAtExceptionLevel1To7;

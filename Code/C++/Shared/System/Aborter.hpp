@@ -6,17 +6,19 @@
 #include <utility>     // std::forward
 #include "Aborter.hpp"
 #include "esp_attr.h"
+#include <string>
 class Aborter {
 private: 
-    static IRAM_ATTR char _reasonBuffer[128];
-    static IRAM_ATTR bool _hasReason;
+	static inline constexpr const char* TAG = "Aborter";
+	static inline constexpr const char*  REASON_KEY = "reason";
+	static inline constexpr const char*  BACKTRACE_KEY = "bt";
 public:
 	static inline void setToSafe(const std::function<void()>& fn) {
 		_toSafe = fn;  // copy
 	}
     template<typename... Args>
     [[noreturn]] static void safeAbort(const char* tag, const char* format, Args&&... args);
-	static const char* getLastAbortReason();
+	static bool getLastAbortReason(std::string& reason);
 	static void clearLastAbortReason();
 private:
     static inline std::function<void()> _toSafe = nullptr;

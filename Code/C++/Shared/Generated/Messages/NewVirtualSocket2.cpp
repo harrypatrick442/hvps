@@ -30,7 +30,8 @@ std::shared_ptr<NewVirtualSocket2> NewVirtualSocket2::fromJSON(cJSON* j){
     int64_t endpointId = JHelper::getInt64(j, "i", s);
     const char* secret = JHelper::getString(j, "s", s);
     int64_t theirNodeId = JHelper::getInt64(j, "n", s);
-    return std::make_shared<NewVirtualSocket2>(endpointId, secret, theirNodeId);
+    auto r = std::make_shared<NewVirtualSocket2>(endpointId, secret, theirNodeId);
+return r;
 }
 NewVirtualSocket2::~NewVirtualSocket2(){
 }

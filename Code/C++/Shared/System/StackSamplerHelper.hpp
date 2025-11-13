@@ -1,5 +1,6 @@
 #pragma once
 #include "soc/soc_memory_layout.h"
+#include "StackSamplerHelper.hpp"
 class StackSamplerHelper {
 public:
     static_assert(

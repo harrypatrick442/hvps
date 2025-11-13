@@ -34,6 +34,9 @@ export default class HVPSUIViewModel{
 		this.reconnect = this.reconnect.bind(this);
 		this._setDevices = this._setDevices.bind(this);
 		this._handleDisconnected = this._handleDisconnected.bind(this);
+		this._handleCoreDumpSummaryMessage = this._handleCoreDumpSummaryMessage.bind(this);
+		this._handleLastAbortMessage = this._handleLastAbortMessage.bind(this);
+		this._buildUsefulCoreDumpSummaryLines = this._buildUsefulCoreDumpSummaryLines.bind(this);
 		this._notSelectedDevice = {name:'Not Selected', address:''};
 		this._state = HVPSState.Unknown;
 		this._devices = [
@@ -68,6 +71,8 @@ export default class HVPSUIViewModel{
 		disposes.push(HVPSUIAPI.addEventListener('disconnected', this._handleDisconnected));
 		disposes.push(HVPSUIAPI.addEventListener('consoleMessage', this._handleConsoleMessage));
 		disposes.push(HVPSUIAPI.addEventListener('errorMessage', this._handleErrorMessage));
+		disposes.push(HVPSUIAPI.addEventListener('coreDumpSummaryMessage', this._handleCoreDumpSummaryMessage));
+		disposes.push(HVPSUIAPI.addEventListener('lastAbortMessage', this._handleLastAbortMessage));
 		this.refreshBluetoothDevices();
 		
 	}
@@ -221,6 +226,9 @@ export default class HVPSUIViewModel{
 		if(isNullOrUndefinedOrEmptyString(address))return;
 		this._connectToBluetoothDevice(address);
 	}
+	test(){
+		HVPSUIAPI.test();
+	}
 	_connectToBluetoothDevice(address){
 		var busyHandle = this._bluetoothBusyHandles.take();
 		try{
@@ -269,6 +277,14 @@ export default class HVPSUIViewModel{
 		console.log("GOT ERROR MESSAGE");
 		this.dispatchEvent({type:'error', error:new ErrorViewModel({errorMessage})});
 	}
+	_handleCoreDumpSummaryMessage({coreDumpSummaryMessage}){
+		this._consoleAppendLine('Core Dump Summary: ', ConsoleMessageType.Error);
+		const lines = this._buildUsefulCoreDumpSummaryLines(coreDumpSummaryMessage);
+		lines.forEach(line=>this._consoleAppendLine(line, ConsoleMessageType.Error));
+	}
+	_handleLastAbortMessage({lastAbortMessage}){
+		this._consoleAppendLine(`Last Abort Reason: ${lastAbortMessage.reason}`, ConsoleMessageType.Error);
+	}
 	_consoleClear(){
 		this.dispatchEvent({type:'consoleClear'});
 	}
@@ -276,4 +292,50 @@ export default class HVPSUIViewModel{
 		console.log('_consoleAppendLine');
 		this.dispatchEvent({type:'consoleAppendLine', str, consoleMessageType});
 	}
+	_buildUsefulCoreDumpSummaryLines(summary) {
+		const lines = [];
+
+		if (!summary) {
+			lines.push("There was no crash dump summary?");
+			return lines;
+		}
+
+		const pc = summary.programCounterForException || 0;
+		lines.push(`Crash task: ${summary.taskName || "?"}  PC=0x${pc.toString(16).padStart(8, "0")}`);
+
+		const depth = summary.backtrace?.length || 0;
+		const corrupted = summary.backtraceCorrupted ? 1 : 0;
+		lines.push(`Backtrace depth=${depth}  corrupted=${corrupted}`);
+
+		if (Array.isArray(summary.backtrace)) {
+			summary.backtrace.forEach((addr, i) => {
+				lines.push(`  #${i}  0x${(addr || 0).toString(16).padStart(8, "0")}`);
+			});
+		}
+
+		if (summary.causeOfException !== undefined)
+			lines.push(`Cause of exception: 0x${summary.causeOfException.toString(16)}`);
+
+		if (Array.isArray(summary.aRegisterSetWhenTheExceptionCaused))
+			lines.push(
+				`A registers: ${summary.aRegisterSetWhenTheExceptionCaused
+					.map(x => "0x" + x.toString(16).padStart(8, "0"))
+					.join(", ")}`
+			);
+
+		if (Array.isArray(summary.pCRegisterAddressAtExceptionLevel1To7))
+			lines.push(
+				`EPCx registers: ${summary.pCRegisterAddressAtExceptionLevel1To7
+					.map(x => "0x" + x.toString(16).padStart(8, "0"))
+					.join(", ")}`
+			);
+
+		lines.push(`Version: ${summary.version}`);
+		lines.push(`Task pointer: 0x${summary.taskPointer.toString(16)}`);
+		lines.push(`Virtual address of exception: 0x${summary.virtualAddressOfException.toString(16)}`);
+		lines.push(`App SHA256: ${summary.crashingApplicationsSHA256SumAsAString}`);
+
+		return lines;
+	}
+	
 }

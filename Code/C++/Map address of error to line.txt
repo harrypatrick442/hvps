@@ -1,0 +1,1 @@
+C:\Users\USER1\esp\xtensa-esp32-elf\bin\xtensa-esp32-elf-addr2line -pfiaC -e build/your_firmware.elf 0x400e1f96

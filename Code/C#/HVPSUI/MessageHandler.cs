@@ -44,7 +44,12 @@ namespace HVPSUI
                 HVPSAPI.MessageTypes.ShutDown, HandleHVPSShutDownMessage);
             _WebViewMessagingInterface.RegisterMethod<
                 RunSystemChecksOnlyMessage>(
-                HVPSAPI.MessageTypes.RunSystemChecksOnly, HandleHVPSRunSystemChecksOnlyMessage);
+                HVPSAPI.MessageTypes.RunSystemChecksOnly,
+                HandleHVPSRunSystemChecksOnlyMessage);
+            _WebViewMessagingInterface.RegisterMethod<
+                TestMessage>(
+                HVPSAPI.MessageTypes.Test,
+                SendToBluetoothDevice);
             _DeviceRegistrationMessageHandler.RegisterMethod<
                 ConsoleMessage>(
                     Native.MessageTypes.ConsoleMessage,

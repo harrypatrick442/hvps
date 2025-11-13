@@ -13,5 +13,6 @@ namespace HVPSAPI
         public const string RanSystemChecks = "cm";
         public const string CoreDumpSummary = "cd";
         public const string LastAbort = "la";
+        public const string Test = "test";
     }
 }
