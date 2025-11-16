@@ -18,8 +18,9 @@ import {
 	DisconnectedMessage,
 	CoreDumpSummaryMessage,
 	LastAbortMessage,
-	TestMessage
-	} from '../messages';
+	TestMessage,
+	ClearLoggedErrorsMessage
+} from '../messages';
 class HVPSUIAPI{
 	static shutDown(){
 		NativeAPI.send(ShutDownMessage.toJSON());
@@ -43,6 +44,9 @@ class HVPSUIAPI{
 	}
 	static test(params){
 		NativeAPI.send(TestMessage.toJSON(params));
+	}
+	static clearLoggedErrors(){
+		NativeAPI.send(ClearLoggedErrorsMessage.toJSON());
 	}
 	static _handleIncomingMessage({message}){
 		console.log(message);

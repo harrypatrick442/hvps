@@ -2,6 +2,7 @@
 #define Port_FiberOpticChannel1_hpp
 #include "Communication/Interfaces/IIncomingMessageHandler.hpp"
 #include "Communication/Interfaces/IMessageSender.hpp"
+#include "../ThresholdMonitor.hpp"
 #include "Core/SingletonBase.hpp"
 #include "Core/Macros.hpp"
 #include "../IO/FiberOpticDuplexChannel_1.hpp"
@@ -24,9 +25,12 @@ class Port_FiberOpticChannel1  final:
 		bool setVoltageThreshold(double voltage);
 		
 	protected:
-		explicit Port_FiberOpticChannel1()noexcept;
+		explicit Port_FiberOpticChannel1(
+			ThresholdMonitor& thesholdMonitor
+	)noexcept;
 		
     private:
+		ThresholdMonitor& _thesholdMonitor;
         IMessageSender* _messageSender;
 		FiberOpticDuplexChannel_1 _fiberOpticChannel_1;
 		TicketedSender _ticketedSender;

@@ -20,10 +20,11 @@ public:
     virtual double getCorrection() = 0;
     virtual double getVoltage() = 0;
 	virtual void measureNReadsPerSecond() = 0;
-	virtual std::shared_ptr<MonitorVoltageThresholdHandle> monitorVoltageThresholdWithNewPriorityTask(
+	/*virtual std::shared_ptr<MonitorVoltageThresholdHandle> 
+	monitorVoltageThresholdWithNewPriorityTask(
 		double initialVoltage, 
 		std::function<void(bool)> callback
-	) = 0;
+	) = 0;*/
 	virtual std::shared_ptr<IMonitorCurrentAndPowerHandle> monitorCurrentAndPower(
 		double senseResistanceOhms, 
 		double outputCurrentLimitingResistanceOhms,

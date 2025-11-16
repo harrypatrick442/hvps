@@ -1,21 +1,44 @@
 #ifndef MonitorVoltageThresholdHandle_HPP
 #define MonitorVoltageThresholdHandle_HPP
+
 #include "ReverseVoltageToRawLookup.hpp"
 #include <atomic>
-#include <functional>  // for std::function
-class MonitorVoltageThresholdHandle{
-	private:
-		ReverseVoltageToRawLookup* _reverseLookup;
-	public:
-		volatile uint32_t rawThreshold;
-		void setThresholdVoltage(double voltage);
-		std::atomic<bool> exit{false};
-		std::function<void(bool)> callback;
-		void stop();
-		MonitorVoltageThresholdHandle(
-			double initialVoltage,
-			ReverseVoltageToRawLookup* reverseLookup,
-			std::function<void(bool)> cb
-		);
+#include <functional>
+
+class MonitorVoltageThresholdHandle {
+private:
+    ReverseVoltageToRawLookup* _reverseLookup;
+    adc_channel_t _channel;
+
+    // Thread-safe current voltage (atomic)
+    std::atomic<uint16_t> _currentVoltageRaw;
+
+public:
+    // Raw ADC threshold (12-bit). Thread-safe.
+    std::atomic<uint32_t> rawThreshold;
+
+    // True when monitor task should exit
+    std::atomic<bool> exit { false };
+
+    // Callback: true = above threshold, false = below
+    std::function<void(bool)> callback;
+
+    // Constructor
+    MonitorVoltageThresholdHandle(
+        adc_channel_t channel,
+        double initialThresholdVoltage,
+        ReverseVoltageToRawLookup* reverseLookup,
+        std::function<void(bool)> cb
+    );
+
+    adc_channel_t getChannel();
+
+    void setThresholdVoltage(double voltage);
+
+    void setVoltageRaw(uint16_t voltage);
+    double getVoltage();
+
+    void stop();
 };
+
 #endif

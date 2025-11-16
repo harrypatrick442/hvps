@@ -14,5 +14,8 @@ namespace HVPSAPI
         public const string CoreDumpSummary = "cd";
         public const string LastAbort = "la";
         public const string Test = "test";
+        public const string ClearLoggedErrors = "cle";
+        public const string GreetingRequest = "gr";
+        public const string Greeting = "g";
     }
 }

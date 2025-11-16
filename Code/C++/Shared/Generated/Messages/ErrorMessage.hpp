@@ -12,6 +12,7 @@ class ErrorMessage
    private:
         int32_t _errorType;
         const char* _serializedError;
+        bool _freeMemoryInDeconstructor;
    public:
         int32_t getErrorType() noexcept;
         const char* getSerializedError() noexcept;

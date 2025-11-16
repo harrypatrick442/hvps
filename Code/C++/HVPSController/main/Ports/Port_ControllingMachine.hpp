@@ -45,6 +45,7 @@ private:
 	void handleStartMessage(cJSON* message);
 	void handleStopMessage(cJSON* message);
 	void handleStateChanged(SystemState systemState);
+	void handleClearLoggedErrors();
 	void sendPing();
 	
 	void handleOnOpened();

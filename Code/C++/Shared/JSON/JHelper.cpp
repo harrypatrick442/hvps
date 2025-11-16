@@ -28,14 +28,18 @@
 		}
 	}*/
 	char* JHelper::getString(
-		cJSON* obj, const char* key, bool& success) {
+    cJSON* obj, const char* key, bool& success) {
 		cJSON* item = cJSON_GetObjectItem(obj, key);
-		if (cJSON_IsString(item)) {
-			return strdup(item->valuestring);;
+		if (cJSON_IsString(item) && item->valuestring != nullptr) {
+			size_t len = std::strlen(item->valuestring);
+			char* copy = new char[len + 1]; // +1 for null terminator
+			std::strcpy(copy, item->valuestring);
+			return copy;
 		}
 		success = false;
 		return nullptr;
 	}
+
 
 	int8_t JHelper::getInt8(
 		cJSON* obj, const char* key, bool& success) {
@@ -141,7 +145,7 @@
 		cJSON* item = cJSON_GetObjectItem(obj, key);
 		return item;
 	}
-	char* JHelper::getNullableString(
+	/*char* JHelper::getNullableString(
 		cJSON* obj, const char* key, bool& success) {
 		cJSON* item = cJSON_GetObjectItem(obj, key);
 		if(item==nullptr){
@@ -152,7 +156,7 @@
 		}
 		success = false;
 		return nullptr;
-	}
+	}*/
 
 	std::optional<int8_t> JHelper::getNullableInt8(
 	cJSON* obj, const char* key, bool& success) {
@@ -332,14 +336,14 @@
 		}
 		cJSON_AddItemToObject(obj, key, value);
 	}
-    void JHelper::addNullableString(cJSON* obj, const char* key, char* value){
+    /*void JHelper::addNullableString(cJSON* obj, const char* key, char* value){
 		if(value==nullptr)
 		{
 			cJSON_AddNullToObject(obj, key);
 			return;
 		}
 		cJSON_AddStringToObject(obj, key, value);
-	}
+	}*/
     void JHelper::addNullableInt8(cJSON* obj, const char* key, std::optional<int8_t> value){
 		if(!value.has_value())
 		{

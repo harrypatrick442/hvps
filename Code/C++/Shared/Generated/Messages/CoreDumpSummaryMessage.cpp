@@ -111,5 +111,7 @@ CoreDumpSummaryMessage::~CoreDumpSummaryMessage(){
 if(!_freeMemoryInDeconstructor)return;
      if(_aRegisterSetWhenTheExceptionCaused!=nullptr)delete[] _aRegisterSetWhenTheExceptionCaused;
      if(_backtrace!=nullptr)delete[] _backtrace;
+     if(_crashingApplicationsSHA256SumAsAString!=nullptr)delete[] _crashingApplicationsSHA256SumAsAString;
      if(_pCRegisterAddressAtExceptionLevel1To7!=nullptr)delete[] _pCRegisterAddressAtExceptionLevel1To7;
+     if(_taskName!=nullptr)delete[] _taskName;
 }

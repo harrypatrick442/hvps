@@ -34,4 +34,5 @@ return r;
 LastAbortMessage::~LastAbortMessage(){
 if(!_freeMemoryInDeconstructor)return;
      if(_backtrace!=nullptr)delete[] _backtrace;
+     if(_reason!=nullptr)delete[] _reason;
 }

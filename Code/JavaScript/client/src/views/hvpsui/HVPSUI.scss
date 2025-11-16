@@ -91,6 +91,9 @@
 			&.run-system-checks-only-button{
 				background-color:var(--color-14);
 			}
+			&.clear-logged-errors-on-device-button{
+				background-color:var(--color-12);
+			}
 			box-sizing:border-box;
 			padding:4px;
 		}

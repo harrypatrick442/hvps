@@ -22,6 +22,7 @@ export default class HVPSUIViewModel{
 		this.stop = this.stop.bind(this);
 		this.shutDown = this.shutDown.bind(this);
 		this.runSystemChecksOnly = this.runSystemChecksOnly.bind(this);
+		this.clearLoggedErrorsOnDevice = this.clearLoggedErrorsOnDevice.bind(this);
 		this._connectToBluetoothDevice = this._connectToBluetoothDevice.bind(this);
 		this._setBluetoothConnected = this._setBluetoothConnected.bind(this);
 		this._setShowBluetoothReconnect = this._setShowBluetoothReconnect.bind(this);
@@ -219,7 +220,24 @@ export default class HVPSUIViewModel{
 			message:'The device will go LIVE while running system checks and must be treated as LIVE!',
 			title:'DANGER'
 		}
-		)
+		);
+	}
+	clearLoggedErrorsOnDevice(){
+		HVPSUIDialog.show({
+			options:[
+				{
+					text:'OK Clear', 
+					callback:HVPSUIAPI.clearLoggedErrors
+				},
+				{
+					text:'Do Not Clear', 
+					callback:()=>{}
+				}
+			],
+			message:'Are you sure you wish to clear logged errors from the device?',
+			title:'DANGER'
+		}
+		);
 	}
 	reconnect(){
 		const address = this.selectedDevice.address;
@@ -281,9 +299,18 @@ export default class HVPSUIViewModel{
 		this._consoleAppendLine('Core Dump Summary: ', ConsoleMessageType.Error);
 		const lines = this._buildUsefulCoreDumpSummaryLines(coreDumpSummaryMessage);
 		lines.forEach(line=>this._consoleAppendLine(line, ConsoleMessageType.Error));
+		this._consoleAppendLine();
+		this._consoleAppendLine();
 	}
 	_handleLastAbortMessage({lastAbortMessage}){
 		this._consoleAppendLine(`Last Abort Reason: ${lastAbortMessage.reason}`, ConsoleMessageType.Error);
+		if(lastAbortMessage.backtrace){
+			lastAbortMessage.backtrace.forEach(b=>{
+				this._consoleAppendLine(`0x${b.toString(16).padStart(8, "0")}`, ConsoleMessageType.Error);
+			});
+		}
+		this._consoleAppendLine();
+		this._consoleAppendLine();
 	}
 	_consoleClear(){
 		this.dispatchEvent({type:'consoleClear'});

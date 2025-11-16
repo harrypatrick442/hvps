@@ -14,6 +14,7 @@ class VirtualSocket2Message
         const char* _payload;
         const char* _secret;
         std::optional<int32_t> _theirNodeId;
+        bool _freeMemoryInDeconstructor;
    public:
         std::optional<int64_t> getEndpointId() noexcept;
         const char* getPayload() noexcept;

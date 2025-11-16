@@ -12,5 +12,5 @@ idf_component_register(
     INCLUDE_DIRS
         .       # lets you #include "Core/Event.hpp" or "Utils/Foo.hpp"
     REQUIRES
-		Shared
+		Shared espcoredump
 )

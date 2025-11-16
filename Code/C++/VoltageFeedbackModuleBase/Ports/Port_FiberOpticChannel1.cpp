@@ -7,8 +7,11 @@
 #include "Messaging/MessageConstants.hpp"
 #include <cstring>
 #include <memory>
-Port_FiberOpticChannel1::Port_FiberOpticChannel1()
+Port_FiberOpticChannel1::Port_FiberOpticChannel1(
+	ThresholdMonitor& thesholdMonitor
+)
 :
+_thesholdMonitor(thesholdMonitor),
 _fiberOpticChannel_1(),
 _ticketedSender(
 			[&](cJSON* msg){
@@ -54,28 +57,42 @@ void Port_FiberOpticChannel1::handleIncomingMessage(cJSON* message, bool& dontDe
 		handleGetVoltageRequest(message);
 		return;
 	}
+	if(strcmp(type, GreetingRequest::TYPE) == 0){
+		Log::Info(TAG, "Got greeting!");
+		handleGreetingRequest();
+		return;
+	}
 }
 void Port_FiberOpticChannel1::handleSetVoltageThresholdRequest(cJSON* message){
 	std::shared_ptr<SetVoltageThresholdRequest> request= SetVoltageThresholdRequest::fromJSON(message);
 	double voltage = request->getVoltage();
 	uint64_t ticket = request->getTicket();
+	_thesholdMonitor.setThresholdVoltage(voltage);
 	NonVolatileState::setVoltageThreshold(voltage);
 	
 	//Log::Info(TAG, "handleSetVoltageThresholdRequest");
 	
 	//Log::Info(TAG, "ticket from request was %" PRIu64 "", ticket);
-	SetVoltageThresholdResponse* response = new SetVoltageThresholdResponse(ticket);
-	_messageSender->sendMessage(response->toJSON());
+	SetVoltageThresholdResponse response(ticket);
+	_messageSender->sendMessage(response.toJSON());
 	//Log::Info(TAG, "handleSetVoltageThresholdRequest sent response");
-	delete response;
 }
 void Port_FiberOpticChannel1::handleGetVoltageRequest(cJSON* message){
 	std::shared_ptr<GetVoltageRequest> request = GetVoltageRequest::fromJSON(message);
 	uint64_t ticket = request->getTicket();
-	Inputs::selectADCVoltageDividerInputAsChannel();
-	double voltage = Inputs::getADCVoltage();
-	GetVoltageResponse* response = new GetVoltageResponse(voltage, ticket);
-	_messageSender->sendMessage(response->toJSON());
-	delete response;
+	double voltage = _thesholdMonitor.getVoltage();
+	GetVoltageResponse response(voltage, ticket);
+	_messageSender->sendMessage(response.toJSON());
+}
+void Port_FiberOpticChannel1::handleGreetingRequest(){
+	std::shared_ptr<GreetingRequest> request = GreetingRequest::fromJSON(message);
+	uint64_t ticket = request->getTicket();
+	
+	CleanupBucket cleanupBucket;
+	std::shared_ptr<CoreDumpSummaryMessage> coreDumpSummaryMessage 
+		= CrashReporter::getCoreDumpSummary(cleanupBucket);
+	LastAbortMessage* lastAbortMessage = 	Aborter::getLastAbortReason(cleanupBucket);
+	GreetingResponse response(coreDumpSummaryMessage, lastAbortMessage, ticket);
+	_messageSender->sendMessage(response.toJSON());
 }
 

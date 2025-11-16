@@ -5,6 +5,7 @@
 #include <functional>
 
 ThresholdMonitor::ThresholdMonitor(
+	adc_channel_t ch, 
 	const Configuration& config1, const Configuration& config2
 ):
 _config1(config1),
@@ -14,17 +15,25 @@ _monitorVoltageThresholdHandle(nullptr)
 	double initialUnscaledVoltageThreshold = _config1.defaultThreshold;
 	NonVolatileState::getVoltageThreshold(initialUnscaledVoltageThreshold);
 	double scaledThreshold = toScaledADCThreshold(initialUnscaledVoltageThreshold);
-	
+	//Inputs::selectADCVoltageDividerInputAsChannel();
 	_monitorVoltageThresholdHandle = 
-		ADC::monitorVoltageThresholdWithNewPriorityTask(scaledThreshold,
-		[this](bool reached) { onVoltageThresholdReachedChanged(reached); }
-	);
+		ADC::monitorVoltageThresholdWithNewPriorityTask(
+			ch,
+			scaledThreshold,
+			[this](bool reached) { onVoltageThresholdReachedChanged(reached); }
+		);
 	
 	_eventConnectionVoltageThresholdChanged = NonVolatileState::onVoltageThresholdChanged.addHandler(
 		[this](double vUnscaled){
 			_monitorVoltageThresholdHandle->setThresholdVoltage(toScaledADCThreshold(vUnscaled));
 		}
 	);
+}
+double ThresholdMonitor::getVoltage(){
+	return _monitorVoltageThresholdHandle->getVoltage();
+}
+void ThresholdMonitor::setThresholdVoltage(double voltage){
+	_monitorVoltageThresholdHandle->setThresholdVoltage(voltage);
 }
 void ThresholdMonitor::onVoltageThresholdReachedChanged(bool reached)noexcept{
 	Outputs::setThresholdReachedFiberOpticOnOff(reached);

@@ -1,5 +1,6 @@
 import E from '../ui_core/E';
 import isNullOrUndefined from '../core/isNullOrUndefined';
+import isNullOrUndefinedOrEmptyString from '../core/isNullOrUndefinedOrEmptyString';
 import ConsoleMessageType from '../enums/ConsoleMessageType';
 import './Console.scss';
 export default class Console{	
@@ -34,7 +35,13 @@ export default class Console{
 	_handleAppendLine({str, consoleMessageType}){
 		console.log('handleAppendLine');
 		const element = E.div('line');
-		element.textContent = str;
+		if(isNullOrUndefinedOrEmptyString(str)){
+			element.classList.add('empty');
+		}
+		else
+		{
+			element.textContent = str;
+		}
 		if(isNullOrUndefined(consoleMessageType)){
 			consoleMessageType = ConsoleMessageType.Info;
 		}

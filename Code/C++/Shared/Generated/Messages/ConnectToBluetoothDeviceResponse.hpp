@@ -13,6 +13,7 @@ class ConnectToBluetoothDeviceResponse
         const char* _address;
         std::optional<int32_t> _failedReason;
         uint64_t _ticket;
+        bool _freeMemoryInDeconstructor;
    public:
         const char* getAddress() noexcept;
         std::optional<int32_t> getFailedReason() noexcept;

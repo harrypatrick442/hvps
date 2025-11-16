@@ -6,7 +6,8 @@ NativeStorageSetStringRequest::NativeStorageSetStringRequest(
     uint64_t ticket):
         _key(key),
         _value(value),
-        _ticket(ticket){
+        _ticket(ticket),
+        _freeMemoryInDeconstructor(false){
 }
 const char* NativeStorageSetStringRequest::getKey(){
     return this->_key;
@@ -31,7 +32,11 @@ std::shared_ptr<NativeStorageSetStringRequest> NativeStorageSetStringRequest::fr
     const char* value = JHelper::getString(j, "v", s);
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
     auto r = std::make_shared<NativeStorageSetStringRequest>(key, value, ticket);
+r->_freeMemoryInDeconstructor = true;
 return r;
 }
 NativeStorageSetStringRequest::~NativeStorageSetStringRequest(){
+if(!_freeMemoryInDeconstructor)return;
+     if(_key!=nullptr)delete[] _key;
+     if(_value!=nullptr)delete[] _value;
 }

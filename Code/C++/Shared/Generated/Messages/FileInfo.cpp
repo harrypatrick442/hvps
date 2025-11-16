@@ -5,7 +5,8 @@ FileInfo::FileInfo(
     const char* type):
         _name(name),
         _size(size),
-        _type(type){
+        _type(type),
+        _freeMemoryInDeconstructor(false){
 }
 const char* FileInfo::getName(){
     return this->_name;
@@ -30,7 +31,11 @@ std::shared_ptr<FileInfo> FileInfo::fromJSON(cJSON* j){
     int64_t size = JHelper::getInt64(j, "s", s);
     const char* type = JHelper::getString(j, "t", s);
     auto r = std::make_shared<FileInfo>(name, size, type);
+r->_freeMemoryInDeconstructor = true;
 return r;
 }
 FileInfo::~FileInfo(){
+if(!_freeMemoryInDeconstructor)return;
+     if(_name!=nullptr)delete[] _name;
+     if(_type!=nullptr)delete[] _type;
 }

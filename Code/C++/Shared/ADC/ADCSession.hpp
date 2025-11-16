@@ -79,14 +79,14 @@ public:
         check();
         _real->measureNReadsPerSecond();
     }
-
+/*
     std::shared_ptr<MonitorVoltageThresholdHandle> monitorVoltageThresholdWithNewPriorityTask(
         double initialVoltage,
         std::function<void(bool)> callback
     ) override {
         check();
         return _real->monitorVoltageThresholdWithNewPriorityTask(initialVoltage, std::move(callback));
-    }
+    }*/
 
     std::shared_ptr<IMonitorCurrentAndPowerHandle> monitorCurrentAndPower(
         double senseResistanceOhms,

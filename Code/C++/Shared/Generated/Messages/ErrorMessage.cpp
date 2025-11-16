@@ -4,7 +4,8 @@ ErrorMessage::ErrorMessage(
     int32_t errorType, 
     const char* serializedError):
         _errorType(errorType),
-        _serializedError(serializedError){
+        _serializedError(serializedError),
+        _freeMemoryInDeconstructor(false){
 }
 int32_t ErrorMessage::getErrorType(){
     return this->_errorType;
@@ -24,7 +25,10 @@ std::shared_ptr<ErrorMessage> ErrorMessage::fromJSON(cJSON* j){
     int32_t errorType = JHelper::getInt32(j, "t", s);
     const char* serializedError = JHelper::getString(j, "s", s);
     auto r = std::make_shared<ErrorMessage>(errorType, serializedError);
+r->_freeMemoryInDeconstructor = true;
 return r;
 }
 ErrorMessage::~ErrorMessage(){
+if(!_freeMemoryInDeconstructor)return;
+     if(_serializedError!=nullptr)delete[] _serializedError;
 }

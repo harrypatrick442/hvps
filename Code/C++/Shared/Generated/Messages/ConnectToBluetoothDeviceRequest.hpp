@@ -12,6 +12,7 @@ class ConnectToBluetoothDeviceRequest
    private:
         const char* _address;
         uint64_t _ticket;
+        bool _freeMemoryInDeconstructor;
    public:
         const char* getAddress() noexcept;
         uint64_t getTicket() noexcept;

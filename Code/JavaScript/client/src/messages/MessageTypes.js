@@ -43,6 +43,9 @@ const MessageTypes ={
      coreDumpSummary:"cd",
      lastAbort:"la",
      test:"test",
+     clearLoggedErrors:"cle",
+     greetingRequest:"gr",
+     greeting:"g",
      getAvaialbleBluetoothDevices:"gabd",
      connectToBluetoothDevice:"ctbd"
 }

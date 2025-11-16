@@ -11,6 +11,7 @@ class Message
        static const char* TYPE;
    private:
         const char* _content;
+        bool _freeMemoryInDeconstructor;
    public:
         const char* getContent() noexcept;
         Message(

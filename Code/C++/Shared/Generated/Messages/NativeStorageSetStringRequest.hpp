@@ -13,6 +13,7 @@ class NativeStorageSetStringRequest
         const char* _key;
         const char* _value;
         uint64_t _ticket;
+        bool _freeMemoryInDeconstructor;
    public:
         const char* getKey() noexcept;
         const char* getValue() noexcept;

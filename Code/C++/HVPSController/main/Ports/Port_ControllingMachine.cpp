@@ -13,6 +13,7 @@
 #include "Generated/Messages/PingMessage.hpp"
 #include "Generated/Messages/CoreDumpSummaryMessage.hpp"
 #include "Generated/Messages/LastAbortMessage.hpp"
+#include "Generated/Messages/ClearLoggedErrorsMessage.hpp"
 #include "System/CrashReporter.hpp"
 #include "Core/CleanupBucket.hpp"
 #include "Enums/ErrorType.hpp"
@@ -85,6 +86,10 @@ void Port_ControllingMachine::handleIncomingMessage(cJSON* message, bool& dontDe
 		handleStopMessage(message);
 		return;
 	}
+	if(strcmp(type, ClearLoggedErrorsMessage::TYPE) == 0){
+		handleClearLoggedErrors();
+		return;
+	}
 }
 void Port_ControllingMachine::handleRunSystemChecksOnlyMessage(cJSON* message){
 	std::shared_ptr<SystemChecksResult> systemChecksResult = _highSpeedCore.runSystemChecksOnly();
@@ -116,14 +121,17 @@ void Port_ControllingMachine::handleOnClosed(){
 	Log::Info(TAG, "Closed");
 	_timerSendPing.stop();
 }
+void Port_ControllingMachine::handleClearLoggedErrors(){
+	Log::Info(TAG, "Cleared logged errors!");
+	CrashReporter::clearRecord();
+	Aborter::clearLastAbortReason();
+}
 void Port_ControllingMachine::sendErrors(){
 	CleanupBucket cleanupBucket;
-	bool doCausePanic = true;
 	std::shared_ptr<CoreDumpSummaryMessage> coreDumpSummaryMessage 
 		= CrashReporter::getCoreDumpSummary(cleanupBucket);
 	if(coreDumpSummaryMessage){
 		_channel.sendMessage(coreDumpSummaryMessage->toJSON());
-		CrashReporter::clearRecord();
 	}
 	LastAbortMessage* lastAbortMessage = 
 		Aborter::getLastAbortReason(cleanupBucket);
@@ -134,7 +142,5 @@ void Port_ControllingMachine::sendErrors(){
 	else{
 		Log::Info(TAG, "Did not have last abort reason");
 	}
-	Delay::ms(30000);
-	Aborter::safeAbort(TAG, "Test Abort");
 }
 

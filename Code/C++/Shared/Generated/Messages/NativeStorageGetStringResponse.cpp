@@ -4,7 +4,8 @@ NativeStorageGetStringResponse::NativeStorageGetStringResponse(
     const char* value, 
     uint64_t ticket):
         _value(value),
-        _ticket(ticket){
+        _ticket(ticket),
+        _freeMemoryInDeconstructor(false){
 }
 const char* NativeStorageGetStringResponse::getValue(){
     return this->_value;
@@ -24,7 +25,10 @@ std::shared_ptr<NativeStorageGetStringResponse> NativeStorageGetStringResponse::
     const char* value = JHelper::getString(j, "v", s);
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
     auto r = std::make_shared<NativeStorageGetStringResponse>(value, ticket);
+r->_freeMemoryInDeconstructor = true;
 return r;
 }
 NativeStorageGetStringResponse::~NativeStorageGetStringResponse(){
+if(!_freeMemoryInDeconstructor)return;
+     if(_value!=nullptr)delete[] _value;
 }

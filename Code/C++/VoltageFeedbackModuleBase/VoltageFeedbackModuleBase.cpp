@@ -4,6 +4,7 @@
 #include "System/Aborter.hpp"
 #include "IO/Outputs.hpp"
 #include "IO/Inputs.hpp"
+#include "IO/ADCChannels.hpp"
 #include "Storage/Flash.hpp"
 #include "ADC/ADC.hpp"
 #include "Ports/Port_FiberOpticChannel1.hpp"
@@ -25,9 +26,14 @@ void VoltageFeedbackModuleBase::main(const Configuration& config1, const Configu
     StayTheFuckAwake::initialize();
     WatchdogFeeder::initialize(WATCHDOG_TIMEOUT_MILLISECONDS);
 	Flash::initialize();
-	Inputs::selectADCVoltageDividerInputAsChannel();
-	ThresholdMonitor::initialize(config1, config2);
-    Port_FiberOpticChannel1& port_FiberOpticChannel1 = Port_FiberOpticChannel1::initialize();
+	ThresholdMonitor& thresholdMonitor 
+		= ThresholdMonitor::initialize(
+			ADCChannels::VOLTAGE_DIVIDER_INPUT,
+			config1,
+			config2
+		);
+    Port_FiberOpticChannel1& port_FiberOpticChannel1 
+		= Port_FiberOpticChannel1::initialize(thresholdMonitor);
 /*
 	bool isHigh = true;
 	while(true){

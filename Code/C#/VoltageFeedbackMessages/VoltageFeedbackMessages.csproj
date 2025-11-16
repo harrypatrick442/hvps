@@ -7,5 +7,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\shared-private\MessageTypes\MessageTypes.csproj" />
+    <ProjectReference Include="..\HVPSAPI\HVPSAPI.csproj" />
   </ItemGroup>
 </Project>

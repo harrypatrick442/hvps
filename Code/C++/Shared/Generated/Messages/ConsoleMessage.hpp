@@ -12,6 +12,7 @@ class ConsoleMessage
    private:
         bool _isError;
         const char* _message;
+        bool _freeMemoryInDeconstructor;
    public:
         bool getIsError() noexcept;
         const char* getMessage() noexcept;

@@ -50,6 +50,10 @@ namespace HVPSUI
                 TestMessage>(
                 HVPSAPI.MessageTypes.Test,
                 SendToBluetoothDevice);
+            _WebViewMessagingInterface.RegisterMethod<
+                ClearLoggedErrorsMessage>(
+                HVPSAPI.MessageTypes.ClearLoggedErrors,
+                SendToBluetoothDevice);
             _DeviceRegistrationMessageHandler.RegisterMethod<
                 ConsoleMessage>(
                     Native.MessageTypes.ConsoleMessage,

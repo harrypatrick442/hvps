@@ -6,7 +6,8 @@ NewVirtualSocket2::NewVirtualSocket2(
     int64_t theirNodeId):
         _endpointId(endpointId),
         _secret(secret),
-        _theirNodeId(theirNodeId){
+        _theirNodeId(theirNodeId),
+        _freeMemoryInDeconstructor(false){
 }
 int64_t NewVirtualSocket2::getEndpointId(){
     return this->_endpointId;
@@ -31,7 +32,10 @@ std::shared_ptr<NewVirtualSocket2> NewVirtualSocket2::fromJSON(cJSON* j){
     const char* secret = JHelper::getString(j, "s", s);
     int64_t theirNodeId = JHelper::getInt64(j, "n", s);
     auto r = std::make_shared<NewVirtualSocket2>(endpointId, secret, theirNodeId);
+r->_freeMemoryInDeconstructor = true;
 return r;
 }
 NewVirtualSocket2::~NewVirtualSocket2(){
+if(!_freeMemoryInDeconstructor)return;
+     if(_secret!=nullptr)delete[] _secret;
 }

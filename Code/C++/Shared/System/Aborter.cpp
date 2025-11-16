@@ -13,6 +13,9 @@ LastAbortMessage* Aborter::getLastAbortReason(
 	size_t backtraceLength = 0;
 	Flash::getArray(TAG, BACKTRACE_KEY, backtrace, backtraceLength, 
 							 cleanupBucket);
+	if((!reason)&&(!backtrace)){
+		return nullptr;
+	}
 	LastAbortMessage* lastAbortMessage = new LastAbortMessage(
 		backtrace, backtraceLength, reason);
 	cleanupBucket.addDelete(lastAbortMessage);
@@ -24,4 +27,5 @@ void Aborter::clearLastAbortReason(){
 		return;
 	}
 	Flash::erase(TAG, REASON_KEY);
+	Flash::erase(TAG, BACKTRACE_KEY);
 }

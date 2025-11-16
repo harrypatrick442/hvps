@@ -231,7 +231,7 @@ void Bluetooth::esp_spp_callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *p
 
         case ESP_SPP_DATA_IND_EVT:
 			{
-				Log::Info(TAG, "Received %d bytes: %.*s", param->data_ind.len, param->data_ind.len, param->data_ind.data);
+				//Log::Info(TAG, "Received %d bytes: %.*s", param->data_ind.len, param->data_ind.len, param->data_ind.data);
 				if(_incomingMessageHandler==nullptr){
 					Log::Warn(TAG, "Incoming Message Handler is NULL. Cannot handle incoming message.");
 					return;
@@ -245,7 +245,7 @@ void Bluetooth::esp_spp_callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *p
 				break;
 			}
 		case ESP_SPP_WRITE_EVT:
-            Log::Info(TAG, "Data Sent: %d bytes", param->write.len);
+            //Log::Info(TAG, "Data Sent: %d bytes", param->write.len);
 			_mutexWrite.lock();
 			if (!_outgoingQueue.empty()) {
 				char* sentMsg = _outgoingQueue.front();

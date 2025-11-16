@@ -8,7 +8,8 @@ VirtualSocket2Message::VirtualSocket2Message(
         _endpointId(endpointId),
         _payload(payload),
         _secret(secret),
-        _theirNodeId(theirNodeId){
+        _theirNodeId(theirNodeId),
+        _freeMemoryInDeconstructor(false){
 }
 std::optional<int64_t> VirtualSocket2Message::getEndpointId(){
     return this->_endpointId;
@@ -38,7 +39,11 @@ std::shared_ptr<VirtualSocket2Message> VirtualSocket2Message::fromJSON(cJSON* j)
     const char* secret = JHelper::getString(j, "s", s);
     std::optional<int32_t> theirNodeId = JHelper::getNullableInt32(j, "n", s);
     auto r = std::make_shared<VirtualSocket2Message>(endpointId, payload, secret, theirNodeId);
+r->_freeMemoryInDeconstructor = true;
 return r;
 }
 VirtualSocket2Message::~VirtualSocket2Message(){
+if(!_freeMemoryInDeconstructor)return;
+     if(_payload!=nullptr)delete[] _payload;
+     if(_secret!=nullptr)delete[] _secret;
 }

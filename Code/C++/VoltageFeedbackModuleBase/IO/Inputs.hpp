@@ -12,7 +12,7 @@ class Inputs {
 	public:
 		static void initialize();
 		static int readReceiver();
-		static void useADCVoltageDividerChannel(const std::function<void(IADCSession&&)>& fn);
+		//static void useADCVoltageDividerChannel(const std::function<void(IADCSession&&)>& fn);
 };
 
 #endif // INPUTS_HPP

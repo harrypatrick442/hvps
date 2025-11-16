@@ -31,8 +31,8 @@ public:
     // --- Nullable accessors using std::optional ---
 	static cJSON* getNullableObject(
 		cJSON* obj, const char* key, bool& success);
-    static char* getNullableString(
-		cJSON* obj, const char* key, bool& success);
+    /*static char* getNullableString(
+		cJSON* obj, const char* key, bool& success);*/
     static std::optional<int8_t> getNullableInt8(
 		cJSON* obj, const char* key, bool& success);
     static std::optional<uint8_t> getNullableUInt8(
@@ -74,7 +74,7 @@ public:
 	
 	
 	static void addNullableObject(cJSON* obj, const char* key, cJSON* value);
-    static void addNullableString(cJSON* obj, const char* key, char* value);
+    //static void addNullableString(cJSON* obj, const char* key, char* value);
     static void addNullableInt8(cJSON* obj, const char* key, std::optional<int8_t> value);
     static void addNullableUInt8(cJSON* obj, const char* key, std::optional<uint8_t> value);
     static void addNullableInt16(cJSON* obj, const char* key, std::optional<int16_t> value);

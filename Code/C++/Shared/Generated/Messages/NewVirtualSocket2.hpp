@@ -13,6 +13,7 @@ class NewVirtualSocket2
         int64_t _endpointId;
         const char* _secret;
         int64_t _theirNodeId;
+        bool _freeMemoryInDeconstructor;
    public:
         int64_t getEndpointId() noexcept;
         const char* getSecret() noexcept;

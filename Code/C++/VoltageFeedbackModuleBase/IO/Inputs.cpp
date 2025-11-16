@@ -33,7 +33,7 @@ int Inputs::readReceiver() {
 	}
 	return gpio_get_level((gpio_num_t)RECEIVER_INPUT_PIN);
 }
-
+/*
 void Inputs::useADCVoltageDividerChannel(const std::function<void(IADCSession&&)>& fn){
     ADC::use(ADCChannels::VOLTAGE_DIVIDER_INPUT, fn);
-}
+}*/

@@ -232,7 +232,9 @@ double ADC::getCorrection()
 double ADC::getMinimumVoltageCanRead(){
 	return convertRawToVoltage(0);
 }
-std::shared_ptr<MonitorVoltageThresholdHandle> ADC::monitorVoltageThresholdWithNewPriorityTask(
+std::shared_ptr<MonitorVoltageThresholdHandle> 
+	ADC::monitorVoltageThresholdWithNewPriorityTask(
+		adc_channel_t channel,
 		double initialVoltage, 
 		std::function<void(bool)> callback
 	) {
@@ -240,8 +242,11 @@ std::shared_ptr<MonitorVoltageThresholdHandle> ADC::monitorVoltageThresholdWithN
 		Aborter::safeAbort(TAG, "No callback provided!");
 		return nullptr;
 	}
-	std::shared_ptr<MonitorVoltageThresholdHandle> handle = std::make_shared<MonitorVoltageThresholdHandle>(
-		initialVoltage, _reverseLookup,  std::move(callback));
+	std::shared_ptr<MonitorVoltageThresholdHandle> handle = 
+		std::make_shared<MonitorVoltageThresholdHandle>(
+			channel, initialVoltage, _reverseLookup,
+			std::move(callback)
+	);
 	
 	TaskFactory::createPriorityTask<MonitorVoltageThresholdHandle>(
 		&ADC::_monitorVoltageThreshold,
@@ -251,41 +256,43 @@ std::shared_ptr<MonitorVoltageThresholdHandle> ADC::monitorVoltageThresholdWithN
 	return handle;
 }
 void ADC::_monitorVoltageThreshold(std::shared_ptr<MonitorVoltageThresholdHandle> handle) {
-	
-	adc_digi_output_data_t d; // Stores a single read value
-	uint32_t len = 0;
-	esp_err_t err;
-	bool set = false;
-	bool isOn = false;
-	while(!handle->exit.load(std::memory_order_relaxed)){
-		err = adc_continuous_read(
-			_adc_hdl,                              // handle
-			reinterpret_cast<uint8_t*>(&d),        // buffer
-			4,                             // size
-			&len,                                   // out bytes
-			0                                       // non-blocking
-		); 
-		if(err!= ESP_OK){
-			continue;
-		}
-		if(len!=4){
-			continue;
-		}
-		uint16_t value = d.type1.data & 0x0FFF;
-		if(value>handle->rawThreshold){
-			if((!set)||isOn){
-				isOn = false;
-                handle->callback(false);
+	use(handle->getChannel(), [handle](IADCSession&& adc){
+		adc_digi_output_data_t d; // Stores a single read value
+		uint32_t len = 0;
+		esp_err_t err;
+		bool set = false;
+		bool isOn = false;
+		while(!handle->exit.load(std::memory_order_relaxed)){
+			err = adc_continuous_read(
+				_adc_hdl,                              // handle
+				reinterpret_cast<uint8_t*>(&d),        // buffer
+				4,                             // size
+				&len,                                   // out bytes
+				0                                       // non-blocking
+			); 
+			if(err!= ESP_OK){
+				continue;
 			}
-		}
-		else{
-			if((!set)||(!isOn)){
-				isOn = true;
-                handle->callback(true);
+			if(len!=4){
+				continue;
 			}
+			uint16_t value = d.type1.data & 0x0FFF;
+			if(value>handle->rawThreshold){
+				if((!set)||isOn){
+					isOn = false;
+					handle->callback(false);
+				}
+			}
+			else{
+				if((!set)||(!isOn)){
+					isOn = true;
+					handle->callback(true);
+				}
+			}
+			set = true;
+			handle->setVoltageRaw(value);
 		}
-		set = true;
-	}
+	});
 }
 
 

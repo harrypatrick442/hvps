@@ -12,6 +12,7 @@ class NativeStorageGetStringResponse
    private:
         const char* _value;
         uint64_t _ticket;
+        bool _freeMemoryInDeconstructor;
    public:
         const char* getValue() noexcept;
         uint64_t getTicket() noexcept;

@@ -4,7 +4,8 @@ NativeStorageGetStringRequest::NativeStorageGetStringRequest(
     const char* key, 
     uint64_t ticket):
         _key(key),
-        _ticket(ticket){
+        _ticket(ticket),
+        _freeMemoryInDeconstructor(false){
 }
 const char* NativeStorageGetStringRequest::getKey(){
     return this->_key;
@@ -24,7 +25,10 @@ std::shared_ptr<NativeStorageGetStringRequest> NativeStorageGetStringRequest::fr
     const char* key = JHelper::getString(j, "k", s);
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
     auto r = std::make_shared<NativeStorageGetStringRequest>(key, ticket);
+r->_freeMemoryInDeconstructor = true;
 return r;
 }
 NativeStorageGetStringRequest::~NativeStorageGetStringRequest(){
+if(!_freeMemoryInDeconstructor)return;
+     if(_key!=nullptr)delete[] _key;
 }

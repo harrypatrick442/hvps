@@ -6,7 +6,8 @@ VirtualSocketMessage::VirtualSocketMessage(
     const char* payload):
         _id(id),
         _internalType(internalType),
-        _payload(payload){
+        _payload(payload),
+        _freeMemoryInDeconstructor(false){
 }
 int64_t VirtualSocketMessage::getId(){
     return this->_id;
@@ -31,7 +32,11 @@ std::shared_ptr<VirtualSocketMessage> VirtualSocketMessage::fromJSON(cJSON* j){
     const char* internalType = JHelper::getString(j, "u", s);
     const char* payload = JHelper::getString(j, "p", s);
     auto r = std::make_shared<VirtualSocketMessage>(id, internalType, payload);
+r->_freeMemoryInDeconstructor = true;
 return r;
 }
 VirtualSocketMessage::~VirtualSocketMessage(){
+if(!_freeMemoryInDeconstructor)return;
+     if(_internalType!=nullptr)delete[] _internalType;
+     if(_payload!=nullptr)delete[] _payload;
 }

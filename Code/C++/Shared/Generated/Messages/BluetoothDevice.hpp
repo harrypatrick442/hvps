@@ -10,6 +10,7 @@ class BluetoothDevice
    private:
         const char* _address;
         const char* _name;
+        bool _freeMemoryInDeconstructor;
    public:
         const char* getAddress() noexcept;
         const char* getName() noexcept;

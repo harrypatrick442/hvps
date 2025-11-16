@@ -72,9 +72,11 @@ public:
     double   getCorrection();
     double   getVoltage();
 	void measureNReadsPerSecond();
-	std::shared_ptr<MonitorVoltageThresholdHandle> monitorVoltageThresholdWithNewPriorityTask(
-		double initialVoltage, 
-		std::function<void(bool)> callback
+	static std::shared_ptr<MonitorVoltageThresholdHandle> 
+		monitorVoltageThresholdWithNewPriorityTask(
+			adc_channel_t channel,
+			double initialVoltage, 
+			std::function<void(bool)> callback
 	);
 	std::shared_ptr<IMonitorCurrentAndPowerHandle> monitorCurrentAndPower(
 		double senseResistanceOhms, 
@@ -87,7 +89,8 @@ public:
 private:
     static void start();
     static void stop();
-	static void _monitorVoltageThreshold(std::shared_ptr<MonitorVoltageThresholdHandle> handle);
+	static void _monitorVoltageThreshold(
+		std::shared_ptr<MonitorVoltageThresholdHandle> handle);
 	static void _monitorCurrentAndPower(
 		std::shared_ptr<MonitorCurrentAndPowerHandle> handle
 	);

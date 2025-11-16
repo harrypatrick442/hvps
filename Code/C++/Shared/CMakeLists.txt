@@ -52,6 +52,7 @@ idf_component_register(
 	"Generated/Messages/VoltageMessage.cpp"
 	"Generated/Messages/CoreDumpSummaryMessage.cpp"
 	"Generated/Messages/LastAbortMessage.cpp"
+	"Generated/Messages/ClearLoggedErrorsMessage.cpp"
     PRIV_REQUIRES spi_flash driver bt nvs_flash esp_adc
 	REQUIRES
 		espcoredump

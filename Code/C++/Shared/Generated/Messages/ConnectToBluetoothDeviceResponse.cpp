@@ -6,7 +6,8 @@ ConnectToBluetoothDeviceResponse::ConnectToBluetoothDeviceResponse(
     uint64_t ticket):
         _address(address),
         _failedReason(failedReason),
-        _ticket(ticket){
+        _ticket(ticket),
+        _freeMemoryInDeconstructor(false){
 }
 const char* ConnectToBluetoothDeviceResponse::getAddress(){
     return this->_address;
@@ -31,7 +32,10 @@ std::shared_ptr<ConnectToBluetoothDeviceResponse> ConnectToBluetoothDeviceRespon
     std::optional<int32_t> failedReason = JHelper::getNullableInt32(j, "s", s);
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
     auto r = std::make_shared<ConnectToBluetoothDeviceResponse>(address, failedReason, ticket);
+r->_freeMemoryInDeconstructor = true;
 return r;
 }
 ConnectToBluetoothDeviceResponse::~ConnectToBluetoothDeviceResponse(){
+if(!_freeMemoryInDeconstructor)return;
+     if(_address!=nullptr)delete[] _address;
 }

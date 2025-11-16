@@ -51,6 +51,7 @@ export default class HVPSUI{
 			_createTextButton({className:'stop-button', callback:model.stop, disposes, useMouseDown:true, text:'Stop'}),
 			_createTextButton({className:'shut-down-button', callback:model.shutDown, disposes, useMouseDown:true, text:'Shut Down'}),
 			_createTextButton({className:'run-system-checks-only-button', callback:model.runSystemChecksOnly, disposes, useMouseDown:true, text:'Run System Checks Only'}),
+			_createTextButton({className:'clear-logged-errors-on-device-button', callback:model.clearLoggedErrorsOnDevice, disposes, useMouseDown:true, text:'Clear Logged Error On Device'}),
 		].forEach(b=>controlButtonsElement.appendChild(b));
 		const fieldsElement = E.div('fields');
 		this._fields = [

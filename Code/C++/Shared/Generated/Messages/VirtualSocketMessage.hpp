@@ -13,6 +13,7 @@ class VirtualSocketMessage
         int64_t _id;
         const char* _internalType;
         const char* _payload;
+        bool _freeMemoryInDeconstructor;
    public:
         int64_t getId() noexcept;
         const char* getInternalType() noexcept;

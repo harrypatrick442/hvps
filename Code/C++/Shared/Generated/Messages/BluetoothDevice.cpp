@@ -3,7 +3,8 @@ BluetoothDevice::BluetoothDevice(
     const char* address, 
     const char* name):
         _address(address),
-        _name(name){
+        _name(name),
+        _freeMemoryInDeconstructor(false){
 }
 const char* BluetoothDevice::getAddress(){
     return this->_address;
@@ -23,7 +24,11 @@ std::shared_ptr<BluetoothDevice> BluetoothDevice::fromJSON(cJSON* j){
     const char* address = JHelper::getString(j, "a", s);
     const char* name = JHelper::getString(j, "n", s);
     auto r = std::make_shared<BluetoothDevice>(address, name);
+r->_freeMemoryInDeconstructor = true;
 return r;
 }
 BluetoothDevice::~BluetoothDevice(){
+if(!_freeMemoryInDeconstructor)return;
+     if(_address!=nullptr)delete[] _address;
+     if(_name!=nullptr)delete[] _name;
 }

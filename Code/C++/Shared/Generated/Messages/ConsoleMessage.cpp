@@ -4,7 +4,8 @@ ConsoleMessage::ConsoleMessage(
     bool isError, 
     const char* message):
         _isError(isError),
-        _message(message){
+        _message(message),
+        _freeMemoryInDeconstructor(false){
 }
 bool ConsoleMessage::getIsError(){
     return this->_isError;
@@ -24,7 +25,10 @@ std::shared_ptr<ConsoleMessage> ConsoleMessage::fromJSON(cJSON* j){
     bool isError = JHelper::getBool(j, "e", s);
     const char* message = JHelper::getString(j, "m", s);
     auto r = std::make_shared<ConsoleMessage>(isError, message);
+r->_freeMemoryInDeconstructor = true;
 return r;
 }
 ConsoleMessage::~ConsoleMessage(){
+if(!_freeMemoryInDeconstructor)return;
+     if(_message!=nullptr)delete[] _message;
 }

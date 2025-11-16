@@ -1,6 +1,6 @@
 using MessageTypes.Attributes;
 
-namespace VoltageFeedbackMessages.DataMemberNames.Responses
+namespace HVPSAPI.DataMemberNames.Responses
 {
     public static class GetVoltageThresholdResponseDataMemberNames
     {

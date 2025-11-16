@@ -11,6 +11,7 @@ class FileInfo
         const char* _name;
         int64_t _size;
         const char* _type;
+        bool _freeMemoryInDeconstructor;
    public:
         const char* getName() noexcept;
         int64_t getSize() noexcept;

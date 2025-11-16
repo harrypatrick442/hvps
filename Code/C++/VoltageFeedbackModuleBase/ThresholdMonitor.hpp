@@ -4,6 +4,7 @@
 #include "Core/Macros.hpp"
 #include "ADC/MonitorVoltageThresholdHandle.hpp"
 #include "Generated/VoltageFeedbackModuleConfiguration.hpp"
+#include "Interfaces/IGetCurrentVoltage.hpp"
 #include <memory>
 class ThresholdMonitor final:
 	public SingletonBase<ThresholdMonitor>{
@@ -11,8 +12,14 @@ class ThresholdMonitor final:
 public:
 	static inline constexpr const char* TAG = "ThresholdMonitor";
 	DISALLOW_COPY_MOVE(ThresholdMonitor);
+	double getVoltage();
+	void setThresholdVoltage(double voltage);
 protected:
-    explicit ThresholdMonitor(const Configuration& config1, const Configuration& config2)noexcept;
+    explicit ThresholdMonitor(
+		adc_channel_t ch,
+		const Configuration& config1,
+		const Configuration& config2
+	)noexcept;
 private:
 	const Configuration& _config1;
 	const Configuration& _config2;
