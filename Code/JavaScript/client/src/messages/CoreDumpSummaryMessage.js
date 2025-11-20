@@ -3,6 +3,7 @@ export default class CoreDumpSummaryMessage
  static toJSON(o){ 
     const r = {};
    r["tpe"]="cd";
+    r["si"]=o.subsystemIdentifier;
     r["tn"]=o.taskName;
     r["tp"]=o.taskPointer;
     r["pc"]=o.programCounterForException;
@@ -19,6 +20,7 @@ export default class CoreDumpSummaryMessage
  }
  static fromJSON(o){
     const r = {};
+    r.subsystemIdentifier=o["si"];
     r.taskName=o["tn"];
     r.taskPointer=o["tp"];
     r.programCounterForException=o["pc"];

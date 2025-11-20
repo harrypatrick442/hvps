@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 class NativeReadyMessage
 {
@@ -13,7 +14,7 @@ class NativeReadyMessage
         NativeReadyMessage(
 ) noexcept;
         ~NativeReadyMessage();
-        static std::shared_ptr<NativeReadyMessage> fromJSON(cJSON* j) noexcept;
+        static NativeReadyMessage* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //NATIVEREADYMESSAGE_HPP

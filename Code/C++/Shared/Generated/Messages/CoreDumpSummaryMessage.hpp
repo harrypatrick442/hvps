@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 #include "../../JSON/JHelper.hpp"
 class CoreDumpSummaryMessage
@@ -21,24 +22,25 @@ class CoreDumpSummaryMessage
         uint32_t* _pCRegisterAddressAtExceptionLevel1To7;
         size_t _pCRegisterAddressAtExceptionLevel1To7Length;
         uint32_t _programCounterForException;
+        int32_t _subsystemIdentifier;
         const char* _taskName;
         uint32_t _taskPointer;
         uint32_t _version;
         uint32_t _virtualAddressOfException;
-        bool _freeMemoryInDeconstructor;
    public:
         uint32_t* getARegisterSetWhenTheExceptionCaused(size_t& length) noexcept;
         uint32_t* getBacktrace(size_t& length) noexcept;
-        bool getBacktraceCorrupted() noexcept;
-        uint8_t getBitMaskOfAvailableEPCxRegisters() noexcept;
-        uint32_t getCauseOfException() noexcept;
-        const char* getCrashingApplicationsSHA256SumAsAString() noexcept;
+        bool getBacktraceCorrupted()const noexcept;
+        uint8_t getBitMaskOfAvailableEPCxRegisters()const noexcept;
+        uint32_t getCauseOfException()const noexcept;
+        const char* getCrashingApplicationsSHA256SumAsAString()const noexcept;
         uint32_t* getPCRegisterAddressAtExceptionLevel1To7(size_t& length) noexcept;
-        uint32_t getProgramCounterForException() noexcept;
-        const char* getTaskName() noexcept;
-        uint32_t getTaskPointer() noexcept;
-        uint32_t getVersion() noexcept;
-        uint32_t getVirtualAddressOfException() noexcept;
+        uint32_t getProgramCounterForException()const noexcept;
+        int32_t getSubsystemIdentifier()const noexcept;
+        const char* getTaskName()const noexcept;
+        uint32_t getTaskPointer()const noexcept;
+        uint32_t getVersion()const noexcept;
+        uint32_t getVirtualAddressOfException()const noexcept;
         CoreDumpSummaryMessage(
            uint32_t* aRegisterSetWhenTheExceptionCaused,
            size_t aRegisterSetWhenTheExceptionCausedLength, 
@@ -51,12 +53,13 @@ class CoreDumpSummaryMessage
            uint32_t* pCRegisterAddressAtExceptionLevel1To7,
            size_t pCRegisterAddressAtExceptionLevel1To7Length, 
            uint32_t programCounterForException, 
+           int32_t subsystemIdentifier, 
            const char* taskName, 
            uint32_t taskPointer, 
            uint32_t version, 
            uint32_t virtualAddressOfException) noexcept;
         ~CoreDumpSummaryMessage();
-        static std::shared_ptr<CoreDumpSummaryMessage> fromJSON(cJSON* j) noexcept;
+        static CoreDumpSummaryMessage* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //COREDUMPSUMMARYMESSAGE_HPP

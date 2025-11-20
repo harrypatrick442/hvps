@@ -13,7 +13,7 @@ namespace VoltageFeedbackMessages.Messages
         [JsonPropertyName(VoltageMessageDataMemberNames.Voltage)]
         [JsonInclude]
         [DataMember(Name = VoltageMessageDataMemberNames.Voltage)]
-        public double Voltage { get { return _Voltage; } set { _Voltage = value; } }
+        public double Voltage { get { return _Voltage; } protected set { _Voltage = value; } }
     }
 }
 

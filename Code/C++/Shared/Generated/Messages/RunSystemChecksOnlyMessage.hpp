@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 class RunSystemChecksOnlyMessage
 {
@@ -13,7 +14,7 @@ class RunSystemChecksOnlyMessage
         RunSystemChecksOnlyMessage(
 ) noexcept;
         ~RunSystemChecksOnlyMessage();
-        static std::shared_ptr<RunSystemChecksOnlyMessage> fromJSON(cJSON* j) noexcept;
+        static RunSystemChecksOnlyMessage* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //RUNSYSTEMCHECKSONLYMESSAGE_HPP

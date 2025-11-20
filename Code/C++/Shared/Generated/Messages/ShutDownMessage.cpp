@@ -9,10 +9,11 @@ cJSON* ShutDownMessage::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<ShutDownMessage> ShutDownMessage::fromJSON(cJSON* j){
+ShutDownMessage* ShutDownMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
-    auto r = std::make_shared<ShutDownMessage>();
-return r;
+    auto r = new ShutDownMessage();
+    cleanupBucket.addDelete(r);
+    return r;
 }
 ShutDownMessage::~ShutDownMessage(){
 }

@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 class ClearLoggedErrorsMessage
 {
@@ -13,7 +14,7 @@ class ClearLoggedErrorsMessage
         ClearLoggedErrorsMessage(
 ) noexcept;
         ~ClearLoggedErrorsMessage();
-        static std::shared_ptr<ClearLoggedErrorsMessage> fromJSON(cJSON* j) noexcept;
+        static ClearLoggedErrorsMessage* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //CLEARLOGGEDERRORSMESSAGE_HPP

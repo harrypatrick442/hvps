@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 #include "../../JSON/JHelper.hpp"
 class NativeShowSaveFilePickerResponse
@@ -12,11 +13,11 @@ class NativeShowSaveFilePickerResponse
    private:
         uint64_t _ticket;
    public:
-        uint64_t getTicket() noexcept;
+        uint64_t getTicket()const noexcept;
         NativeShowSaveFilePickerResponse(
            uint64_t ticket) noexcept;
         ~NativeShowSaveFilePickerResponse();
-        static std::shared_ptr<NativeShowSaveFilePickerResponse> fromJSON(cJSON* j) noexcept;
+        static NativeShowSaveFilePickerResponse* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //NATIVESHOWSAVEFILEPICKERRESPONSE_HPP

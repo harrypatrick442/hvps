@@ -9,10 +9,11 @@ cJSON* ClearLoggedErrorsMessage::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<ClearLoggedErrorsMessage> ClearLoggedErrorsMessage::fromJSON(cJSON* j){
+ClearLoggedErrorsMessage* ClearLoggedErrorsMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
-    auto r = std::make_shared<ClearLoggedErrorsMessage>();
-return r;
+    auto r = new ClearLoggedErrorsMessage();
+    cleanupBucket.addDelete(r);
+    return r;
 }
 ClearLoggedErrorsMessage::~ClearLoggedErrorsMessage(){
 }

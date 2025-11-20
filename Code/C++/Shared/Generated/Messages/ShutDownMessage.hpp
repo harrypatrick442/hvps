@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 class ShutDownMessage
 {
@@ -13,7 +14,7 @@ class ShutDownMessage
         ShutDownMessage(
 ) noexcept;
         ~ShutDownMessage();
-        static std::shared_ptr<ShutDownMessage> fromJSON(cJSON* j) noexcept;
+        static ShutDownMessage* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //SHUTDOWNMESSAGE_HPP

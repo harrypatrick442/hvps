@@ -16,6 +16,8 @@
 #include "Generated/HVPSConfig.hpp"
 #include "Timing/Delay.hpp"
 #include "System/CrashReporter.hpp"
+#include "Enums/SubsystemIdentifiers.hpp"
+#include "System/SubsystemIdentifier.hpp"
 
 #define WATCHDOG_TIMEOUT_MILLISECONDS 10000
 
@@ -23,10 +25,10 @@ static const char *TAG = "HVPS";
 
 extern "C" void app_main(void)
 {
+	SubsystemIdentifier::set(SubsystemIdentifiers::HVPSController);
 	Aborter::setToSafe(&Outputs::toSafe);
 	Outputs::initialize();
 	Outputs::toSafeReversible();
-	CrashReporter::initialize();
 	Delay::ms(10000);
 	Log::Info(TAG, "Starting HVPSController....");
 	Delay::ms(1000);
@@ -61,13 +63,21 @@ extern "C" void app_main(void)
 		port_FirstStageVoltageFeedback,
 		port_OutputVoltageFeedback
 	);
+	bool inError = Aborter::hasLastAbortReason()||CrashReporter::hasCoreDumpSummary();
 	HighSpeedCore& highSpeedCore = HighSpeedCore::initialize(
 		port_FirstStageVoltageFeedback,
 		port_OutputVoltageFeedback,
-		liveDataCache
+		liveDataCache,
+		inError
 	);
 	Port_ControllingMachine& portControllingMachine 
-		= Port_ControllingMachine::initialize(bluetooth, highSpeedCore, Config1.pingTimeoutMilliseconds);
+		= Port_ControllingMachine::initialize(
+			bluetooth, 
+			highSpeedCore,
+			Config1.pingTimeoutMilliseconds,
+			port_FirstStageVoltageFeedback,
+			port_OutputVoltageFeedback
+	);
 							 
 	LiveDataBroadcaster::initialize(liveDataCache, portControllingMachine);
 	vTaskDelete(NULL); // Delete the current task*/

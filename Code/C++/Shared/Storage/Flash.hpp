@@ -42,6 +42,8 @@ class Flash{
 			const T* array, size_t count);
 		
 		static bool erase(const char* namespaceName, const char* key);
+		static bool hasKey(const char* namespaceName, const char* key);
+
     private:
 		static inline constexpr const char* TAG = "Flash";
 		static inline constexpr const char* STRING_VALUE_NOT_FOUND_FOR_KEY 

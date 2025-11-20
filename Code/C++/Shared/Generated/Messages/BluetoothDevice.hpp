@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 #include "../../JSON/JHelper.hpp"
 class BluetoothDevice
@@ -10,15 +11,14 @@ class BluetoothDevice
    private:
         const char* _address;
         const char* _name;
-        bool _freeMemoryInDeconstructor;
    public:
-        const char* getAddress() noexcept;
-        const char* getName() noexcept;
+        const char* getAddress()const noexcept;
+        const char* getName()const noexcept;
         BluetoothDevice(
            const char* address, 
            const char* name) noexcept;
         ~BluetoothDevice();
-        static std::shared_ptr<BluetoothDevice> fromJSON(cJSON* j) noexcept;
+        static BluetoothDevice* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //BLUETOOTHDEVICE_HPP

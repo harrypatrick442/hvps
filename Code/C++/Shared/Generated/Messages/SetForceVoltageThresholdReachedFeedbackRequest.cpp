@@ -6,10 +6,10 @@ SetForceVoltageThresholdReachedFeedbackRequest::SetForceVoltageThresholdReachedF
         _force(force),
         _ticket(ticket){
 }
-bool SetForceVoltageThresholdReachedFeedbackRequest::getForce(){
+bool SetForceVoltageThresholdReachedFeedbackRequest::getForce()const noexcept{
     return this->_force;
 }
-uint64_t SetForceVoltageThresholdReachedFeedbackRequest::getTicket(){
+uint64_t SetForceVoltageThresholdReachedFeedbackRequest::getTicket()const noexcept{
     return this->_ticket;
 }
 cJSON* SetForceVoltageThresholdReachedFeedbackRequest::toJSON(){
@@ -19,12 +19,13 @@ cJSON* SetForceVoltageThresholdReachedFeedbackRequest::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<SetForceVoltageThresholdReachedFeedbackRequest> SetForceVoltageThresholdReachedFeedbackRequest::fromJSON(cJSON* j){
+SetForceVoltageThresholdReachedFeedbackRequest* SetForceVoltageThresholdReachedFeedbackRequest::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
     bool force = JHelper::getBool(j, "f", s);
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    auto r = std::make_shared<SetForceVoltageThresholdReachedFeedbackRequest>(force, ticket);
-return r;
+    auto r = new SetForceVoltageThresholdReachedFeedbackRequest(force, ticket);
+    cleanupBucket.addDelete(r);
+    return r;
 }
 SetForceVoltageThresholdReachedFeedbackRequest::~SetForceVoltageThresholdReachedFeedbackRequest(){
 }

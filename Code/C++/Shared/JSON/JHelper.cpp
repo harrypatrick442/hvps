@@ -1,5 +1,5 @@
 	#include "JHelper.hpp"
-	#include <string.h>
+	#include <cstring>
 	
 	std::shared_ptr<cJSON> JHelper::toSharedPtr(cJSON* raw) {
 		return std::shared_ptr<cJSON>(raw, cJSON_Delete); // custom deleter
@@ -290,9 +290,11 @@
 	
 	
 	void JHelper::addObject(cJSON* obj, const char* key, cJSON* value){
+		if(value==nullptr)return;
 		cJSON_AddItemToObject(obj, key, value);
 	}
     void JHelper::addString(cJSON* obj, const char* key, const char* value){
+		if(value==nullptr)return;
 		cJSON_AddStringToObject(obj, key, value);
 	}
     void JHelper::addInt8(cJSON* obj, const char* key, int8_t value){

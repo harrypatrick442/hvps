@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 #include "../../JSON/JHelper.hpp"
 class VoltageMessage
@@ -12,11 +13,11 @@ class VoltageMessage
    private:
         double _voltage;
    public:
-        double getVoltage() noexcept;
+        double getVoltage()const noexcept;
         VoltageMessage(
            double voltage) noexcept;
         ~VoltageMessage();
-        static std::shared_ptr<VoltageMessage> fromJSON(cJSON* j) noexcept;
+        static VoltageMessage* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //VOLTAGEMESSAGE_HPP

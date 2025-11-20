@@ -8,6 +8,7 @@
 #include "StackSamplerHelper.hpp"
 #include <cstring>
 #include "Generated/Messages/CoreDumpSummaryMessage.hpp"
+#include "SubsystemIdentifier.hpp"
 
 
 //YOU MUST ENABLE DUMPING TO FLASH FOR THIS TO WORK. MR WOBOT LOVES DUMPING AND FLASHING!🤖<(grrr)
@@ -19,15 +20,15 @@ private:
     static inline constexpr const char* TAG = "CrashReporter";
 
 public:
-    static inline void initialize() {
-        static bool initialized = false;
-        if (initialized) {
-            Aborter::safeAbort(TAG, "CrashReporter already initialized!");
-        }
-        initialized = true;
-    }
 
-	static inline std::shared_ptr<CoreDumpSummaryMessage> getCoreDumpSummary(CleanupBucket& cleanupBucket) {
+	static inline bool hasCoreDumpSummary() {
+		esp_core_dump_summary_t summary;
+		if (esp_core_dump_get_summary(&summary) != ESP_OK) {
+			return false;
+		}
+		return true;
+	}
+	static inline CoreDumpSummaryMessage* getCoreDumpSummary(CleanupBucket& cleanupBucket) {
 		esp_core_dump_summary_t* summary = new esp_core_dump_summary_t();
 		cleanupBucket.addDelete(summary);
 		if (esp_core_dump_get_summary(summary) != ESP_OK) {
@@ -44,7 +45,7 @@ public:
 		memcpy(taskName, summary->exc_task, 16); // copy exactly 16 bytes
 		taskName[16] = '\0'; 
 		
-		return std::make_shared<CoreDumpSummaryMessage>(
+		auto coreDumpSummaryMessage =  new CoreDumpSummaryMessage(
 			   extra_info.exc_a/*aRegisterSetWhenTheExceptionCaused*/,
 			   16/*aRegisterSetWhenTheExceptionCausedLength*/,
 			   backtrace_info.bt/*backtrace*/,
@@ -56,11 +57,14 @@ public:
 			   extra_info.epcx/*pCRegisterAddressAtExceptionLevel1To7*/,
 			   EPCx_REGISTER_COUNT/*pCRegisterAddressAtExceptionLevel1To7Length*/,
 			   summary->exc_pc/*programCounterForException*/, 
+			   SubsystemIdentifier::get(),
 			   taskName,
 			   summary->exc_tcb/*taskPointer*/,
 			   summary->core_dump_version, 
 			   extra_info.exc_vaddr/*virtualAddressOfException*/
 		);
+		cleanupBucket.addDelete(coreDumpSummaryMessage);
+		return coreDumpSummaryMessage;
 	}
 	static inline const char* convertSha256ToHexCstr(const uint8_t* hash, CleanupBucket& cleanupBucket) {
 		// 2 chars per byte + 1 null terminator

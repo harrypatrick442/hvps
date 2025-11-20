@@ -1,10 +1,13 @@
 #include "Port_FiberOpticChannel1.hpp"
-#include "../NonVolatileState.hpp"
 #include "Logging/Log.hpp"
 #include "System/Aborter.hpp"
 #include "JSON/JHelper.hpp"
 #include "../IO/Inputs.hpp"
 #include "Messaging/MessageConstants.hpp"
+#include "Generated/Messages/GreetingRequest.hpp"
+#include "Generated/Messages/GreetingResponse.hpp"
+#include "Generated/Messages/GreetingMessage.hpp"
+#include "Tasks/TaskFactory.hpp"
 #include <cstring>
 #include <memory>
 Port_FiberOpticChannel1::Port_FiberOpticChannel1(
@@ -20,8 +23,14 @@ _ticketedSender(
     _fiberOpticChannel_1.setIncomingMessageHandler(this);
 	_messageSender = &_fiberOpticChannel_1;
 	_fiberOpticChannel_1.startAsNewNonPriorityTask();
+	TaskFactory::createNonPriorityTask(
+		[&](){
+			greetControllingMachine();
+			vTaskDelete(NULL);
+		}, 
+		"greetControllingMachine"
+	);
 }
-//TOREMOVE
 bool Port_FiberOpticChannel1::setVoltageThreshold(double voltage){
 	SetVoltageThresholdRequest request(voltage);
 	std::shared_ptr<cJSON> response = _ticketedSender.send(request.toJSON(), 1000);
@@ -59,16 +68,16 @@ void Port_FiberOpticChannel1::handleIncomingMessage(cJSON* message, bool& dontDe
 	}
 	if(strcmp(type, GreetingRequest::TYPE) == 0){
 		Log::Info(TAG, "Got greeting!");
-		handleGreetingRequest();
+		handleGreetingRequest(message);
 		return;
 	}
 }
 void Port_FiberOpticChannel1::handleSetVoltageThresholdRequest(cJSON* message){
-	std::shared_ptr<SetVoltageThresholdRequest> request= SetVoltageThresholdRequest::fromJSON(message);
+	CleanupBucket cleanupBucket;
+	SetVoltageThresholdRequest* request= SetVoltageThresholdRequest::fromJSON(message, cleanupBucket);
 	double voltage = request->getVoltage();
 	uint64_t ticket = request->getTicket();
 	_thesholdMonitor.setThresholdVoltage(voltage);
-	NonVolatileState::setVoltageThreshold(voltage);
 	
 	//Log::Info(TAG, "handleSetVoltageThresholdRequest");
 	
@@ -78,21 +87,30 @@ void Port_FiberOpticChannel1::handleSetVoltageThresholdRequest(cJSON* message){
 	//Log::Info(TAG, "handleSetVoltageThresholdRequest sent response");
 }
 void Port_FiberOpticChannel1::handleGetVoltageRequest(cJSON* message){
-	std::shared_ptr<GetVoltageRequest> request = GetVoltageRequest::fromJSON(message);
+	CleanupBucket cleanupBucket;
+	GetVoltageRequest* request = GetVoltageRequest::fromJSON(message, cleanupBucket);
 	uint64_t ticket = request->getTicket();
 	double voltage = _thesholdMonitor.getVoltage();
 	GetVoltageResponse response(voltage, ticket);
 	_messageSender->sendMessage(response.toJSON());
 }
-void Port_FiberOpticChannel1::handleGreetingRequest(){
-	std::shared_ptr<GreetingRequest> request = GreetingRequest::fromJSON(message);
-	uint64_t ticket = request->getTicket();
-	
+void Port_FiberOpticChannel1::handleGreetingRequest(cJSON* message){
 	CleanupBucket cleanupBucket;
-	std::shared_ptr<CoreDumpSummaryMessage> coreDumpSummaryMessage 
+	GreetingRequest* request = GreetingRequest::fromJSON(message, cleanupBucket);
+	uint64_t ticket = request->getTicket();
+	LastAbortMessage* lastAbortMessage 
+		= Aborter::getLastAbortReason(cleanupBucket);
+	CoreDumpSummaryMessage* coreDumpSummaryMessage 
 		= CrashReporter::getCoreDumpSummary(cleanupBucket);
-	LastAbortMessage* lastAbortMessage = 	Aborter::getLastAbortReason(cleanupBucket);
 	GreetingResponse response(coreDumpSummaryMessage, lastAbortMessage, ticket);
 	_messageSender->sendMessage(response.toJSON());
+}
+void Port_FiberOpticChannel1::greetControllingMachine(){
+	CleanupBucket cleanupBucket;
+	CoreDumpSummaryMessage* coreDumpSummaryMessage 
+		= CrashReporter::getCoreDumpSummary(cleanupBucket);
+	LastAbortMessage* lastAbortMessage = Aborter::getLastAbortReason(cleanupBucket);
+	GreetingMessage message(coreDumpSummaryMessage, lastAbortMessage);
+	_messageSender->sendMessage(message.toJSON());
 }
 

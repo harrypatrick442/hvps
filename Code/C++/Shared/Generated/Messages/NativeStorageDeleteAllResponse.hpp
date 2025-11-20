@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 #include "../../JSON/JHelper.hpp"
 class NativeStorageDeleteAllResponse
@@ -12,11 +13,11 @@ class NativeStorageDeleteAllResponse
    private:
         uint64_t _ticket;
    public:
-        uint64_t getTicket() noexcept;
+        uint64_t getTicket()const noexcept;
         NativeStorageDeleteAllResponse(
            uint64_t ticket) noexcept;
         ~NativeStorageDeleteAllResponse();
-        static std::shared_ptr<NativeStorageDeleteAllResponse> fromJSON(cJSON* j) noexcept;
+        static NativeStorageDeleteAllResponse* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //NATIVESTORAGEDELETEALLRESPONSE_HPP

@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 #include "../../JSON/JHelper.hpp"
 class StateChangedMessage
@@ -12,11 +13,11 @@ class StateChangedMessage
    private:
         int32_t _state;
    public:
-        int32_t getState() noexcept;
+        int32_t getState()const noexcept;
         StateChangedMessage(
            int32_t state) noexcept;
         ~StateChangedMessage();
-        static std::shared_ptr<StateChangedMessage> fromJSON(cJSON* j) noexcept;
+        static StateChangedMessage* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //STATECHANGEDMESSAGE_HPP

@@ -6,16 +6,15 @@ VirtualSocketMessage::VirtualSocketMessage(
     const char* payload):
         _id(id),
         _internalType(internalType),
-        _payload(payload),
-        _freeMemoryInDeconstructor(false){
+        _payload(payload){
 }
-int64_t VirtualSocketMessage::getId(){
+int64_t VirtualSocketMessage::getId()const noexcept{
     return this->_id;
 }
-const char* VirtualSocketMessage::getInternalType(){
+const char* VirtualSocketMessage::getInternalType()const noexcept{
     return this->_internalType;
 }
-const char* VirtualSocketMessage::getPayload(){
+const char* VirtualSocketMessage::getPayload()const noexcept{
     return this->_payload;
 }
 cJSON* VirtualSocketMessage::toJSON(){
@@ -26,17 +25,16 @@ cJSON* VirtualSocketMessage::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<VirtualSocketMessage> VirtualSocketMessage::fromJSON(cJSON* j){
+VirtualSocketMessage* VirtualSocketMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
     int64_t id = JHelper::getInt64(j, "i", s);
     const char* internalType = JHelper::getString(j, "u", s);
+    cleanupBucket.addDeleteArray(internalType);
     const char* payload = JHelper::getString(j, "p", s);
-    auto r = std::make_shared<VirtualSocketMessage>(id, internalType, payload);
-r->_freeMemoryInDeconstructor = true;
-return r;
+    cleanupBucket.addDeleteArray(payload);
+    auto r = new VirtualSocketMessage(id, internalType, payload);
+    cleanupBucket.addDelete(r);
+    return r;
 }
 VirtualSocketMessage::~VirtualSocketMessage(){
-if(!_freeMemoryInDeconstructor)return;
-     if(_internalType!=nullptr)delete[] _internalType;
-     if(_payload!=nullptr)delete[] _payload;
 }

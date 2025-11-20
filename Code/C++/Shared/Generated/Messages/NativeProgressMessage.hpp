@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 class NativeProgressMessage
 {
@@ -11,7 +12,7 @@ class NativeProgressMessage
         NativeProgressMessage(
 ) noexcept;
         ~NativeProgressMessage();
-        static std::shared_ptr<NativeProgressMessage> fromJSON(cJSON* j) noexcept;
+        static NativeProgressMessage* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //NATIVEPROGRESSMESSAGE_HPP

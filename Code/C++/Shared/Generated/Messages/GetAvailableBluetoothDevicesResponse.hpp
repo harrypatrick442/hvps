@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 #include "../../JSON/JHelper.hpp"
 class GetAvailableBluetoothDevicesResponse
@@ -13,14 +14,14 @@ class GetAvailableBluetoothDevicesResponse
                 std::optional<int32_t> _failedReason;
         uint64_t _ticket;
    public:
-                std::optional<int32_t> getFailedReason() noexcept;
-        uint64_t getTicket() noexcept;
+                std::optional<int32_t> getFailedReason()const noexcept;
+        uint64_t getTicket()const noexcept;
         GetAvailableBluetoothDevicesResponse(
            , 
            std::optional<int32_t> failedReason, 
            uint64_t ticket) noexcept;
         ~GetAvailableBluetoothDevicesResponse();
-        static std::shared_ptr<GetAvailableBluetoothDevicesResponse> fromJSON(cJSON* j) noexcept;
+        static GetAvailableBluetoothDevicesResponse* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //GETAVAILABLEBLUETOOTHDEVICESRESPONSE_HPP

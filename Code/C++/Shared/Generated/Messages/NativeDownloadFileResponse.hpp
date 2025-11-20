@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 #include "../../JSON/JHelper.hpp"
 class NativeDownloadFileResponse
@@ -12,11 +13,11 @@ class NativeDownloadFileResponse
    private:
         uint64_t _ticket;
    public:
-        uint64_t getTicket() noexcept;
+        uint64_t getTicket()const noexcept;
         NativeDownloadFileResponse(
            uint64_t ticket) noexcept;
         ~NativeDownloadFileResponse();
-        static std::shared_ptr<NativeDownloadFileResponse> fromJSON(cJSON* j) noexcept;
+        static NativeDownloadFileResponse* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //NATIVEDOWNLOADFILERESPONSE_HPP

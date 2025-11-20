@@ -4,7 +4,7 @@ VoltageMessage::VoltageMessage(
     double voltage):
         _voltage(voltage){
 }
-double VoltageMessage::getVoltage(){
+double VoltageMessage::getVoltage()const noexcept{
     return this->_voltage;
 }
 cJSON* VoltageMessage::toJSON(){
@@ -13,11 +13,12 @@ cJSON* VoltageMessage::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<VoltageMessage> VoltageMessage::fromJSON(cJSON* j){
+VoltageMessage* VoltageMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
     double voltage = JHelper::getDouble(j, "v", s);
-    auto r = std::make_shared<VoltageMessage>(voltage);
-return r;
+    auto r = new VoltageMessage(voltage);
+    cleanupBucket.addDelete(r);
+    return r;
 }
 VoltageMessage::~VoltageMessage(){
 }

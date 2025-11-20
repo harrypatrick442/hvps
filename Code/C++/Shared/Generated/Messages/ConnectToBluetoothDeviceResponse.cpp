@@ -6,16 +6,15 @@ ConnectToBluetoothDeviceResponse::ConnectToBluetoothDeviceResponse(
     uint64_t ticket):
         _address(address),
         _failedReason(failedReason),
-        _ticket(ticket),
-        _freeMemoryInDeconstructor(false){
+        _ticket(ticket){
 }
-const char* ConnectToBluetoothDeviceResponse::getAddress(){
+const char* ConnectToBluetoothDeviceResponse::getAddress()const noexcept{
     return this->_address;
 }
-std::optional<int32_t> ConnectToBluetoothDeviceResponse::getFailedReason(){
+std::optional<int32_t> ConnectToBluetoothDeviceResponse::getFailedReason()const noexcept{
     return this->_failedReason;
 }
-uint64_t ConnectToBluetoothDeviceResponse::getTicket(){
+uint64_t ConnectToBluetoothDeviceResponse::getTicket()const noexcept{
     return this->_ticket;
 }
 cJSON* ConnectToBluetoothDeviceResponse::toJSON(){
@@ -26,16 +25,15 @@ cJSON* ConnectToBluetoothDeviceResponse::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<ConnectToBluetoothDeviceResponse> ConnectToBluetoothDeviceResponse::fromJSON(cJSON* j){
+ConnectToBluetoothDeviceResponse* ConnectToBluetoothDeviceResponse::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
     const char* address = JHelper::getString(j, "a", s);
+    cleanupBucket.addDeleteArray(address);
     std::optional<int32_t> failedReason = JHelper::getNullableInt32(j, "s", s);
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    auto r = std::make_shared<ConnectToBluetoothDeviceResponse>(address, failedReason, ticket);
-r->_freeMemoryInDeconstructor = true;
-return r;
+    auto r = new ConnectToBluetoothDeviceResponse(address, failedReason, ticket);
+    cleanupBucket.addDelete(r);
+    return r;
 }
 ConnectToBluetoothDeviceResponse::~ConnectToBluetoothDeviceResponse(){
-if(!_freeMemoryInDeconstructor)return;
-     if(_address!=nullptr)delete[] _address;
 }

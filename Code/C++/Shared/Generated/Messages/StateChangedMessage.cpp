@@ -4,7 +4,7 @@ StateChangedMessage::StateChangedMessage(
     int32_t state):
         _state(state){
 }
-int32_t StateChangedMessage::getState(){
+int32_t StateChangedMessage::getState()const noexcept{
     return this->_state;
 }
 cJSON* StateChangedMessage::toJSON(){
@@ -13,11 +13,12 @@ cJSON* StateChangedMessage::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<StateChangedMessage> StateChangedMessage::fromJSON(cJSON* j){
+StateChangedMessage* StateChangedMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
     int32_t state = JHelper::getInt32(j, "s", s);
-    auto r = std::make_shared<StateChangedMessage>(state);
-return r;
+    auto r = new StateChangedMessage(state);
+    cleanupBucket.addDelete(r);
+    return r;
 }
 StateChangedMessage::~StateChangedMessage(){
 }

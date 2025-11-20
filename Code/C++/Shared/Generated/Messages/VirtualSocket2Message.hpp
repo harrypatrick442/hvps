@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 #include "../../JSON/JHelper.hpp"
 class VirtualSocket2Message
@@ -14,19 +15,18 @@ class VirtualSocket2Message
         const char* _payload;
         const char* _secret;
         std::optional<int32_t> _theirNodeId;
-        bool _freeMemoryInDeconstructor;
    public:
-        std::optional<int64_t> getEndpointId() noexcept;
-        const char* getPayload() noexcept;
-        const char* getSecret() noexcept;
-        std::optional<int32_t> getTheirNodeId() noexcept;
+        std::optional<int64_t> getEndpointId()const noexcept;
+        const char* getPayload()const noexcept;
+        const char* getSecret()const noexcept;
+        std::optional<int32_t> getTheirNodeId()const noexcept;
         VirtualSocket2Message(
            std::optional<int64_t> endpointId, 
            const char* payload, 
            const char* secret, 
            std::optional<int32_t> theirNodeId) noexcept;
         ~VirtualSocket2Message();
-        static std::shared_ptr<VirtualSocket2Message> fromJSON(cJSON* j) noexcept;
+        static VirtualSocket2Message* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //VIRTUALSOCKET2MESSAGE_HPP

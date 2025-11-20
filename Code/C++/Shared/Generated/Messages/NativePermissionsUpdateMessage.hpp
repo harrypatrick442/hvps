@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 #include "../../JSON/JHelper.hpp"
 class NativePermissionsUpdateMessage
@@ -12,11 +13,11 @@ class NativePermissionsUpdateMessage
    private:
         bool _hasAllRequired;
    public:
-        bool getHasAllRequired() noexcept;
+        bool getHasAllRequired()const noexcept;
         NativePermissionsUpdateMessage(
            bool hasAllRequired) noexcept;
         ~NativePermissionsUpdateMessage();
-        static std::shared_ptr<NativePermissionsUpdateMessage> fromJSON(cJSON* j) noexcept;
+        static NativePermissionsUpdateMessage* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //NATIVEPERMISSIONSUPDATEMESSAGE_HPP

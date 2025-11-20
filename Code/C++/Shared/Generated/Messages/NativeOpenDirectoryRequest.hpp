@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 #include "../../JSON/JHelper.hpp"
 class NativeOpenDirectoryRequest
@@ -12,11 +13,11 @@ class NativeOpenDirectoryRequest
    private:
         uint64_t _ticket;
    public:
-        uint64_t getTicket() noexcept;
+        uint64_t getTicket()const noexcept;
         NativeOpenDirectoryRequest(
            uint64_t ticket = 0) noexcept;
         ~NativeOpenDirectoryRequest();
-        static std::shared_ptr<NativeOpenDirectoryRequest> fromJSON(cJSON* j) noexcept;
+        static NativeOpenDirectoryRequest* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //NATIVEOPENDIRECTORYREQUEST_HPP

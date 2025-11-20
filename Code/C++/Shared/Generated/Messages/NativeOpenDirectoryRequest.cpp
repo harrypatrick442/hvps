@@ -4,7 +4,7 @@ NativeOpenDirectoryRequest::NativeOpenDirectoryRequest(
     uint64_t ticket):
         _ticket(ticket){
 }
-uint64_t NativeOpenDirectoryRequest::getTicket(){
+uint64_t NativeOpenDirectoryRequest::getTicket()const noexcept{
     return this->_ticket;
 }
 cJSON* NativeOpenDirectoryRequest::toJSON(){
@@ -13,11 +13,12 @@ cJSON* NativeOpenDirectoryRequest::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<NativeOpenDirectoryRequest> NativeOpenDirectoryRequest::fromJSON(cJSON* j){
+NativeOpenDirectoryRequest* NativeOpenDirectoryRequest::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    auto r = std::make_shared<NativeOpenDirectoryRequest>(ticket);
-return r;
+    auto r = new NativeOpenDirectoryRequest(ticket);
+    cleanupBucket.addDelete(r);
+    return r;
 }
 NativeOpenDirectoryRequest::~NativeOpenDirectoryRequest(){
 }

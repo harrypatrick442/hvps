@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 #include "../../JSON/JHelper.hpp"
 class SetVoltageThresholdRequest
@@ -13,13 +14,13 @@ class SetVoltageThresholdRequest
         double _voltage;
         uint64_t _ticket;
    public:
-        double getVoltage() noexcept;
-        uint64_t getTicket() noexcept;
+        double getVoltage()const noexcept;
+        uint64_t getTicket()const noexcept;
         SetVoltageThresholdRequest(
            double voltage, 
            uint64_t ticket = 0) noexcept;
         ~SetVoltageThresholdRequest();
-        static std::shared_ptr<SetVoltageThresholdRequest> fromJSON(cJSON* j) noexcept;
+        static SetVoltageThresholdRequest* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //SETVOLTAGETHRESHOLDREQUEST_HPP

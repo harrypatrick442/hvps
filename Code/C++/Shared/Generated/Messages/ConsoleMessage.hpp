@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 #include "../../JSON/JHelper.hpp"
 class ConsoleMessage
@@ -12,15 +13,14 @@ class ConsoleMessage
    private:
         bool _isError;
         const char* _message;
-        bool _freeMemoryInDeconstructor;
    public:
-        bool getIsError() noexcept;
-        const char* getMessage() noexcept;
+        bool getIsError()const noexcept;
+        const char* getMessage()const noexcept;
         ConsoleMessage(
            bool isError, 
            const char* message) noexcept;
         ~ConsoleMessage();
-        static std::shared_ptr<ConsoleMessage> fromJSON(cJSON* j) noexcept;
+        static ConsoleMessage* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //CONSOLEMESSAGE_HPP

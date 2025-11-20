@@ -13,4 +13,9 @@
 	.error{
 		color:var(--color-12);
 	}
+	.line{
+		&.empty{
+			height:15px;
+		}
+	}
 }

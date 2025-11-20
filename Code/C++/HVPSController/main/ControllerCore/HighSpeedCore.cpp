@@ -9,7 +9,8 @@
 HighSpeedCore::HighSpeedCore(
 	Port_FirstStageVoltageFeedback& portFirstStageVoltageFeedback, 
 	Port_OutputVoltageFeedback& portOutputVoltageFeedback,
-	LiveDataCache& liveDataCache
+	LiveDataCache& liveDataCache,
+	bool inError
 ):
 _portFirstStageVoltageFeedback(portFirstStageVoltageFeedback),
 _portOutputVoltageFeedback(portOutputVoltageFeedback),
@@ -18,6 +19,7 @@ _shuttingOrShutDown(false),
 _actualSystemState(SystemState::Idle),
 _desiredSystemState(SystemState::Idle),
 _shuttingOrShutDown_2(false),
+_inError(inError),
 _systemChecksResult(nullptr),
 _runSystemChecksLatch(){
 	
@@ -35,13 +37,32 @@ std::shared_ptr<SystemChecksResult> HighSpeedCore::runSystemChecksOnly(){
 	_runSystemChecksLatch.wait();
 	std::unique_lock<std::mutex> lock(_mutexSystemChecksResult);
     auto result = _systemChecksResult; // copy under lock
-	dispatchError(result->getErrorMessage());
+	//lock.unlock();
     return result; // refcount is incremented, safe after unlock
 }
 void HighSpeedCore::shutDown(){
 	setDesiredSystemState(SystemState::ShutDown);
 	_shuttingOrShutDown.store(true, std::memory_order_relaxed);
 	_shuttingOrShutDown_2.store(true, std::memory_order_relaxed);
+}
+void HighSpeedCore::setInError(bool value){
+	_inError.store(value, std::memory_order_relaxed);
+	SystemState desiredSystemState = SystemState::Idle;
+	if(value){
+		desiredSystemState = SystemState::Error;
+	}
+	else{
+		if(isShuttingDownOrShutDown()){
+			desiredSystemState = SystemState::ShuttingDown;
+		}
+		else{
+			desiredSystemState = SystemState::Idle;
+		}
+	}
+	setDesiredSystemState(desiredSystemState);
+}
+bool HighSpeedCore::getInError(){
+	return _inError.load(std::memory_order_relaxed);
 }
 SystemState HighSpeedCore::getDesiredSystemState(){
 	return _desiredSystemState.load(std::memory_order_relaxed);
@@ -84,12 +105,17 @@ void HighSpeedCore::_run(){
 				continue;
 			case SystemState::Live:
 				doLive();
+				Outputs::setMOSFETOnOff(false);
+				//Second set for backup
 				continue;
 			case SystemState::ShutDown:
 				doShutDown();
 				continue;
 			case SystemState::RunningSystemChecks:
 				doSystemChecks();
+				continue;
+			case SystemState::Error:
+				doError();
 				continue;
 			default:
 				Aborter::safeAbort(TAG, "Illegal state");
@@ -99,10 +125,13 @@ void HighSpeedCore::_run(){
 	}
 }
 std::shared_ptr<SystemChecksResult> HighSpeedCore::doSystemChecks(){
-	;
 	std::shared_ptr<SystemChecksResult> result = SystemChecks::run();
 	std::unique_lock<std::mutex> lock(_mutexSystemChecksResult);
 	_systemChecksResult = result;
+	if(!result->getSuccess()){
+		setInError(true);
+		dispatchError(result->getErrorMessage());//TODO THIS ISNT RIGHT 10/11/2025
+	}
 	return result;
 }
 void HighSpeedCore::doShutDown(){
@@ -148,9 +177,11 @@ void HighSpeedCore::doLive(){
 	if(isShuttingDownOrShutDown()){
 		return;
 	}
+	if(getInError()){
+		return;
+	}
 	std::shared_ptr<SystemChecksResult> systemChecksResult = doSystemChecks();
 	if(!systemChecksResult->getSuccess()){
-		dispatchError(systemChecksResult->getErrorMessage());
 		return;
 	}
 	uint64_t time, endTime, endTime_2;
@@ -158,9 +189,6 @@ void HighSpeedCore::doLive(){
 	while(true){
 		endTime = TimeHelper::us()+ON_TIME_US;
 		endTime_2 = TimeHelper::us()+ON_TIME_US_2;
-		if(isShuttingDownOrShutDown()){
-			return;
-		}
 		if((!Inputs::getOutputVoltageFeedbackThresholdReached())&&
 		(!Inputs::getFirstStageVoltageFeedbackThresholdReached())){
 				Outputs::setMOSFETOnOff(true);
@@ -183,8 +211,13 @@ void HighSpeedCore::doLive(){
 		if(getDesiredSystemState()!=SystemState::Live){
 			return;
 		}
+		if(isShuttingDownOrShutDown()){
+			return;
+		}
+		if(getInError()){
+			return;
+		}
 		setActualSystemState(SystemState::Live);
-		
 		while(true){
 			time = TimeHelper::us();
 			if(time>=endTime){
@@ -193,6 +226,16 @@ void HighSpeedCore::doLive(){
 			if(time>=endTime_2){
 				break;
 			}
+		}
+	}
+}
+void HighSpeedCore::doError(){
+	setActualSystemState(SystemState::Error);
+	while(true){
+		Outputs::setMOSFETOnOff(false);
+		Delay::ms(100);
+		if(getActualSystemState()!=SystemState::Error){
+			break;
 		}
 	}
 }

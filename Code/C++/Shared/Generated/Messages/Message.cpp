@@ -2,10 +2,9 @@
 const char* Message::TYPE = "m";
 Message::Message(
     const char* content):
-        _content(content),
-        _freeMemoryInDeconstructor(false){
+        _content(content){
 }
-const char* Message::getContent(){
+const char* Message::getContent()const noexcept{
     return this->_content;
 }
 cJSON* Message::toJSON(){
@@ -14,14 +13,13 @@ cJSON* Message::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<Message> Message::fromJSON(cJSON* j){
+Message* Message::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
     const char* content = JHelper::getString(j, "c", s);
-    auto r = std::make_shared<Message>(content);
-r->_freeMemoryInDeconstructor = true;
-return r;
+    cleanupBucket.addDeleteArray(content);
+    auto r = new Message(content);
+    cleanupBucket.addDelete(r);
+    return r;
 }
 Message::~Message(){
-if(!_freeMemoryInDeconstructor)return;
-     if(_content!=nullptr)delete[] _content;
 }

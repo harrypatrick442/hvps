@@ -4,7 +4,7 @@ NativeStorageDeleteAllRequest::NativeStorageDeleteAllRequest(
     uint64_t ticket):
         _ticket(ticket){
 }
-uint64_t NativeStorageDeleteAllRequest::getTicket(){
+uint64_t NativeStorageDeleteAllRequest::getTicket()const noexcept{
     return this->_ticket;
 }
 cJSON* NativeStorageDeleteAllRequest::toJSON(){
@@ -13,11 +13,12 @@ cJSON* NativeStorageDeleteAllRequest::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<NativeStorageDeleteAllRequest> NativeStorageDeleteAllRequest::fromJSON(cJSON* j){
+NativeStorageDeleteAllRequest* NativeStorageDeleteAllRequest::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    auto r = std::make_shared<NativeStorageDeleteAllRequest>(ticket);
-return r;
+    auto r = new NativeStorageDeleteAllRequest(ticket);
+    cleanupBucket.addDelete(r);
+    return r;
 }
 NativeStorageDeleteAllRequest::~NativeStorageDeleteAllRequest(){
 }

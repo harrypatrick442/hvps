@@ -4,13 +4,12 @@ ErrorMessage::ErrorMessage(
     int32_t errorType, 
     const char* serializedError):
         _errorType(errorType),
-        _serializedError(serializedError),
-        _freeMemoryInDeconstructor(false){
+        _serializedError(serializedError){
 }
-int32_t ErrorMessage::getErrorType(){
+int32_t ErrorMessage::getErrorType()const noexcept{
     return this->_errorType;
 }
-const char* ErrorMessage::getSerializedError(){
+const char* ErrorMessage::getSerializedError()const noexcept{
     return this->_serializedError;
 }
 cJSON* ErrorMessage::toJSON(){
@@ -20,15 +19,14 @@ cJSON* ErrorMessage::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<ErrorMessage> ErrorMessage::fromJSON(cJSON* j){
+ErrorMessage* ErrorMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
     int32_t errorType = JHelper::getInt32(j, "t", s);
     const char* serializedError = JHelper::getString(j, "s", s);
-    auto r = std::make_shared<ErrorMessage>(errorType, serializedError);
-r->_freeMemoryInDeconstructor = true;
-return r;
+    cleanupBucket.addDeleteArray(serializedError);
+    auto r = new ErrorMessage(errorType, serializedError);
+    cleanupBucket.addDelete(r);
+    return r;
 }
 ErrorMessage::~ErrorMessage(){
-if(!_freeMemoryInDeconstructor)return;
-     if(_serializedError!=nullptr)delete[] _serializedError;
 }

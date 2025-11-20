@@ -6,10 +6,10 @@ SetVoltageThresholdRequest::SetVoltageThresholdRequest(
         _voltage(voltage),
         _ticket(ticket){
 }
-double SetVoltageThresholdRequest::getVoltage(){
+double SetVoltageThresholdRequest::getVoltage()const noexcept{
     return this->_voltage;
 }
-uint64_t SetVoltageThresholdRequest::getTicket(){
+uint64_t SetVoltageThresholdRequest::getTicket()const noexcept{
     return this->_ticket;
 }
 cJSON* SetVoltageThresholdRequest::toJSON(){
@@ -19,12 +19,13 @@ cJSON* SetVoltageThresholdRequest::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<SetVoltageThresholdRequest> SetVoltageThresholdRequest::fromJSON(cJSON* j){
+SetVoltageThresholdRequest* SetVoltageThresholdRequest::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
     double voltage = JHelper::getDouble(j, "v", s);
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    auto r = std::make_shared<SetVoltageThresholdRequest>(voltage, ticket);
-return r;
+    auto r = new SetVoltageThresholdRequest(voltage, ticket);
+    cleanupBucket.addDelete(r);
+    return r;
 }
 SetVoltageThresholdRequest::~SetVoltageThresholdRequest(){
 }

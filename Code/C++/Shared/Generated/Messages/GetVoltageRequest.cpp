@@ -4,7 +4,7 @@ GetVoltageRequest::GetVoltageRequest(
     uint64_t ticket):
         _ticket(ticket){
 }
-uint64_t GetVoltageRequest::getTicket(){
+uint64_t GetVoltageRequest::getTicket()const noexcept{
     return this->_ticket;
 }
 cJSON* GetVoltageRequest::toJSON(){
@@ -13,11 +13,12 @@ cJSON* GetVoltageRequest::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<GetVoltageRequest> GetVoltageRequest::fromJSON(cJSON* j){
+GetVoltageRequest* GetVoltageRequest::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    auto r = std::make_shared<GetVoltageRequest>(ticket);
-return r;
+    auto r = new GetVoltageRequest(ticket);
+    cleanupBucket.addDelete(r);
+    return r;
 }
 GetVoltageRequest::~GetVoltageRequest(){
 }

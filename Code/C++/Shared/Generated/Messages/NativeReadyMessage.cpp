@@ -9,10 +9,11 @@ cJSON* NativeReadyMessage::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<NativeReadyMessage> NativeReadyMessage::fromJSON(cJSON* j){
+NativeReadyMessage* NativeReadyMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
-    auto r = std::make_shared<NativeReadyMessage>();
-return r;
+    auto r = new NativeReadyMessage();
+    cleanupBucket.addDelete(r);
+    return r;
 }
 NativeReadyMessage::~NativeReadyMessage(){
 }

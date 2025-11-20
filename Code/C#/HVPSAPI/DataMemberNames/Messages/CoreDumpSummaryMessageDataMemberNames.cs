@@ -5,6 +5,7 @@ namespace HVPSAPI.DataMemberNames.Messages
     [MessageType(MessageTypes.CoreDumpSummary)]
     public static class CoreDumpSummaryMessageDataMemberNames
     {
+        public const string SubsystemIdentifier = "si";
         public const string TaskName = "tn";
         public const string TaskPointer = "tp";
         public const string ProgramCounterForException = "pc";

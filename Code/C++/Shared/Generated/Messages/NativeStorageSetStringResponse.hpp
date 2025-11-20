@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 #include "../../JSON/JHelper.hpp"
 class NativeStorageSetStringResponse
@@ -12,11 +13,11 @@ class NativeStorageSetStringResponse
    private:
         uint64_t _ticket;
    public:
-        uint64_t getTicket() noexcept;
+        uint64_t getTicket()const noexcept;
         NativeStorageSetStringResponse(
            uint64_t ticket) noexcept;
         ~NativeStorageSetStringResponse();
-        static std::shared_ptr<NativeStorageSetStringResponse> fromJSON(cJSON* j) noexcept;
+        static NativeStorageSetStringResponse* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //NATIVESTORAGESETSTRINGRESPONSE_HPP

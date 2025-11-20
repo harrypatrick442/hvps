@@ -35,8 +35,10 @@ class Port_FiberOpticChannel1  final:
 		FiberOpticDuplexChannel_1 _fiberOpticChannel_1;
 		TicketedSender _ticketedSender;
 		
-		void handleSetVoltageThresholdRequest(cJSON* request);
-		void handleGetVoltageRequest(cJSON* request);
+		void handleSetVoltageThresholdRequest(cJSON* message);
+		void handleGetVoltageRequest(cJSON* message);
+		void handleGreetingRequest(cJSON* message);
+		void greetControllingMachine();
 };
 
 #endif // Port_FiberOpticChannel1_hpp

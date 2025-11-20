@@ -4,7 +4,7 @@ NativeShowSaveFilePickerResponse::NativeShowSaveFilePickerResponse(
     uint64_t ticket):
         _ticket(ticket){
 }
-uint64_t NativeShowSaveFilePickerResponse::getTicket(){
+uint64_t NativeShowSaveFilePickerResponse::getTicket()const noexcept{
     return this->_ticket;
 }
 cJSON* NativeShowSaveFilePickerResponse::toJSON(){
@@ -13,11 +13,12 @@ cJSON* NativeShowSaveFilePickerResponse::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<NativeShowSaveFilePickerResponse> NativeShowSaveFilePickerResponse::fromJSON(cJSON* j){
+NativeShowSaveFilePickerResponse* NativeShowSaveFilePickerResponse::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    auto r = std::make_shared<NativeShowSaveFilePickerResponse>(ticket);
-return r;
+    auto r = new NativeShowSaveFilePickerResponse(ticket);
+    cleanupBucket.addDelete(r);
+    return r;
 }
 NativeShowSaveFilePickerResponse::~NativeShowSaveFilePickerResponse(){
 }

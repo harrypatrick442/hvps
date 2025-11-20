@@ -1,5 +1,5 @@
 #pragma once
-enum class ErrorType
+enum ErrorType
 {
 	None = 1,
 	Panic= 2,

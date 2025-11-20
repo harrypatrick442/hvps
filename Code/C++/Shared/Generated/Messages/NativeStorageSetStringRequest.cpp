@@ -6,16 +6,15 @@ NativeStorageSetStringRequest::NativeStorageSetStringRequest(
     uint64_t ticket):
         _key(key),
         _value(value),
-        _ticket(ticket),
-        _freeMemoryInDeconstructor(false){
+        _ticket(ticket){
 }
-const char* NativeStorageSetStringRequest::getKey(){
+const char* NativeStorageSetStringRequest::getKey()const noexcept{
     return this->_key;
 }
-const char* NativeStorageSetStringRequest::getValue(){
+const char* NativeStorageSetStringRequest::getValue()const noexcept{
     return this->_value;
 }
-uint64_t NativeStorageSetStringRequest::getTicket(){
+uint64_t NativeStorageSetStringRequest::getTicket()const noexcept{
     return this->_ticket;
 }
 cJSON* NativeStorageSetStringRequest::toJSON(){
@@ -26,17 +25,16 @@ cJSON* NativeStorageSetStringRequest::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<NativeStorageSetStringRequest> NativeStorageSetStringRequest::fromJSON(cJSON* j){
+NativeStorageSetStringRequest* NativeStorageSetStringRequest::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
     const char* key = JHelper::getString(j, "k", s);
+    cleanupBucket.addDeleteArray(key);
     const char* value = JHelper::getString(j, "v", s);
+    cleanupBucket.addDeleteArray(value);
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    auto r = std::make_shared<NativeStorageSetStringRequest>(key, value, ticket);
-r->_freeMemoryInDeconstructor = true;
-return r;
+    auto r = new NativeStorageSetStringRequest(key, value, ticket);
+    cleanupBucket.addDelete(r);
+    return r;
 }
 NativeStorageSetStringRequest::~NativeStorageSetStringRequest(){
-if(!_freeMemoryInDeconstructor)return;
-     if(_key!=nullptr)delete[] _key;
-     if(_value!=nullptr)delete[] _value;
 }

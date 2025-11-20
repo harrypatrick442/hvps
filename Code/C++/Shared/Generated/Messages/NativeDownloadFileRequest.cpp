@@ -4,7 +4,7 @@ NativeDownloadFileRequest::NativeDownloadFileRequest(
     uint64_t ticket):
         _ticket(ticket){
 }
-uint64_t NativeDownloadFileRequest::getTicket(){
+uint64_t NativeDownloadFileRequest::getTicket()const noexcept{
     return this->_ticket;
 }
 cJSON* NativeDownloadFileRequest::toJSON(){
@@ -13,11 +13,12 @@ cJSON* NativeDownloadFileRequest::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<NativeDownloadFileRequest> NativeDownloadFileRequest::fromJSON(cJSON* j){
+NativeDownloadFileRequest* NativeDownloadFileRequest::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    auto r = std::make_shared<NativeDownloadFileRequest>(ticket);
-return r;
+    auto r = new NativeDownloadFileRequest(ticket);
+    cleanupBucket.addDelete(r);
+    return r;
 }
 NativeDownloadFileRequest::~NativeDownloadFileRequest(){
 }

@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 class NativeCloseFileMessage
 {
@@ -13,7 +14,7 @@ class NativeCloseFileMessage
         NativeCloseFileMessage(
 ) noexcept;
         ~NativeCloseFileMessage();
-        static std::shared_ptr<NativeCloseFileMessage> fromJSON(cJSON* j) noexcept;
+        static NativeCloseFileMessage* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //NATIVECLOSEFILEMESSAGE_HPP

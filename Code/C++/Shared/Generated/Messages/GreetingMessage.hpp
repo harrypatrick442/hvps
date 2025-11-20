@@ -3,25 +3,27 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
-#include "./CoreDumpSummaryMessage.hpp"
-#include "./LastAbortMessage.hpp"
+#include "CoreDumpSummaryMessage.hpp"
+#include "../../System/Aborter.hpp"
+#include "LastAbortMessage.hpp"
 #include "../../JSON/JHelper.hpp"
 class GreetingMessage
 {
    public:
        static const char* TYPE;
    private:
-        std::shared_ptr<CoreDumpSummaryMessage> _coreDumpSummaryMessage;
-        std::shared_ptr<LastAbortMessage> _lastAbortMessage;
+        CoreDumpSummaryMessage* _coreDumpSummaryMessage;
+        LastAbortMessage* _lastAbortMessage;
    public:
-        std::shared_ptr<CoreDumpSummaryMessage> getCoreDumpSummaryMessage() noexcept;
-        std::shared_ptr<LastAbortMessage> getLastAbortMessage() noexcept;
+        CoreDumpSummaryMessage* getCoreDumpSummaryMessage()const noexcept;
+        LastAbortMessage* getLastAbortMessage()const noexcept;
         GreetingMessage(
-           std::shared_ptr<CoreDumpSummaryMessage>, 
-           std::shared_ptr<LastAbortMessage>) noexcept;
+           CoreDumpSummaryMessage* coreDumpSummaryMessage, 
+           LastAbortMessage* lastAbortMessage) noexcept;
         ~GreetingMessage();
-        static std::shared_ptr<GreetingMessage> fromJSON(cJSON* j) noexcept;
+        static GreetingMessage* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //GREETINGMESSAGE_HPP

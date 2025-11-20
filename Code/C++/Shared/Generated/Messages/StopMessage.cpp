@@ -9,10 +9,11 @@ cJSON* StopMessage::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<StopMessage> StopMessage::fromJSON(cJSON* j){
+StopMessage* StopMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
-    auto r = std::make_shared<StopMessage>();
-return r;
+    auto r = new StopMessage();
+    cleanupBucket.addDelete(r);
+    return r;
 }
 StopMessage::~StopMessage(){
 }

@@ -22,6 +22,7 @@ public:
     [[noreturn]] static void safeAbort(const char* tag, const char* format, Args&&... args);
 	static LastAbortMessage* getLastAbortReason(
 			CleanupBucket& cleanupBucket);
+	static bool hasLastAbortReason();
 	static void clearLastAbortReason();
 private:
     static inline std::function<void()> _toSafe = nullptr;

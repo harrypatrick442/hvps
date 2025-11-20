@@ -9,10 +9,11 @@ cJSON* RunSystemChecksOnlyMessage::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<RunSystemChecksOnlyMessage> RunSystemChecksOnlyMessage::fromJSON(cJSON* j){
+RunSystemChecksOnlyMessage* RunSystemChecksOnlyMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
-    auto r = std::make_shared<RunSystemChecksOnlyMessage>();
-return r;
+    auto r = new RunSystemChecksOnlyMessage();
+    cleanupBucket.addDelete(r);
+    return r;
 }
 RunSystemChecksOnlyMessage::~RunSystemChecksOnlyMessage(){
 }

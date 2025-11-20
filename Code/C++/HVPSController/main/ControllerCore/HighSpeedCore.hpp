@@ -16,6 +16,7 @@ public:
 	void stop();
 	std::shared_ptr<SystemChecksResult>  runSystemChecksOnly();
 	void shutDown();
+	void setInError(bool value);
 private:
     friend class SingletonBase<HighSpeedCore>;
 	
@@ -28,7 +29,8 @@ private:
 	HighSpeedCore(
 		Port_FirstStageVoltageFeedback& portFirstStageVoltageFeedback, 
 		Port_OutputVoltageFeedback& portOutputVoltageFeedback,
-		LiveDataCache& liveDataCache
+		LiveDataCache& liveDataCache,
+		bool inError
 	)noexcept;
 	Port_FirstStageVoltageFeedback& _portFirstStageVoltageFeedback;
 	Port_OutputVoltageFeedback& _portOutputVoltageFeedback;
@@ -37,6 +39,7 @@ private:
 	std::atomic<SystemState> _actualSystemState;
 	std::atomic<SystemState> _desiredSystemState;
 	std::atomic<bool> _shuttingOrShutDown_2;
+	std::atomic<bool> _inError;
 	std::mutex _mutexControlInput;
 	
 	std::mutex _mutexSystemChecksResult;
@@ -49,11 +52,13 @@ private:
 	void doIdle();
 	void doLive();
 	void doShutDown();
+	void doError();
 	SystemState getDesiredSystemState();
 	SystemState getActualSystemState();
 	void setDesiredSystemState(SystemState systemState);
 	void setActualSystemState(SystemState systemState);
 	bool isShuttingDownOrShutDown();
+	bool getInError();
 	void dispatchSystemStateChanged(SystemState systemState);
 	void dispatchError(std::string errorMessage);
 };

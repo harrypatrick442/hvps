@@ -16,50 +16,28 @@ private:
     inline static constexpr int PRIORITY_NORMAL = 1;
     inline static constexpr int PRIORITY_HIGH = 5;
 public:
+	static void createNonPriorityTask(
+									  const std::function<void()>& fn,
+									  const char* name,
+									  TaskHandle_t* taskHandle = nullptr);
+	static void createPriorityTask(
+									  const std::function<void()>& fn,
+									  const char* name,
+									  TaskHandle_t* taskHandle = nullptr);
     // --- Raw pointer versions (original) ---
     static void createNonPriorityTask(void (*taskFunc)(void*),
                                       void* obj,
                                       const char* name,
-                                      TaskHandle_t* taskHandle = nullptr)
-    {
-        BaseType_t result = xTaskCreatePinnedToCore(
-            taskFunc,
-            name,
-            STACK_SIZE_NON_PRIORITY,
-            obj,
-            PRIORITY_NORMAL,
-            taskHandle,
-            CORE_NON_PRIORITY
-        );
-
-        if (result != pdPASS) {
-            Aborter::safeAbort(TAG, "Failed to create non-priority task: %s", name);
-        }
-    }
+                                      TaskHandle_t* taskHandle = nullptr);
 
     static void createPriorityTask(void (*taskFunc)(void*),
                                    void* obj,
                                    const char* name,
-                                   TaskHandle_t* taskHandle = nullptr)
-    {
-        BaseType_t result = xTaskCreatePinnedToCore(
-            taskFunc,
-            name,
-            STACK_SIZE_PRIORITY,
-            obj,
-            PRIORITY_HIGH,
-            taskHandle,
-            CORE_PRIORITY
-        );
-
-        if (result != pdPASS) {
-            Aborter::safeAbort(TAG, "Failed to create priority task: %s", name);
-        }
-    }
+                                   TaskHandle_t* taskHandle = nullptr);
 
     // --- Shared pointer versions (new) ---// --- Shared pointer version (non-priority) ---
 	template <typename T>
-	static void createNonPriorityTask(void (*taskFunc)(std::shared_ptr<T>),
+	inline static void createNonPriorityTask(void (*taskFunc)(std::shared_ptr<T>),
 									  std::shared_ptr<T> obj,
 									  const char* name,
 									  TaskHandle_t* taskHandle = nullptr)
@@ -93,7 +71,7 @@ public:
 		}
 	}
 	template <typename T>
-	static void createPriorityTask(void (*taskFunc)(std::shared_ptr<T>),
+	inline static void createPriorityTask(void (*taskFunc)(std::shared_ptr<T>),
 								   std::shared_ptr<T> obj,
 								   const char* name,
 								   TaskHandle_t* _taskHandle = nullptr)
@@ -126,5 +104,12 @@ public:
 			Aborter::safeAbort(TAG, "Failed to create priority task: %s", name);
 		}
 	}
-
+private:
+	static void launchTrampolineTask(
+                                 const std::function<void()>& fn,
+								 const char* name,
+                                 size_t stackSize,
+                                 int priority,
+                                 int core,
+                                 TaskHandle_t* taskHandle);
 };

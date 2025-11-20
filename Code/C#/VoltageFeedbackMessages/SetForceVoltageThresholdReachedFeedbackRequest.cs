@@ -14,7 +14,7 @@ namespace VoltageFeedbackMessages.Requests
         [JsonInclude]
         [DataMember(Name =
             SetForceVoltageThresholdReachedFeedbackRequestDataMemberNames.Force)]
-        public bool Force { get { return _Force; } set { _Force = value; } }
+        public bool Force { get { return _Force; } protected set { _Force = value; } }
     }
 }
 

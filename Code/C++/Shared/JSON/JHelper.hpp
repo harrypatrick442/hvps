@@ -9,6 +9,7 @@
 #include <vector>
 #include <type_traits>
 #include <cstddef>  // for size_t
+#include "Logging/Log.hpp"
 
 class JHelper {
 public:

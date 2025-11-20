@@ -3,6 +3,7 @@
 #include "../Ports/Port_VoltageFeedbackBase.hpp"
 #include "../Ports/Port_OutputVoltageFeedback.hpp"
 #include "../Ports/Port_FirstStageVoltageFeedback.hpp"
+#include "../Ports/Port_ControllingMachine.hpp"
 #include "../IO/Inputs.hpp"
 std::shared_ptr<SystemChecksResult> SystemChecks::run(){
 	std::string errorMessage;
@@ -10,6 +11,12 @@ std::shared_ptr<SystemChecksResult> SystemChecks::run(){
 	return std::make_shared<SystemChecksResult>(success, errorMessage);
 }
 bool SystemChecks::run(std::string& errorMessage){
+	uint32_t subsystemIdentifierWithError = 
+		Port_ControllingMachine::getInstance().greetVoltageFeedbackModules();
+	if(subsystemIdentifierWithError!=0){
+		errorMessage = "Error state detected for subsystem "
+		+std::to_string(subsystemIdentifierWithError);
+	}
 	if(!suspended_firstStageVoltageFeedbackAbstractComs_replies(errorMessage)){
 		return false;
 	}

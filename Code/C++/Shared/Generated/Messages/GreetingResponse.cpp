@@ -1,39 +1,40 @@
 #include "./GreetingResponse.hpp"
 const char* GreetingResponse::TYPE = "tkd";
 GreetingResponse::GreetingResponse(
-    std::shared_ptr<CoreDumpSummaryMessage>, 
-    std::shared_ptr<LastAbortMessage>, 
+    CoreDumpSummaryMessage* coreDumpSummaryMessage, 
+    LastAbortMessage* lastAbortMessage, 
     uint64_t ticket):
         _coreDumpSummaryMessage(coreDumpSummaryMessage),
         _lastAbortMessage(lastAbortMessage),
         _ticket(ticket){
 }
-std::shared_ptr<CoreDumpSummaryMessage> GreetingResponse::getCoreDumpSummaryMessage(){
+CoreDumpSummaryMessage* GreetingResponse::getCoreDumpSummaryMessage()const noexcept{
     return this->_coreDumpSummaryMessage;
 }
-std::shared_ptr<LastAbortMessage> GreetingResponse::getLastAbortMessage(){
+LastAbortMessage* GreetingResponse::getLastAbortMessage()const noexcept{
     return this->_lastAbortMessage;
 }
-uint64_t GreetingResponse::getTicket(){
+uint64_t GreetingResponse::getTicket()const noexcept{
     return this->_ticket;
 }
 cJSON* GreetingResponse::toJSON(){
     cJSON *j = cJSON_CreateObject();
-    JHelper::addNullableObject(j, "cd", this->_coreDumpSummaryMessage->toJSON());
-    JHelper::addNullableObject(j, "la", this->_lastAbortMessage->toJSON());
+    JHelper::addNullableObject(j, "cd", this->_coreDumpSummaryMessage==nullptr?nullptr:this->_coreDumpSummaryMessage->toJSON());
+    JHelper::addNullableObject(j, "la", this->_lastAbortMessage==nullptr?nullptr:this->_lastAbortMessage->toJSON());
     JHelper::addUInt64(j, "tckt", this->_ticket);
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<GreetingResponse> GreetingResponse::fromJSON(cJSON* j){
+GreetingResponse* GreetingResponse::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
     cJSON* coreDumpSummaryMessageJSON = JHelper::getNullableObject(j, "cd", s);
-    std::shared_ptr<CoreDumpSummaryMessage> coreDumpSummaryMessage = coreDumpSummaryMessageJSON==nullptr?nullptr:CoreDumpSummaryMessage::fromJSON(coreDumpSummaryMessageJSON);
+    CoreDumpSummaryMessage* coreDumpSummaryMessage = coreDumpSummaryMessageJSON==nullptr?nullptr:CoreDumpSummaryMessage::fromJSON(coreDumpSummaryMessageJSON, cleanupBucket);
     cJSON* lastAbortMessageJSON = JHelper::getNullableObject(j, "la", s);
-    std::shared_ptr<LastAbortMessage> lastAbortMessage = lastAbortMessageJSON==nullptr?nullptr:LastAbortMessage::fromJSON(lastAbortMessageJSON);
+    LastAbortMessage* lastAbortMessage = lastAbortMessageJSON==nullptr?nullptr:LastAbortMessage::fromJSON(lastAbortMessageJSON, cleanupBucket);
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    auto r = std::make_shared<GreetingResponse>(coreDumpSummaryMessage, lastAbortMessage, ticket);
-return r;
+    auto r = new GreetingResponse(coreDumpSummaryMessage, lastAbortMessage, ticket);
+    cleanupBucket.addDelete(r);
+    return r;
 }
 GreetingResponse::~GreetingResponse(){
 }

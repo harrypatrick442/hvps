@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 #include "../../JSON/JHelper.hpp"
 class ErrorMessage
@@ -12,15 +13,14 @@ class ErrorMessage
    private:
         int32_t _errorType;
         const char* _serializedError;
-        bool _freeMemoryInDeconstructor;
    public:
-        int32_t getErrorType() noexcept;
-        const char* getSerializedError() noexcept;
+        int32_t getErrorType()const noexcept;
+        const char* getSerializedError()const noexcept;
         ErrorMessage(
            int32_t errorType, 
            const char* serializedError) noexcept;
         ~ErrorMessage();
-        static std::shared_ptr<ErrorMessage> fromJSON(cJSON* j) noexcept;
+        static ErrorMessage* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //ERRORMESSAGE_HPP

@@ -6,10 +6,10 @@ GetVoltageThresholdResponse::GetVoltageThresholdResponse(
         _voltage(voltage),
         _ticket(ticket){
 }
-double GetVoltageThresholdResponse::getVoltage(){
+double GetVoltageThresholdResponse::getVoltage()const noexcept{
     return this->_voltage;
 }
-uint64_t GetVoltageThresholdResponse::getTicket(){
+uint64_t GetVoltageThresholdResponse::getTicket()const noexcept{
     return this->_ticket;
 }
 cJSON* GetVoltageThresholdResponse::toJSON(){
@@ -19,12 +19,13 @@ cJSON* GetVoltageThresholdResponse::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<GetVoltageThresholdResponse> GetVoltageThresholdResponse::fromJSON(cJSON* j){
+GetVoltageThresholdResponse* GetVoltageThresholdResponse::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
     double voltage = JHelper::getDouble(j, "v", s);
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    auto r = std::make_shared<GetVoltageThresholdResponse>(voltage, ticket);
-return r;
+    auto r = new GetVoltageThresholdResponse(voltage, ticket);
+    cleanupBucket.addDelete(r);
+    return r;
 }
 GetVoltageThresholdResponse::~GetVoltageThresholdResponse(){
 }

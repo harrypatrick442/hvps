@@ -6,16 +6,18 @@
 	void JHelper::addArray(cJSON* parent, const char* key, const T* values, size_t count)
 	{
 		static_assert(std::is_arithmetic<T>::value, "T must be a numeric type");
-		if (!parent || !key || !values) return;
-
+		if (
+			(parent==nullptr) 
+			|| (key==nullptr) 
+			|| (values==nullptr)
+			||(count<1)
+		) return;
 		cJSON* arr = cJSON_CreateArray();
 		if (!arr) return;
-
 		for (size_t i = 0; i < count; ++i)
 		{
 			cJSON_AddItemToArray(arr, cJSON_CreateNumber(values[i]));
 		}
-
 		cJSON_AddItemToObject(parent, key, arr);
 	}
 	template <typename T>

@@ -1,7 +1,7 @@
 #include "ThresholdMonitor.hpp"
 #include "IO/Outputs.hpp"
 #include "ADC/ADC.hpp"
-#include "NonVolatileState.hpp"
+#include "Storage/Flash.hpp"
 #include <functional>
 
 ThresholdMonitor::ThresholdMonitor(
@@ -13,7 +13,7 @@ _config2(config2),
 _monitorVoltageThresholdHandle(nullptr)
 {
 	double initialUnscaledVoltageThreshold = _config1.defaultThreshold;
-	NonVolatileState::getVoltageThreshold(initialUnscaledVoltageThreshold);
+	Flash::getDouble(FLASH_NAMESPACE, THRESHOLD_VOLTAGE_KEY, initialUnscaledVoltageThreshold);
 	double scaledThreshold = toScaledADCThreshold(initialUnscaledVoltageThreshold);
 	//Inputs::selectADCVoltageDividerInputAsChannel();
 	_monitorVoltageThresholdHandle = 
@@ -22,18 +22,13 @@ _monitorVoltageThresholdHandle(nullptr)
 			scaledThreshold,
 			[this](bool reached) { onVoltageThresholdReachedChanged(reached); }
 		);
-	
-	_eventConnectionVoltageThresholdChanged = NonVolatileState::onVoltageThresholdChanged.addHandler(
-		[this](double vUnscaled){
-			_monitorVoltageThresholdHandle->setThresholdVoltage(toScaledADCThreshold(vUnscaled));
-		}
-	);
 }
 double ThresholdMonitor::getVoltage(){
 	return _monitorVoltageThresholdHandle->getVoltage();
 }
 void ThresholdMonitor::setThresholdVoltage(double voltage){
 	_monitorVoltageThresholdHandle->setThresholdVoltage(voltage);
+	Flash::setDouble(FLASH_NAMESPACE, THRESHOLD_VOLTAGE_KEY, voltage);
 }
 void ThresholdMonitor::onVoltageThresholdReachedChanged(bool reached)noexcept{
 	Outputs::setThresholdReachedFiberOpticOnOff(reached);

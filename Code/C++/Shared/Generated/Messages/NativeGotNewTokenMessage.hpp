@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 class NativeGotNewTokenMessage
 {
@@ -13,7 +14,7 @@ class NativeGotNewTokenMessage
         NativeGotNewTokenMessage(
 ) noexcept;
         ~NativeGotNewTokenMessage();
-        static std::shared_ptr<NativeGotNewTokenMessage> fromJSON(cJSON* j) noexcept;
+        static NativeGotNewTokenMessage* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //NATIVEGOTNEWTOKENMESSAGE_HPP

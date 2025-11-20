@@ -8,19 +8,18 @@ VirtualSocket2Message::VirtualSocket2Message(
         _endpointId(endpointId),
         _payload(payload),
         _secret(secret),
-        _theirNodeId(theirNodeId),
-        _freeMemoryInDeconstructor(false){
+        _theirNodeId(theirNodeId){
 }
-std::optional<int64_t> VirtualSocket2Message::getEndpointId(){
+std::optional<int64_t> VirtualSocket2Message::getEndpointId()const noexcept{
     return this->_endpointId;
 }
-const char* VirtualSocket2Message::getPayload(){
+const char* VirtualSocket2Message::getPayload()const noexcept{
     return this->_payload;
 }
-const char* VirtualSocket2Message::getSecret(){
+const char* VirtualSocket2Message::getSecret()const noexcept{
     return this->_secret;
 }
-std::optional<int32_t> VirtualSocket2Message::getTheirNodeId(){
+std::optional<int32_t> VirtualSocket2Message::getTheirNodeId()const noexcept{
     return this->_theirNodeId;
 }
 cJSON* VirtualSocket2Message::toJSON(){
@@ -32,18 +31,17 @@ cJSON* VirtualSocket2Message::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<VirtualSocket2Message> VirtualSocket2Message::fromJSON(cJSON* j){
+VirtualSocket2Message* VirtualSocket2Message::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
     std::optional<int64_t> endpointId = JHelper::getNullableInt64(j, "i", s);
     const char* payload = JHelper::getString(j, "p", s);
+    cleanupBucket.addDeleteArray(payload);
     const char* secret = JHelper::getString(j, "s", s);
+    cleanupBucket.addDeleteArray(secret);
     std::optional<int32_t> theirNodeId = JHelper::getNullableInt32(j, "n", s);
-    auto r = std::make_shared<VirtualSocket2Message>(endpointId, payload, secret, theirNodeId);
-r->_freeMemoryInDeconstructor = true;
-return r;
+    auto r = new VirtualSocket2Message(endpointId, payload, secret, theirNodeId);
+    cleanupBucket.addDelete(r);
+    return r;
 }
 VirtualSocket2Message::~VirtualSocket2Message(){
-if(!_freeMemoryInDeconstructor)return;
-     if(_payload!=nullptr)delete[] _payload;
-     if(_secret!=nullptr)delete[] _secret;
 }

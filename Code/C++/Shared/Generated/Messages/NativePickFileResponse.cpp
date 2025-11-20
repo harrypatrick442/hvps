@@ -4,7 +4,7 @@ NativePickFileResponse::NativePickFileResponse(
     uint64_t ticket):
         _ticket(ticket){
 }
-uint64_t NativePickFileResponse::getTicket(){
+uint64_t NativePickFileResponse::getTicket()const noexcept{
     return this->_ticket;
 }
 cJSON* NativePickFileResponse::toJSON(){
@@ -13,11 +13,12 @@ cJSON* NativePickFileResponse::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<NativePickFileResponse> NativePickFileResponse::fromJSON(cJSON* j){
+NativePickFileResponse* NativePickFileResponse::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    auto r = std::make_shared<NativePickFileResponse>(ticket);
-return r;
+    auto r = new NativePickFileResponse(ticket);
+    cleanupBucket.addDelete(r);
+    return r;
 }
 NativePickFileResponse::~NativePickFileResponse(){
 }

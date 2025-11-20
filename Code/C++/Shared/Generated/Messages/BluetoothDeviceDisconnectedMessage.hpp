@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 class BluetoothDeviceDisconnectedMessage
 {
@@ -13,7 +14,7 @@ class BluetoothDeviceDisconnectedMessage
         BluetoothDeviceDisconnectedMessage(
 ) noexcept;
         ~BluetoothDeviceDisconnectedMessage();
-        static std::shared_ptr<BluetoothDeviceDisconnectedMessage> fromJSON(cJSON* j) noexcept;
+        static BluetoothDeviceDisconnectedMessage* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //BLUETOOTHDEVICEDISCONNECTEDMESSAGE_HPP

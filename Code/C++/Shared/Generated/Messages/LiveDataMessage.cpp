@@ -12,19 +12,19 @@ LiveDataMessage::LiveDataMessage(
         _peakPrimaryCurrent(peakPrimaryCurrent),
         _totalOutputEnergy(totalOutputEnergy){
 }
-double LiveDataMessage::getFirstStageVoltage(){
+double LiveDataMessage::getFirstStageVoltage()const noexcept{
     return this->_firstStageVoltage;
 }
-double LiveDataMessage::getOutputCurrent(){
+double LiveDataMessage::getOutputCurrent()const noexcept{
     return this->_outputCurrent;
 }
-double LiveDataMessage::getOutputVoltage(){
+double LiveDataMessage::getOutputVoltage()const noexcept{
     return this->_outputVoltage;
 }
-double LiveDataMessage::getPeakPrimaryCurrent(){
+double LiveDataMessage::getPeakPrimaryCurrent()const noexcept{
     return this->_peakPrimaryCurrent;
 }
-double LiveDataMessage::getTotalOutputEnergy(){
+double LiveDataMessage::getTotalOutputEnergy()const noexcept{
     return this->_totalOutputEnergy;
 }
 cJSON* LiveDataMessage::toJSON(){
@@ -37,15 +37,16 @@ cJSON* LiveDataMessage::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<LiveDataMessage> LiveDataMessage::fromJSON(cJSON* j){
+LiveDataMessage* LiveDataMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
     double firstStageVoltage = JHelper::getDouble(j, "f", s);
     double outputCurrent = JHelper::getDouble(j, "c", s);
     double outputVoltage = JHelper::getDouble(j, "v", s);
     double peakPrimaryCurrent = JHelper::getDouble(j, "p", s);
     double totalOutputEnergy = JHelper::getDouble(j, "t", s);
-    auto r = std::make_shared<LiveDataMessage>(firstStageVoltage, outputCurrent, outputVoltage, peakPrimaryCurrent, totalOutputEnergy);
-return r;
+    auto r = new LiveDataMessage(firstStageVoltage, outputCurrent, outputVoltage, peakPrimaryCurrent, totalOutputEnergy);
+    cleanupBucket.addDelete(r);
+    return r;
 }
 LiveDataMessage::~LiveDataMessage(){
 }

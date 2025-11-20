@@ -1,6 +1,5 @@
 #pragma once
 #include "Core/SingletonBase.hpp"
-#include "Core/Event.hpp"
 #include "Core/Macros.hpp"
 #include "ADC/MonitorVoltageThresholdHandle.hpp"
 #include "Generated/VoltageFeedbackModuleConfiguration.hpp"
@@ -9,6 +8,9 @@
 class ThresholdMonitor final:
 	public SingletonBase<ThresholdMonitor>{
     friend class SingletonBase<ThresholdMonitor>;
+private:
+	static inline constexpr const char* FLASH_NAMESPACE = "s";
+	static inline constexpr const char* THRESHOLD_VOLTAGE_KEY = "tv";
 public:
 	static inline constexpr const char* TAG = "ThresholdMonitor";
 	DISALLOW_COPY_MOVE(ThresholdMonitor);
@@ -24,7 +26,6 @@ private:
 	const Configuration& _config1;
 	const Configuration& _config2;
 	std::shared_ptr<MonitorVoltageThresholdHandle> _monitorVoltageThresholdHandle;
-	EventConnection _eventConnectionVoltageThresholdChanged;
 	
 	void onVoltageThresholdReachedChanged(bool reached)noexcept;
 	double toScaledADCThreshold(double vUnscaled)noexcept;

@@ -4,7 +4,7 @@ NativeStorageSetStringResponse::NativeStorageSetStringResponse(
     uint64_t ticket):
         _ticket(ticket){
 }
-uint64_t NativeStorageSetStringResponse::getTicket(){
+uint64_t NativeStorageSetStringResponse::getTicket()const noexcept{
     return this->_ticket;
 }
 cJSON* NativeStorageSetStringResponse::toJSON(){
@@ -13,11 +13,12 @@ cJSON* NativeStorageSetStringResponse::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<NativeStorageSetStringResponse> NativeStorageSetStringResponse::fromJSON(cJSON* j){
+NativeStorageSetStringResponse* NativeStorageSetStringResponse::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    auto r = std::make_shared<NativeStorageSetStringResponse>(ticket);
-return r;
+    auto r = new NativeStorageSetStringResponse(ticket);
+    cleanupBucket.addDelete(r);
+    return r;
 }
 NativeStorageSetStringResponse::~NativeStorageSetStringResponse(){
 }

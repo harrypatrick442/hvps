@@ -351,4 +351,44 @@ bool Flash::erase(const char* namespaceName, const char* key)
 	return true;
 } 
 
+bool Flash::hasKey(const char* namespaceName, const char* key)
+{
+    if (!_isInitialized) {
+        Aborter::safeAbort(TAG, NVS_NOT_INITIALIZED);
+        return false;
+    }
 
+    nvs_handle_t handle;
+    esp_err_t err = nvs_open(namespaceName, NVS_READONLY, &handle);
+
+    // Namespace never created => no keys
+    if (err == ESP_ERR_NVS_NOT_FOUND) {
+        return false;
+    }
+
+    if (err != ESP_OK) {
+        Log::Warn(TAG, FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
+        return false;
+    }
+
+    // We don't care about the type, only existence.
+    // Try to read as string just to probe existence.
+    size_t requiredSize = 0;
+    err = nvs_get_str(handle, key, nullptr, &requiredSize);
+    nvs_close(handle);
+
+    if (err == ESP_ERR_NVS_NOT_FOUND) {
+        // Key genuinely doesn't exist
+        return false;
+    }
+
+    if (err == ESP_OK || err == ESP_ERR_NVS_TYPE_MISMATCH) {
+        // OK: key exists (string or some other type)
+        return true;
+    }
+
+    // Any other error is a real failure
+    Log::Warn(TAG, "Failed to probe existence of key '%s': %s",
+              key, esp_err_to_name(err));
+    return false;
+}

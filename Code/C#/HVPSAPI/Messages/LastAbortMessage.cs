@@ -12,6 +12,11 @@ namespace HVPSAPI.Messages
     [DataContract]
     public class LastAbortMessage : TypedMessageBase
     {
+        [JsonPropertyName(LastAbortMessageDataMemberNames.SubsystemIdentifier)]
+        [JsonInclude]
+        [DataMember(Name = LastAbortMessageDataMemberNames.SubsystemIdentifier)]
+        /*!< a register set when the exception caused */
+        public SubsystemIdentifier SubsystemIdentifier { get; protected set; }
         [JsonPropertyName(LastAbortMessageDataMemberNames.Backtrace)]
         [JsonInclude]
         [DataMember(Name = LastAbortMessageDataMemberNames.Backtrace)]

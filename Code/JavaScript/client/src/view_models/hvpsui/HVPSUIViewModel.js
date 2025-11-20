@@ -12,6 +12,7 @@ import Handles  from '../../core/Handles';
 import BluetoothFailedReason  from '../../enums/BluetoothFailedReason';
 import HVPSUIDialog from '../../components/hvpsui/HVPSUIDialog';
 import ConsoleMessageType from '../../enums/ConsoleMessageType';
+import SubsystemIdentifier from '../../enums/SubsystemIdentifier';
 import ErrorViewModel from './ErrorViewModel';
 export default class HVPSUIViewModel{
 	constructor(){
@@ -288,11 +289,9 @@ export default class HVPSUIViewModel{
 		console.log('_handleConsoleMessage');
 		this._consoleAppendLine(
 			consoleMessage.message,
-			consoleMessage.isError?ConsoleMessageType.Error:ConsoleMessageType.Info)
-		;
+			consoleMessage.isError?ConsoleMessageType.Error:ConsoleMessageType.Info);
 	}
 	_handleErrorMessage({errorMessage}){
-		console.log("GOT ERROR MESSAGE");
 		this.dispatchEvent({type:'error', error:new ErrorViewModel({errorMessage})});
 	}
 	_handleCoreDumpSummaryMessage({coreDumpSummaryMessage}){
@@ -328,7 +327,7 @@ export default class HVPSUIViewModel{
 		}
 
 		const pc = summary.programCounterForException || 0;
-		lines.push(`Crash task: ${summary.taskName || "?"}  PC=0x${pc.toString(16).padStart(8, "0")}`);
+		lines.push(`Crash subsystem: ${SubsystemIdentifier.getDescription(summary.subsystemIdentifier)}, task: ${summary.taskName || "?"}  PC=0x${pc.toString(16).padStart(8, "0")}`);
 
 		const depth = summary.backtrace?.length || 0;
 		const corrupted = summary.backtraceCorrupted ? 1 : 0;

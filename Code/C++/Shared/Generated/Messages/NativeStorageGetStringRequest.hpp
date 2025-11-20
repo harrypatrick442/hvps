@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 #include "../../JSON/JHelper.hpp"
 class NativeStorageGetStringRequest
@@ -12,15 +13,14 @@ class NativeStorageGetStringRequest
    private:
         const char* _key;
         uint64_t _ticket;
-        bool _freeMemoryInDeconstructor;
    public:
-        const char* getKey() noexcept;
-        uint64_t getTicket() noexcept;
+        const char* getKey()const noexcept;
+        uint64_t getTicket()const noexcept;
         NativeStorageGetStringRequest(
            const char* key, 
            uint64_t ticket = 0) noexcept;
         ~NativeStorageGetStringRequest();
-        static std::shared_ptr<NativeStorageGetStringRequest> fromJSON(cJSON* j) noexcept;
+        static NativeStorageGetStringRequest* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //NATIVESTORAGEGETSTRINGREQUEST_HPP

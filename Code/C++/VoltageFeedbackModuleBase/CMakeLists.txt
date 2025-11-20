@@ -1,7 +1,6 @@
 idf_component_register(
     SRCS 
 	"VoltageFeedbackModuleBase.cpp"
-	"NonVolatileState.cpp"
 	"ThresholdMonitor.cpp"
     "Ports/Port_FiberOpticChannel1.cpp"
 	"IO/FiberOpticDuplexChannel_1.cpp"

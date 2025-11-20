@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 class NativeDisposeClientToClientChannelMessage
 {
@@ -13,7 +14,7 @@ class NativeDisposeClientToClientChannelMessage
         NativeDisposeClientToClientChannelMessage(
 ) noexcept;
         ~NativeDisposeClientToClientChannelMessage();
-        static std::shared_ptr<NativeDisposeClientToClientChannelMessage> fromJSON(cJSON* j) noexcept;
+        static NativeDisposeClientToClientChannelMessage* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //NATIVEDISPOSECLIENTTOCLIENTCHANNELMESSAGE_HPP

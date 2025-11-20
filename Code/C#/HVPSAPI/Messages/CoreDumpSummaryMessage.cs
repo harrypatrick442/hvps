@@ -6,12 +6,18 @@ using System;
 using System.Net;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
-
+using HVPSCore.Enums;
 namespace HVPSAPI.Messages
 {
     [DataContract]
     public class CoreDumpSummaryMessage : TypedMessageBase
     {
+
+        [JsonPropertyName(CoreDumpSummaryMessageDataMemberNames.SubsystemIdentifier)]
+        [JsonInclude]
+        [DataMember(Name = CoreDumpSummaryMessageDataMemberNames.SubsystemIdentifier)]
+        /*!< a register set when the exception caused */
+        public SubsystemIdentifier SubsystemIdentifier{ get; protected set; }
 
         [JsonPropertyName(CoreDumpSummaryMessageDataMemberNames.ARegisterSetWhenTheExceptionCaused)]
         [JsonInclude]

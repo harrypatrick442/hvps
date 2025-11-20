@@ -4,13 +4,12 @@ ConnectToBluetoothDeviceRequest::ConnectToBluetoothDeviceRequest(
     const char* address, 
     uint64_t ticket):
         _address(address),
-        _ticket(ticket),
-        _freeMemoryInDeconstructor(false){
+        _ticket(ticket){
 }
-const char* ConnectToBluetoothDeviceRequest::getAddress(){
+const char* ConnectToBluetoothDeviceRequest::getAddress()const noexcept{
     return this->_address;
 }
-uint64_t ConnectToBluetoothDeviceRequest::getTicket(){
+uint64_t ConnectToBluetoothDeviceRequest::getTicket()const noexcept{
     return this->_ticket;
 }
 cJSON* ConnectToBluetoothDeviceRequest::toJSON(){
@@ -20,15 +19,14 @@ cJSON* ConnectToBluetoothDeviceRequest::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<ConnectToBluetoothDeviceRequest> ConnectToBluetoothDeviceRequest::fromJSON(cJSON* j){
+ConnectToBluetoothDeviceRequest* ConnectToBluetoothDeviceRequest::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
     const char* address = JHelper::getString(j, "a", s);
+    cleanupBucket.addDeleteArray(address);
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    auto r = std::make_shared<ConnectToBluetoothDeviceRequest>(address, ticket);
-r->_freeMemoryInDeconstructor = true;
-return r;
+    auto r = new ConnectToBluetoothDeviceRequest(address, ticket);
+    cleanupBucket.addDelete(r);
+    return r;
 }
 ConnectToBluetoothDeviceRequest::~ConnectToBluetoothDeviceRequest(){
-if(!_freeMemoryInDeconstructor)return;
-     if(_address!=nullptr)delete[] _address;
 }

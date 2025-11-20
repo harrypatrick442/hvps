@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 class RanSystemChecksMessage
 {
@@ -13,7 +14,7 @@ class RanSystemChecksMessage
         RanSystemChecksMessage(
 ) noexcept;
         ~RanSystemChecksMessage();
-        static std::shared_ptr<RanSystemChecksMessage> fromJSON(cJSON* j) noexcept;
+        static RanSystemChecksMessage* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //RANSYSTEMCHECKSMESSAGE_HPP

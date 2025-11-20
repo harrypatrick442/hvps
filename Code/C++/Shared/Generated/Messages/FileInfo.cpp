@@ -5,16 +5,15 @@ FileInfo::FileInfo(
     const char* type):
         _name(name),
         _size(size),
-        _type(type),
-        _freeMemoryInDeconstructor(false){
+        _type(type){
 }
-const char* FileInfo::getName(){
+const char* FileInfo::getName()const noexcept{
     return this->_name;
 }
-int64_t FileInfo::getSize(){
+int64_t FileInfo::getSize()const noexcept{
     return this->_size;
 }
-const char* FileInfo::getType(){
+const char* FileInfo::getType()const noexcept{
     return this->_type;
 }
 cJSON* FileInfo::toJSON(){
@@ -25,17 +24,16 @@ cJSON* FileInfo::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<FileInfo> FileInfo::fromJSON(cJSON* j){
+FileInfo* FileInfo::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
     const char* name = JHelper::getString(j, "n", s);
+    cleanupBucket.addDeleteArray(name);
     int64_t size = JHelper::getInt64(j, "s", s);
     const char* type = JHelper::getString(j, "t", s);
-    auto r = std::make_shared<FileInfo>(name, size, type);
-r->_freeMemoryInDeconstructor = true;
-return r;
+    cleanupBucket.addDeleteArray(type);
+    auto r = new FileInfo(name, size, type);
+    cleanupBucket.addDelete(r);
+    return r;
 }
 FileInfo::~FileInfo(){
-if(!_freeMemoryInDeconstructor)return;
-     if(_name!=nullptr)delete[] _name;
-     if(_type!=nullptr)delete[] _type;
 }

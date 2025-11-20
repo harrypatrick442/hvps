@@ -3,6 +3,7 @@
 #include "System/Aborter.hpp"
 #include "JSON/JHelper.hpp"
 #include "Messaging/MessageConstants.hpp"
+#include "Tasks/TaskFactory.hpp"
 #include "Generated/Messages/SetVoltageThresholdRequest.hpp"
 #include "Generated/Messages/SetVoltageThresholdResponse.hpp"
 #include "Generated/Messages/GetVoltageThresholdRequest.hpp"
@@ -10,7 +11,10 @@
 #include "Generated/Messages/GetVoltageRequest.hpp"
 #include "Generated/Messages/GetVoltageResponse.hpp"
 #include "Generated/Messages/SetForceVoltageThresholdReachedFeedbackRequest.hpp"
+#include "Generated/Messages/GreetingRequest.hpp"
+#include "Generated/Messages/GreetingResponse.hpp"
 #include "Generated/Messages/VoltageMessage.hpp"
+#include "Generated/Messages/GreetingMessage.hpp"
 #include <memory>
 #include <cstring>
 Port_VoltageFeedbackBase::Port_VoltageFeedbackBase(TOSLINKDuplexChannel* toslinkDuplexChannel)
@@ -45,8 +49,9 @@ bool Port_VoltageFeedbackBase::getVoltageThreshold(double& voltage) {
     if (!jsonResponse) {
         return false;
     }
-	std::shared_ptr<GetVoltageThresholdResponse> response = GetVoltageThresholdResponse::fromJSON(jsonResponse.get());
-    voltage = response.get()->getVoltage();
+	CleanupBucket cleanupBucket;
+	GetVoltageThresholdResponse* response = GetVoltageThresholdResponse::fromJSON(jsonResponse.get(), cleanupBucket);
+    voltage = response->getVoltage();
     return true;
 }
 bool Port_VoltageFeedbackBase::getVoltage(double& voltage) {
@@ -57,8 +62,9 @@ bool Port_VoltageFeedbackBase::getVoltage(double& voltage) {
     if (!jsonResponse) {
         return false;
     }
-	std::shared_ptr<GetVoltageResponse> response = GetVoltageResponse::fromJSON(jsonResponse.get());
-    voltage = response.get()->getVoltage();
+	CleanupBucket cleanupBucket;
+	GetVoltageResponse* response = GetVoltageResponse::fromJSON(jsonResponse.get(), cleanupBucket);
+    voltage = response->getVoltage();
     return true;
 }
 bool Port_VoltageFeedbackBase::setForceThresholdReachedFeedback(bool force){
@@ -89,9 +95,33 @@ void Port_VoltageFeedbackBase::handleIncomingMessage(cJSON* message, bool& dontD
 		handleVoltageMessage(message);
 		return;
 	}
+	if(strcmp(type, GreetingMessage::TYPE) == 0){
+		handleGreetingMessage(message);
+		return;
+	}
 }
 void Port_VoltageFeedbackBase::handleVoltageMessage(cJSON* message){
-	std::shared_ptr<VoltageMessage> voltageMessage = VoltageMessage::fromJSON(message);
-	double voltage = voltageMessage.get()->getVoltage();
+	CleanupBucket cleanupBucket;
+	VoltageMessage* voltageMessage = VoltageMessage::fromJSON(message, cleanupBucket);
+	double voltage = voltageMessage->getVoltage();
 	onGotVoltage.dispatch(voltage);
+}
+GreetingResponse* Port_VoltageFeedbackBase::greet(
+	CleanupBucket& cleanupBucket){
+    GreetingRequest request;
+    std::shared_ptr<cJSON> jsonResponse = 
+		_ticketedSender.send(request.toJSON(), TIMEOUT);
+    if (!jsonResponse) {
+		return nullptr;
+    };
+	return GreetingResponse::fromJSON(jsonResponse.get(), cleanupBucket);
+}
+void Port_VoltageFeedbackBase::handleGreetingMessage(cJSON* message){
+	CleanupBucket cleanupBucket;
+	GreetingMessage* greetingMessage = GreetingMessage::fromJSON(
+		message, cleanupBucket);
+	if(greetingMessage==nullptr){
+		return;
+	}
+	onGotGreetingMessage.dispatch(greetingMessage);
 }

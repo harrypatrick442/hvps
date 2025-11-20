@@ -15,13 +15,16 @@
 #include "Generated/Messages/LastAbortMessage.hpp"
 #include "Generated/Messages/ClearLoggedErrorsMessage.hpp"
 #include "System/CrashReporter.hpp"
+#include "Enums/SubsystemIdentifiers.hpp"
 #include "Core/CleanupBucket.hpp"
 #include "Enums/ErrorType.hpp"
 //#include "Generated/Messages/SetVoltageThresholdRequest.hpp"
 #include <cstring>
 Port_ControllingMachine::Port_ControllingMachine(
 	IChannel& channel, HighSpeedCore& highSpeedCore,
-	uint32_t pingTimeoutMilliseconds)
+	uint32_t pingTimeoutMilliseconds,
+	Port_FirstStageVoltageFeedback& port_FirstStageVoltageFeedback,
+	Port_OutputVoltageFeedback& port_OutputVoltageFeedback)
 :
 _channel(channel),
 _highSpeedCore(highSpeedCore),
@@ -33,7 +36,9 @@ _timerSendPing(
 	/*uint32_t intervalMs*/ pingTimeoutMilliseconds/2,
 	/*Callback callback*/[this](){sendPing();},
 	/*bool repeat*/ true
-){
+),
+_port_FirstStageVoltageFeedback(port_FirstStageVoltageFeedback),
+_port_OutputVoltageFeedback(port_OutputVoltageFeedback){
     _channel.setIncomingMessageHandler(this);
 	_highSpeedCore.onSystemStateChanged.addHandler(
 		[this](SystemState systemState){
@@ -46,6 +51,16 @@ _timerSendPing(
 	_eventConnectionOnClosed = _channel.addOnClosedHandler([this](const ChannelEventArgs& e){
 				handleOnClosed();
 	});
+	_eventConnectionOnGotGreetingMessageFirstStageVoltageFeedbackModule = _port_FirstStageVoltageFeedback.onGotGreetingMessage.addHandler(
+		[this](GreetingMessage* greetingMessage){
+			this->handleGotGreetingMessageFromVoltageFeedbackModule(greetingMessage);
+		}
+	);
+	_eventConnectionOnGotGreetingMessageOutputVoltageFeedbackModule = _port_OutputVoltageFeedback.onGotGreetingMessage.addHandler(
+		[this](GreetingMessage* greetingMessage){
+			this->handleGotGreetingMessageFromVoltageFeedbackModule(greetingMessage);
+		}
+	);
 }
 Port_ControllingMachine::~Port_ControllingMachine() noexcept
 {
@@ -113,34 +128,66 @@ void Port_ControllingMachine::sendPing(){
 	_channel.sendMessage(pingMessage.toJSON());
 }
 void Port_ControllingMachine::handleOnOpened(){
-	Log::Info(TAG, "Opened");
 	_timerSendPing.start();
 	sendErrors();
+	Log::Info(TAG, "Opened");
 }
 void Port_ControllingMachine::handleOnClosed(){
-	Log::Info(TAG, "Closed");
 	_timerSendPing.stop();
+	Log::Info(TAG, "Closed");
 }
 void Port_ControllingMachine::handleClearLoggedErrors(){
-	Log::Info(TAG, "Cleared logged errors!");
 	CrashReporter::clearRecord();
 	Aborter::clearLastAbortReason();
+	_highSpeedCore.setInError(false);
+	Log::Info(TAG, "Cleared logged errors!");
 }
 void Port_ControllingMachine::sendErrors(){
 	CleanupBucket cleanupBucket;
-	std::shared_ptr<CoreDumpSummaryMessage> coreDumpSummaryMessage 
+	CoreDumpSummaryMessage* coreDumpSummaryMessage 
 		= CrashReporter::getCoreDumpSummary(cleanupBucket);
-	if(coreDumpSummaryMessage){
-		_channel.sendMessage(coreDumpSummaryMessage->toJSON());
-	}
 	LastAbortMessage* lastAbortMessage = 
 		Aborter::getLastAbortReason(cleanupBucket);
+	sendErrors(
+		coreDumpSummaryMessage, 
+		lastAbortMessage
+	);
+	greetVoltageFeedbackModules();
+}
+void Port_ControllingMachine::sendErrors(
+	CoreDumpSummaryMessage* coreDumpSummaryMessage, 
+	LastAbortMessage* lastAbortMessage
+){
+	if(coreDumpSummaryMessage){
+		_channel.sendMessage(coreDumpSummaryMessage->toJSON());
+		Log::Info(TAG, "Sent CoreDumpSummaryMessage!");
+	}
 	if(lastAbortMessage){
 		_channel.sendMessage(lastAbortMessage->toJSON());
-		Log::Info(TAG, "Last abort reason sent!");
+		Log::Info(TAG, "Sent LastAbortMessage!");
 	}
-	else{
-		Log::Info(TAG, "Did not have last abort reason");
+}
+uint32_t Port_ControllingMachine::greetVoltageFeedbackModules(){
+	CleanupBucket cleanupBucket;
+	GreetingResponse* greetingResponse = _port_FirstStageVoltageFeedback.greet(
+		cleanupBucket);
+	int32_t subsystemIdentifierWithError = 0;
+	if(greetingResponse!=nullptr){
+		subsystemIdentifierWithError = SubsystemIdentifiers::FirstStageVoltageFeedbackModule;
+		sendErrors(greetingResponse->getCoreDumpSummaryMessage(),
+			greetingResponse->getLastAbortMessage());
 	}
+	greetingResponse = _port_OutputVoltageFeedback.greet(cleanupBucket);
+	if(greetingResponse!=nullptr){
+		subsystemIdentifierWithError = SubsystemIdentifiers::FirstStageVoltageFeedbackModule;
+		sendErrors(greetingResponse->getCoreDumpSummaryMessage(),
+			greetingResponse->getLastAbortMessage());
+	}
+	return subsystemIdentifierWithError;
+}
+void Port_ControllingMachine::handleGotGreetingMessageFromVoltageFeedbackModule(
+	GreetingMessage* greetingMessage){
+	sendErrors(greetingMessage->getCoreDumpSummaryMessage(),
+		greetingMessage->getLastAbortMessage());
 }
 

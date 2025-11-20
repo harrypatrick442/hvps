@@ -9,10 +9,11 @@ cJSON* TestMessage::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<TestMessage> TestMessage::fromJSON(cJSON* j){
+TestMessage* TestMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
-    auto r = std::make_shared<TestMessage>();
-return r;
+    auto r = new TestMessage();
+    cleanupBucket.addDelete(r);
+    return r;
 }
 TestMessage::~TestMessage(){
 }

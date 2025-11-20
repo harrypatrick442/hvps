@@ -8,10 +8,11 @@ cJSON* NativeProgressMessage::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<NativeProgressMessage> NativeProgressMessage::fromJSON(cJSON* j){
+NativeProgressMessage* NativeProgressMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
-    auto r = std::make_shared<NativeProgressMessage>();
-return r;
+    auto r = new NativeProgressMessage();
+    cleanupBucket.addDelete(r);
+    return r;
 }
 NativeProgressMessage::~NativeProgressMessage(){
 }

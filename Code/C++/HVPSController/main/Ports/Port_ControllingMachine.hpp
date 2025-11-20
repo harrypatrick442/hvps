@@ -4,11 +4,14 @@
 #include "Communication/Interfaces/IChannel.hpp"
 #include "Ticketing/TicketedSender.hpp"
 #include "Generated/Messages/LiveDataMessage.hpp"
+#include "Generated/Messages/GreetingMessage.hpp"
 #include "Core/Timer.hpp"
 #include "Core/SingletonBase.hpp"
 #include "Core/Macros.hpp"
 #include "../Enums/SystemState.hpp"
 #include "../ControllerCore/HighSpeedCore.hpp"
+#include "Port_FirstStageVoltageFeedback.hpp"
+#include "Port_OutputVoltageFeedback.hpp"
 #include "cJSON/cJSON.h"
 #include <string>
 
@@ -26,20 +29,29 @@ public:
 	
 	void sendConsoleMessage(const std::string& str);
 	void sendLiveData(LiveDataMessage liveDataMessage);
+	//return errorFree
+	uint32_t greetVoltageFeedbackModules();
 
 protected:
     explicit Port_ControllingMachine(
 		IChannel& channel,
 		HighSpeedCore& highSpeedCore,
-		uint32_t pingTimeoutMilliseconds)noexcept;
+		uint32_t pingTimeoutMilliseconds,
+		Port_FirstStageVoltageFeedback& port_FirstStageVoltageFeedback,
+		Port_OutputVoltageFeedback& port_OutputVoltageFeedback)noexcept;
 	virtual ~Port_ControllingMachine();
     IChannel&  _channel;
 	HighSpeedCore& _highSpeedCore;
     TicketedSender	_ticketedSender;
 	Timer _timerSendPing;
+	Port_FirstStageVoltageFeedback& _port_FirstStageVoltageFeedback;
+	Port_OutputVoltageFeedback& _port_OutputVoltageFeedback;
+	
 private:
 	EventConnection _eventConnectionOnOpened;
 	EventConnection _eventConnectionOnClosed;
+	EventConnection _eventConnectionOnGotGreetingMessageFirstStageVoltageFeedbackModule;
+	EventConnection _eventConnectionOnGotGreetingMessageOutputVoltageFeedbackModule;
 	void handleRunSystemChecksOnlyMessage(cJSON* message);
 	void handleShutDownMessage(cJSON* message);
 	void handleStartMessage(cJSON* message);
@@ -51,4 +63,9 @@ private:
 	void handleOnOpened();
 	void handleOnClosed();
 	void sendErrors();
+	void sendErrors(
+		CoreDumpSummaryMessage* coreDumpSummaryMessage, 
+		LastAbortMessage* lastAbortMessage
+	);
+	void handleGotGreetingMessageFromVoltageFeedbackModule(GreetingMessage* greetingMessage);
 };

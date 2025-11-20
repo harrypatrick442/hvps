@@ -9,10 +9,11 @@ cJSON* BluetoothDeviceDisconnectedMessage::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<BluetoothDeviceDisconnectedMessage> BluetoothDeviceDisconnectedMessage::fromJSON(cJSON* j){
+BluetoothDeviceDisconnectedMessage* BluetoothDeviceDisconnectedMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
-    auto r = std::make_shared<BluetoothDeviceDisconnectedMessage>();
-return r;
+    auto r = new BluetoothDeviceDisconnectedMessage();
+    cleanupBucket.addDelete(r);
+    return r;
 }
 BluetoothDeviceDisconnectedMessage::~BluetoothDeviceDisconnectedMessage(){
 }

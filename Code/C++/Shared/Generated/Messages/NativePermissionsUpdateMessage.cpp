@@ -4,7 +4,7 @@ NativePermissionsUpdateMessage::NativePermissionsUpdateMessage(
     bool hasAllRequired):
         _hasAllRequired(hasAllRequired){
 }
-bool NativePermissionsUpdateMessage::getHasAllRequired(){
+bool NativePermissionsUpdateMessage::getHasAllRequired()const noexcept{
     return this->_hasAllRequired;
 }
 cJSON* NativePermissionsUpdateMessage::toJSON(){
@@ -13,11 +13,12 @@ cJSON* NativePermissionsUpdateMessage::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<NativePermissionsUpdateMessage> NativePermissionsUpdateMessage::fromJSON(cJSON* j){
+NativePermissionsUpdateMessage* NativePermissionsUpdateMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
     bool hasAllRequired = JHelper::getBool(j, "a", s);
-    auto r = std::make_shared<NativePermissionsUpdateMessage>(hasAllRequired);
-return r;
+    auto r = new NativePermissionsUpdateMessage(hasAllRequired);
+    cleanupBucket.addDelete(r);
+    return r;
 }
 NativePermissionsUpdateMessage::~NativePermissionsUpdateMessage(){
 }

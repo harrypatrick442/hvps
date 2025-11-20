@@ -7,10 +7,10 @@ GetAvailableBluetoothDevicesResponse::GetAvailableBluetoothDevicesResponse(
         _failedReason(failedReason),
         _ticket(ticket){
 }
-std::optional<int32_t> GetAvailableBluetoothDevicesResponse::getFailedReason(){
+std::optional<int32_t> GetAvailableBluetoothDevicesResponse::getFailedReason()const noexcept{
     return this->_failedReason;
 }
-uint64_t GetAvailableBluetoothDevicesResponse::getTicket(){
+uint64_t GetAvailableBluetoothDevicesResponse::getTicket()const noexcept{
     return this->_ticket;
 }
 cJSON* GetAvailableBluetoothDevicesResponse::toJSON(){
@@ -20,12 +20,13 @@ cJSON* GetAvailableBluetoothDevicesResponse::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<GetAvailableBluetoothDevicesResponse> GetAvailableBluetoothDevicesResponse::fromJSON(cJSON* j){
+GetAvailableBluetoothDevicesResponse* GetAvailableBluetoothDevicesResponse::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
     std::optional<int32_t> failedReason = JHelper::getNullableInt32(j, "s", s);
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    auto r = std::make_shared<GetAvailableBluetoothDevicesResponse>(devices, failedReason, ticket);
-return r;
+    auto r = new GetAvailableBluetoothDevicesResponse(devices, failedReason, ticket);
+    cleanupBucket.addDelete(r);
+    return r;
 }
 GetAvailableBluetoothDevicesResponse::~GetAvailableBluetoothDevicesResponse(){
 }

@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 class StartMessage
 {
@@ -13,7 +14,7 @@ class StartMessage
         StartMessage(
 ) noexcept;
         ~StartMessage();
-        static std::shared_ptr<StartMessage> fromJSON(cJSON* j) noexcept;
+        static StartMessage* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //STARTMESSAGE_HPP

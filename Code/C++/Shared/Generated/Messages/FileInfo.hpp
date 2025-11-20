@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 #include "../../JSON/JHelper.hpp"
 class FileInfo
@@ -11,17 +12,16 @@ class FileInfo
         const char* _name;
         int64_t _size;
         const char* _type;
-        bool _freeMemoryInDeconstructor;
    public:
-        const char* getName() noexcept;
-        int64_t getSize() noexcept;
-        const char* getType() noexcept;
+        const char* getName()const noexcept;
+        int64_t getSize()const noexcept;
+        const char* getType()const noexcept;
         FileInfo(
            const char* name, 
            int64_t size, 
            const char* type) noexcept;
         ~FileInfo();
-        static std::shared_ptr<FileInfo> fromJSON(cJSON* j) noexcept;
+        static FileInfo* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //FILEINFO_HPP

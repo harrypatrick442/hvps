@@ -9,10 +9,11 @@ cJSON* RanSystemChecksMessage::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<RanSystemChecksMessage> RanSystemChecksMessage::fromJSON(cJSON* j){
+RanSystemChecksMessage* RanSystemChecksMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
-    auto r = std::make_shared<RanSystemChecksMessage>();
-return r;
+    auto r = new RanSystemChecksMessage();
+    cleanupBucket.addDelete(r);
+    return r;
 }
 RanSystemChecksMessage::~RanSystemChecksMessage(){
 }

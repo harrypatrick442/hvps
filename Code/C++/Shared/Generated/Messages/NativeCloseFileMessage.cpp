@@ -9,10 +9,11 @@ cJSON* NativeCloseFileMessage::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<NativeCloseFileMessage> NativeCloseFileMessage::fromJSON(cJSON* j){
+NativeCloseFileMessage* NativeCloseFileMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
-    auto r = std::make_shared<NativeCloseFileMessage>();
-return r;
+    auto r = new NativeCloseFileMessage();
+    cleanupBucket.addDelete(r);
+    return r;
 }
 NativeCloseFileMessage::~NativeCloseFileMessage(){
 }

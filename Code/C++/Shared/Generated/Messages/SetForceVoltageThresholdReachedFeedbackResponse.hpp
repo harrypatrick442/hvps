@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 #include "../../JSON/JHelper.hpp"
 class SetForceVoltageThresholdReachedFeedbackResponse
@@ -12,11 +13,11 @@ class SetForceVoltageThresholdReachedFeedbackResponse
    private:
         uint64_t _ticket;
    public:
-        uint64_t getTicket() noexcept;
+        uint64_t getTicket()const noexcept;
         SetForceVoltageThresholdReachedFeedbackResponse(
            uint64_t ticket) noexcept;
         ~SetForceVoltageThresholdReachedFeedbackResponse();
-        static std::shared_ptr<SetForceVoltageThresholdReachedFeedbackResponse> fromJSON(cJSON* j) noexcept;
+        static SetForceVoltageThresholdReachedFeedbackResponse* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //SETFORCEVOLTAGETHRESHOLDREACHEDFEEDBACKRESPONSE_HPP

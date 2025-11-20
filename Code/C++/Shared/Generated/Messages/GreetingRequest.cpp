@@ -4,7 +4,7 @@ GreetingRequest::GreetingRequest(
     uint64_t ticket):
         _ticket(ticket){
 }
-uint64_t GreetingRequest::getTicket(){
+uint64_t GreetingRequest::getTicket()const noexcept{
     return this->_ticket;
 }
 cJSON* GreetingRequest::toJSON(){
@@ -13,11 +13,12 @@ cJSON* GreetingRequest::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<GreetingRequest> GreetingRequest::fromJSON(cJSON* j){
+GreetingRequest* GreetingRequest::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    auto r = std::make_shared<GreetingRequest>(ticket);
-return r;
+    auto r = new GreetingRequest(ticket);
+    cleanupBucket.addDelete(r);
+    return r;
 }
 GreetingRequest::~GreetingRequest(){
 }

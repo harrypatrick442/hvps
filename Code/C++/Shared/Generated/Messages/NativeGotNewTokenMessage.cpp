@@ -9,10 +9,11 @@ cJSON* NativeGotNewTokenMessage::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<NativeGotNewTokenMessage> NativeGotNewTokenMessage::fromJSON(cJSON* j){
+NativeGotNewTokenMessage* NativeGotNewTokenMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
-    auto r = std::make_shared<NativeGotNewTokenMessage>();
-return r;
+    auto r = new NativeGotNewTokenMessage();
+    cleanupBucket.addDelete(r);
+    return r;
 }
 NativeGotNewTokenMessage::~NativeGotNewTokenMessage(){
 }

@@ -6,10 +6,10 @@ GetVoltageResponse::GetVoltageResponse(
         _voltage(voltage),
         _ticket(ticket){
 }
-double GetVoltageResponse::getVoltage(){
+double GetVoltageResponse::getVoltage()const noexcept{
     return this->_voltage;
 }
-uint64_t GetVoltageResponse::getTicket(){
+uint64_t GetVoltageResponse::getTicket()const noexcept{
     return this->_ticket;
 }
 cJSON* GetVoltageResponse::toJSON(){
@@ -19,12 +19,13 @@ cJSON* GetVoltageResponse::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<GetVoltageResponse> GetVoltageResponse::fromJSON(cJSON* j){
+GetVoltageResponse* GetVoltageResponse::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
     double voltage = JHelper::getDouble(j, "v", s);
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    auto r = std::make_shared<GetVoltageResponse>(voltage, ticket);
-return r;
+    auto r = new GetVoltageResponse(voltage, ticket);
+    cleanupBucket.addDelete(r);
+    return r;
 }
 GetVoltageResponse::~GetVoltageResponse(){
 }

@@ -4,13 +4,12 @@ NativeStorageGetStringResponse::NativeStorageGetStringResponse(
     const char* value, 
     uint64_t ticket):
         _value(value),
-        _ticket(ticket),
-        _freeMemoryInDeconstructor(false){
+        _ticket(ticket){
 }
-const char* NativeStorageGetStringResponse::getValue(){
+const char* NativeStorageGetStringResponse::getValue()const noexcept{
     return this->_value;
 }
-uint64_t NativeStorageGetStringResponse::getTicket(){
+uint64_t NativeStorageGetStringResponse::getTicket()const noexcept{
     return this->_ticket;
 }
 cJSON* NativeStorageGetStringResponse::toJSON(){
@@ -20,15 +19,14 @@ cJSON* NativeStorageGetStringResponse::toJSON(){
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
-std::shared_ptr<NativeStorageGetStringResponse> NativeStorageGetStringResponse::fromJSON(cJSON* j){
+NativeStorageGetStringResponse* NativeStorageGetStringResponse::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
     const char* value = JHelper::getString(j, "v", s);
+    cleanupBucket.addDeleteArray(value);
     uint64_t ticket = JHelper::getUInt64(j, "tckt", s);
-    auto r = std::make_shared<NativeStorageGetStringResponse>(value, ticket);
-r->_freeMemoryInDeconstructor = true;
-return r;
+    auto r = new NativeStorageGetStringResponse(value, ticket);
+    cleanupBucket.addDelete(r);
+    return r;
 }
 NativeStorageGetStringResponse::~NativeStorageGetStringResponse(){
-if(!_freeMemoryInDeconstructor)return;
-     if(_value!=nullptr)delete[] _value;
 }

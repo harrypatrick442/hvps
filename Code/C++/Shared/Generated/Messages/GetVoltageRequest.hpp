@@ -3,6 +3,7 @@
 
 #include "../../cJSON/cJSON.h"
 #include "../../JSON/JHelper.hpp"
+#include "../../Core/CleanupBucket.hpp"
 #include <memory>
 #include "../../JSON/JHelper.hpp"
 class GetVoltageRequest
@@ -12,11 +13,11 @@ class GetVoltageRequest
    private:
         uint64_t _ticket;
    public:
-        uint64_t getTicket() noexcept;
+        uint64_t getTicket()const noexcept;
         GetVoltageRequest(
            uint64_t ticket = 0) noexcept;
         ~GetVoltageRequest();
-        static std::shared_ptr<GetVoltageRequest> fromJSON(cJSON* j) noexcept;
+        static GetVoltageRequest* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;
 };
 #endif //GETVOLTAGEREQUEST_HPP

@@ -7,6 +7,7 @@ enum class SystemState {
     Live,
 	RunningSystemChecks,
     ShuttingDown,
-    ShutDown
+    ShutDown,
+	Error
 };
 #endif
