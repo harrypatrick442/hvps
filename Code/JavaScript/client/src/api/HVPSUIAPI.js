@@ -19,7 +19,8 @@ import {
 	CoreDumpSummaryMessage,
 	LastAbortMessage,
 	TestMessage,
-	ClearLoggedErrorsMessage
+	ClearLoggedErrorsMessage,
+	StateChangedMessage
 } from '../messages';
 class HVPSUIAPI{
 	static shutDown(){
@@ -74,6 +75,12 @@ class HVPSUIAPI{
 				HVPSUIAPI.dispatchEvent({
 					type:'lastAbortMessage',
 					lastAbortMessage:LastAbortMessage.fromJSON(message)
+				});
+				break;
+			case MessageTypes.stateChanged:
+				HVPSUIAPI.dispatchEvent({
+					type:'stateChangedMessage',
+					stateChangedMessage:StateChangedMessage.fromJSON(message)
 				});
 				break;
 		}

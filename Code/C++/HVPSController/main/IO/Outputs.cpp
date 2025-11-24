@@ -61,36 +61,11 @@ void Outputs::setMOSFETOnOff(bool onElseOff){
     portEXIT_CRITICAL(&s_outputsMux);
 }
 void Outputs::setSoftStartResistorBypassOnOff(bool onElseOff){
-	Log::Info(TAG, "setSoftStartResistorBypassOnOff");
-	Log::Info(TAG, "softStartResistor %d", PinDefinitions::SOFT_START_RESISTOR_BYPASS);
-	if(onElseOff){
-		Log::Info(TAG, "on");
-	}
-	else{
-		Log::Info(TAG, "off");
-	}
-	if(!s_safe){
-		Log::Info(TAG, "no safe");
-	}
-	else{
-		Log::Info(TAG, "safe");	
-	}
-	if(!s_initialized){
-		Log::Info(TAG, "not initialized");
-	}
-	else{
-		Log::Info(TAG, "initialized");
-	}
-	bool didIt = false;
     portENTER_CRITICAL(&s_outputsMux);
     if (!s_safe && s_initialized) {
 		_setSoftStartResistorBypassOnOff(onElseOff);
-		didIt = true;
     }
     portEXIT_CRITICAL(&s_outputsMux);
-	if(didIt){
-		Log::Info(TAG, "did it");
-	}
 }
 void Outputs::_setMOSFETOnOff(bool onElseOff){
 	gpio_set_level((gpio_num_t)PinDefinitions::MOSFET_DRIVE, onElseOff?1:0);

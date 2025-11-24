@@ -169,6 +169,34 @@ namespace HVPSConfigurationGenerator
 
                 );
             }*/
+            {
+                Peripheral1Config peripheral1Config = new Peripheral1Config
+                {
+                    errorColour= Constants.ErrorColour.ToUInt32(),
+                    liveColour= Constants.LiveColour.ToUInt32(),
+                    idleColour= Constants.IdleColour.ToUInt32(),
+                    runningSystemChecksColour=Constants.RunningSystemChecksColour.ToUInt32(),
+                    shutDownColour= Constants.ShutDownColour.ToUInt32(),
+                    shuttingDownColour = Constants.ShuttingDownColour.ToUInt32(),
+                    unknownColour= Constants.UnknownColour.ToUInt32(),
+                };
+                ConfigurationWriter.WriteProjectSpecificConfiguration(
+                    projectSpecificConfigurationFilePath:
+                        Path.Combine(reposDirectory, "hvps", "Code", "C++",
+                        "Peripheral1", "main",
+                        "Generated", "Peripheral1Config.hpp"),
+                    peripheral1Config,
+                    structHppFileRelativePath: "Peripheral1Configuration.hpp",
+                    dependenciesIncludePathPrefix,
+                    alreadyWroteWatcher
+                );
+            }
+            ConfigurationWriter.WriteConfigurationStructFile<Peripheral1Config>(
+                Path.Combine(reposDirectory, "hvps", "Code", "C++", "Peripheral1",
+                    "main",
+                    "Generated", "Peripheral1Configuration.hpp"),
+                alreadyWroteWatcher
+            );
         }
     }
 }

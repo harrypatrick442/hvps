@@ -35,17 +35,17 @@ namespace HVPSUI
                 HVPSUIMessages.MessageTypes.ConnectToBluetoothDevice, HandleConnectToBluetoothDevice);
             _WebViewMessagingInterface.RegisterMethod<
                 StartMessage>(
-                HVPSAPI.MessageTypes.Start, HandleHVPSStartMessage);
+                HVPSAPI.MessageTypes.Start, SendToBluetoothDevice);
             _WebViewMessagingInterface.RegisterMethod<
                 StopMessage>(
-                HVPSAPI.MessageTypes.Stop, HandleHVPSStopMessage);
+                HVPSAPI.MessageTypes.Stop, SendToBluetoothDevice);
             _WebViewMessagingInterface.RegisterMethod<
                 ShutDownMessage>(
-                HVPSAPI.MessageTypes.ShutDown, HandleHVPSShutDownMessage);
+                HVPSAPI.MessageTypes.ShutDown, SendToBluetoothDevice);
             _WebViewMessagingInterface.RegisterMethod<
                 RunSystemChecksOnlyMessage>(
                 HVPSAPI.MessageTypes.RunSystemChecksOnly,
-                HandleHVPSRunSystemChecksOnlyMessage);
+                SendToBluetoothDevice);
             _WebViewMessagingInterface.RegisterMethod<
                 TestMessage>(
                 HVPSAPI.MessageTypes.Test,
@@ -57,58 +57,21 @@ namespace HVPSUI
             _DeviceRegistrationMessageHandler.RegisterMethod<
                 ConsoleMessage>(
                     Native.MessageTypes.ConsoleMessage,
-                    HandleConsoleMessage
+                    _WebViewMessagingInterface.Send
                 );
             _DeviceRegistrationMessageHandler.RegisterMethod<
                 ErrorMessage>(
-                HVPSAPI.MessageTypes.Error, HandleError);
+                HVPSAPI.MessageTypes.Error, _WebViewMessagingInterface.Send);
             _DeviceRegistrationMessageHandler.RegisterMethod<
                 CoreDumpSummaryMessage>(
-                HVPSAPI.MessageTypes.CoreDumpSummary, HandleCoreDumpSummaryMessage);
+                HVPSAPI.MessageTypes.CoreDumpSummary, _WebViewMessagingInterface.Send);
             _DeviceRegistrationMessageHandler.RegisterMethod<
                 LastAbortMessage>(
-                HVPSAPI.MessageTypes.LastAbort, HandleLastAbortMessage);
+                HVPSAPI.MessageTypes.LastAbort, _WebViewMessagingInterface.Send);
+            _DeviceRegistrationMessageHandler.RegisterMethod<
+                LastAbortMessage>(
+                HVPSAPI.MessageTypes.StateChanged, _WebViewMessagingInterface.Send);
             _DeviceRegistrationMessageHandler.OnMessage += (o, e) => _PingDisconnectDetector.Received();
-        }
-        private void HandleHVPSStartMessage(
-            StartMessage message)
-        {
-            SendToBluetoothDevice(message);
-        }
-        private void HandleHVPSStopMessage(
-            StopMessage message)
-        {
-            SendToBluetoothDevice(message);
-        }
-        private void HandleHVPSShutDownMessage(
-            ShutDownMessage message)  
-        {
-            SendToBluetoothDevice(message);
-        }
-        private void HandleHVPSRunSystemChecksOnlyMessage(
-            RunSystemChecksOnlyMessage message)
-        {
-            SendToBluetoothDevice(message);
-        }
-        private void HandleError(
-            ErrorMessage message)
-        {
-            _WebViewMessagingInterface.Send(message);
-        }
-        private void HandleCoreDumpSummaryMessage(
-            CoreDumpSummaryMessage message)
-        {
-            _WebViewMessagingInterface.Send(message);
-        }
-        private void HandleLastAbortMessage(
-            LastAbortMessage message)
-        {
-            _WebViewMessagingInterface.Send(message);
-        }
-        private void HandleConsoleMessage(
-            ConsoleMessage message)
-        {
-            _WebViewMessagingInterface.Send(message);
         }
         private void HandleMessageFromJavaScript(object sender, TypedMessageEventArgs e) {
             //Logs.Default.Info(e.Message);

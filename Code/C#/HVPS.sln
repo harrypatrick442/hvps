@@ -56,7 +56,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessageTypes", "..\..\..\sh
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EspIdfSmartPrebuild", "EspIdfSmartPrebuild\EspIdfSmartPrebuild.csproj", "{24812604-29F4-4E3B-B8EF-961E8AEA1679}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HVPSConstants", "HVPSConstants\HVPSConstants.csproj", "{6A47D92C-AD78-4040-BC39-7D2F36FEAEF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HVPSConstants", "HVPSConstants\HVPSConstants.csproj", "{6A47D92C-AD78-4040-BC39-7D2F36FEAEF5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedMasterSlaveUARTMessages", "..\..\..\shared-public\SharedMasterSlaveUARTMessages\SharedMasterSlaveUARTMessages.csproj", "{6DFA1C31-AE94-4820-9A2D-101BAC69A044}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -176,6 +178,10 @@ Global
 		{6A47D92C-AD78-4040-BC39-7D2F36FEAEF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A47D92C-AD78-4040-BC39-7D2F36FEAEF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A47D92C-AD78-4040-BC39-7D2F36FEAEF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DFA1C31-AE94-4820-9A2D-101BAC69A044}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DFA1C31-AE94-4820-9A2D-101BAC69A044}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DFA1C31-AE94-4820-9A2D-101BAC69A044}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DFA1C31-AE94-4820-9A2D-101BAC69A044}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

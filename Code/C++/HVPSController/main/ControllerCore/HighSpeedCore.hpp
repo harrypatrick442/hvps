@@ -1,6 +1,6 @@
 #ifndef HIGH_SPEED_CORE_HPP
 #define HIGH_SPEED_CORE_HPP
-#include "../Enums/SystemState.hpp"
+#include "Enums/SystemState.hpp"
 #include "Core/Event.hpp"
 #include "Core/SingletonBase.hpp"
 #include "SystemChecksResult.hpp"
@@ -17,6 +17,7 @@ public:
 	std::shared_ptr<SystemChecksResult>  runSystemChecksOnly();
 	void shutDown();
 	void setInError(bool value);
+	SystemState getActualSystemState();
 private:
     friend class SingletonBase<HighSpeedCore>;
 	
@@ -54,7 +55,6 @@ private:
 	void doShutDown();
 	void doError();
 	SystemState getDesiredSystemState();
-	SystemState getActualSystemState();
 	void setDesiredSystemState(SystemState systemState);
 	void setActualSystemState(SystemState systemState);
 	bool isShuttingDownOrShutDown();

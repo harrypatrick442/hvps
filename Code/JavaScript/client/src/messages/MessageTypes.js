@@ -46,7 +46,11 @@ const MessageTypes ={
      clearLoggedErrors:"cle",
      greetingRequest:"gr",
      greeting:"g",
+     indicateState:"is",
+     indicateStateRequest:"isr",
+     sendStateToIndicate:"ssti",
      getAvaialbleBluetoothDevices:"gabd",
-     connectToBluetoothDevice:"ctbd"
+     connectToBluetoothDevice:"ctbd",
+     hasBus:"hb"
 }
 export default MessageTypes;

@@ -1,4 +1,7 @@
-﻿namespace HVPSConstants
+﻿using System.Runtime.InteropServices;
+using Core.Graphics;
+
+namespace HVPSConstants
 {
     public class Constants
     {
@@ -27,6 +30,12 @@
         //public const double OutputResistorMaximumEnergy = ;
         public const double OutputCurrentLimitingResistorMaxPowerDisipation = 15;
         public const int PingTimeoutMilliseconds = 3000;
-
+        public static readonly RGB IdleColour = new RGB("#1771a6");
+        public static readonly RGB LiveColour = new RGB("#f75f07");
+        public static readonly RGB RunningSystemChecksColour = new RGB("#a307f7");
+        public static readonly RGB ShuttingDownColour = new RGB("#f0dd0e");
+        public static readonly RGB ShutDownColour = new RGB("#0ff707");
+        public static readonly RGB ErrorColour = new RGB("#f7075f");
+        public static readonly RGB UnknownColour = new RGB("#ffffff");
     }
 }

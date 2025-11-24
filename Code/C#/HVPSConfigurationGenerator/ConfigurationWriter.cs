@@ -78,7 +78,7 @@ namespace HVPSConfigurationGenerator
             sb.AppendLine($"inline const uint32_t CONFIG_CRC32_EXPECTED = {crc};");
             //sbAll.AppendLine("static_assert(podConfig1 == CONFIG_CRC32_EXPECTED, \"pod did not match expected crc\"");
             sb.AppendLine("inline Configuration Config2 = Config1;//This one is in RAM. Config1 is in ROM.");
-            sb.Append(@"bool validateConfiguration(){
+            sb.Append(@"inline bool validateConfiguration(){
 	uint32_t podConfig1 = Crc32::computePod(Config1);
 	uint32_t podConfig2 = Crc32::computePod(Config2);
 	if(podConfig1 != podConfig2){

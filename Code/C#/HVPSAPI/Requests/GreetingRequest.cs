@@ -2,7 +2,7 @@ using Core.Messages.Messages;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
-namespace HVPSAPI.Messages
+namespace HVPSAPI.Requests
 {
     [DataContract]
     public class GreetingRequest : TypedMessageBase

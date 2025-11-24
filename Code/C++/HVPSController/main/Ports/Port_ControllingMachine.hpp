@@ -5,10 +5,10 @@
 #include "Ticketing/TicketedSender.hpp"
 #include "Generated/Messages/LiveDataMessage.hpp"
 #include "Generated/Messages/GreetingMessage.hpp"
-#include "Core/Timer.hpp"
+#include "Timing/Timer.hpp"
 #include "Core/SingletonBase.hpp"
 #include "Core/Macros.hpp"
-#include "../Enums/SystemState.hpp"
+#include "Enums/SystemState.hpp"
 #include "../ControllerCore/HighSpeedCore.hpp"
 #include "Port_FirstStageVoltageFeedback.hpp"
 #include "Port_OutputVoltageFeedback.hpp"
@@ -67,5 +67,6 @@ private:
 		CoreDumpSummaryMessage* coreDumpSummaryMessage, 
 		LastAbortMessage* lastAbortMessage
 	);
+	void sendState();
 	void handleGotGreetingMessageFromVoltageFeedbackModule(GreetingMessage* greetingMessage);
 };

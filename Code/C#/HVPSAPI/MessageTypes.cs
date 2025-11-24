@@ -17,5 +17,8 @@ namespace HVPSAPI
         public const string ClearLoggedErrors = "cle";
         public const string GreetingRequest = "gr";
         public const string Greeting = "g";
+        public const string IndicateState = "is";
+        public const string IndicateStateRequest = "isr";
+        public const string SendStateToIndicate = "ssti";
     }
 }

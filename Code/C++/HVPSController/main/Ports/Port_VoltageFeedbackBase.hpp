@@ -7,7 +7,6 @@
 #include "Generated/Messages/GreetingResponse.hpp"
 #include "Generated/Messages/GreetingMessage.hpp"
 #include "Core/CleanupBucket.hpp"
-#include "../Enums/SystemState.hpp"
 #include "Ticketing/TicketedSender.hpp"
 #include "cJSON/cJSON.h"
 #include "Core/Macros.hpp"

@@ -1,7 +1,7 @@
 #include "TimerSimple.hpp"
 #include "../System/Aborter.hpp"
 #include "../Tasks/TaskFactory.hpp"
-#include "../Timing/Delay.hpp"
+#include "Delay.hpp"
 #include "../Core/UsageGuard.hpp"
 const char* TimerSimple::TAG = "TimerSimple";
 TimerSimple::TimerSimple(uint32_t intervalMs, Callback callback, bool repeat)

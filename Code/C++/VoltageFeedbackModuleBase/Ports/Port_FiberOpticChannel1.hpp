@@ -28,7 +28,9 @@ class Port_FiberOpticChannel1  final:
 		explicit Port_FiberOpticChannel1(
 			ThresholdMonitor& thesholdMonitor
 	)noexcept;
-		
+	
+	protected:
+		static inline constexpr int TIMEOUT = 1000;
     private:
 		ThresholdMonitor& _thesholdMonitor;
         IMessageSender* _messageSender;

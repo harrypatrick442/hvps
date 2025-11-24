@@ -101,10 +101,6 @@ void Port_ControllingMachine::handleIncomingMessage(cJSON* message, bool& dontDe
 		handleStopMessage(message);
 		return;
 	}
-	if(strcmp(type, ClearLoggedErrorsMessage::TYPE) == 0){
-		handleClearLoggedErrors();
-		return;
-	}
 }
 void Port_ControllingMachine::handleRunSystemChecksOnlyMessage(cJSON* message){
 	std::shared_ptr<SystemChecksResult> systemChecksResult = _highSpeedCore.runSystemChecksOnly();
@@ -120,8 +116,8 @@ void Port_ControllingMachine::handleStopMessage(cJSON* message){
 	_highSpeedCore.stop();
 }
 void Port_ControllingMachine::handleStateChanged(SystemState systemState){		
-	StateChangedMessage hvpsStateChangedMessage((int32_t)systemState);
-	_channel.sendMessage(hvpsStateChangedMessage.toJSON());
+	StateChangedMessage stateChangedMessage((int32_t)systemState);
+	_channel.sendMessage(stateChangedMessage.toJSON());
 }
 void Port_ControllingMachine::sendPing(){	
 	PingMessage pingMessage;
@@ -130,6 +126,7 @@ void Port_ControllingMachine::sendPing(){
 void Port_ControllingMachine::handleOnOpened(){
 	_timerSendPing.start();
 	sendErrors();
+	sendState();
 	Log::Info(TAG, "Opened");
 }
 void Port_ControllingMachine::handleOnClosed(){
@@ -189,5 +186,10 @@ void Port_ControllingMachine::handleGotGreetingMessageFromVoltageFeedbackModule(
 	GreetingMessage* greetingMessage){
 	sendErrors(greetingMessage->getCoreDumpSummaryMessage(),
 		greetingMessage->getLastAbortMessage());
+}
+void Port_ControllingMachine::sendState(){
+	SystemState systemState = _highSpeedCore.getActualSystemState();
+	StateChangedMessage stateChangedMessage((int32_t)systemState);
+	_channel.sendMessage(stateChangedMessage.toJSON());
 }
 

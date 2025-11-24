@@ -11,7 +11,7 @@ import isNullOrUndefined from '../../core/isNullOrUndefined';
 import Console from '../../components/Console';
 import State from './State';
 import ValueAndMaxField from './ValueAndMaxField';
-import HVPSState from '../../enums/HVPSState';
+import SystemState from '../../enums/SystemState';
 import BluetoothDevicePicker from './BluetoothDevicePicker';
 import Blocker from '../../tippler_ui/Blocker';
 import './HVPSUI.scss';
@@ -21,6 +21,7 @@ export default class HVPSUI{
 		this._disposes = disposes;
 		this._stateChanged = this._stateChanged.bind(this);
 		this._showBluetoothReconnectChanged = this._showBluetoothReconnectChanged.bind(this);
+		this._getFullClassName = this._getFullClassName.bind(this);
 		this.dispose = this.dispose.bind(this);
 		this._element = document.getElementById('root');
 		this._element.classList.add('hvpsui');
@@ -124,15 +125,18 @@ export default class HVPSUI{
 		this._deviceSpecificElement.appendChild(reconnectDialogElement);
 		PropertyBindingFactory.standard(this, model, 'showBluetoothReconnect', this._showBluetoothReconnectChanged);
 	}
-	_stateChanged(hvpsState){
+	_stateChanged(value){
 		if(!isNullOrUndefined(this._currentState)){
-			this._element.classList.remove(`state-${HVPSState.getClassName(hvpsState)}`);
+			this._element.classList.remove(_getFullClassName(value));
 		}
-		this._currentState = hvpsState;
-		if(isNullOrUndefined(hvpsState)){
+		this._currentState = value;
+		if(isNullOrUndefined(value)){
 			return;
 		}
-		this._element.classList.add(`state-${HVPSState.getClassName(hvpsState)}`);
+		this._element.classList.add(_getFullClassName(value));
+	}
+	_getFullClassName(systemState){
+		return `state-${SystemState.getClassName(systemState)}`;
 	}
 	_showBluetoothReconnectChanged(value){
 		if(value){

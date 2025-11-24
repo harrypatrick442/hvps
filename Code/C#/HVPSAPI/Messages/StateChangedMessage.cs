@@ -12,7 +12,7 @@ namespace HVPSAPI.Messages
         [JsonPropertyName(StateChangedMessageDataMemberNames.State)]
         [JsonInclude]
         [DataMember(Name = StateChangedMessageDataMemberNames.State)]
-        public HVPSState State { get; protected set; }
+        public SystemState State { get; protected set; }
         public StateChangedMessage()
             : base()
         {

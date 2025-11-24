@@ -32,15 +32,18 @@
             projectOptions3 = new ProjectOptions();
             projectOptions2 = new ProjectOptions();
             projectOptions1 = new ProjectOptions();
+            projectOptions4 = new ProjectOptions();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // tableLayoutPanel1
             // 
-            tableLayoutPanel1.ColumnCount = 3;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel1.ColumnCount = 4;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            tableLayoutPanel1.Controls.Add(projectOptions4, 0, 0);
             tableLayoutPanel1.Controls.Add(projectOptions3, 2, 0);
             tableLayoutPanel1.Controls.Add(projectOptions2, 1, 0);
             tableLayoutPanel1.Controls.Add(projectOptions1, 0, 0);
@@ -57,24 +60,24 @@
             // 
             projectOptions3.BorderStyle = BorderStyle.FixedSingle;
             projectOptions3.Dock = DockStyle.Fill;
-            projectOptions3.Location = new Point(391, 3);
+            projectOptions3.Location = new Point(441, 3);
             projectOptions3.Name = "projectOptions3";
-            projectOptions3.PnpDeviceId = "USB\\VID_10C4&PID_EA60\\0012";
-            projectOptions3.ProjectName = "Output Voltage Feedback Module";
-            projectOptions3.ProjectRelativePath = "../../../../../C++/OutputVoltageFeedbackModule";
-            projectOptions3.Size = new Size(190, 164);
+            projectOptions3.PnpDeviceId = "USB\\VID_10C4&PID_EA60\\0001";
+            projectOptions3.ProjectName = "Peripheral1";
+            projectOptions3.ProjectRelativePath = "../../../../../C++/Peripheral1";
+            projectOptions3.Size = new Size(140, 164);
             projectOptions3.TabIndex = 2;
             // 
             // projectOptions2
             // 
             projectOptions2.BorderStyle = BorderStyle.FixedSingle;
             projectOptions2.Dock = DockStyle.Fill;
-            projectOptions2.Location = new Point(197, 3);
+            projectOptions2.Location = new Point(295, 3);
             projectOptions2.Name = "projectOptions2";
             projectOptions2.PnpDeviceId = "USB\\VID_10C4&PID_EA60\\0011";
             projectOptions2.ProjectName = "First Stage Voltage Feedback Module";
             projectOptions2.ProjectRelativePath = "../../../../../C++/FirstStageVoltageFeedbackModule";
-            projectOptions2.Size = new Size(188, 164);
+            projectOptions2.Size = new Size(140, 164);
             projectOptions2.TabIndex = 1;
             // 
             // projectOptions1
@@ -86,8 +89,20 @@
             projectOptions1.PnpDeviceId = "USB\\VID_10C4&PID_EA60\\0033";
             projectOptions1.ProjectName = "HVPS Controller";
             projectOptions1.ProjectRelativePath = "../../../../../C++/HVPSController";
-            projectOptions1.Size = new Size(188, 164);
+            projectOptions1.Size = new Size(140, 164);
             projectOptions1.TabIndex = 0;
+            // 
+            // projectOptions4
+            // 
+            projectOptions4.BorderStyle = BorderStyle.FixedSingle;
+            projectOptions4.Dock = DockStyle.Fill;
+            projectOptions4.Location = new Point(149, 3);
+            projectOptions4.Name = "projectOptions4";
+            projectOptions4.PnpDeviceId = "USB\\VID_10C4&PID_EA60\\0012";
+            projectOptions4.ProjectName = "Output Voltage Feedback Module";
+            projectOptions4.ProjectRelativePath = "../../../../../C++/OutputVoltageFeedbackModule";
+            projectOptions4.Size = new Size(140, 164);
+            projectOptions4.TabIndex = 3;
             // 
             // Form1
             // 
@@ -107,5 +122,6 @@
         private ProjectOptions projectOptions3;
         private ProjectOptions projectOptions2;
         private ProjectOptions projectOptions1;
+        private ProjectOptions projectOptions4;
     }
 }

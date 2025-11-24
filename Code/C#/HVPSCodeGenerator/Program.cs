@@ -5,7 +5,8 @@ using System.Reflection;
 using BaseMessages.Constants;
 using Core.FileSystem;
 using DataMemberNamesClassBuilder;
-using VoltageFeedbackMessages;
+using SharedMasterSlaveUARTMessages;
+using SharedMasterSlaveUARTMessages.DataMemberNames.Messages;
 namespace HVPSCodeGenerator
 {
     class Program
@@ -28,7 +29,8 @@ namespace HVPSCodeGenerator
                 typeof(Bluetooth.DataMemberNames.Messages.BluetoothDeviceDataMemberNames),
                 typeof(VoltageFeedbackMessages.DataMemberNames.Requests.SetVoltageThresholdRequestDataMemberNames),
                 typeof(HVPSAPI.DataMemberNames.Responses.GreetingResponseDataMemberNames),
-                typeof(HVPSUIMessages.DataMemberNames.Requests.ConnectToBluetoothDeviceRequestDataMemberNames)
+                typeof(HVPSUIMessages.DataMemberNames.Requests.ConnectToBluetoothDeviceRequestDataMemberNames),
+                typeof(SharedMasterSlaveUARTMessages.DataMemberNames.Messages.HasBusMessageDataMemberNames)
             };
             JavaScriptConstantsBuilderHelper.Run(
                 Path.Combine(hvpsDirectory, "Code", "JavaScript", "client", "src", "constants"), "Constants",
@@ -50,7 +52,10 @@ namespace HVPSCodeGenerator
             CPlusPlusClassBuilderHelper.Run(
                 generatedCppDirectory,
                 "DataMemberNames",
-                typeInEachNamespace);
+                typeInEachNamespace,
+                reservedKeys:new ReservedKey[] {
+                    new ReservedKey(HasBusMessageDataMemberNames.Target, typeof(HasBusMessage))
+                });
             string[] generatedDirectories = new string[]{
                 Path.Combine(
                         reposDirectory,

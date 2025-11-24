@@ -6,7 +6,7 @@ import NativeAPI  from '../../api/NativeAPI';
 import eventEnable  from '../../core/eventEnable';
 import isNullOrUndefined from '../../core/isNullOrUndefined';
 import isNullOrUndefinedOrEmptyString  from '../../core/isNullOrUndefinedOrEmptyString';
-import HVPSState  from '../../enums/HVPSState';
+import SystemState  from '../../enums/SystemState';
 import HVPSUIAPI  from '../../api/HVPSUIAPI';
 import Handles  from '../../core/Handles';
 import BluetoothFailedReason  from '../../enums/BluetoothFailedReason';
@@ -39,8 +39,9 @@ export default class HVPSUIViewModel{
 		this._handleCoreDumpSummaryMessage = this._handleCoreDumpSummaryMessage.bind(this);
 		this._handleLastAbortMessage = this._handleLastAbortMessage.bind(this);
 		this._buildUsefulCoreDumpSummaryLines = this._buildUsefulCoreDumpSummaryLines.bind(this);
+		this._handleStateChangedMessage = this._handleStateChangedMessage.bind(this);
 		this._notSelectedDevice = {name:'Not Selected', address:''};
-		this._state = HVPSState.Unknown;
+		this._state = SystemState.Unknown;
 		this._devices = [
 			this._notSelectedDevice
 		];
@@ -75,6 +76,7 @@ export default class HVPSUIViewModel{
 		disposes.push(HVPSUIAPI.addEventListener('errorMessage', this._handleErrorMessage));
 		disposes.push(HVPSUIAPI.addEventListener('coreDumpSummaryMessage', this._handleCoreDumpSummaryMessage));
 		disposes.push(HVPSUIAPI.addEventListener('lastAbortMessage', this._handleLastAbortMessage));
+		disposes.push(HVPSUIAPI.addEventListener('stateChangedMessage', this._handleStateChangedMessage));
 		this.refreshBluetoothDevices();
 		
 	}
@@ -363,5 +365,8 @@ export default class HVPSUIViewModel{
 
 		return lines;
 	}
-	
+	_handleStateChangedMessage({stateChangedMessage}){
+		this._state = stateChangedMessage.state;
+		this.bindingsHandler.changed('state', this._state);
+	}
 }

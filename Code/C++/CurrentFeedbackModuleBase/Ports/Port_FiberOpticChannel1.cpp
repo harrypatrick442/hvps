@@ -21,7 +21,7 @@ _ticketedSender(
 //TOREMOVE
 bool Port_FiberOpticChannel1::setVoltageThreshold(double voltage){
 	SetVoltageThresholdRequest request(voltage);
-	std::shared_ptr<cJSON> response = _ticketedSender.send(request.toJSON(), 1000);
+	std::shared_ptr<cJSON> response = _ticketedSender.send(request.toJSON(), TIMEOUT);
 	if(response==nullptr){
 		return false;
 	}
