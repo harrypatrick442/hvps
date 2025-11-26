@@ -170,6 +170,13 @@ namespace HVPSConfigurationGenerator
                 );
             }*/
             {
+                Func<double, UInt32> flashHzToMilliseconds = (hz) => { 
+                    if(hz<=0)return 0;
+                    double delayMs = Math.Ceiling((double)500 / hz);
+                    if (delayMs <= 0) return 0;
+                    var delay =  (UInt32)delayMs;
+                    return delay;
+                };
                 Peripheral1Config peripheral1Config = new Peripheral1Config
                 {
                     errorColour= Constants.ErrorColour.ToUInt32(),
@@ -179,6 +186,22 @@ namespace HVPSConfigurationGenerator
                     shutDownColour= Constants.ShutDownColour.ToUInt32(),
                     shuttingDownColour = Constants.ShuttingDownColour.ToUInt32(),
                     unknownColour= Constants.UnknownColour.ToUInt32(),
+
+
+                    idleFlashDelayMs = flashHzToMilliseconds(
+                        Constants.IdleFlashHz),
+                    liveFlashDelayMs = flashHzToMilliseconds(
+                        Constants.LiveFlashHz),
+                    runningSystemChecksFlashDelayMs = flashHzToMilliseconds(
+                        Constants.RunningSystemChecksFlashHz),
+                    shuttingDownFlashDelayMs = flashHzToMilliseconds(
+                        Constants.ShuttingDownFlashHz),
+                    shutDownFlashDelayMs = flashHzToMilliseconds(
+                        Constants.ShutDownFlashHz),
+                    errorFlashDelayMs = flashHzToMilliseconds(
+                        Constants.ErrorFlashHz),
+                    unknownFlashDelayMs = flashHzToMilliseconds(
+                        Constants.UnknownFlashHz),
                 };
                 ConfigurationWriter.WriteProjectSpecificConfiguration(
                     projectSpecificConfigurationFilePath:

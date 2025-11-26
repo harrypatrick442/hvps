@@ -13,11 +13,15 @@ Timer::~Timer() {
 	stop();
 }
 
+void Timer::setIntervalMs(uint32_t value){
+    _intervalMs.store(value, std::memory_order_relaxed);
+}
 void Timer::start() {
+    const uint32_t interval = _intervalMs.load(std::memory_order_relaxed);
     std::unique_lock<std::mutex> lock(_mutex);
     if (_current) return;
 
-    auto* t = new TimerSimple(_intervalMs, _callback, _repeat);
+    auto* t = new TimerSimple(interval, _callback, _repeat);
     if (!t->start()) {
         // task failed to start; drop our only ref
         t->release();

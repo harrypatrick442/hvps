@@ -1,11 +1,11 @@
 #include "PixelHelper.hpp"
-void uInt32ToRGB(uint32_t pixel, uint8_t& r, uint8_t& g, uint8_t& b)
+void PixelHelper::uInt32ToRGB(uint32_t pixel, uint8_t& r, uint8_t& g, uint8_t& b)
 {
 	r = static_cast<uint8_t>(pixel & 0xFF);
 	g = static_cast<uint8_t>((pixel >> 8) & 0xFF);
 	b = static_cast<uint8_t>((pixel >> 16) & 0xFF);
-};
-inline uint32_t rGBToUInt32(uint8_t r, uint8_t g, uint8_t b)
+}
+uint32_t PixelHelper::rGBToUInt32(uint8_t r, uint8_t g, uint8_t b)
 {
 	return static_cast<uint32_t>(r) |
 		   (static_cast<uint32_t>(g) << 8) |

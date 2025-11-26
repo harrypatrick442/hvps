@@ -30,7 +30,8 @@ protected:
 	~HVPSLEDDisplay();
 private:
 	void timerCallback();
-	void flashColour(uint32_t colour);
+	void show(uint32_t colour, uint32_t flashDelayMilliseconds);
+	void flashColour(uint32_t colour, uint32_t flashDelayMilliseconds);
 	void staticColour(uint32_t colour);
 	void displayColour(uint32_t colour);
 };

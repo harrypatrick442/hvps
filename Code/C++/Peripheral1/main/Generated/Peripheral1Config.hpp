@@ -3,15 +3,22 @@
 #include "System/Aborter.hpp"
 #include "Core/Checksums/Crc32.hpp"
 inline constexpr Configuration Config1{
-    .idleColour = 10907927,
-    .liveColour = 483319,
-    .runningSystemChecksColour = 16189347,
-    .shuttingDownColour = 974320,
-    .shutDownColour = 521999,
+    .idleColour = 14724644,
+    .liveColour = 255,
+    .runningSystemChecksColour = 5631,
+    .shuttingDownColour = 16523,
+    .shutDownColour = 65280,
     .errorColour = 6227959,
-    .unknownColour = 16777215
+    .unknownColour = 16777215,
+    .idleFlashDelayMs = 250,
+    .liveFlashDelayMs = 250,
+    .runningSystemChecksFlashDelayMs = 500,
+    .shuttingDownFlashDelayMs = 500,
+    .shutDownFlashDelayMs = 0,
+    .errorFlashDelayMs = 500,
+    .unknownFlashDelayMs = 500
 };
-inline const uint32_t CONFIG_CRC32_EXPECTED = 103459372;
+inline const uint32_t CONFIG_CRC32_EXPECTED = 712775843;
 inline Configuration Config2 = Config1;//This one is in RAM. Config1 is in ROM.
 inline bool validateConfiguration(){
 	uint32_t podConfig1 = Crc32::computePod(Config1);

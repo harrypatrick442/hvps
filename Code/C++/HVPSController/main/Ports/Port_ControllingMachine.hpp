@@ -27,7 +27,7 @@ public:
 
 	DISALLOW_COPY_MOVE(Port_ControllingMachine);
 	
-	void sendConsoleMessage(const std::string& str);
+	void sendConsoleMessage(const std::string& str, bool isError = true);
 	void sendLiveData(LiveDataMessage liveDataMessage);
 	//return errorFree
 	uint32_t greetVoltageFeedbackModules();
@@ -48,6 +48,8 @@ protected:
 	Port_OutputVoltageFeedback& _port_OutputVoltageFeedback;
 	
 private:
+	EventConnection _eventConnectionHighSpeedCoreOnSystemStateChanged;
+	EventConnection _eventConnectionHighSpeedCoreOnError;
 	EventConnection _eventConnectionOnOpened;
 	EventConnection _eventConnectionOnClosed;
 	EventConnection _eventConnectionOnGotGreetingMessageFirstStageVoltageFeedbackModule;
@@ -69,4 +71,5 @@ private:
 	);
 	void sendState();
 	void handleGotGreetingMessageFromVoltageFeedbackModule(GreetingMessage* greetingMessage);
+	void handleHighSpeedCoreError(std::string errorMessage);
 };

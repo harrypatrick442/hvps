@@ -10,6 +10,7 @@
 #include "Ports/Port_ControllingMachine.hpp"
 #include "Ports/Port_FirstStageVoltageFeedback.hpp"
 #include "Ports/Port_OutputVoltageFeedback.hpp"
+#include "Ports/Port_OtherPeripherals.hpp"
 #include "System/WatchdogFeeder.hpp"
 #include "System/StayTheFuckAwake.hpp"
 #include "Generated/HVPSConfiguration.hpp"
@@ -54,6 +55,7 @@ extern "C" void app_main(void)
 		
 	Port_FirstStageVoltageFeedback& port_FirstStageVoltageFeedback = Port_FirstStageVoltageFeedback::initialize();
 	Port_OutputVoltageFeedback& port_OutputVoltageFeedback = Port_OutputVoltageFeedback::initialize();
+	Port_OtherPeripherals& port_OtherPeripherals = Port_OtherPeripherals::initialize();
     Bluetooth::initialize(
         "HVPS", 
         "HVPSControllerServer"

@@ -40,9 +40,14 @@ _timerSendPing(
 _port_FirstStageVoltageFeedback(port_FirstStageVoltageFeedback),
 _port_OutputVoltageFeedback(port_OutputVoltageFeedback){
     _channel.setIncomingMessageHandler(this);
-	_highSpeedCore.onSystemStateChanged.addHandler(
+	_eventConnectionHighSpeedCoreOnSystemStateChanged = _highSpeedCore.onSystemStateChanged.addHandler(
 		[this](SystemState systemState){
 			this->handleStateChanged(systemState);
+		}
+	);
+	_eventConnectionHighSpeedCoreOnError = _highSpeedCore.onError.addHandler(
+		[this](std::string errorMessage){
+			this->handleHighSpeedCoreError(errorMessage);
 		}
 	);
 	_eventConnectionOnOpened = _channel.addOnOpenedHandler([this](const ChannelEventArgs& e){
@@ -66,8 +71,8 @@ Port_ControllingMachine::~Port_ControllingMachine() noexcept
 {
 	
 }
-void Port_ControllingMachine::sendConsoleMessage(const std::string& str) {
-    ConsoleMessage consoleMessage(false, str.c_str());   // automatic storage, no `new`
+void Port_ControllingMachine::sendConsoleMessage(const std::string& str, bool isError) {
+    ConsoleMessage consoleMessage(isError, str.c_str());   // automatic storage, no `new`
     _channel.sendMessage(consoleMessage.toJSON());
 }
 void Port_ControllingMachine::sendLiveData(LiveDataMessage liveDataMessage) {
@@ -191,5 +196,8 @@ void Port_ControllingMachine::sendState(){
 	SystemState systemState = _highSpeedCore.getActualSystemState();
 	StateChangedMessage stateChangedMessage((int32_t)systemState);
 	_channel.sendMessage(stateChangedMessage.toJSON());
+}
+void Port_ControllingMachine::handleHighSpeedCoreError(std::string errorMessage){
+	sendConsoleMessage(errorMessage, true);
 }
 

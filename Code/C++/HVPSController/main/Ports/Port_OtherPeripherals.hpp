@@ -1,5 +1,4 @@
-#ifndef Port_VoltageFeedbackBase_hpp
-#define Port_VoltageFeedbackBase_hpp
+#pragma once
 
 #include "Communication/Interfaces/IIncomingMessageHandler.hpp"
 #include "Communication/Interfaces/IMessageSender.hpp"
@@ -7,25 +6,29 @@
 #include "Generated/Messages/GreetingResponse.hpp"
 #include "Generated/Messages/GreetingMessage.hpp"
 #include "Core/CleanupBucket.hpp"
-#include "../Enums/SystemState.hpp"
+#include "Core/SingletonBase.hpp"
+#include "Enums/SystemState.hpp"
 #include "Ticketing/TicketedSender.hpp"
 #include "cJSON/cJSON.h"
 #include "Core/Macros.hpp"
 #include "Core/Event.hpp"
 
-class Port_OtherPeripherals : public IIncomingMessageHandler {
+class Port_OtherPeripherals final:
+	public SingletonBase<Port_OtherPeripherals>,
+	public IIncomingMessageHandler{
+    friend class SingletonBase<Port_OtherPeripherals>;
 public:
 
+	inline static constexpr const char* TAG = "Port_OtherPeripherals";
     // Force derived classes to identify themselves
-    virtual const char* getTag() const = 0;
 	DISALLOW_COPY_MOVE(Port_OtherPeripherals);
 
     void handleIncomingMessage(cJSON* message, bool& dontDelete) override;
-	void sendIndicateStateRequest();
+	bool sendIndicateStateRequest();
 	void sendIndicateStateMessage();
 
 protected:
-    explicit Port_OtherPeripherals(TOSLINKDuplexChannel* channel);
+    explicit Port_OtherPeripherals() noexcept;
 	virtual ~Port_OtherPeripherals();
 
 protected:
@@ -37,5 +40,3 @@ private:
 	void handleSendStateToIndicateMessage();
 	void setTarget(cJSON* json, uint32_t target);
 };
-
-#endif

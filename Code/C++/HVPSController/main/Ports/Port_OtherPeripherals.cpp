@@ -20,9 +20,9 @@
 #include "Generated/Messages/IndicateStateResponse.hpp"
 #include <memory>
 #include <cstring>
-Port_OtherPeripherals::Port_OtherPeripherals(TOSLINKDuplexChannel* toslinkDuplexChannel)
+Port_OtherPeripherals::Port_OtherPeripherals()
 :
-_TOSLINKDuplexChannel(toslinkDuplexChannel),
+_TOSLINKDuplexChannel(new OutputVoltageFeedbackFiberOpticDuplexChannel()),
 _ticketedSender(
 			[this](cJSON* msg){
 				_TOSLINKDuplexChannel->sendMessage(msg, true);
@@ -63,22 +63,22 @@ void Port_OtherPeripherals::handleIncomingMessage(cJSON* message, bool& dontDele
 		return;
 	}
 }
-void Port_ControllingMachine::handleSendStateToIndicateMessage(){	
+void Port_OtherPeripherals::handleSendStateToIndicateMessage(){	
 	sendIndicateStateMessage();
 }
-void Port_ControllingMachine::sendIndicateStateMessage(){
+void Port_OtherPeripherals::sendIndicateStateMessage(){
 	SystemState systemState = _highSpeedCore.getActualSystemState();
 	IndicateStateMessage indicateStateMessage((int32_t)systemState);
 	cJSON* jsonMessage = indicateStateMessage.toJSON();
 	setTarget(jsonMessage, SubsystemIdentifiers::Peripheral1);
 	_channel.sendMessage(jsonMessage);
 }
-bool Port_ControllingMachine::sendIndicateStateRequest(){
+bool Port_OtherPeripherals::sendIndicateStateRequest(){
 	SystemState systemState = _highSpeedCore.getActualSystemState();
 	IndicateStateRequest indicateStateRequest((int32_t)systemState);
 	cJSON* jsonRequest = stateChangedMessage.toJSON();
 	setTarget(jsonRequest, SubsystemIdentifiers::Peripheral1);
-	std::shared_ptr<cJSON> jsonResponse = _ticketedSender.send(, TIMEOUT);
+	std::shared_ptr<cJSON> jsonResponse = _ticketedSender.send(jsonRequest, TIMEOUT);
 	if(jsonResponse==nullptr){
 		return false;
 	}
@@ -86,6 +86,6 @@ bool Port_ControllingMachine::sendIndicateStateRequest(){
 	IndicateStateResponse* response = IndicateStateResponse::fromJSON(jsonResponse.get(), cleanupBucket);
 	return response->getSuccess();
 }
-void Port_ControllingMachine::setTarget(cJSON* obj, uint32_t target){
+void Port_OtherPeripherals::setTarget(cJSON* obj, uint32_t target){
 	JHelper::addInt32(cJSON* obj, MessageConstants::TARGET_KEY, target);
 }

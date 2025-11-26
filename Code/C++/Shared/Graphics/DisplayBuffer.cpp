@@ -13,11 +13,10 @@ DisplayBuffer::DisplayBuffer(size_t length):
 	);
 }
 volatile uint32_t* DisplayBuffer::takePixels(size_t& length){
-	size_t newNextIndex = _nextIndex+length;
-	if(newNextIndex>=_length){
+	if(_nextIndex>=_length){
 		Aborter::safeAbort(TAG, "Buffer was not long enough");
 	}
 	volatile uint32_t* pointer = _pixels+_nextIndex;
-	_nextIndex = newNextIndex;
+	_nextIndex+=length;
 	return pointer;
 }

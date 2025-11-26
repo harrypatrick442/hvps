@@ -1,0 +1,74 @@
+// ==== C++ Standard Library Core ====
+#include <cstdint>            // fixed-width integer types: uint8_t, uint16_t, uint32_t...
+#include <cstddef>            // size_t, ptrdiff_t, nullptr_t, offsetof
+#include <cstdlib>            // malloc/free, abs, atoi, random, getenv
+#include <cstring>            // memcpy, memset, strcmp, strcpy, memmove
+#include <cmath>              // math functions: sin, cos, sqrt, pow, fabs
+#include <cassert>            // assert() macro for debug checking
+#include <atomic>             // std::atomic, atomic_flag, memory_order
+#include <chrono>             // time durations, milliseconds, microseconds
+
+// ==== Strings & Streams ====
+#include <string>             // std::string, std::stoi, .substr, etc.
+#include <string_view>        // non-owning immutable string slices
+#include <sstream>            // stringstream, ostringstream, istringstream
+#include <iomanip>            // formatting manipulators: std::hex, setw, setfill
+
+// ==== Containers ====
+#include <array>              // fixed-size array container
+#include <vector>             // dynamic arrays
+#include <deque>              // double-ended queue
+#include <list>               // doubly-linked list
+#include <map>                // sorted associative map (red-black tree)
+#include <unordered_map>      // hash map (fast lookups)
+#include <set>                // sorted tree-based set
+#include <unordered_set>      // hash set
+#include <queue>              // FIFO queue, priority_queue
+
+// ==== Memory & Utilities ====
+#include <memory>             // smart pointers: unique_ptr, shared_ptr
+#include <utility>            // std::move, std::forward, pair
+#include <functional>         // std::function, std::bind, lambdas helpers
+#include <algorithm>          // std::sort, std::find, transform, min/max
+#include <optional>           // std::optional for maybe-values
+#include <variant>            // std::variant for tagged unions
+
+// ==== Concurrency ====
+#include <mutex>              // std::mutex, lock_guard, unique_lock
+#include <shared_mutex>       // shared locking primitives
+#include <condition_variable> // thread signaling
+
+// ==== Formatting & Output ====
+#include <cstdio>             // printf, snprintf, FILE*, fopen
+#include <iostream>           // std::cout, std::cerr (rare on ESP32)
+
+// ==== ESP-IDF / FreeRTOS Core ====
+#include "freertos/FreeRTOS.h"      // core FreeRTOS definitions
+#include "freertos/task.h"          // task creation, vTaskDelay
+#include "freertos/semphr.h"        // semaphores & mutexes
+#include "freertos/queue.h"         // FreeRTOS message queues
+#include "freertos/timers.h"        // FreeRTOS timers
+#include "freertos/event_groups.h"  // event groups bitmasks
+
+#include "esp_log.h"                // ESP logging macros
+#include "esp_err.h"                // esp_err_t error codes
+#include "esp_timer.h"              // high-resolution hardware timers
+
+// ==== HAL / Hardware Drivers ====
+#include "driver/gpio.h"            // GPIO read/write, interrupts
+#include "driver/uart.h"            // hardware UART API
+#include "driver/adc.h"             // ADC driver
+#include "driver/dac.h"             // DAC driver
+#include "driver/spi_master.h"      // SPI master
+#include "driver/i2c.h"             // I2C driver
+
+// ==== RMT / Peripheral Control ====
+#include "driver/rmt.h"             // RMT peripheral for pulses, LEDs, IR
+
+// ==== Memory Management ====
+#include "esp_heap_caps.h"          // heap memory with capability flags
+
+// ==== System ====
+#include "esp_system.h"             // system info, restart, IDF system calls
+#include "esp_task_wdt.h"           // task watchdog
+#include "esp_pm.h"                 // power management API

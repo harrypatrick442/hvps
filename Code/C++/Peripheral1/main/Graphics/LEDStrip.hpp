@@ -15,7 +15,7 @@ class LEDStrip: public IDisplayElement{
 		LEDStrip(
 			int dOutPin, 
 			size_t length, 
-			led_color_component_format_t colourComponentFormat = LED_STRIP_COLOR_COMPONENT_FMT_RGB,
+			led_color_component_format_t colourComponentFormat = LED_STRIP_COLOR_COMPONENT_FMT_GRB,
 			led_model_t ledModel = LED_MODEL_WS2812,
 			bool invertOut = false,
 			bool isRGBW = false

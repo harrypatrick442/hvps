@@ -32,28 +32,42 @@ HVPSLEDDisplay::~HVPSLEDDisplay(){
 void HVPSLEDDisplay::indicateState(SystemState systemState){
 	switch(systemState){
 		case SystemState::Idle:
-			staticColour(_config.idleColour);
+			//Log::Info(TAG, "Idle");
+			show(_config.idleColour, _config.idleFlashDelayMs);
 			break;
 		case SystemState::Live:
-			flashColour(_config.liveColour);
+			//Log::Info(TAG, "Live");
+			show(_config.liveColour, _config.liveFlashDelayMs);
 			break;
 		case SystemState::RunningSystemChecks:
-			flashColour(_config.runningSystemChecksColour);
+			//Log::Info(TAG, "RunningSystemChecks");
+			show(_config.runningSystemChecksColour, _config.runningSystemChecksFlashDelayMs);
 			break;
 		case SystemState::ShuttingDown:
-			flashColour(_config.shuttingDownColour);
+			//Log::Info(TAG, "ShuttingDown");
+			show(_config.shuttingDownColour, _config.shuttingDownFlashDelayMs);
 			break;
 		case SystemState::ShutDown:
-			staticColour(_config.shutDownColour);
+			//Log::Info(TAG, "ShutDown");
+			show(_config.shutDownColour, _config.shutDownFlashDelayMs);
 			break;
 		case SystemState::Error:
-			flashColour(_config.errorColour);
+			//Log::Info(TAG, "Error");
+			show(_config.errorColour, _config.errorFlashDelayMs);
 			break;
 		case SystemState::Unknown:
+			//Log::Info(TAG, "Unknown");
 		default:
-			staticColour(_config.unknownColour);
+			show(_config.unknownColour, _config.unknownFlashDelayMs);
 			break;
 	}
+}
+void HVPSLEDDisplay::show(uint32_t colour, uint32_t flashDelayMilliseconds){
+	if(flashDelayMilliseconds>0){
+		flashColour(colour, flashDelayMilliseconds);
+		return;
+	}
+	staticColour(colour);
 }
 void HVPSLEDDisplay::staticColour(uint32_t colour){
 	_timerFlash->stop();
@@ -63,13 +77,15 @@ void HVPSLEDDisplay::staticColour(uint32_t colour){
 	displayColour(_currentColour);
 	
 }
-void HVPSLEDDisplay::flashColour(uint32_t colour){
+void HVPSLEDDisplay::flashColour(uint32_t colour, uint32_t flashDelayMilliseconds){
 	std::unique_lock<std::mutex> lock(_mutex);
 	_flashing = true;
 	_flashingIsOn = true;
 	_currentColour = colour;
 	displayColour(_currentColour);
 	lock.unlock();
+	_timerFlash->stop();
+	_timerFlash->setIntervalMs(flashDelayMilliseconds);
 	_timerFlash->start();
 }
 void HVPSLEDDisplay::timerCallback(){
@@ -89,4 +105,5 @@ void HVPSLEDDisplay::displayColour(uint32_t colour){
 	for(size_t i=0; i<LED_STRIP_LENGTH; i++){
 		*(*(_pixels+i)) = colour;
 	}
+	_ledStrip->refresh();
 }

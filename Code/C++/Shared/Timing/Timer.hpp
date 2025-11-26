@@ -12,13 +12,13 @@ public:
 
     Timer(uint32_t intervalMs, Callback cb, bool repeat = true);
     ~Timer();
-
+	void setIntervalMs(uint32_t value);
     void start()noexcept;
     void stop()noexcept;
     bool isRunning() const noexcept;
 
 private:
-    uint32_t _intervalMs;
+    std::atomic<uint32_t> _intervalMs;
     Callback _callback;
     const bool _repeat;
 

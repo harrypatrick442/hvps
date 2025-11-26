@@ -11,8 +11,8 @@ class PinDefinitions{
 		static const int OUTPUT_CURRENT_FEEDBACK_TX;
 		static const int OUTPUT_CURRENT_FEEDBACK_RX;
 		static const int OUTPUT_CURRENT_FEEDBACK_THRESHOLD_REACHED;
-		static const int PERIPHERALS_TX;
-		static const int PERIPHERALS_RX;
+		static const int OTHER_PERIPHERALS_TX;
+		static const int OTHER_PERIPHERALS_RX;
 		static const int MOSFET_DRIVE;
 		static const int PRIMARY_CURRENT_FEEDBACK;
 		static const int POWER_SUPPLY_VOLTAGE_FEEDBACK;

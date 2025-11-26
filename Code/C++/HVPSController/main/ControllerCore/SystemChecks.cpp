@@ -4,6 +4,7 @@
 #include "../Ports/Port_OutputVoltageFeedback.hpp"
 #include "../Ports/Port_FirstStageVoltageFeedback.hpp"
 #include "../Ports/Port_ControllingMachine.hpp"
+#include "../Ports/Port_OtherPeripherals.hpp"
 #include "../IO/Inputs.hpp"
 std::shared_ptr<SystemChecksResult> SystemChecks::run(){
 	std::string errorMessage;
@@ -11,11 +12,16 @@ std::shared_ptr<SystemChecksResult> SystemChecks::run(){
 	return std::make_shared<SystemChecksResult>(success, errorMessage);
 }
 bool SystemChecks::run(std::string& errorMessage){
+	if(Port_OtherPeripherals::getInstance().sendIndicateStateRequest()){
+		errorMessage= "Failed to speak to peripherals";
+		return false;
+	}
 	uint32_t subsystemIdentifierWithError = 
 		Port_ControllingMachine::getInstance().greetVoltageFeedbackModules();
 	if(subsystemIdentifierWithError!=0){
 		errorMessage = "Error state detected for subsystem "
 		+std::to_string(subsystemIdentifierWithError);
+		return false;
 	}
 	if(!suspended_firstStageVoltageFeedbackAbstractComs_replies(errorMessage)){
 		return false;

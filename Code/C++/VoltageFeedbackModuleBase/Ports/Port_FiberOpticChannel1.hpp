@@ -17,6 +17,13 @@ class Port_FiberOpticChannel1  final:
 	public IIncomingMessageHandler
 {
     friend class SingletonBase<Port_FiberOpticChannel1>;
+	protected:
+		static inline constexpr int TIMEOUT = 1000;
+    private:
+		ThresholdMonitor& _thesholdMonitor;
+        IMessageSender* _messageSender;
+		FiberOpticDuplexChannel_1 _fiberOpticChannel_1;
+		TicketedSender _ticketedSender;
     public :
 		static inline constexpr const char* TAG = "Port_FiberOpticChannel1";
 		void handleIncomingMessage(cJSON* message, bool& dontDelete) override;
@@ -29,13 +36,7 @@ class Port_FiberOpticChannel1  final:
 			ThresholdMonitor& thesholdMonitor
 	)noexcept;
 	
-	protected:
-		static inline constexpr int TIMEOUT = 1000;
     private:
-		ThresholdMonitor& _thesholdMonitor;
-        IMessageSender* _messageSender;
-		FiberOpticDuplexChannel_1 _fiberOpticChannel_1;
-		TicketedSender _ticketedSender;
 		
 		void handleSetVoltageThresholdRequest(cJSON* message);
 		void handleGetVoltageRequest(cJSON* message);
