@@ -55,7 +55,6 @@ extern "C" void app_main(void)
 		
 	Port_FirstStageVoltageFeedback& port_FirstStageVoltageFeedback = Port_FirstStageVoltageFeedback::initialize();
 	Port_OutputVoltageFeedback& port_OutputVoltageFeedback = Port_OutputVoltageFeedback::initialize();
-	Port_OtherPeripherals& port_OtherPeripherals = Port_OtherPeripherals::initialize();
     Bluetooth::initialize(
         "HVPS", 
         "HVPSControllerServer"
@@ -72,6 +71,7 @@ extern "C" void app_main(void)
 		liveDataCache,
 		inError
 	);
+	Port_OtherPeripherals& port_OtherPeripherals = Port_OtherPeripherals::initialize(highSpeedCore);
 	Port_ControllingMachine& portControllingMachine 
 		= Port_ControllingMachine::initialize(
 			bluetooth, 

@@ -1,28 +1,22 @@
-#include "Port_VoltageFeedbackBase.hpp"
+#include "Port_OtherPeripherals.hpp"
 #include "Logging/Log.hpp"
 #include "System/Aborter.hpp"
 #include "JSON/JHelper.hpp"
 #include "Messaging/MessageConstants.hpp"
 #include "Tasks/TaskFactory.hpp"
-#include "Generated/Messages/SetVoltageThresholdRequest.hpp"
-#include "Generated/Messages/SetVoltageThresholdResponse.hpp"
-#include "Generated/Messages/GetVoltageThresholdRequest.hpp"
-#include "Generated/Messages/GetVoltageThresholdResponse.hpp"
-#include "Generated/Messages/GetVoltageRequest.hpp"
-#include "Generated/Messages/GetVoltageResponse.hpp"
-#include "Generated/Messages/SetForceVoltageThresholdReachedFeedbackRequest.hpp"
-#include "Generated/Messages/GreetingRequest.hpp"
-#include "Generated/Messages/GreetingResponse.hpp"
-#include "Generated/Messages/VoltageMessage.hpp"
-#include "Generated/Messages/GreetingMessage.hpp"
+#include "../IO/OtherPeripheralsFiberOpticDuplexChannel.hpp"
+#include "Generated/Messages/SendStateToIndicateMessage.hpp"
 #include "Generated/Messages/IndicateStateMessage.hpp"
 #include "Generated/Messages/IndicateStateRequest.hpp"
 #include "Generated/Messages/IndicateStateResponse.hpp"
+#include "Enums/SubsystemIdentifiers.hpp"
+#include "cJSON/cJSON.h"
 #include <memory>
 #include <cstring>
-Port_OtherPeripherals::Port_OtherPeripherals()
+Port_OtherPeripherals::Port_OtherPeripherals(HighSpeedCore& highSpeedCore)
 :
-_TOSLINKDuplexChannel(new OutputVoltageFeedbackFiberOpticDuplexChannel()),
+_highSpeedCore(highSpeedCore),
+_TOSLINKDuplexChannel(new OtherPeripheralsFiberOpticDuplexChannel()),
 _ticketedSender(
 			[this](cJSON* msg){
 				_TOSLINKDuplexChannel->sendMessage(msg, true);
@@ -32,10 +26,10 @@ _ticketedSender(
 	_messageSender = _TOSLINKDuplexChannel;
 	TaskFactory::createNonPriorityTask(
 		[&](){
-			sendState();
+			sendIndicateStateMessage();
 			vTaskDelete(NULL);
 		}, 
-		"sendState"
+		"sendIndicateStateMessage"
 	);
 }
 Port_OtherPeripherals::~Port_OtherPeripherals() noexcept
@@ -45,7 +39,7 @@ Port_OtherPeripherals::~Port_OtherPeripherals() noexcept
 }
 void Port_OtherPeripherals::handleIncomingMessage(cJSON* message, bool& dontDelete){
 	if(_messageSender==nullptr){
-        Log::Error(getTag(), "_messageSender was null. You must set it with setMessageSender");
+        Log::Error(TAG, "_messageSender was null. You must set it with setMessageSender");
 		return;
 	}
 	bool success = true;
@@ -71,12 +65,12 @@ void Port_OtherPeripherals::sendIndicateStateMessage(){
 	IndicateStateMessage indicateStateMessage((int32_t)systemState);
 	cJSON* jsonMessage = indicateStateMessage.toJSON();
 	setTarget(jsonMessage, SubsystemIdentifiers::Peripheral1);
-	_channel.sendMessage(jsonMessage);
+	_messageSender->sendMessage(jsonMessage);
 }
 bool Port_OtherPeripherals::sendIndicateStateRequest(){
 	SystemState systemState = _highSpeedCore.getActualSystemState();
 	IndicateStateRequest indicateStateRequest((int32_t)systemState);
-	cJSON* jsonRequest = stateChangedMessage.toJSON();
+	cJSON* jsonRequest = indicateStateRequest.toJSON();
 	setTarget(jsonRequest, SubsystemIdentifiers::Peripheral1);
 	std::shared_ptr<cJSON> jsonResponse = _ticketedSender.send(jsonRequest, TIMEOUT);
 	if(jsonResponse==nullptr){
@@ -87,5 +81,5 @@ bool Port_OtherPeripherals::sendIndicateStateRequest(){
 	return response->getSuccess();
 }
 void Port_OtherPeripherals::setTarget(cJSON* obj, uint32_t target){
-	JHelper::addInt32(cJSON* obj, MessageConstants::TARGET_KEY, target);
+	JHelper::addInt32(obj, MessageConstants::TARGET_KEY, target);
 }

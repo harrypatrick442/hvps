@@ -41,6 +41,7 @@ class Port_FiberOpticChannel1  final:
 		void handleSetVoltageThresholdRequest(cJSON* message);
 		void handleGetVoltageRequest(cJSON* message);
 		void handleGreetingRequest(cJSON* message);
+		void handleClearLoggedErrorsMessage();
 		void greetControllingMachine();
 };
 

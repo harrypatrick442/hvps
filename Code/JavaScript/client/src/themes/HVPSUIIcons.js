@@ -15,6 +15,8 @@ import ReloadBlue from '../icons/hvpsui/ReloadBlue.png';
 import ReloadWhite from '../icons/hvpsui/ReloadWhite.png';
 import ConnectOrange from '../icons/hvpsui/ConnectOrange.png';
 import ConnectPink from '../icons/hvpsui/ConnectPink.png';
+import BinRed from '../icons/hvpsui/BinRed.png';
+import BinLidLiftedRed from '../icons/hvpsui/BinLidLiftedRed.png';
 const mappings = [
  ['DownArrow', DownArrow]
 ,['DownArrowHover',DownArrowHover]
@@ -24,5 +26,7 @@ const mappings = [
 ,['ReloadHover',ReloadWhite]
 ,['Connect',ConnectOrange]
 ,['ConnectHover',ConnectPink]
+,['BinRed',BinRed]
+,['BinLidLiftedRed',BinLidLiftedRed]
 ];
 export default mappings;

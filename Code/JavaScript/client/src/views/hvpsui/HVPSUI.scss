@@ -133,8 +133,24 @@
 			}
 		}
 	}
-	.console{
-		margin-top:3px;
+	.console-wrapper{
+		padding: 0px;
+		position:relative;
+		display:flex;
+		flex-grow: 1;
+		overflow:hidden;
+		.console{
+			margin-top:3px;
+			position:relative;
+		}
+		.clear-console-button{			
+			position: absolute;
+			height: 20px;
+			width:20px;
+			right: 15px;
+			bottom:2px;
+			z-index:1;
+		}
 	}
 	&.show-bluetooth-reconnect{
 		.reconnect-dialog{

@@ -11,10 +11,12 @@
 #include "Generated/Messages/GetVoltageRequest.hpp"
 #include "Generated/Messages/GetVoltageResponse.hpp"
 #include "Generated/Messages/SetForceVoltageThresholdReachedFeedbackRequest.hpp"
+//#include "Generated/Messages/SetForceVoltageThresholdReachedFeedbackResponse.hpp"
 #include "Generated/Messages/GreetingRequest.hpp"
 #include "Generated/Messages/GreetingResponse.hpp"
 #include "Generated/Messages/VoltageMessage.hpp"
 #include "Generated/Messages/GreetingMessage.hpp"
+#include "Generated/Messages/ClearLoggedErrorsMessage.hpp"
 #include <memory>
 #include <cstring>
 Port_VoltageFeedbackBase::Port_VoltageFeedbackBase(TOSLINKDuplexChannel* toslinkDuplexChannel)
@@ -56,7 +58,6 @@ bool Port_VoltageFeedbackBase::getVoltageThreshold(double& voltage) {
 }
 bool Port_VoltageFeedbackBase::getVoltage(double& voltage) {
     voltage = -1.0;
-
     GetVoltageRequest request;   // NOTE: not request()
     std::shared_ptr<cJSON> jsonResponse = _ticketedSender.send(request.toJSON(), TIMEOUT);
     if (!jsonResponse) {
@@ -124,4 +125,8 @@ void Port_VoltageFeedbackBase::handleGreetingMessage(cJSON* message){
 		return;
 	}
 	onGotGreetingMessage.dispatch(greetingMessage);
+}
+void Port_VoltageFeedbackBase::sendClearLoggedErrors(){
+	ClearLoggedErrorsMessage message;
+	_messageSender->sendMessage(message.toJSON());
 }

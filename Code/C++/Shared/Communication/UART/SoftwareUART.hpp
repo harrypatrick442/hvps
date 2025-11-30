@@ -1,9 +1,12 @@
 #pragma once
 #include "UARTBase.hpp"
+#include "driver/gpio.h"
 
 class SoftwareUART : public UARTBase {
 private:
     int _bitPeriodUs;   // derived from baudRate
+	gpio_num_t _txGPIONum;
+	gpio_num_t _rxGPIONum;
 public:
     SoftwareUART(
         int nUART,

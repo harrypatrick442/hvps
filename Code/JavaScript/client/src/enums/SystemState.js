@@ -1,6 +1,6 @@
 import isNullOrUndefined from '../core/isNullOrUndefined';
 const SystemState={
-	Unknown:0
+	Unknown:0,
 	Idle:1,
 	Live:2,
 	RunningSystemChecks:3,

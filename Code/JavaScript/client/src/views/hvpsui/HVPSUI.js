@@ -3,6 +3,7 @@ import PropertyBindingFactory from '../../mvvm/PropertyBindingFactory';
 import OrderedItems from '../../tippler_ui/OrderedItems';
 import NativeAPI from '../../api/NativeAPI';
 import E from '../../ui_core/E';
+import _createImageHoverButton from '../../ui_core/_createImageHoverButton';
 import _createImageHoverTextButton from '../../ui_core/_createImageHoverTextButton';
 import _createTextButton from '../../ui_core/_createTextButton';
 import ResizeWatchers from '../../ui_core/ResizeWatchers';
@@ -109,8 +110,16 @@ export default class HVPSUI{
 			disposes.push(v.dispose);
 			fieldsElement.appendChild(v.element);
 		});
+		const consoleWrapperElement = E.div('console-wrapper');
+		const clearConsoleButton = _createImageHoverButton(
+			i('BinRed'), i('BinLidLiftedRed'), 
+			'clear-console-button', 
+			model.clearConsole, disposes);
+			
 		this._deviceSpecificElement.appendChild(fieldsElement);
-		this._innerElement.appendChild(this._console.element);
+		consoleWrapperElement.appendChild(clearConsoleButton);
+		this._innerElement.appendChild(consoleWrapperElement);
+		consoleWrapperElement.appendChild(this._console.element);
 		this._disconnectedBlocker = new Blocker({
 			model, 
 			propertyNameBlocking:'bluetoothDisconnected'
@@ -127,13 +136,13 @@ export default class HVPSUI{
 	}
 	_stateChanged(value){
 		if(!isNullOrUndefined(this._currentState)){
-			this._element.classList.remove(_getFullClassName(value));
+			this._element.classList.remove(this._getFullClassName(value));
 		}
 		this._currentState = value;
 		if(isNullOrUndefined(value)){
 			return;
 		}
-		this._element.classList.add(_getFullClassName(value));
+		this._element.classList.add(this._getFullClassName(value));
 	}
 	_getFullClassName(systemState){
 		return `state-${SystemState.getClassName(systemState)}`;

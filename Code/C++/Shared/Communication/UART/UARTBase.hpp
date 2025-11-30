@@ -2,6 +2,8 @@
 #include <unordered_set> 
 #include <mutex>
 class UARTBase {
+public:
+	inline static constexpr const char* TAG= "UARTBase";
 private:
 	static std::mutex _mutexClaimReleaseNUart;	
 	static std::unordered_set<int> _usedUarts;
@@ -22,7 +24,7 @@ public:
 		bool invertTx, 
 		bool invertRx);
 	virtual ~UARTBase();
-	int getNUART();
+	int getNUART() const;
 protected:
 	bool checkNUARTValid(int nUART);
 public:

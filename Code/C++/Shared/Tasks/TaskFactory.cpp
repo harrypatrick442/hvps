@@ -1,10 +1,10 @@
 #include "TaskFactory.hpp"
-void TaskFactory::createNonPriorityTask(
+bool TaskFactory::createNonPriorityTask(
 								  const std::function<void()>& fn,
 								  const char* name,
 								  TaskHandle_t* taskHandle)
 {
-    launchTrampolineTask(fn,
+    return launchTrampolineTask(fn,
 						name, 
                         STACK_SIZE_NON_PRIORITY,
                         PRIORITY_NORMAL,
@@ -12,19 +12,19 @@ void TaskFactory::createNonPriorityTask(
                         taskHandle);
 }
 
-void TaskFactory::createPriorityTask(
+bool TaskFactory::createPriorityTask(
 								  const std::function<void()>& fn,
 								  const char* name,
 								  TaskHandle_t* taskHandle)
 {
-    launchTrampolineTask(fn,
+    return launchTrampolineTask(fn,
 						name, 
                         STACK_SIZE_PRIORITY,
                         PRIORITY_HIGH,
                         CORE_PRIORITY,
                         taskHandle);
 }
-void TaskFactory::launchTrampolineTask(
+bool TaskFactory::launchTrampolineTask(
                                  const std::function<void()>& fn,
 								 const char* name,
                                  size_t stackSize,
@@ -36,6 +36,7 @@ void TaskFactory::launchTrampolineTask(
     auto trampoline = [](void* param) {
         std::unique_ptr<std::function<void()>> fnPtr(static_cast<std::function<void()>*>(param));
         (*fnPtr)();
+		vTaskDelete(nullptr);
     };
 
     BaseType_t result = xTaskCreatePinnedToCore(
@@ -51,11 +52,13 @@ void TaskFactory::launchTrampolineTask(
     if (result != pdPASS) {
         delete wrapper;
         Aborter::safeAbort("TaskFactory", "Failed to create task: %s", name);
+		return false;
     }
+	return true;
 }
-
+/*
 // --- Raw pointer versions (original) ---
-void TaskFactory::createNonPriorityTask(void (*taskFunc)(void*),
+bool TaskFactory::createNonPriorityTask(void (*taskFunc)(void*),
 								  void* obj,
 								  const char* name,
 								  TaskHandle_t* taskHandle)
@@ -72,10 +75,12 @@ void TaskFactory::createNonPriorityTask(void (*taskFunc)(void*),
 
 	if (result != pdPASS) {
 		Aborter::safeAbort(TAG, "Failed to create non-priority task: %s", name);
+		return false;
 	}
+	return true;
 }
 
-void TaskFactory::createPriorityTask(void (*taskFunc)(void*),
+bool TaskFactory::createPriorityTask(void (*taskFunc)(void*),
 							   void* obj,
 							   const char* name,
 							   TaskHandle_t* taskHandle)
@@ -92,5 +97,7 @@ void TaskFactory::createPriorityTask(void (*taskFunc)(void*),
 
 	if (result != pdPASS) {
 		Aborter::safeAbort(TAG, "Failed to create priority task: %s", name);
+		return false;
 	}
-}
+	return true;
+}*/

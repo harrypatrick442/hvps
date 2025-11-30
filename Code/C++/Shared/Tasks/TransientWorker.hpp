@@ -23,7 +23,8 @@ public:
     explicit TransientWorker(
 		UBaseType_t maxQueueLength=32, 
 		uint32_t idleTimeoutMs=500, 
-		bool abortOnQueueOverflow = true);
+		bool abortOnQueueOverflow = true,
+		uint64_t maxDesiredJobTimeUs = 10000);
     ~TransientWorker();
 
     bool enqueue(Job job);
@@ -32,6 +33,7 @@ private:
 	static inline constexpr const char* TAG = "TransientWorker";
     const uint32_t _idleTimeoutMs;
 	const bool _abortOnQueueOverflow;
+	uint64_t _maxDesiredJobTimeUs;
     QueueHandle_t _queue;
     SemaphoreHandle_t _mutex;
     std::atomic<bool> _alive;

@@ -143,7 +143,15 @@
 	cJSON* JHelper::getNullableObject(
 		cJSON* obj, const char* key, bool& success) {
 		cJSON* item = cJSON_GetObjectItem(obj, key);
-		return item;
+		if(item==nullptr)return nullptr;
+		if (cJSON_IsNull(item)) {
+			// key exists, but it's null
+			return nullptr;
+		}
+		if(cJSON_IsObject(item)){
+			return item;
+		}
+		return nullptr;
 	}
 	/*char* JHelper::getNullableString(
 		cJSON* obj, const char* key, bool& success) {
@@ -164,6 +172,10 @@
 		if(item==nullptr){
 			return std::nullopt;
 		}
+		if (cJSON_IsNull(item)) {
+			// key exists, but it's null
+			return std::nullopt;
+		}
 		if (cJSON_IsNumber(item)) {
 			return static_cast<int8_t>(item->valuedouble);
 		}
@@ -174,6 +186,10 @@
 	cJSON* obj, const char* key, bool& success) {
 		cJSON* item = cJSON_GetObjectItem(obj, key);
 		if(item==nullptr){
+			return std::nullopt;
+		}
+		if (cJSON_IsNull(item)) {
+			// key exists, but it's null
 			return std::nullopt;
 		}
 		if (cJSON_IsNumber(item)) {
@@ -189,6 +205,10 @@
 		if(item==nullptr){
 			return std::nullopt;
 		}
+		if (cJSON_IsNull(item)) {
+			// key exists, but it's null
+			return std::nullopt;
+		}
 		if (cJSON_IsNumber(item)) {
 			return static_cast<int16_t>(item->valuedouble);
 		}
@@ -199,6 +219,10 @@
 	cJSON* obj, const char* key, bool& success) {
 		cJSON* item = cJSON_GetObjectItem(obj, key);
 		if(item==nullptr){
+			return std::nullopt;
+		}
+		if (cJSON_IsNull(item)) {
+			// key exists, but it's null
 			return std::nullopt;
 		}
 		if (cJSON_IsNumber(item)) {
@@ -214,6 +238,10 @@
 		if(item==nullptr){
 			return std::nullopt;
 		}
+		if (cJSON_IsNull(item)) {
+			// key exists, but it's null
+			return std::nullopt;
+		}
 		if (cJSON_IsNumber(item)) {
 			return static_cast<int32_t>(item->valuedouble);
 		}
@@ -225,6 +253,10 @@
 	cJSON* obj, const char* key, bool& success) {
 		cJSON* item = cJSON_GetObjectItem(obj, key);
 		if(item==nullptr){
+			return std::nullopt;
+		}
+		if (cJSON_IsNull(item)) {
+			// key exists, but it's null
 			return std::nullopt;
 		}
 		if (cJSON_IsNumber(item)) {
@@ -239,6 +271,10 @@
 		if(item==nullptr){
 			return std::nullopt;
 		}
+		if (cJSON_IsNull(item)) {
+			// key exists, but it's null
+			return std::nullopt;
+		}
 		if (cJSON_IsNumber(item)) {
 			return static_cast<int64_t>(item->valuedouble);
 		}
@@ -249,6 +285,10 @@
 	cJSON* obj, const char* key, bool& success) {
 		cJSON* item = cJSON_GetObjectItem(obj, key);
 		if(item==nullptr){
+			return std::nullopt;
+		}
+		if (cJSON_IsNull(item)) {
+			// key exists, but it's null
 			return std::nullopt;
 		}
 		if (cJSON_IsNumber(item)) {
@@ -264,6 +304,10 @@
 		if(item==nullptr){
 			return std::nullopt;
 		}
+		if (cJSON_IsNull(item)) {
+			// key exists, but it's null
+			return std::nullopt;
+		}
 		if (cJSON_IsNumber(item)) {
 			return item->valuedouble;
 		}
@@ -275,6 +319,10 @@
 	cJSON* obj, const char* key, bool& success) {
 		cJSON* item = cJSON_GetObjectItem(obj, key);
 		if(item==nullptr){
+			return std::nullopt;
+		}
+		if (cJSON_IsNull(item)) {
+			// key exists, but it's null
 			return std::nullopt;
 		}
 		if (cJSON_IsBool(item)) {

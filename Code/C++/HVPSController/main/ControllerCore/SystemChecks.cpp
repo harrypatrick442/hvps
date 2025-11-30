@@ -89,7 +89,7 @@ bool SystemChecks::_suspended_voltageFeedbackAbstractComs_replies(
 	errorMessage = "Failed to communicate with "+moduleFriendlyName;
 	return false;
 }
-bool _suspended_voltageFeedbackModule_highsSpeedFeedback( 
+bool SystemChecks::_suspended_voltageFeedbackModule_highsSpeedFeedback( 
 	const std::string& moduleFriendlyName,
 	std::string& errorMessage,
 	std::function<bool()> getThresholdReached

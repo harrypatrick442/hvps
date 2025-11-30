@@ -30,7 +30,7 @@ export default class HVPSUIViewModel{
 		this._setRefreshingBluetooth = this._setRefreshingBluetooth.bind(this);
 		this._handleConsoleMessage = this._handleConsoleMessage.bind(this);
 		this._handleErrorMessage = this._handleErrorMessage.bind(this);
-		this._consoleClear = this._consoleClear.bind(this);
+		this.clearConsole = this.clearConsole.bind(this);
 		this._consoleAppendLine = this._consoleAppendLine.bind(this);
 		this.refreshBluetoothDevices = this.refreshBluetoothDevices.bind(this);
 		this.reconnect = this.reconnect.bind(this);
@@ -304,7 +304,7 @@ export default class HVPSUIViewModel{
 		this._consoleAppendLine();
 	}
 	_handleLastAbortMessage({lastAbortMessage}){
-		this._consoleAppendLine(`Last Abort Reason: ${lastAbortMessage.reason}`, ConsoleMessageType.Error);
+		this._consoleAppendLine(`Last Abort, Subsystem: ${SubsystemIdentifier.getDescription(lastAbortMessage.subsystemIdentifier)}, Reason: ${lastAbortMessage.reason}`, ConsoleMessageType.Error);
 		if(lastAbortMessage.backtrace){
 			lastAbortMessage.backtrace.forEach(b=>{
 				this._consoleAppendLine(`0x${b.toString(16).padStart(8, "0")}`, ConsoleMessageType.Error);
@@ -313,7 +313,7 @@ export default class HVPSUIViewModel{
 		this._consoleAppendLine();
 		this._consoleAppendLine();
 	}
-	_consoleClear(){
+	clearConsole(){
 		this.dispatchEvent({type:'consoleClear'});
 	}
 	_consoleAppendLine(str, consoleMessageType){

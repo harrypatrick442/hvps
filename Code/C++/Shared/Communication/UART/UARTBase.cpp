@@ -1,4 +1,7 @@
 #include "UARTBase.hpp"
+#include "System/Aborter.hpp"
+std::mutex UARTBase::_mutexClaimReleaseNUart;
+std::unordered_set<int> UARTBase::_usedUarts;
 UARTBase::UARTBase(
 		int nUART,
 		int txPin, 

@@ -1,14 +1,17 @@
 #include "TransientWorker.hpp"
 #include "../System/Aborter.hpp";
 #include "TaskFactory.hpp";
+#include "../Timing/TimeHelper.hpp";
 TransientWorker::TransientWorker(
 	UBaseType_t maxQueueLength,
 	uint32_t idleTimeoutMs,
-	bool abortOnQueueOverflow
+	bool abortOnQueueOverflow,
+	uint64_t maxDesiredJobTimeUs
 )
     : 
 	_idleTimeoutMs(idleTimeoutMs),
 	_abortOnQueueOverflow(abortOnQueueOverflow),
+	_maxDesiredJobTimeUs(maxDesiredJobTimeUs),
 	_queue(xQueueCreate(maxQueueLength, sizeof(Job*))),
 	_mutex(xSemaphoreCreateMutex()),
 	_alive(false),
@@ -20,6 +23,7 @@ TransientWorker::TransientWorker(
 
 TransientWorker::~TransientWorker() {
     if (_queue){
+		taskLoop();
 		vQueueDelete(_queue);
 	}
     if (_mutex) vSemaphoreDelete(_mutex);
@@ -44,23 +48,35 @@ bool TransientWorker::enqueue(Job job) {
 	_alive = true;
     giveSemaphore();
 	auto self = shared_from_this();
-	TaskFactory::createNonPriorityTask<TransientWorker>(
+	bool startedTaskSuccessfully = TaskFactory::createNonPriorityTask<TransientWorker>(
 		TransientWorker::runTask,
 		self,
 		TAG
 	);
+	if(!startedTaskSuccessfully){
+		Log::Warn(TAG, "Failed to start runTask successfully");
+		return false;
+	}
 	return true;
 }
 void TransientWorker::runTask(std::shared_ptr<TransientWorker> selfPtr) {
 	selfPtr->taskLoop();
+	Log::Info(TAG, "Worker exiting after idle timeout");
+	vTaskDelete(nullptr);
 }
 
 void TransientWorker::taskLoop() {
 	Job* jobPtr = nullptr;
+	uint64_t startTimeUs = TimeHelper::us();
 	while(true) {
 		if (xQueueReceive(_queue, &jobPtr, _idleTicks) == pdTRUE) {
 			std::unique_ptr<Job> job(jobPtr);
 			(*job)();
+			uint64_t endTimeUs = TimeHelper::us();
+			if(endTimeUs - startTimeUs > _maxDesiredJobTimeUs){
+				Log::Info(TAG, "Warning, a task caused a delay greater than max allowed job time: %" PRIu64 " us", _maxDesiredJobTimeUs);
+			}
+			startTimeUs = endTimeUs;
 			continue;
 		}
 		takeSemaphore();
@@ -71,8 +87,6 @@ void TransientWorker::taskLoop() {
 		}
 		giveSemaphore();
 	}
-	Log::Info(TAG, "Worker exiting after idle timeout");
-	vTaskDelete(nullptr);
 }
 void TransientWorker::takeSemaphore(){
 	if(xSemaphoreTake(_mutex, portMAX_DELAY)!=pdTRUE){

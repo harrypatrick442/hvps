@@ -26,7 +26,7 @@ export default class Console{
 			disposes.push(model.addEventListener(eventNameAppendLine, this._handleAppendLine));
 		}
 		if(!isNullOrUndefined(eventNameClear)){
-			disposes.push(model.addEventListener(eventNameClear, this._clear));
+			disposes.push(model.addEventListener(eventNameClear, this._handleClear));
 		}
 	}
 	get element(){
@@ -54,6 +54,7 @@ export default class Console{
 	}
 	_handleClear(){
 		this._lines.forEach(l=>this._element.removeChild(l));
+		this._lines = [];
 	}
 	dispose(){
 		this._disposes.forEach(d=>d());

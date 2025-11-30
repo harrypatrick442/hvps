@@ -1,4 +1,7 @@
 #include "HardwareUART.hpp"
+#include "driver/gpio.h"
+#include "esp_log.h"
+#include "System/Aborter.hpp"
 HardwareUART::HardwareUART(
 	int nUART,
 	int txPin, 
@@ -77,7 +80,7 @@ bool HardwareUART::configure(){
 			_uartPort, esp_err_to_name(err), err);
 		return false;
 	}
-	Log::Info(TAG, "UART%d is using baud rate %d", _uartPort, baudRate);
+	Log::Info(TAG, "UART%d is using baud rate %d", _uartPort, _baudRate);
 	return true;
 }
 int HardwareUART::readBytes(char* receiveBuffer, size_t maxlen, uint32_t timeoutMs){

@@ -47,12 +47,14 @@ class Bluetooth : public virtual IChannel, public virtual ChannelEvents{
         const char* _deviceName;
         const char* _serverName;
         IIncomingMessageHandler* _incomingMessageHandler;
+		std::shared_ptr<TransientWorker> _incomingMessageWorker;
         static void esp_spp_callback_static(esp_spp_cb_event_t event, esp_spp_cb_param_t *param);
         void esp_spp_callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param);
         static void esp_gap_callback_static(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *param);
         void esp_gap_callback(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *param);
         
 		void tryFlushSendQueue();
+		void emptyOutgoingQueue();
 };
 #endif
 #endif // Bluetooth_BR_EDR_hpp

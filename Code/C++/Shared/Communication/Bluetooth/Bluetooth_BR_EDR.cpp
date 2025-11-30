@@ -118,12 +118,14 @@ Bluetooth::Bluetooth(
     const char* deviceName,
     const char* serverName) :
     _deviceName(deviceName),
-     _serverName(serverName),
-     _incomingMessageHandler(nullptr) {
-		_connectionHandle=0; 
+    _serverName(serverName),
+    _incomingMessageHandler(nullptr),
+	_incomingMessageWorker(std::make_shared<TransientWorker>(32, 1000, true))
+{
+	_connectionHandle=0; 
 		/*_mainTaskHandle = */
-		xTaskGetCurrentTaskHandle();
-     }
+	xTaskGetCurrentTaskHandle();
+}
 
 // Secure Connections (SC) GAP Callback
 
@@ -215,33 +217,40 @@ void Bluetooth::esp_spp_callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *p
 			break;
         case ESP_SPP_SRV_OPEN_EVT :
             _connectionHandle = param->open.handle;
-            Log::Info(TAG, "THAT ONE WORKED!");
-			
 			_mutexWrite.lock();
 			_writeInProgress = false;
 			_mutexWrite.unlock();
+			emptyOutgoingQueue();
 			dispatchOnOpened();
 			tryFlushSendQueue();
             break;
 
         case ESP_SPP_CLOSE_EVT:
+			_connectionHandle = 0;
 			dispatchOnClosed();
+			emptyOutgoingQueue();
             Log::Info(TAG, "Client Disconnected");
             break;
 
         case ESP_SPP_DATA_IND_EVT:
 			{
 				//Log::Info(TAG, "Received %d bytes: %.*s", param->data_ind.len, param->data_ind.len, param->data_ind.data);
-				if(_incomingMessageHandler==nullptr){
-					Log::Warn(TAG, "Incoming Message Handler is NULL. Cannot handle incoming message.");
-					return;
-				}
+				
 				cJSON *root = cJSON_ParseWithLength((const char*)param->data_ind.data, param->data_ind.len);
-				bool dontDelete = false;
-				_incomingMessageHandler->handleIncomingMessage(root, dontDelete);
-				if(!dontDelete){
-					cJSON_Delete(root);
+				if(_incomingMessageWorker->enqueue([this, root]{ 
+					if(_incomingMessageHandler==nullptr){
+						Log::Warn(TAG, "Incoming Message Handler is NULL. Cannot handle incoming message.");
+						return;
+					}
+					bool dontDelete = false;
+					_incomingMessageHandler->handleIncomingMessage(root, dontDelete);
+					if(!dontDelete){
+						cJSON_Delete(root);
+					}
+				})){
+					break;
 				}
+				cJSON_Delete(root);
 				break;
 			}
 		case ESP_SPP_WRITE_EVT:
@@ -276,6 +285,10 @@ void Bluetooth::sendMessage(cJSON* message, bool deleteMessageAfter) {
         Log::Error(TAG, "sendMessage: failed to serialize JSON");
         return;
     }
+	if(_connectionHandle==0){
+		Log::Warn(TAG, "Called sendMessage while not connected");
+		return;
+	}
     if (_outgoingQueue.size() >= MAX_BT_SEND_QUEUE) {
         Log::Error(TAG, "Bluetooth TX queue overflow! Dropping message.");
         free(json_str);
@@ -306,7 +319,7 @@ void Bluetooth::tryFlushSendQueue() {
 	}	
     _writeInProgress = true;
 	_mutexWrite.unlock();
-
+	//Log::Info(TAG, "There are %zu entries in queue", _outgoingQueue.size());
     char* nextMsg = _outgoingQueue.front();
     size_t len = strlen(nextMsg);
     esp_err_t ret = esp_spp_write(_connectionHandle, len, (uint8_t*)nextMsg);
@@ -317,5 +330,13 @@ void Bluetooth::tryFlushSendQueue() {
 		_mutexWrite.unlock();
         Log::Error(TAG, "esp_spp_write failed: %s", esp_err_to_name(ret));
     }
+}
+void Bluetooth::emptyOutgoingQueue(){
+	while(!_outgoingQueue.empty()) {
+		char* sentMsg = _outgoingQueue.front();
+		_outgoingQueue.pop();
+		free(sentMsg);
+		// ✅ Important: free the memory after it's sent
+	}
 }
 #endif

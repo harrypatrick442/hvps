@@ -7,9 +7,9 @@
 #include "Generated/Messages/GreetingMessage.hpp"
 #include "Core/CleanupBucket.hpp"
 #include "Core/SingletonBase.hpp"
+#include "../ControllerCore/HighSpeedCore.hpp"
 #include "Enums/SystemState.hpp"
 #include "Ticketing/TicketedSender.hpp"
-#include "cJSON/cJSON.h"
 #include "Core/Macros.hpp"
 #include "Core/Event.hpp"
 
@@ -28,11 +28,12 @@ public:
 	void sendIndicateStateMessage();
 
 protected:
-    explicit Port_OtherPeripherals() noexcept;
+    explicit Port_OtherPeripherals(HighSpeedCore& highSpeedCore) noexcept;
 	virtual ~Port_OtherPeripherals();
 
-protected:
+private:
 	static inline constexpr int TIMEOUT = 1000;
+	HighSpeedCore& _highSpeedCore;
     IMessageSender*       _messageSender = nullptr;
     TOSLINKDuplexChannel*  _TOSLINKDuplexChannel = nullptr;
     TicketedSender        _ticketedSender;

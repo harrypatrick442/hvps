@@ -1,3 +1,6 @@
+#include "SoftwareUART.hpp"
+#include "esp_timer.h"
+#include <rom/ets_sys.h>
 SoftwareUART::SoftwareUART(
     int nUART,
     int txPin,
@@ -7,7 +10,9 @@ SoftwareUART::SoftwareUART(
     bool invertRx
 )
 : UARTBase(nUART, txPin, rxPin, baudRate, invertTx, invertRx),
-  _bitDelayUs(1000000 / baudRate)
+  _bitPeriodUs(1000000 / baudRate),
+  _txGPIONum((gpio_num_t)txPin),
+  _rxGPIONum((gpio_num_t)rxPin)
 {
     // Nothing else here — configure() handles everything.
 }
@@ -25,7 +30,7 @@ bool SoftwareUART::configure() {
     gpio_config(&io_conf_tx);
 
     // Default idle state = HIGH
-    gpio_set_level(_txPin, _invertTx ? 0 : 1);
+    gpio_set_level(_txGPIONum, _invertTx ? 0 : 1);
 
     // Configure RX pin
     gpio_config_t io_conf_rx = {};
@@ -41,19 +46,19 @@ int SoftwareUART::writeBytes(const char* src, size_t len) {
         unsigned char b = src[i];
 
         // Start bit (LOW)
-        gpio_set_level(_txPin, _invertTx ? 1 : 0);
+        gpio_set_level(_txGPIONum, _invertTx ? 1 : 0);
         ets_delay_us(_bitPeriodUs);
 
         // Data bits (LSB first)
         for (int bit = 0; bit < 8; bit++) {
             int bitval = (b >> bit) & 1;
             bitval ^= _invertTx;  // invert if needed
-            gpio_set_level(_txPin, bitval);
+            gpio_set_level(_txGPIONum, bitval);
             ets_delay_us(_bitPeriodUs);
         }
 
         // Stop bit (HIGH)
-        gpio_set_level(_txPin, _invertTx ? 0 : 1);
+        gpio_set_level(_txGPIONum, _invertTx ? 0 : 1);
         ets_delay_us(_bitPeriodUs);
     }
 
@@ -67,7 +72,7 @@ int SoftwareUART::readBytes(char* dst, size_t maxlen, uint32_t timeoutMs) {
     while (count < (int)maxlen) {
         // Wait for start bit (line goes LOW)
         while ((esp_timer_get_time() < deadlineUs)) {
-            int level = gpio_get_level(_rxPin);
+            int level = gpio_get_level(_rxGPIONum);
             level ^= _invertRx;
             if (level == 0) break;
         }
@@ -82,7 +87,7 @@ int SoftwareUART::readBytes(char* dst, size_t maxlen, uint32_t timeoutMs) {
 
         for (int bit = 0; bit < 8; bit++) {
             ets_delay_us(_bitPeriodUs);
-            int bitval = gpio_get_level(_rxPin);
+            int bitval = gpio_get_level(_rxGPIONum);
             bitval ^= _invertRx;
             byte |= (bitval << bit);
         }

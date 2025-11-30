@@ -4,6 +4,8 @@
 #include "../../Logging/Log.hpp"
 #include "../../cJSON/cJSON.h"
 #include "driver/uart.h"
+#include "driver/gpio.h"
+#include "esp_log.h"
 #include <mutex>
 #include <atomic> 
 #include <memory>
@@ -31,6 +33,5 @@ class UARTDuplexChannel : public IMessageSender{
 	protected:	
 		virtual ~UARTDuplexChannel();
 	private: 
-		static void loopTaskEntry(void* obj);
 		void loop();
 };

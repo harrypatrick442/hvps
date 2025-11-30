@@ -22,7 +22,9 @@ bool TimerSimple::start(){
 	} 
 	_taskHandle = nullptr;
     this->addRef(); // <-- task holds a ref from now on
-    TaskFactory::createNonPriorityTask(timerTask, this, "timerTask", &_taskHandle);
+    TaskFactory::createNonPriorityTask([this](){
+		timerTask();
+	}, "timerTask", &_taskHandle);
 	if(_taskHandle!=nullptr){
 		this->_isRunning.store(true, std::memory_order_release);
 		return true;
@@ -38,17 +40,16 @@ bool TimerSimple::getIsRunning() const {
 void TimerSimple::dispose(){
 	this->_disposed.store(true, std::memory_order_release);
 }
-void TimerSimple::timerTask(void* param) {
-    auto* self = static_cast<TimerSimple*>(param);
+void TimerSimple::timerTask() {
 	for (;;) {
-		Delay::ms(self->_intervalMs);
-		if (self->_disposed.load(std::memory_order_acquire)) 
+		Delay::ms(_intervalMs);
+		if (_disposed.load(std::memory_order_acquire)) 
 			break;
-		self->_callback();
-		if (!self->_repeat) 
+		_callback();
+		if (!_repeat) 
 			break;
 	}
-	self->_isRunning.store(false, std::memory_order_release);
-    self->release();
+	_isRunning.store(false, std::memory_order_release);
+    release();
     vTaskDelete(nullptr);
 }

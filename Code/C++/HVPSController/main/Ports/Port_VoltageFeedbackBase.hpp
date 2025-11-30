@@ -27,6 +27,7 @@ public:
     bool getVoltage(double& voltage);
 	bool setForceThresholdReachedFeedback(bool force);
 	void handleVoltageMessage(cJSON* message);
+	void sendClearLoggedErrors();
 	GreetingResponse* greet(CleanupBucket& cleanupBucket);
 
 protected:

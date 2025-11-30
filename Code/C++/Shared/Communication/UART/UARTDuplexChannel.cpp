@@ -1,5 +1,3 @@
-#include "driver/gpio.h"
-#include "esp_log.h"
 #include "../../Tasks/TaskFactory.hpp"
 #include "UARTDuplexChannel.hpp"
 #include "../../System/Aborter.hpp"
@@ -8,7 +6,8 @@
 #include "HardwareUART.hpp"
 #include "SoftwareUART.hpp"
 #include <cstring>
-
+//#include "driver/gpio.h"
+//#include "esp_log.h"
 const char* UARTDuplexChannel::TAG = "UARTDuplexChannel";
 UARTDuplexChannel::UARTDuplexChannel(
 	/*uart_port_t*/ int nUART,
@@ -35,7 +34,9 @@ void UARTDuplexChannel::startThisThread(){
 	loop();
 }
 void UARTDuplexChannel::startAsNewNonPriorityTask(){
-	TaskFactory::createNonPriorityTask(loopTaskEntry, this, "UART", &_taskHandle);
+	TaskFactory::createNonPriorityTask([this](){
+		loop();
+	},  "UART", &_taskHandle);
 }
 UARTDuplexChannel::~UARTDuplexChannel(){
 	std::unique_lock<std::mutex> lock(_mutexDispose);
@@ -79,10 +80,6 @@ void UARTDuplexChannel::sendMessage(cJSON* message, bool deleteMessageAfter){
 	_uart->flushTx();
 	lock.unlock();
 	free(json_with_newline); 
-}
-void UARTDuplexChannel::loopTaskEntry(void* obj) {
-	UARTDuplexChannel* instance = static_cast<UARTDuplexChannel*>(obj);
-	instance->loop();
 }
 void UARTDuplexChannel::loop() {
 	char receiveBuffer[256];     // temporary buffer for reading from UART

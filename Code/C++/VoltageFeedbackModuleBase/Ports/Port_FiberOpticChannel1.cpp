@@ -7,7 +7,9 @@
 #include "Generated/Messages/GreetingRequest.hpp"
 #include "Generated/Messages/GreetingResponse.hpp"
 #include "Generated/Messages/GreetingMessage.hpp"
+#include "Generated/Messages/ClearLoggedErrorsMessage.hpp"
 #include "Tasks/TaskFactory.hpp"
+#include "System/CrashReporter.hpp"
 #include <cstring>
 #include <memory>
 Port_FiberOpticChannel1::Port_FiberOpticChannel1(
@@ -26,7 +28,6 @@ _ticketedSender(
 	TaskFactory::createNonPriorityTask(
 		[&](){
 			greetControllingMachine();
-			vTaskDelete(NULL);
 		}, 
 		"greetControllingMachine"
 	);
@@ -41,6 +42,7 @@ bool Port_FiberOpticChannel1::setVoltageThreshold(double voltage){
 	return true;
 }
 void Port_FiberOpticChannel1::handleIncomingMessage(cJSON* message, bool& dontDelete){
+	Log::Info(TAG, "Handling message");
 	if(_messageSender==nullptr){
         Log::Error(TAG, "_messageSender was null. You must set it with setMessageSender");
 		return;
@@ -50,6 +52,7 @@ void Port_FiberOpticChannel1::handleIncomingMessage(cJSON* message, bool& dontDe
 	if (!success) {
 		return;
 	}
+	Log::Info(TAG, "type: %s", type);
 	if(strcmp(type, MessageConstants::TYPE_TICKETED_VALUE) == 0){
 		Log::Info(TAG, "Got ticketed");
 		_ticketedSender.handleTicketedMessage(message, type);
@@ -69,6 +72,11 @@ void Port_FiberOpticChannel1::handleIncomingMessage(cJSON* message, bool& dontDe
 	if(strcmp(type, GreetingRequest::TYPE) == 0){
 		Log::Info(TAG, "Got greeting!");
 		handleGreetingRequest(message);
+		return;
+	}
+	if(strcmp(type, ClearLoggedErrorsMessage::TYPE) == 0){
+		Log::Info(TAG, "Got clear logged errors!");
+		handleClearLoggedErrorsMessage();
 		return;
 	}
 }
@@ -112,5 +120,10 @@ void Port_FiberOpticChannel1::greetControllingMachine(){
 	LastAbortMessage* lastAbortMessage = Aborter::getLastAbortReason(cleanupBucket);
 	GreetingMessage message(coreDumpSummaryMessage, lastAbortMessage);
 	_messageSender->sendMessage(message.toJSON());
+}
+void Port_FiberOpticChannel1::handleClearLoggedErrorsMessage(){
+	CrashReporter::clearRecord();
+	Aborter::clearLastAbortReason();
+	Log::Info(TAG, "Cleared logged errors!");
 }
 

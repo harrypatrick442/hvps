@@ -36,6 +36,12 @@ private:
 	Port_FirstStageVoltageFeedback& _portFirstStageVoltageFeedback;
 	Port_OutputVoltageFeedback& _portOutputVoltageFeedback;
 	LiveDataCache& _liveDataCache;
+	/*
+	DO NOT EVER SET _shuttingOrShutDown or _shuttingOrShutDown_2 BACK TO FALSE. EVER!!!!
+	A FULL SYSTEM REBOOT IS REQUIRED TO ACTIVATE AFTER SHUTDOWN!!
+	THE ENTIRE POINT OF THIS IS TO PUT THE SYSTEM INTO A PERMANENT STATE WHERE IT CANNOT BE
+	REACTIVATED WITHOUT REBOOT!!
+	*/
 	std::atomic<bool> _shuttingOrShutDown;
 	std::atomic<SystemState> _actualSystemState;
 	std::atomic<SystemState> _desiredSystemState;
@@ -47,7 +53,6 @@ private:
 	std::shared_ptr<SystemChecksResult> _systemChecksResult;
 	Latch _runSystemChecksLatch;
 	void startCoreTask();
-	static void _run_taskTrampoline(void* arg);
 	void _run();
 	std::shared_ptr<SystemChecksResult> doSystemChecks();
 	void doIdle();

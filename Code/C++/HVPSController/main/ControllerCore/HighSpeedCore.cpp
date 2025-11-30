@@ -15,6 +15,13 @@ HighSpeedCore::HighSpeedCore(
 _portFirstStageVoltageFeedback(portFirstStageVoltageFeedback),
 _portOutputVoltageFeedback(portOutputVoltageFeedback),
 _liveDataCache(liveDataCache),
+
+/*
+DO NOT EVER SET _shuttingOrShutDown or _shuttingOrShutDown_2 BACK TO FALSE. EVER!!!!
+A FULL SYSTEM REBOOT IS REQUIRED TO ACTIVATE AFTER SHUTDOWN!!
+THE ENTIRE POINT OF THIS IS TO PUT THE SYSTEM INTO A PERMANENT STATE WHERE IT CANNOT BE
+REACTIVATED WITHOUT REBOOT!!
+*/
 _shuttingOrShutDown(false),
 _actualSystemState(SystemState::Idle),
 _desiredSystemState(SystemState::Idle),
@@ -22,7 +29,7 @@ _shuttingOrShutDown_2(false),
 _inError(inError),
 _systemChecksResult(nullptr),
 _runSystemChecksLatch(){
-	
+	startCoreTask();
 }
 
 void HighSpeedCore::start(){
@@ -32,34 +39,44 @@ void HighSpeedCore::stop(){
 	setDesiredSystemState(SystemState::Idle);
 }
 std::shared_ptr<SystemChecksResult> HighSpeedCore::runSystemChecksOnly(){
+	Log::Info(TAG, "runSystemChecksOnly...");
 	_runSystemChecksLatch.latch();
+	Log::Info(TAG, "runSystemChecksOnly...2");
 	setDesiredSystemState(SystemState::RunningSystemChecks);
+	Log::Info(TAG, "runSystemChecksOnly...3");
 	_runSystemChecksLatch.wait();
+	Log::Info(TAG, "runSystemChecksOnly...4");
 	std::unique_lock<std::mutex> lock(_mutexSystemChecksResult);
+	Log::Info(TAG, "runSystemChecksOnly...5");
     auto result = _systemChecksResult; // copy under lock
+	Log::Info(TAG, "runSystemChecksOnly...6");
 	//lock.unlock();
     return result; // refcount is incremented, safe after unlock
 }
 void HighSpeedCore::shutDown(){
 	setDesiredSystemState(SystemState::ShutDown);
+	/*
+	DO NOT EVER SET THESE BACK TO FALSE. EVER!!!!
+	A FULL SYSTEM REBOOT IS REQUIRED TO ACTIVATE AFTER SHUTDOWN!!
+	THE ENTIRE POINT OF THIS IS TO PUT THE SYSTEM INTO A PERMANENT STATE WHERE IT CANNOT BE
+	REACTIVATED WITHOUT REBOOT!!
+	*/
 	_shuttingOrShutDown.store(true, std::memory_order_relaxed);
 	_shuttingOrShutDown_2.store(true, std::memory_order_relaxed);
 }
 void HighSpeedCore::setInError(bool value){
 	_inError.store(value, std::memory_order_relaxed);
-	SystemState desiredSystemState = SystemState::Idle;
 	if(value){
-		desiredSystemState = SystemState::Error;
+		setDesiredSystemState(SystemState::Error);
+		return;
 	}
-	else{
-		if(isShuttingDownOrShutDown()){
-			desiredSystemState = SystemState::ShuttingDown;
-		}
-		else{
-			desiredSystemState = SystemState::Idle;
-		}
+	if(isShuttingDownOrShutDown()){
+		setActualSystemState(SystemState::ShuttingDown);
+		setDesiredSystemState(SystemState::ShuttingDown);
+		return;
 	}
-	setDesiredSystemState(desiredSystemState);
+	setDesiredSystemState(SystemState::Idle);
+	setActualSystemState(SystemState::Idle);
 }
 bool HighSpeedCore::getInError(){
 	return _inError.load(std::memory_order_relaxed);
@@ -78,6 +95,13 @@ void HighSpeedCore::setActualSystemState(SystemState systemState){
 	dispatchSystemStateChanged(systemState);
 }
 bool HighSpeedCore::isShuttingDownOrShutDown(){
+	
+	/*
+	DO NOT EVER SET _shuttingOrShutDown or _shuttingOrShutDown_2 BACK TO FALSE. EVER!!!!
+	A FULL SYSTEM REBOOT IS REQUIRED TO ACTIVATE AFTER SHUTDOWN!!
+	THE ENTIRE POINT OF THIS IS TO PUT THE SYSTEM INTO A PERMANENT STATE WHERE IT CANNOT BE
+	REACTIVATED WITHOUT REBOOT!!
+	*/
 	if(_shuttingOrShutDown.load(std::memory_order_relaxed)){
 		return true;
 	}
@@ -87,34 +111,40 @@ bool HighSpeedCore::isShuttingDownOrShutDown(){
 	return false;
 }
 void HighSpeedCore::startCoreTask(){
-	TaskFactory::createPriorityTask(_run_taskTrampoline, this, "HighSpeedCore::_run");
-}
-void  HighSpeedCore::_run_taskTrampoline(void* arg) {
-    static_cast<HighSpeedCore*>(arg)->_run();
+	TaskFactory::createPriorityTask([this](){
+		_run();
+	}, "HighSpeedCore::_run");
 }
 void HighSpeedCore::_run(){
 	while(true){
-		Delay::ms(10);
+		Log::Info(TAG, "looping...");
+		Delay::ms(100);
 		if(isShuttingDownOrShutDown()||getActualSystemState()==SystemState::ShutDown){
+			Log::Info(TAG, "Is shut down");
 			doShutDown();
 			continue;
 		}
 		switch(getDesiredSystemState()){
 			case SystemState::Idle:
+				Log::Info(TAG, "Idle");
 				doIdle();
 				continue;
 			case SystemState::Live:
+				Log::Info(TAG, "Live");
 				doLive();
 				Outputs::setMOSFETOnOff(false);
 				//Second set for backup
 				continue;
 			case SystemState::ShutDown:
+				Log::Info(TAG, "ShutDown");
 				doShutDown();
 				continue;
 			case SystemState::RunningSystemChecks:
+				Log::Info(TAG, "RunningSystemChecks");
 				doSystemChecks();
 				continue;
 			case SystemState::Error:
+				Log::Info(TAG, "Error");
 				doError();
 				continue;
 			default:
@@ -125,17 +155,26 @@ void HighSpeedCore::_run(){
 	}
 }
 std::shared_ptr<SystemChecksResult> HighSpeedCore::doSystemChecks(){
+	Log::Info(TAG, "doSystemChecks");
 	std::shared_ptr<SystemChecksResult> result = SystemChecks::run();
 	std::unique_lock<std::mutex> lock(_mutexSystemChecksResult);
 	_systemChecksResult = result;
+	_runSystemChecksLatch.unlatch();
 	if(!result->getSuccess()){
-		setInError(true);
+		setInError(true);//NOTE THIS ACTUALLY CLEARS THE _runSystemChecksLatch too.
 		dispatchError(result->getErrorMessage());//TODO THIS ISNT RIGHT 10/11/2025
 	}
 	return result;
 }
 void HighSpeedCore::doShutDown(){
 	bool v = true;
+	
+	/*
+	DO NOT EVER SET _shuttingOrShutDown or _shuttingOrShutDown_2 BACK TO FALSE. EVER!!!!
+	A FULL SYSTEM REBOOT IS REQUIRED TO ACTIVATE AFTER SHUTDOWN!!
+	THE ENTIRE POINT OF THIS IS TO PUT THE SYSTEM INTO A PERMANENT STATE WHERE IT CANNOT BE
+	REACTIVATED WITHOUT REBOOT!!
+	*/
 	_shuttingOrShutDown.store(v, std::memory_order_relaxed);
 	_shuttingOrShutDown_2.store(v, std::memory_order_relaxed);
 	setActualSystemState(SystemState::ShuttingDown);
@@ -149,6 +188,7 @@ void HighSpeedCore::doShutDown(){
 		{
 			return;
 		}
+		Outputs::setMOSFETOnOff(false);
 		DoubleAndTime outputVoltageAndTime = _liveDataCache.getOutputVoltage();
 		if(outputVoltageAndTime.t!=lastTime){
 			if(outputVoltageAndTime.d<=SAFE_OUTPUT_VOLTAGE){
@@ -235,6 +275,9 @@ void HighSpeedCore::doError(){
 		Outputs::setMOSFETOnOff(false);
 		Delay::ms(100);
 		if(getActualSystemState()!=SystemState::Error){
+			break;
+		}
+		if(getDesiredSystemState()==SystemState::RunningSystemChecks){
 			break;
 		}
 	}

@@ -122,6 +122,11 @@ namespace ProgrammingHelper
             GetComPort(out string? ignore);
         }
 
+        private void buttonBringToFront_Click(object sender, EventArgs e)
+        {
+            ConsoleBridge.BringToFront();
+        }
+
         [Category("Custom")]
         [Description("The PNPDeviceId")]
         public string PnpDeviceId

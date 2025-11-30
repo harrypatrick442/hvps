@@ -16,28 +16,28 @@ private:
     inline static constexpr int PRIORITY_NORMAL = 1;
     inline static constexpr int PRIORITY_HIGH = 5;
 public:
-	static void createNonPriorityTask(
+	static bool createNonPriorityTask(
 									  const std::function<void()>& fn,
 									  const char* name,
 									  TaskHandle_t* taskHandle = nullptr);
-	static void createPriorityTask(
+	static bool createPriorityTask(
 									  const std::function<void()>& fn,
 									  const char* name,
 									  TaskHandle_t* taskHandle = nullptr);
     // --- Raw pointer versions (original) ---
-    static void createNonPriorityTask(void (*taskFunc)(void*),
+    /*static bool createNonPriorityTask(void (*taskFunc)(void*),
                                       void* obj,
                                       const char* name,
                                       TaskHandle_t* taskHandle = nullptr);
 
-    static void createPriorityTask(void (*taskFunc)(void*),
+    static bool createPriorityTask(void (*taskFunc)(void*),
                                    void* obj,
                                    const char* name,
-                                   TaskHandle_t* taskHandle = nullptr);
+                                   TaskHandle_t* taskHandle = nullptr);*/
 
     // --- Shared pointer versions (new) ---// --- Shared pointer version (non-priority) ---
 	template <typename T>
-	inline static void createNonPriorityTask(void (*taskFunc)(std::shared_ptr<T>),
+	inline static bool createNonPriorityTask(void (*taskFunc)(std::shared_ptr<T>),
 									  std::shared_ptr<T> obj,
 									  const char* name,
 									  TaskHandle_t* taskHandle = nullptr)
@@ -53,6 +53,7 @@ public:
 			// take ownership of wrapper so it is deleted when task ends
 			std::unique_ptr<Wrapper> w(static_cast<Wrapper*>(param));
 			w->func(w->obj);
+			vTaskDelete(nullptr);
 		};
 
 		BaseType_t result = xTaskCreatePinnedToCore(
@@ -68,10 +69,12 @@ public:
 		if (result != pdPASS) {
 			delete wrapper;
 			Aborter::safeAbort(TAG, "Failed to create non-priority task: %s", name);
+			return false;
 		}
+		return true;
 	}
 	template <typename T>
-	inline static void createPriorityTask(void (*taskFunc)(std::shared_ptr<T>),
+	inline static bool createPriorityTask(void (*taskFunc)(std::shared_ptr<T>),
 								   std::shared_ptr<T> obj,
 								   const char* name,
 								   TaskHandle_t* _taskHandle = nullptr)
@@ -87,6 +90,7 @@ public:
 			// take ownership of wrapper so it's deleted when done
 			std::unique_ptr<Wrapper> w(static_cast<Wrapper*>(param));
 			w->func(w->obj);
+			vTaskDelete(nullptr);
 		};
 
 		BaseType_t result = xTaskCreatePinnedToCore(
@@ -102,10 +106,12 @@ public:
 		if (result != pdPASS) {
 			delete wrapper; // cleanup if task creation failed
 			Aborter::safeAbort(TAG, "Failed to create priority task: %s", name);
+			return false;
 		}
+		return true;
 	}
 private:
-	static void launchTrampolineTask(
+	static bool launchTrampolineTask(
                                  const std::function<void()>& fn,
 								 const char* name,
                                  size_t stackSize,

@@ -3,6 +3,7 @@
 #include "System/Aborter.hpp"
 #include "Timing/Delay.hpp"
 #include "JSON/JHelper.hpp"
+#include "Tasks/TaskFactory.hpp"
 #include "Messaging/MessageConstants.hpp"
 #include "Generated/Messages/ConsoleMessage.hpp"
 #include "Generated/Messages/RunSystemChecksOnlyMessage.hpp"
@@ -85,30 +86,49 @@ void Port_ControllingMachine::handleIncomingMessage(cJSON* message, bool& dontDe
 		return;
 	}
 	if(strcmp(type, MessageConstants::TYPE_TICKETED_VALUE) == 0){
+		Log::Info(TAG, "Got TYPE_TICKETED_VALUE");
 		//Log::Info(getTag(), "Got ticketed");
 		_ticketedSender.handleTicketedMessage(message, type);
 		dontDelete = true;
 		return;
 	}
 	if(strcmp(type, RunSystemChecksOnlyMessage::TYPE) == 0){
+		Log::Info(TAG, "Got RunSystemChecksOnlyMessage");
 		handleRunSystemChecksOnlyMessage(message);
 		return;
 	}
 	if(strcmp(type, ShutDownMessage::TYPE) == 0){
+		Log::Info(TAG, "Got ShutDownMessage");
 		handleShutDownMessage(message);
 		return;
 	}
 	if(strcmp(type, StartMessage::TYPE) == 0){
+		Log::Info(TAG, "Got StartMessage");
 		handleStartMessage(message);
 		return;
 	}
 	if(strcmp(type, StopMessage::TYPE) == 0){
+		Log::Info(TAG, "Got StopMessage");
 		handleStopMessage(message);
 		return;
 	}
+	if(strcmp(type, ClearLoggedErrorsMessage::TYPE) == 0){
+		Log::Info(TAG, "Got ClearLoggedErrorsMessage");
+		handleClearLoggedErrors();
+		return;
+	}
+	if(strcmp(type, PingMessage::TYPE) == 0){
+		Log::Info(TAG, "Got Ping");
+		return;
+	}
+	Log::Warn(TAG, "Unhandled message type %s", type);
 }
 void Port_ControllingMachine::handleRunSystemChecksOnlyMessage(cJSON* message){
-	std::shared_ptr<SystemChecksResult> systemChecksResult = _highSpeedCore.runSystemChecksOnly();
+	TaskFactory::createNonPriorityTask([this](){
+			std::shared_ptr<SystemChecksResult> systemChecksResult = _highSpeedCore.runSystemChecksOnly();
+		}, 
+		"runSystemChecksOnly"
+	);
 }
 void Port_ControllingMachine::handleShutDownMessage(cJSON* message){
 	_highSpeedCore.shutDown();
@@ -143,6 +163,8 @@ void Port_ControllingMachine::handleClearLoggedErrors(){
 	Aborter::clearLastAbortReason();
 	_highSpeedCore.setInError(false);
 	Log::Info(TAG, "Cleared logged errors!");
+	_port_FirstStageVoltageFeedback.sendClearLoggedErrors();
+	_port_OutputVoltageFeedback.sendClearLoggedErrors();
 }
 void Port_ControllingMachine::sendErrors(){
 	CleanupBucket cleanupBucket;

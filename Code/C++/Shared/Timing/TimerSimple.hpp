@@ -19,7 +19,7 @@ public:
 	bool getIsRunning() const noexcept;
 
 private:
-    static void timerTask(void* param);
+    void timerTask();
 
     uint32_t _intervalMs;
     Callback _callback;
