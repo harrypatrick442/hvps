@@ -33,6 +33,7 @@ extern "C" void app_main(void)
     Port_FiberOpticChannel1& port_FiberOpticChannel1 
 		= Port_FiberOpticChannel1::initialize(
 			SubsystemIdentifiers::Peripheral1, systemStateIndicator);
+			/*
 	bool b = false;
 	while(true){
 		hVPSLEDDisplay.indicateState(SystemState::Unknown);
@@ -49,6 +50,6 @@ extern "C" void app_main(void)
 		Delay::ms(10000);
 		hVPSLEDDisplay.indicateState(SystemState::Error);
 		Delay::ms(10000);
-	}
+	}*/
 	vTaskDelete(NULL); // Delete the current task
 }

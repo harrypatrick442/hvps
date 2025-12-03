@@ -1,6 +1,8 @@
 #include "SoftwareUART.hpp"
 #include "esp_timer.h"
 #include <rom/ets_sys.h>
+#include "Logging/Log.hpp"
+#include "Tasks/TaskFactory.hpp"
 SoftwareUART::SoftwareUART(
     int nUART,
     int txPin,
@@ -11,17 +13,16 @@ SoftwareUART::SoftwareUART(
 )
 : UARTBase(nUART, txPin, rxPin, baudRate, invertTx, invertRx),
   _bitPeriodUs(1000000 / baudRate),
+  _halfBitPeriodUs(500000 / baudRate),
   _txGPIONum((gpio_num_t)txPin),
-  _rxGPIONum((gpio_num_t)rxPin)
+  _rxGPIONum((gpio_num_t)rxPin),
+  _rxBuffer(2048)
 {
     // Nothing else here — configure() handles everything.
 }
 bool SoftwareUART::configure() {
     if (!checkNUARTValid(_nUART))
         return false;
-
-    // Precompute bit timing
-    _bitPeriodUs = 1000000 / _baudRate;
 
     // Configure TX pin
     gpio_config_t io_conf_tx = {};
@@ -37,8 +38,12 @@ bool SoftwareUART::configure() {
     io_conf_rx.pin_bit_mask = (1ULL << _rxPin);
     io_conf_rx.mode = GPIO_MODE_INPUT;
     gpio_config(&io_conf_rx);
-
-    return true;
+	return TaskFactory::createNonPriorityTask(
+		[this](){
+			readLooper();
+		}, 
+		"SoftwareUART::readLooper"
+	);
 }
 
 int SoftwareUART::writeBytes(const char* src, size_t len) {
@@ -64,41 +69,94 @@ int SoftwareUART::writeBytes(const char* src, size_t len) {
 
     return (int)len;
 }
+int SoftwareUART::readBytes(char* dst, size_t maxlen, uint32_t timeoutMs)
+{
+    if (maxlen == 0) return 0;
 
-int SoftwareUART::readBytes(char* dst, size_t maxlen, uint32_t timeoutMs) {
-    int count = 0;
-    int64_t deadlineUs = esp_timer_get_time() + (timeoutMs * 1000);
+    uint64_t deadlineUs = esp_timer_get_time() + (uint64_t)timeoutMs * 1000ULL;
+    size_t totalRead = 0;
 
-    while (count < (int)maxlen) {
-        // Wait for start bit (line goes LOW)
-        while ((esp_timer_get_time() < deadlineUs)) {
-            int level = gpio_get_level(_rxGPIONum);
-            level ^= _invertRx;
-            if (level == 0) break;
+    while (totalRead < maxlen)
+    {
+        // Try to take any available bytes immediately
+        size_t taken = _rxBuffer.take((uint8_t*)(dst + totalRead), maxlen - totalRead);
+
+        if (taken > 0) {
+            totalRead += taken;
+            continue;               // try for more until maxlen reached
         }
 
-        if (esp_timer_get_time() >= deadlineUs)
-            return count; // no more bytes
-
-        // We detected start bit → wait half bit to sample center
-        ets_delay_us(_bitPeriodUs / 2);
-
-        unsigned char byte = 0;
-
-        for (int bit = 0; bit < 8; bit++) {
-            ets_delay_us(_bitPeriodUs);
-            int bitval = gpio_get_level(_rxGPIONum);
-            bitval ^= _invertRx;
-            byte |= (bitval << bit);
+        // No data in buffer → check timeout
+        if (esp_timer_get_time() >= deadlineUs) {
+            break; // timeout expired
         }
 
-        // Stop bit window
-        ets_delay_us(_bitPeriodUs);
-
-        dst[count++] = byte;
+        // Light delay to avoid tight spin-loop (1 tick or ~1ms)
+        vTaskDelay(1);
     }
 
-    return count;
+    return (int)totalRead;
 }
+
+void SoftwareUART::readLooper()
+{
+    while (true) {
+        // ----- 1) WAIT FOR START BIT -----
+        // RX idle = HIGH → start bit = LOW
+        int level;
+        uint64_t tStart;
+
+        while (true) {
+            level = gpio_get_level(_rxGPIONum) ^ _invertRx;
+
+            if (level == 0) {
+                // Detected falling edge: START BIT
+                tStart = esp_timer_get_time();
+                break;
+            }
+
+            // No start bit — just keep scanning indefinitely
+            // (This is the behaviour you asked for)
+        }
+
+        // ----- 2) SAMPLE THE BYTE -----
+        // First data bit center: tStart + 1.5 * bitPeriod
+        uint64_t sampleTime = tStart + _bitPeriodUs + (_bitPeriodUs / 2);
+
+        uint8_t byte = 0;
+
+        for (int bit = 0; bit < 8; bit++) {
+
+            // wait until sampleTime
+            while (esp_timer_get_time() < sampleTime) {
+                // tight spin until sample moment
+            }
+
+            int bitVal = gpio_get_level(_rxGPIONum) ^ _invertRx;
+            byte |= (bitVal << bit);
+
+            sampleTime += _bitPeriodUs; // next bit
+        }
+
+        // ----- 3) STOP BIT CHECK (optional) -----
+        // Sample stop bit at its center
+        while (esp_timer_get_time() < sampleTime) {
+            // spin
+        }
+
+        int stop = gpio_get_level(_rxGPIONum) ^ _invertRx;
+        if (stop == 0) {
+            // framing error — optional:
+            // continue;  // ignore byte
+            // but we will keep the byte to maximize robustness
+        }
+
+        // ----- 4) PUSH BYTE INTO RING BUFFER -----
+        _rxBuffer.push(&byte, 1);
+
+        // Continue immediately to detect the next start bit
+    }
+}
+
 
 void SoftwareUART::flushTx() { }

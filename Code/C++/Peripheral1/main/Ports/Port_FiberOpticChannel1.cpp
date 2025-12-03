@@ -26,7 +26,6 @@ _ticketedSender(
 	TaskFactory::createNonPriorityTask(
 		[&](){
 			sendSendStateToIndicate();
-			vTaskDelete(NULL);
 		}, 
 		"sendSendStateToIndicate"
 	);
@@ -38,8 +37,11 @@ void Port_FiberOpticChannel1::handleIncomingMessage(cJSON* message, bool& dontDe
 	}
 	bool success = true;
 	uint32_t target = 
-		JHelper::getUInt32(message, MessageConstants::TYPE_KEY, success);
-	if (!success || (target!=_subsystemIdentifier)) {
+		JHelper::getUInt32(message, MessageConstants::TARGET_KEY, success);
+	if (!success) {
+		return;
+	}
+	if (target!=_subsystemIdentifier) {
 		return;
 	}
 	char* type = JHelper::getString(message, MessageConstants::TYPE_KEY, success);
@@ -78,6 +80,7 @@ void Port_FiberOpticChannel1::handleIndicateStateMessage(cJSON* message){
 void Port_FiberOpticChannel1::sendSendStateToIndicate(){
 	CleanupBucket cleanupBucket;
 	SendStateToIndicateMessage request;
+	Log::Info(TAG, "sent sendStateToIndicate");
 	_messageSender->sendMessage(request.toJSON());
 }
 

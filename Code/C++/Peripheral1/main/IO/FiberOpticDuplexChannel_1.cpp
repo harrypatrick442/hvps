@@ -1,6 +1,6 @@
 #include "FiberOpticDuplexChannel_1.hpp"
 #include "PinDefinitions.hpp"
 FiberOpticDuplexChannel_1::FiberOpticDuplexChannel_1(): TOSLINKDuplexChannel(
-	1, PinDefinitions::TX, PinDefinitions::RX, 4800) {
+	1, PinDefinitions::TX, PinDefinitions::RX, 300) {
 	
 };

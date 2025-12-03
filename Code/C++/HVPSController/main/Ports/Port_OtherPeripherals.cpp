@@ -24,10 +24,16 @@ _ticketedSender(
     _TOSLINKDuplexChannel->setIncomingMessageHandler(this);
 	_TOSLINKDuplexChannel->startAsNewNonPriorityTask();
 	_messageSender = _TOSLINKDuplexChannel;
+	_eventConnectionHighSpeedCoreOnSystemStateChanged = _highSpeedCore.onSystemStateChanged.addHandler(
+		[this](SystemState systemState){
+			this->sendIndicateStateMessage();
+		}
+	);
 	TaskFactory::createNonPriorityTask(
 		[&](){
 			sendIndicateStateMessage();
-			vTaskDelete(NULL);
+			Delay::ms(200);
+			sendIndicateStateMessage();
 		}, 
 		"sendIndicateStateMessage"
 	);
@@ -53,6 +59,7 @@ void Port_OtherPeripherals::handleIncomingMessage(cJSON* message, bool& dontDele
 		return;
 	}
 	if(strcmp(type, SendStateToIndicateMessage::TYPE) == 0){
+		Log::Info(TAG, "got SendStateToIndicateMessage");
 		handleSendStateToIndicateMessage();
 		return;
 	}
@@ -65,6 +72,7 @@ void Port_OtherPeripherals::sendIndicateStateMessage(){
 	IndicateStateMessage indicateStateMessage((int32_t)systemState);
 	cJSON* jsonMessage = indicateStateMessage.toJSON();
 	setTarget(jsonMessage, SubsystemIdentifiers::Peripheral1);
+	Log::Info(TAG, "sending to peripheral1");
 	_messageSender->sendMessage(jsonMessage);
 }
 bool Port_OtherPeripherals::sendIndicateStateRequest(){

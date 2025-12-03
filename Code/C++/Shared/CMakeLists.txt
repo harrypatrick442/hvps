@@ -22,6 +22,7 @@ idf_component_register(
 	"Core/CleanupBucket.cpp"
 	"Core/Latch.cpp"
 	"Core/RefCounted.cpp"
+	"Core/RingBuffer.cpp"
 	"Encoding/Base64.cpp"
 	"JSON/JHelper.cpp"
 	"Logging/Log.cpp"

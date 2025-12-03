@@ -86,39 +86,31 @@ void Port_ControllingMachine::handleIncomingMessage(cJSON* message, bool& dontDe
 		return;
 	}
 	if(strcmp(type, MessageConstants::TYPE_TICKETED_VALUE) == 0){
-		Log::Info(TAG, "Got TYPE_TICKETED_VALUE");
-		//Log::Info(getTag(), "Got ticketed");
 		_ticketedSender.handleTicketedMessage(message, type);
 		dontDelete = true;
 		return;
 	}
 	if(strcmp(type, RunSystemChecksOnlyMessage::TYPE) == 0){
-		Log::Info(TAG, "Got RunSystemChecksOnlyMessage");
 		handleRunSystemChecksOnlyMessage(message);
 		return;
 	}
 	if(strcmp(type, ShutDownMessage::TYPE) == 0){
-		Log::Info(TAG, "Got ShutDownMessage");
 		handleShutDownMessage(message);
 		return;
 	}
 	if(strcmp(type, StartMessage::TYPE) == 0){
-		Log::Info(TAG, "Got StartMessage");
 		handleStartMessage(message);
 		return;
 	}
 	if(strcmp(type, StopMessage::TYPE) == 0){
-		Log::Info(TAG, "Got StopMessage");
 		handleStopMessage(message);
 		return;
 	}
 	if(strcmp(type, ClearLoggedErrorsMessage::TYPE) == 0){
-		Log::Info(TAG, "Got ClearLoggedErrorsMessage");
 		handleClearLoggedErrors();
 		return;
 	}
 	if(strcmp(type, PingMessage::TYPE) == 0){
-		Log::Info(TAG, "Got Ping");
 		return;
 	}
 	Log::Warn(TAG, "Unhandled message type %s", type);
@@ -152,19 +144,17 @@ void Port_ControllingMachine::handleOnOpened(){
 	_timerSendPing.start();
 	sendErrors();
 	sendState();
-	Log::Info(TAG, "Opened");
 }
 void Port_ControllingMachine::handleOnClosed(){
 	_timerSendPing.stop();
-	Log::Info(TAG, "Closed");
 }
 void Port_ControllingMachine::handleClearLoggedErrors(){
 	CrashReporter::clearRecord();
 	Aborter::clearLastAbortReason();
 	_highSpeedCore.setInError(false);
-	Log::Info(TAG, "Cleared logged errors!");
 	_port_FirstStageVoltageFeedback.sendClearLoggedErrors();
 	_port_OutputVoltageFeedback.sendClearLoggedErrors();
+	 sendConsoleMessage("Cleared errors!", false);
 }
 void Port_ControllingMachine::sendErrors(){
 	CleanupBucket cleanupBucket;
@@ -184,11 +174,9 @@ void Port_ControllingMachine::sendErrors(
 ){
 	if(coreDumpSummaryMessage){
 		_channel.sendMessage(coreDumpSummaryMessage->toJSON());
-		Log::Info(TAG, "Sent CoreDumpSummaryMessage!");
 	}
 	if(lastAbortMessage){
 		_channel.sendMessage(lastAbortMessage->toJSON());
-		Log::Info(TAG, "Sent LastAbortMessage!");
 	}
 }
 uint32_t Port_ControllingMachine::greetVoltageFeedbackModules(){

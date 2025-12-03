@@ -37,6 +37,7 @@ private:
     IMessageSender*       _messageSender = nullptr;
     TOSLINKDuplexChannel*  _TOSLINKDuplexChannel = nullptr;
     TicketedSender        _ticketedSender;
+	EventConnection _eventConnectionHighSpeedCoreOnSystemStateChanged;
 private:
 	void handleSendStateToIndicateMessage();
 	void setTarget(cJSON* json, uint32_t target);
