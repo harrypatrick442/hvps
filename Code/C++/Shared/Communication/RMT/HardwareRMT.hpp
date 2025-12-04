@@ -18,8 +18,7 @@ public:
         int rxChannel,
         int txPin,
         int rxPin,
-        int shortPulseUs = SHORT_PULSE_US_DEFAULT,
-		int longPulseUs = LONG_PULSE_US_DEFAULT,
+        int periodUs,
 		bool invertTx = false,
 		bool invertRx = false
     );
@@ -37,11 +36,21 @@ private:
     int _rxChannel;
     int _txPin;
     int _rxPin;
-    int _shortPulseUs;
-    int _longPulseUs;
 	bool _invertTx;
 	bool _invertRx;
+	
+    int _shortPulseUs;
+    int _shortPulseLowUs;
+    int _longPulseUs;
+    int _longPulseLowUs;
 	int _middlePulseUs;
+	int _startPulseUs;
+	int _startPulseLowUs;
+	int _stopPulseUs;
+	int _stopPulseLowUs;
+	int _stopPulseUs;
+	int _startPulseMaxUs;
+	int _stopPulseMinUs;
     RingbufHandle_t _rb;
     std::mutex _mutexTX;
     char _description[32];

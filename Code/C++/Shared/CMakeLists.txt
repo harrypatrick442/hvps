@@ -14,6 +14,8 @@ idf_component_register(
 	"Communication/Events/ChannelEvents.cpp"
 	"Communication/I2C/I2C.cpp"
 	"Communication/I2C/I2CConfiguration.cpp"
+	"Communication/RMT/HardwareRMT.cpp"
+	"Communication/RMT/RMTDuplexChannel.cpp"
 	"Components/TemperatureSensors/LM75A.cpp"
 	"Components/Accelerometers/MPU6050.cpp"
 	"Core/CancellationToken.cpp"

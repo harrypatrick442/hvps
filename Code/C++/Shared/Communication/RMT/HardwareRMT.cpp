@@ -20,10 +20,10 @@ HIGH pulse:
 
      SHORT         LONG or SHORT         LONG
   (start mark)      (bit0 or bit1)      (stop mark)
-  duration ≤ _startBitMaxDuration
+  duration ≤ _startPulseMaxUs
                    duration <  _middlePulseUs  → ‘0’
                    duration >= _middlePulseUs  → ‘1’
-                                            duration >= _stopBitMinDuration
+                                            duration >= _stopPulseMinUs
 
 
 ASCII timeline (not drawn to scale, but structured):
@@ -41,7 +41,7 @@ ASCII timeline (not drawn to scale, but structured):
     │ SHORT │  │ SHORT/   │  │... │  ...   │ SHORT/   │  │    LONG       │
     │  (S)  │  │  LONG    │  │    │        │  LONG    │  │   (STOP)      │
     └───────┘  └──────────┘  └────┘        └──────────┘  └───────────────┘
-      ≤ _startBitMaxDuration      < or ≥ _middlePulseUs     ≥ _stopBitMinDuration
+      ≤ _startBitMaxUs      < or ≥ _middlePulseUs     ≥ _stopPulseMinUs
 
     LOW gap after each symbol:
             ┌────┐    ┌────┐    ┌────┐ ...    ┌────┐    ┌────┐
@@ -63,8 +63,7 @@ HardwareRMT::HardwareRMT(
     int rxChannel,
     int txPin,
     int rxPin,
-    int shortPulseUs,
-	int longPulseUs,
+    int periodUs,
 	bool invertTx,
 	bool invertRx
 ) :
@@ -72,11 +71,20 @@ HardwareRMT::HardwareRMT(
     _rxChannel(rxChannel),
     _txPin(txPin),
     _rxPin(rxPin),
-    _shortPulseUs(shortPulseUs),
-    _longPulseUs(longPulseUs),
 	_invertTx(invertTx),
 	_invertRx(invertRx),
-	_middlePulseUs((longPulseUs + shortPulseUs)/2),
+    _shortPulseUs((periodUs*3)/8),
+    _shortPulseLowUs(periodUs - _shortPulseUs),
+    _longPulseUs((periodUs*5)/8),
+    _longPulseLowUs(periodUs - _longPulseUs),
+	_middlePulseUs(periodUs/2),
+	_startPulseUs(periodUs/8),
+	_startPulseLowUs(periodUs - _startPulseUs),
+	_stopPulseUs((periodUs*7)/8),
+	_stopPulseLowUs(periodUs - _stopPulseUs),
+	_stopPulseUs((periodUs*7)/8),
+	_startPulseMaxUs(periodUs/4),
+	_stopPulseMinUs((periodUs*3)/4),
     _rb(nullptr)
 {
 	if(_shortPulseUs>=_longPulseUs){
@@ -166,21 +174,17 @@ int HardwareRMT::writeBytes(const char* src, size_t len) {
 }
 
 void HardwareRMT::encodeByte(uint8_t b, std::vector<rmt_item32_t>& items) {
-    items.push_back({{ _shortStopStartPulseUs, 1, _longStopStartPulseUs, 0 }});
+    items.push_back({{ _startPulseUs, 1, _startPulseLowUs, 0 }});
     for (int bit = 7; bit >= 0; bit--) {
-        bool one = (b >> bit) & 0x01;
-		uint32_t duration0, duration1;		
+        bool one = (b >> bit) & 0x01;	
 		if(one^_invertTx){
-			duration0 = _longPulseUs;
-			duration1 = _shortPulseUs;
+			items.push_back({{ _longPulseUs, 1, _longPulseLowUs, 0 }});
 		}
 		else{
-			duration0 = _shortPulseUs;
-			duration1 = _longPulseUs;
+			items.push_back({{ _shortPulseUs, 1, _shortPulseLowUs, 0 }});
 		}
-        items.push_back({{ duration0, 1, duration1, 0 }});
     }
-    items.push_back({{ _longStopStartPulseUs, 1, _shortStopStartPulseUs, 0 }});
+    items.push_back({{ _stopPulseUs, 1, _stopPulseLowUs, 0 }});
 }
 
 void HardwareRMT::flushTx() {
@@ -188,7 +192,7 @@ void HardwareRMT::flushTx() {
         rmt_wait_tx_done((rmt_channel_t)_txChannel, portMAX_DELAY);
     }
 }
-size_t HardwareRMT::readBytes(char* destination, size_t maxLength, uint32_t timeoutMs) {
+int HardwareRMT::readBytes(char* destination, size_t maxLength, uint32_t timeoutMs) {
     if (_rb == nullptr) return 0;
 
 	uint8_t currentByte = 0;
@@ -219,13 +223,13 @@ size_t HardwareRMT::readBytes(char* destination, size_t maxLength, uint32_t time
 		while(nextItemIndex<nItems){
 			item = &items[nextItemIndex++];
 			duration = item->level0>0?item->duration0:item->duration1;
-			if(duration<=_startBitMaxDuration){
+			if(duration<=_startPulseMaxUs){
 				nextNBit = 0;
 				doneWithCurrentByte = false;
 				currentByte = 0;
 				continue;
 			}
-			if(duration >=_stopBitMinDuration){
+			if(duration >=_stopPulseMinUs){
 				if(nextNBit<9){
 					handleMalformed(currentByte);
 					continue;

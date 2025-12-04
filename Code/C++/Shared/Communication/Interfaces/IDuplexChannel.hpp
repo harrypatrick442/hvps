@@ -6,5 +6,5 @@
 
 class IDuplexChannel : public IMessageSender, public IMessageReceiver, public virtual IChannelEvents {
 public:
-    virtual ~IChannel() = default;
+    virtual ~IDuplexChannel() = default;
 };
