@@ -1,7 +1,8 @@
 #pragma once
 #include <unordered_set> 
 #include <mutex>
-class UARTBase {
+#include "../Interfaces/IChannelBase.hpp"
+class UARTBase: public IChannelBase{
 public:
 	inline static constexpr const char* TAG= "UARTBase";
 private:
@@ -15,6 +16,7 @@ protected:
 	int _baudRate;
 	bool _invertTx;
 	bool _invertRx;
+    char _description[16]; // enough for "UART123" etc.
 public:
 	UARTBase(
 		int nUART,
@@ -24,7 +26,7 @@ public:
 		bool invertTx, 
 		bool invertRx);
 	virtual ~UARTBase();
-	int getNUART() const;
+	const char* getDescription() const;
 protected:
 	bool checkNUARTValid(int nUART);
 public:

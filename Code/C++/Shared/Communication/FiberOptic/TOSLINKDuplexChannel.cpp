@@ -1,8 +1,8 @@
 #include "TOSLINKDuplexChannel.hpp"
 
 TOSLINKDuplexChannel::TOSLINKDuplexChannel(
-	/*uart_port_t*/ int nUART,
-	/*int*/ int txPin, 
-	/*int*/ int rxPin, 
-	/*int*/ int baudRate): UARTDuplexChannel(nUART, txPin, rxPin, baudRate, false, true) {
+	int txChannel,
+	int rxChannel,
+	int txPin,
+	int rxPin): RMTDuplexChannel(txChannel, rxChannel, txPin, rxPin, false, true) {
 };

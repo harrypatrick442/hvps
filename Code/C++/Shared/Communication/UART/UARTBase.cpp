@@ -15,7 +15,9 @@ _txPin(txPin),
 _rxPin(rxPin),
 _baudRate(baudRate),
 _invertTx(invertTx),
-_invertRx(invertRx){
+_invertRx(invertRx)
+{
+    std::snprintf(_description, sizeof(_description), "UART%d", nUART);
 }
 UARTBase::~UARTBase() {
 	std::unique_lock<std::mutex> lock(_mutexClaimReleaseNUart);
@@ -23,8 +25,8 @@ UARTBase::~UARTBase() {
 		_usedUarts.erase(_nUART);
 	}
 }
-int UARTBase::getNUART() const{
-	return _nUART;
+const char* UARTBase::getDescription() const{
+	return _description;
 }
 bool UARTBase::checkNUARTValid(int nUART){
 	std::unique_lock<std::mutex> lock(_mutexClaimReleaseNUart);

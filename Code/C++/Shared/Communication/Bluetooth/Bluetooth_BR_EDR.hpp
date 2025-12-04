@@ -13,13 +13,13 @@
 #include <esp_spp_api.h>
 #include <esp_log.h>
 #include "Core/Event.hpp"
-#include "../../Communication/Interfaces/IChannel.hpp"
+#include "../../Communication/Interfaces/IDuplexChannel.hpp"
 #include "../../Communication/Interfaces/IIncomingMessageHandler.hpp"
 #include "../../Communication/Events/ChannelEvents.hpp"
 #include "../../cJSON/cJSON.h"
 #include <queue>
 #include <mutex>
-class Bluetooth : public virtual IChannel, public virtual ChannelEvents{
+class Bluetooth : public virtual IDuplexChannel, public virtual ChannelEvents{
     public:
         static Bluetooth& initialize(
             const char* deviceName, 

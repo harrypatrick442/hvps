@@ -22,7 +22,7 @@
 //#include "Generated/Messages/SetVoltageThresholdRequest.hpp"
 #include <cstring>
 Port_ControllingMachine::Port_ControllingMachine(
-	IChannel& channel, HighSpeedCore& highSpeedCore,
+	IDuplexChannel& channel, HighSpeedCore& highSpeedCore,
 	uint32_t pingTimeoutMilliseconds,
 	Port_FirstStageVoltageFeedback& port_FirstStageVoltageFeedback,
 	Port_OutputVoltageFeedback& port_OutputVoltageFeedback)

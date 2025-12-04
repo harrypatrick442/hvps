@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Communication/Interfaces/IIncomingMessageHandler.hpp"
-#include "Communication/Interfaces/IChannel.hpp"
+#include "Communication/Interfaces/IDuplexChannel.hpp"
 #include "Ticketing/TicketedSender.hpp"
 #include "Generated/Messages/LiveDataMessage.hpp"
 #include "Generated/Messages/GreetingMessage.hpp"
@@ -34,13 +34,13 @@ public:
 
 protected:
     explicit Port_ControllingMachine(
-		IChannel& channel,
+		IDuplexChannel& channel,
 		HighSpeedCore& highSpeedCore,
 		uint32_t pingTimeoutMilliseconds,
 		Port_FirstStageVoltageFeedback& port_FirstStageVoltageFeedback,
 		Port_OutputVoltageFeedback& port_OutputVoltageFeedback)noexcept;
 	virtual ~Port_ControllingMachine();
-    IChannel&  _channel;
+    IDuplexChannel&  _channel;
 	HighSpeedCore& _highSpeedCore;
     TicketedSender	_ticketedSender;
 	Timer _timerSendPing;
