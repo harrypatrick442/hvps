@@ -83,20 +83,28 @@ bool HardwareUART::configure(){
 	Log::Info(TAG, "UART%d is using baud rate %d", _uartPort, _baudRate);
 	return true;
 }
-int HardwareUART::readBytes(char* receiveBuffer, size_t maxlen, uint32_t timeoutMs){
-	return uart_read_bytes(
+size_t HardwareUART::readBytes(char* receiveBuffer, size_t maxlen, uint32_t timeoutMs){
+	int res = uart_read_bytes(
 		_uartPort,// uart_port_t
 		(uint8_t*)receiveBuffer,// destination buffer
 		maxlen,// max bytes to read
 		pdMS_TO_TICKS(timeoutMs)// timeout
 	);
+	if(res<0){
+		return 0;
+	}
+	return static_cast<size_t>(res);
 }
-int HardwareUART::writeBytes(const char* jsonWithNewLine, size_t length){
-	return uart_write_bytes(
+size_t HardwareUART::writeBytes(const char* jsonWithNewLine, size_t length){
+	int res = uart_write_bytes(
 		/*uart_num*/   _uartPort,   /*uart_port_t*/
 		/*src*/        jsonWithNewLine,          /*const char* or const void* */
 		/*length*/     length   /*size_t*/
 	);
+	if(res<0){
+		return 0;
+	}
+	return static_cast<size_t>(res);
 }
 void HardwareUART::flushTx(){
 	uart_wait_tx_done(_uartPort, pdMS_TO_TICKS(50));

@@ -7,11 +7,12 @@ RMTDuplexChannel::RMTDuplexChannel(
 	int rxChannel,
 	int txPin,
 	int rxPin,
-	int shortPulseUs,
-	int longPulseUs
+	bool invertTx,
+	bool invertRx,
+	int periodUs
 ) :DuplexChannel(
 	std::unique_ptr<IChannel>(
-		new HardwareRMT(txChannel, rxChannel, txPin, rxPin, shortPulseUs, longPulseUs)
+		new HardwareRMT(txChannel, rxChannel, txPin, rxPin, invertTx, invertRx, periodUs)
 	)
 )
 {

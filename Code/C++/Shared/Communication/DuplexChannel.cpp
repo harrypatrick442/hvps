@@ -1,9 +1,9 @@
-#include "../../Tasks/TaskFactory.hpp"
+#include "../Tasks/TaskFactory.hpp"
 #include "DuplexChannel.hpp"
-#include "../../System/Aborter.hpp"
-#include "../../Timing/Delay.hpp"
-#include "../../JSON/CJsonRAII.hpp"
-#include "../../Logging/Log.hpp"
+#include "../System/Aborter.hpp"
+#include "../Timing/Delay.hpp"
+#include "../JSON/CJsonRAII.hpp"
+#include "../Logging/Log.hpp"
 #include <cstring>
 //#include "driver/gpio.h"
 //#include "esp_log.h"
@@ -12,7 +12,7 @@ DuplexChannel::DuplexChannel(std::unique_ptr<IChannel> channel) :
 	_incomingMessageHandler(nullptr),
 	_disposed(false),
 	_taskHandle(nullptr),
-	_channel(channel)
+	_channel(std::move(channel))
 {
 	if(!_channel->configure()){
 		_disposed = true;
@@ -81,7 +81,7 @@ void DuplexChannel::loop() {
 			break;
 		}
 		// Read up to N bytes with 100ms timeout
-		int len = _channel->readBytes(
+		size_t len = _channel->readBytes(
 			receiveBuffer,     // destination buffer
 			sizeof(receiveBuffer),       // max bytes to read
 			100         // timeout
@@ -92,7 +92,7 @@ void DuplexChannel::loop() {
 			vTaskDelay(10 / portTICK_PERIOD_MS);
 			continue;
 		}
-		for (int i = 0; i < len; i++) {
+		for (size_t i = 0; i < len; i++) {
 			char c = receiveBuffer[i];
 			if(disgardingTillNewLine){
 				if (c == '\n') {

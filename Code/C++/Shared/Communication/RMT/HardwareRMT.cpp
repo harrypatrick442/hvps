@@ -1,8 +1,14 @@
 #include "HardwareRMT.hpp"
 #include "System/Aborter.hpp"
+#include "Logging/Log.hpp"
 #include <cstdio>
 #include <cstring>
-
+/*
+   BYTE 0                    BYTE 1                    BYTE 2            END
+┌──────────┐            ┌──────────┐            ┌──────────┐      ┌──────────┐
+│ START S  │ B7 B6 B5…B0│ START S  │ B7 B6 B5…B0│ START S  │ B7…B0│ STOP (long)│
+└──────────┘            └──────────┘            └──────────┘      └──────────┘
+*/
 /*
                    ONE FULL FRAME (1 BYTE)
               -------------------------------------
@@ -73,25 +79,23 @@ HardwareRMT::HardwareRMT(
     _rxPin(rxPin),
 	_invertTx(invertTx),
 	_invertRx(invertRx),
-    _shortPulseUs((periodUs*3)/8),
+	_periodUs(periodUs),
+	_syncPulseUs((periodUs*1)/6),
+	_syncPulseLowUs(periodUs - _syncPulseUs),
+	_syncPulseMaxUs((periodUs*2)/6),
+    _shortPulseUs((periodUs*3)/6),
     _shortPulseLowUs(periodUs - _shortPulseUs),
-    _longPulseUs((periodUs*5)/8),
+	_shortPulseMaxUs((periodUs*4)/6),
+    _longPulseUs((periodUs*5)/6),
     _longPulseLowUs(periodUs - _longPulseUs),
-	_middlePulseUs(periodUs/2),
-	_startPulseUs(periodUs/8),
-	_startPulseLowUs(periodUs - _startPulseUs),
-	_stopPulseUs((periodUs*7)/8),
-	_stopPulseLowUs(periodUs - _stopPulseUs),
-	_stopPulseUs((periodUs*7)/8),
-	_startPulseMaxUs(periodUs/4),
-	_stopPulseMinUs((periodUs*3)/4),
+	/*
+		Its also about conveying intent and underlying thinking through the code.
+		Hence the numerator and denominator :)
+	*/
     _rb(nullptr)
 {
-	if(_shortPulseUs>=_longPulseUs){
-		Aborter::safeAbort(TAG, "_shortPulseUs must be less than _longPulseUs");
-	}
-	if(_middlePulseUs==_shortPulseUs||_middlePulseUs==_longPulseUs){
-		Aborter::safeAbort(TAG, "_middlePulseUs was computed to be the same as _shortPulseUs or _longPulseUs! You need the long and short pulse to have more space between them");
+	if (periodUs < 6) {
+		Aborter::safeAbort(TAG, "periodUs too small for pulse scheme");
 	}
     std::snprintf(_description, sizeof(_description),
         "RMT(tx:%d rx:%d)", txChannel, rxChannel);
@@ -136,9 +140,14 @@ bool HardwareRMT::configure() {
         rxconf.mem_block_num = 1;
         rxconf.clk_div = 80;   // 1 tick = 1µs
 
-        rxconf.rx_config.filter_en = true;
-        rxconf.rx_config.filter_ticks_thresh = 50;    // ignore <50µs noise
-        rxconf.rx_config.idle_threshold = 1000;       // break frame
+		rxconf.rx_config.filter_en = false;
+        
+		/*ALTERNATIVE OPTION FOR AFTER PROFILED NOISE
+		rxconf.rx_config.filter_en = true;
+        rxconf.rx_config.filter_ticks_thresh = std::max<uint16_t>(1, _periodUs/64);    // ignore <50µs noise
+		*/
+        rxconf.rx_config.idle_threshold = _periodUs*30;       // break frame
+		//^NOT SURE YET WHAT IDEAL VALUE FOR THIS IS^
 
         if (rmt_config(&rxconf) != ESP_OK ||
             rmt_driver_install(rxconf.channel, RMT_BUFFER_SIZE, 0) != ESP_OK)
@@ -155,36 +164,58 @@ bool HardwareRMT::configure() {
     return true;
 }
 
-int HardwareRMT::writeBytes(const char* src, size_t len) {
+size_t HardwareRMT::writeBytes(const char* src, size_t len) {
     std::lock_guard<std::mutex> lock(_mutexTX);
-
-    if (_txChannel < 0) return -1;
 	
-    std::vector<rmt_item32_t> items;
-    items.reserve(len * 10);
+    if (_txChannel < 0){
+		static bool doneWarning = false;
+		if(!doneWarning){
+			doneWarning = true;
+			Log::Warn(TAG, "Trying to writeBytes but TX channel was %d", _txChannel);
+		}
+		return 0;
+	}
+	
+    size_t nextWriteBufferIndex = 0;
+	size_t nWrittenThisWrite = 0;
+	size_t currentNWrittenConfirmed = 0;
     for (size_t i = 0; i < len; i++) {
-        encodeByte((uint8_t)src[i], items);
+        encodeByte((uint8_t)src[i], _writeBuffer, nextWriteBufferIndex);
+		nWrittenThisWrite++;
+		if(nextWriteBufferIndex>ITEMS_WRITE_BUFFER_LENGTH-10){
+			if(rmt_write_items((rmt_channel_t)_txChannel,
+					_writeBuffer, nextWriteBufferIndex, true) != ESP_OK)
+			{
+				return currentNWrittenConfirmed;
+			}
+			nextWriteBufferIndex = 0;
+			currentNWrittenConfirmed += nWrittenThisWrite;
+			nWrittenThisWrite = 0;
+		}
     }
-    if (rmt_write_items((rmt_channel_t)_txChannel,
-            items.data(), items.size(), true) != ESP_OK)
-    {
-        return -1;
-    }
-    return (int)len;
+	addSyncPulse(_writeBuffer, nextWriteBufferIndex);
+	if(rmt_write_items((rmt_channel_t)_txChannel,
+				_writeBuffer, nextWriteBufferIndex, true) != ESP_OK)
+	{
+		return currentNWrittenConfirmed;
+	}
+    return currentNWrittenConfirmed + nWrittenThisWrite;
 }
 
-void HardwareRMT::encodeByte(uint8_t b, std::vector<rmt_item32_t>& items) {
-    items.push_back({{ _startPulseUs, 1, _startPulseLowUs, 0 }});
+void HardwareRMT::encodeByte(uint8_t b, rmt_item32_t* items, size_t& nextIndex) {
+	addSyncPulse(items, nextIndex);
     for (int bit = 7; bit >= 0; bit--) {
         bool one = (b >> bit) & 0x01;	
 		if(one^_invertTx){
-			items.push_back({{ _longPulseUs, 1, _longPulseLowUs, 0 }});
+			items[nextIndex++]={{ _longPulseUs, 1, _longPulseLowUs, 0 }};
 		}
 		else{
-			items.push_back({{ _shortPulseUs, 1, _shortPulseLowUs, 0 }});
+			items[nextIndex++]={{ _shortPulseUs, 1, _shortPulseLowUs, 0 }};
 		}
     }
-    items.push_back({{ _stopPulseUs, 1, _stopPulseLowUs, 0 }});
+}
+void HardwareRMT::addSyncPulse(rmt_item32_t* items, size_t& nextIndex){
+    items[nextIndex++]= {{ _syncPulseUs, 1, _syncPulseLowUs, 0 }};
 }
 
 void HardwareRMT::flushTx() {
@@ -192,16 +223,15 @@ void HardwareRMT::flushTx() {
         rmt_wait_tx_done((rmt_channel_t)_txChannel, portMAX_DELAY);
     }
 }
-int HardwareRMT::readBytes(char* destination, size_t maxLength, uint32_t timeoutMs) {
+size_t HardwareRMT::readBytes(char* destination, size_t maxLength, uint32_t timeoutMs) {
+	
     if (_rb == nullptr) return 0;
 
 	uint8_t currentByte = 0;
 	uint8_t nextNBit = 0;
-	bool doneWithCurrentByte = false;
 	uint32_t  duration;
 	size_t nextDestinationIndex = 0;
 	rmt_item32_t* item = nullptr;
-	
     while (true) {
 		size_t maxNItemsRetrieve = maxLength-nextDestinationIndex;
 		if(maxNItemsRetrieve<=0){
@@ -215,7 +245,7 @@ int HardwareRMT::readBytes(char* destination, size_t maxLength, uint32_t timeout
             _rb,
             &outSize,
             pdMS_TO_TICKS(timeoutMs),
-			maxNItemsRetrieve
+			sizeof(rmt_item32_t)*maxNItemsRetrieve
         );
         if (!items) break;
         size_t nItems = outSize / sizeof(rmt_item32_t);
@@ -223,32 +253,23 @@ int HardwareRMT::readBytes(char* destination, size_t maxLength, uint32_t timeout
 		while(nextItemIndex<nItems){
 			item = &items[nextItemIndex++];
 			duration = item->level0>0?item->duration0:item->duration1;
-			if(duration<=_startPulseMaxUs){
-				nextNBit = 0;
-				doneWithCurrentByte = false;
+			if(duration<=_syncPulseMaxUs){
+				if(nextNBit>0){
+					if(nextNBit!=8){
+						handleMalformedByte(nextNBit);
+					}
+					destination[nextDestinationIndex++]=currentByte;
+					if(nextDestinationIndex>=maxLength){
+						break;
+					}
+					nextNBit = 0;
+				}
 				currentByte = 0;
 				continue;
 			}
-			if(duration >=_stopPulseMinUs){
-				if(nextNBit<9){
-					handleMalformed(currentByte);
-					continue;
-				}
-				continue;
-			}
-			if(doneWithCurrentByte){
-				continue;
-			}
-			uint8_t bit = ((duration>=_middlePulseUs)^_invertRx)?1:0;
-            currentByte = (currentByte << 1) | bit;
-			if(nextNBit>=8){
-				doneWithCurrentByte = true;
-				destination[nextDestinationIndex++]=currentByte;
-				if(nextDestinationIndex>=maxLength){
-					break;
-				}
-				nextNBit = 0;
-				continue;
+			if(nextNBit<8){
+				uint8_t bit = ((duration>_shortPulseMaxUs)^_invertRx)?1:0;
+				currentByte = (currentByte << 1) | bit;
 			}
             nextNBit++;
         }
@@ -256,6 +277,14 @@ int HardwareRMT::readBytes(char* destination, size_t maxLength, uint32_t timeout
     }
 
     return nextDestinationIndex;
+}
+void HardwareRMT::handleMalformedByte(uint8_t nextNBit){
+	//We dont really need this. Any noise will trigger it. Such as anything at startup*/
+	static bool firstMalformedWarning = true;
+	if(firstMalformedWarning){
+		Log::Warn(TAG, "Received malformed byte with a length of %d", nextNBit);
+		firstMalformedWarning = false;
+	}
 }
 
 const char* HardwareRMT::getDescription() const {

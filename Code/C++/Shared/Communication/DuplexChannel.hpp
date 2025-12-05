@@ -1,7 +1,9 @@
 #pragma once
-#include "../Interfaces/IIncomingMessageHandler.hpp"
-#include "../Interfaces/IChannel.hpp"
-#include "../../cJSON/cJSON.h"
+#include "./Interfaces/IIncomingMessageHandler.hpp"
+#include "./Interfaces/IChannel.hpp"
+#include "./Interfaces/IDuplexChannel.hpp"
+#include "./Events/ChannelEvents.hpp"
+#include "../cJSON/cJSON.h"
 //#include "driver/uart.h"
 //#include "driver/gpio.h"
 //#include "esp_log.h"

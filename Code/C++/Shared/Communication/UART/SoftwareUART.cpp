@@ -46,7 +46,7 @@ bool SoftwareUART::configure() {
 	);
 }
 
-int SoftwareUART::writeBytes(const char* src, size_t len) {
+size_t SoftwareUART::writeBytes(const char* src, size_t len) {
     for (size_t i = 0; i < len; i++) {
         unsigned char b = src[i];
 
@@ -67,9 +67,9 @@ int SoftwareUART::writeBytes(const char* src, size_t len) {
         ets_delay_us(_bitPeriodUs);
     }
 
-    return (int)len;
+    return len;
 }
-int SoftwareUART::readBytes(char* dst, size_t maxlen, uint32_t timeoutMs)
+size_t SoftwareUART::readBytes(char* dst, size_t maxlen, uint32_t timeoutMs)
 {
     if (maxlen == 0) return 0;
 
@@ -95,7 +95,7 @@ int SoftwareUART::readBytes(char* dst, size_t maxlen, uint32_t timeoutMs)
         vTaskDelay(1);
     }
 
-    return (int)totalRead;
+    return totalRead;
 }
 
 void SoftwareUART::readLooper()

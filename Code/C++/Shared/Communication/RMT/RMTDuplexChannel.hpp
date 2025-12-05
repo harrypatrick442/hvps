@@ -9,7 +9,8 @@ class RMTDuplexChannel : public DuplexChannel{
 			int rxChannel,
 			int txPin,
 			int rxPin,
-			int shortPulseUs = HardwareRMT::SHORT_PULSE_US_DEFAULT,
-			int longPulseUs = HardwareRMT::LONG_PULSE_US_DEFAULT
+			bool invertTx,
+			bool invertRx,
+			int periodUs = HardwareRMT::PERIOD_DEFAULT
 		);
 };
