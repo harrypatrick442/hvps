@@ -12,16 +12,19 @@
 
 class HardwareRMT : public IChannel {
 private:
-	static inline constexpr int RMT_BUFFER_SIZE = 2000;
+	static inline constexpr int READ_BUFFER_SIZE_SYMBOLS = 1000;
+	static inline constexpr int WRITE_BUFFER_SIZE_SYMBOLS = 200;
+	static inline constexpr int RX_EVENT_QUEUE_LENGTH = 10;
 	static inline constexpr int MAX_N_ITEM_RETRIEVE_FROM_RING_BUFFER_AT_ONCE = 200;
-	static inline constexpr int ITEMS_WRITE_BUFFER_LENGTH = 200;
+	//static inline constexpr int ITEMS_WRITE_BUFFER_LENGTH = 200;
 public:
 	static inline constexpr bool INVERT_TX_DEFAULT = false;
 	static inline constexpr bool INVERT_RX_DEFAULT = true;
 	static inline constexpr int PERIOD_US_DEFAULT = 60;
 	static inline constexpr const char* TAG = "HardwareRMT";
 	static inline constexpr int MIN_N_ITEMS_PER_CHAR = 9;
-	static inline constexpr size_t MIN_REQUIRED_RECEIVE_BUFFER_SIZE  = RMT_BUFFER_SIZE/(sizeof(rmt_symbol_word_t)*MIN_N_ITEMS_PER_CHAR);
+	static inline constexpr size_t MIN_REQUIRED_RECEIVE_BUFFER_SIZE  = READ_BUFFER_SIZE_SYMBOLS
+		/(sizeof(rmt_symbol_word_t)*MIN_N_ITEMS_PER_CHAR);
 
 	HardwareRMT(
 		int txChannel,
@@ -61,12 +64,17 @@ private:
 	RingbufHandle_t _rb;
 	u_int8_t _currentByte;
 	u_int8_t _nextNBit;
+	std::atomic<bool> _txChannelCreatedAndEnabled;
+	std::atomic<bool> _rxChannelCreatedAndEnabled;
 	std::mutex _mutexTX;
 	char _description[32];
-	rmt_symbol_word_t _writeBuffer[ITEMS_WRITE_BUFFER_LENGTH];
+	rmt_symbol_word_t _writeBuffer[WRITE_BUFFER_SIZE_SYMBOLS];
+	std::atomic<bool> 
 
+	bool configureRx();
+	bool configureTx();
 	// --- encoding helpers ---
 	void encodeByte(uint8_t b, rmt_symbol_word_t* items, size_t& nextIndex);
 	void handleMalformedByte(uint8_t nextNBit);
-	void addSyncPulse(rmt_symbol_word_t* items, size_t& nextIndex);
+	void addSyncPulse(rmt_symbol_word_t* items, size_t& index) ;
 };

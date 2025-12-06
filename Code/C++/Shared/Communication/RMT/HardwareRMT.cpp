@@ -29,158 +29,251 @@ HardwareRMT::HardwareRMT(
     _longPulseLowUs(periodUs - _longPulseUs),
     _rb(nullptr),
 	_currentByte(0),
-	_nextNBit(0)
+	_nextNBit(0),
+	_txChannelCreatedAndEnabled(false),
+	_rxChannelCreatedAndEnabled(false)
 {
-	if (periodUs < 6) {
-		Aborter::safeAbort(TAG, "periodUs too small for pulse scheme");
-	}
     std::snprintf(_description, sizeof(_description),
         "RMT(tx:%d rx:%d)", txChannel, rxChannel);
+	if (periodUs < 6) {
+		Aborter::safeAbort(TAG, "periodUs too small for pulse scheme");
+		return;
+	}
+    if (_rxChannel < 0) {
+		Aborter::safeAbort(TAG, "You provided rxChannel < 0");
+		return;
+	}
+    if (_txChannel < 0) {
+		Aborter::safeAbort(TAG, "You provided txChannel < 0");
+		return;
+	}
 }
 
 HardwareRMT::~HardwareRMT() {
-    if (_txChannel >= 0) {
-        rmt_driver_uninstall((rmt_channel_t)_txChannel);
+    if (_txChannelCreatedAndEnabled) {
+		rmt_disable((rmt_channel_handle_t)_txChannel);
+        rmt_del_channel((rmt_channel_t)_txChannel);
     }
     if (_rxChannel >= 0) {
-        rmt_driver_uninstall((rmt_channel_t)_rxChannel);
+		rmt_disable((rmt_channel_handle_t)_rxChannel);
+        rmt_del_channel((rmt_channel_t)_rxChannel);
     }
 }
 
 bool HardwareRMT::configure() {
-    // --------------------
-    //  CONFIGURE TX
-    // --------------------
-    if (_txChannel >= 0) {
-        rmt_config_t txconf = {};
-        txconf.rmt_mode = RMT_MODE_TX;
-        txconf.channel = (rmt_channel_t)_txChannel;
-        txconf.gpio_num = (gpio_num_t)_txPin;
-        txconf.mem_block_num = 1;
-        txconf.clk_div = 80;   // 1 tick = 1µs (80MHz / 80)
-
-        if (rmt_config(&txconf) != ESP_OK ||
-            rmt_driver_install(txconf.channel, 0, 0) != ESP_OK)
-        {
-            return false;
-        }
+	if(!configureRx()){
+		return false;
+	}
+    return configureTx();
+}
+bool HardwareRMT::configureRx() {
+    if (_rxChannel < 0) {
+        return false;
     }
 
-    // --------------------
-    //  CONFIGURE RX
-    // --------------------
-    if (_rxChannel >= 0) {
-        rmt_config_t rxconf = {};
-        rxconf.rmt_mode = RMT_MODE_RX;
-        rxconf.channel = (rmt_channel_t)_rxChannel;
-        rxconf.gpio_num = (gpio_num_t)_rxPin;
-        rxconf.mem_block_num = 1;
-        rxconf.clk_div = 80;   // 1 tick = 1µs
+    rmt_rx_channel_config_t rx_config = {
+        .gpio_num = (gpio_num_t)_rxPin,
+        .clk_src = RMT_CLK_SRC_DEFAULT,
+        .resolution_hz = 1000000,
+        .mem_block_symbols = READ_BUFFER_SIZE_SYMBOLS
+		// Do NOT set .invert_in here — handled explicitly in readBytes() for clarity and consistency and it makes the code simpler.
+		.flags = {
+			.invert_in = false
+		}
+    };
 
-		rxconf.rx_config.filter_en = false;
-        
-		/*ALTERNATIVE OPTION FOR AFTER PROFILED NOISE
-		rxconf.rx_config.filter_en = true;
-        rxconf.rx_config.filter_ticks_thresh = std::max<uint16_t>(1, _periodUs/64);    // ignore <50µs noise
-		*/
-        rxconf.rx_config.idle_threshold = _periodUs*30;       // break frame
-		//^NOT SURE YET WHAT IDEAL VALUE FOR THIS IS^
-
-        if (rmt_config(&rxconf) != ESP_OK ||
-            rmt_driver_install(rxconf.channel, RMT_BUFFER_SIZE, 0) != ESP_OK)
-        {
-            return false;
-        }
-
-        rmt_get_ringbuf_handle((rmt_channel_t)_rxChannel, &_rb);
-        if (_rb == nullptr) return false;
-
-        rmt_rx_start((rmt_channel_t)_rxChannel, true);
+    esp_err_t res = rmt_new_rx_channel(&rx_config, (rmt_channel_handle_t*)&_rxChannel);
+    if (res != ESP_OK) {
+        Aborter::safeAbort(
+            TAG,
+            "Failed to create RX RMT channel (pin=%d, res=%d, err='%s')",
+            _rxPin, res, esp_err_to_name(res)
+        );
+        return false;
     }
 
+    rmt_receive_config_t recv_cfg = {
+        .signal_range_min_ns = 500,
+        .signal_range_max_ns = _periodUs * 1000 * 30,
+    };
+
+    res = rmt_rx_register_event_queue((rmt_channel_handle_t)_rxChannel, &_rxQueue, RX_EVENT_QUEUE_LENGTH);
+    if (res != ESP_OK) {
+        rmt_del_channel((rmt_channel_handle_t)_rxChannel);  // cleanup
+        _rxChannel = -1;
+        Aborter::safeAbort(
+            TAG,
+            "Failed to register RX event queue (res=%d, err='%s')",
+            res, esp_err_to_name(res)
+        );
+        return false;
+    }
+
+    res = rmt_enable((rmt_channel_handle_t)_rxChannel);
+    if (res != ESP_OK) {
+        rmt_del_channel((rmt_channel_handle_t)_rxChannel);  // cleanup
+        _rxChannel = -1;
+        Aborter::safeAbort(
+            TAG,
+            "Failed to enable RX RMT channel (res=%d, err='%s')",
+            res, esp_err_to_name(res)
+        );
+        return false;
+    }
+
+    res = rmt_receive((rmt_channel_handle_t)_rxChannel, &_rxQueue, &recv_cfg);
+    if (res != ESP_OK) {
+        rmt_disable((rmt_channel_handle_t)_rxChannel);      // disable before deleting
+        rmt_del_channel((rmt_channel_handle_t)_rxChannel);  // cleanup
+        _rxChannel = -1;
+        Aborter::safeAbort(
+            TAG,
+            "Failed to start RX receiving (res=%d, err='%s')",
+            res, esp_err_to_name(res)
+        );
+        return false;
+    }
+	_rxChannelCreatedAndEnabled = true;
+    return true;
+}
+bool HardwareRMT::configureTx() {
+	if (_txChannel < 0) {
+		return false;
+	}
+    rmt_tx_channel_config_t tx_config = {
+        .gpio_num = (gpio_num_t)_txPin,
+        .clk_src = RMT_CLK_SRC_DEFAULT,
+        .resolution_hz = 1000000,  // 1us resolution
+        .mem_block_symbols = WRITE_BUFFER_SIZE_SYMBOLS,
+        .trans_queue_depth = 4,
+		//DO NOT INVERT HERE. ITS DONE IN WRITE. INVERTING AT THIS LEVEL OVERCOMPLICATES THINGS.
+        .flags = {
+            .invert_out = false
+        }
+    };
+
+    esp_err_t res = rmt_new_tx_channel(&tx_config, (rmt_channel_handle_t*)&_txChannel);
+    if (res != ESP_OK) {
+        Aborter::safeAbort(
+            TAG,
+            "Failed to create TX RMT channel (pin=%d, res=%d, err='%s')",
+            _txPin, res, esp_err_to_name(res)
+        );
+        _txChannel = -1;
+        return false;
+    }
+
+    res = rmt_enable((rmt_channel_handle_t)_txChannel);
+    if (res != ESP_OK) {
+        rmt_del_channel((rmt_channel_handle_t)_txChannel);  // cleanup
+        _txChannel = -1;
+        Aborter::safeAbort(
+            TAG,
+            "Failed to enable TX RMT channel (res=%d, err='%s')",
+            res, esp_err_to_name(res)
+        );
+        return false;
+    }
+
+	_txChannelCreatedAndEnabled = true;
     return true;
 }
 
 size_t HardwareRMT::writeBytes(const char* src, size_t len) {
-    std::lock_guard<std::mutex> lock(_mutexTX);
-	
     if (_txChannel < 0){
-		static bool doneWarning = false;
-		if(!doneWarning){
-			doneWarning = true;
-			Log::Warn(TAG, "Trying to writeBytes but TX channel was %d", _txChannel);
-		}
 		return 0;
 	}
-	
+    std::lock_guard<std::mutex> lock(_mutexTX);
     size_t nextWriteBufferIndex = 0;
-	size_t nWrittenThisWrite = 0;
-	size_t currentNWrittenConfirmed = 0;
+	size_t nCharsWrittenThisWrite = 0;
+	size_t currentNCharsWrittenConfirmed = 0;
+	exp_err_t err;
     for (size_t i = 0; i < len; i++) {
-        encodeByte((uint8_t)src[i], _writeBuffer, nextWriteBufferIndex);
-		nWrittenThisWrite++;
-		if(nextWriteBufferIndex>ITEMS_WRITE_BUFFER_LENGTH-10){
-			if(rmt_write_items((rmt_channel_t)_txChannel,
-					_writeBuffer, nextWriteBufferIndex, true) != ESP_OK)
+        encodeByte(static_cast<uint8_t>(src[i]), _writeBuffer, nextWriteBufferIndex);
+		nCharsWrittenThisWrite++;
+		if(nextWriteBufferIndex>WRITE_BUFFER_SIZE_SYMBOLS-10){
+			err = rmt_transmit((rmt_channel_handle_t)_txChannel, _writeBuffer, nextWriteBufferIndex, true);
+			if(err != ESP_OK)
 			{
-				return currentNWrittenConfirmed;
+				return currentNCharsWrittenConfirmed;
 			}
 			nextWriteBufferIndex = 0;
-			currentNWrittenConfirmed += nWrittenThisWrite;
-			nWrittenThisWrite = 0;
+			currentNCharsWrittenConfirmed += nCharsWrittenThisWrite;
+			nCharsWrittenThisWrite = 0;
 		}
     }
 	addSyncPulse(_writeBuffer, nextWriteBufferIndex);
-	if(rmt_write_items((rmt_channel_t)_txChannel,
-				_writeBuffer, nextWriteBufferIndex, true) != ESP_OK)
+    err = rmt_transmit((rmt_channel_handle_t)_txChannel, _writeBuffer, nextWriteBufferIndex, true);
+	if(err != ESP_OK)
 	{
-		return currentNWrittenConfirmed;
+		return currentNCharsWrittenConfirmed;
 	}
-    return currentNWrittenConfirmed + nWrittenThisWrite;
+    return currentNCharsWrittenConfirmed  + nCharsWrittenThisWrite;
 }
 
-void HardwareRMT::encodeByte(uint8_t b, rmt_item32_t* items, size_t& nextIndex) {
+void HardwareRMT::encodeByte(uint8_t b, rmt_symbol_word_t* items, size_t& nextIndex) {
 	addSyncPulse(items, nextIndex);
     for (int bit = 7; bit >= 0; bit--) {
         bool one = (b >> bit) & 0x01;	
 		if(one^_invertTx){
-			items[nextIndex++]={{ _longPulseUs, 1, _longPulseLowUs, 0 }};
+			items[nextIndex++] = {
+				.level0 = 1,
+				.duration0 = static_cast<uint16_t>(_longPulseUs),
+				.level1 = 0,
+				.duration1 = static_cast<uint16_t>(_longPulseLowUs)
+			};
 		}
 		else{
-			items[nextIndex++]={{ _shortPulseUs, 1, _shortPulseLowUs, 0 }};
+			items[nextIndex++] = {
+				.level0 = 1,
+				.duration0 = static_cast<uint16_t>(_shortPulseUs),
+				.level1 = 0,
+				.duration1 = static_cast<uint16_t>(_shortPulseLowUs)
+			};
 		}
     }
 }
-void HardwareRMT::addSyncPulse(rmt_item32_t* items, size_t& nextIndex){
-    items[nextIndex++]= {{ _syncPulseUs, 1, _syncPulseLowUs, 0 }};
+void HardwareRMT::encodeByte(uint8_t b, rmt_symbol_word_t* items, size_t& index) {
+    addSyncPulse(items, index);
+    for (int i = 7; i >= 0; --i) {
+        bool bit = ((b >> i) & 1) ^ _invertTx;
+        items[index++] = {
+            .level0 = 1,
+            .duration0 = static_cast<uint16_t>(bit ? _longPulseUs : _shortPulseUs),
+            .level1 = 0,
+            .duration1 = static_cast<uint16_t>(bit ? _longPulseLowUs : _shortPulseLowUs),
+        };
+    }
+}
+
+void HardwareRMT::addSyncPulse(rmt_symbol_word_t* items, size_t& index) {
+    items[index++] = {
+        .level0 = 1,
+        .duration0 = static_cast<uint16_t>(_syncPulseUs),
+        .level1 = 0,
+        .duration1 = static_cast<uint16_t>(_syncPulseLowUs),
+    };
 }
 
 void HardwareRMT::flushTx() {
-    if (_txChannel >= 0) {
-        rmt_wait_tx_done((rmt_channel_t)_txChannel, portMAX_DELAY);
-    }
+	//rmt_tx_wait_all_done((rmt_channel_handle_t)_txChannel, portMAX_DELAY);
+	//Not needed due to true in rmt_transmit
 }
 size_t HardwareRMT::readBytes(char* destination, size_t maxLength, uint32_t timeoutMs) {
+    if (!_rxQueue) return 0;
 	if(maxLength<MIN_REQUIRED_RECEIVE_BUFFER_SIZE){
 		Aborter::safeAbort(TAG, "The maxLength (given as %zu) must always be greater or equal to MIN_REQUIRED_RECEIVE_BUFFER_SIZE", maxLength);
 		return 0;
 	}
-    if (_rb == nullptr) return 0;
-	uint32_t  duration;
-	size_t nextDestinationIndex = 0;
-	rmt_item32_t* item = nullptr;
-	size_t outSize = 0;
-	auto* items = (rmt_item32_t*)xRingbufferReceive(
-		_rb,
-		&outSize,
-		pdMS_TO_TICKS(timeoutMs)
-	);
-	if (!items) return 0;
-	size_t nItems = outSize / sizeof(rmt_item32_t);
+    rmt_rx_event_data_t* item = nullptr;
+    if (xQueueReceive(_rxQueue, &item, pdMS_TO_TICKS(timeoutMs)) != pdTRUE || item == nullptr){
+        return 0;
+	}
 	size_t nextItemIndex = 0;
-	while(nextItemIndex<nItems){
-		item = &items[nextItemIndex++];
-		duration = item->level0>0?item->duration0:item->duration1;
+	size_t nextDestinationIndex = 0;
+	while(nextItemIndex<item->num_symbols){
+        auto symbol = item->symbols[nextItemIndex++];
+		uint32_t duration = symbol.level0>0?symbol.duration0:symbol.duration1;
 		if(duration<=_syncPulseMaxUs){
 			if(_nextNBit>0){	
 				if(_nextNBit!=8){
@@ -201,7 +294,6 @@ size_t HardwareRMT::readBytes(char* destination, size_t maxLength, uint32_t time
 		}
 		_nextNBit++;
 	}
-	vRingbufferReturnItem(_rb, (void*)items);
     return nextDestinationIndex;
 }
 void HardwareRMT::handleMalformedByte(uint8_t _nextNBit){
