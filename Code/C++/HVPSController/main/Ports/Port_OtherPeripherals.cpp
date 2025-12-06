@@ -72,7 +72,6 @@ void Port_OtherPeripherals::sendIndicateStateMessage(){
 	IndicateStateMessage indicateStateMessage((int32_t)systemState);
 	cJSON* jsonMessage = indicateStateMessage.toJSON();
 	setTarget(jsonMessage, SubsystemIdentifiers::Peripheral1);
-	Log::Info(TAG, "sending to peripheral1");
 	_messageSender->sendMessage(jsonMessage);
 }
 bool Port_OtherPeripherals::sendIndicateStateRequest(){

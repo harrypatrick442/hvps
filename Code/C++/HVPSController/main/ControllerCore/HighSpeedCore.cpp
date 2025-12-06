@@ -90,9 +90,11 @@ SystemState HighSpeedCore::getActualSystemState(){
 void HighSpeedCore::setDesiredSystemState(SystemState systemState){
 	_desiredSystemState.store(systemState, std::memory_order_relaxed);
 }
-void HighSpeedCore::setActualSystemState(SystemState systemState){
-	_actualSystemState.store(systemState, std::memory_order_relaxed);
-	dispatchSystemStateChanged(systemState);
+void HighSpeedCore::setActualSystemState(SystemState systemState) {
+	SystemState old = _actualSystemState.exchange(systemState, std::memory_order_relaxed);
+	if(old != systemState){
+        dispatchSystemStateChanged(systemState);
+	}
 }
 bool HighSpeedCore::isShuttingDownOrShutDown(){
 	
