@@ -9,8 +9,8 @@ class RMTDuplexChannel : public DuplexChannel{
 			int rxChannel,
 			int txPin,
 			int rxPin,
-			bool invertTx,
-			bool invertRx,
-			int periodUs = HardwareRMT::PERIOD_DEFAULT
+			int periodUs = HardwareRMT::PERIOD_US_DEFAULT,
+			bool invertTx = HardwareRMT::INVERT_TX_DEFAULT,
+			bool invertRx = HardwareRMT::INVERT_RX_DEFAULT
 		);
 };

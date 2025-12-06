@@ -17,6 +17,8 @@ class DuplexChannel : public IDuplexChannel, public ChannelEvents{
 		std::mutex _mutexDispose;
 		TaskHandle_t _taskHandle;
 		std::unique_ptr<IChannel> _channel;
+		size_t _receiveBufferSize;
+		char* _receiveBuffer;
 	public:
 		static const char* TAG;
 		DuplexChannel(std::unique_ptr<IChannel> channel);

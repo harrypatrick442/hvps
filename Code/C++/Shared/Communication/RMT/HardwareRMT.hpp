@@ -13,16 +13,21 @@ private:
 	static inline constexpr int MAX_N_ITEM_RETRIEVE_FROM_RING_BUFFER_AT_ONCE = 200;
 	static inline constexpr int ITEMS_WRITE_BUFFER_LENGTH = 200;
 public:
-	static inline constexpr int PERIOD_DEFAULT = 20;
+	static inline constexpr bool INVERT_TX_DEFAULT = false;
+	static inline constexpr bool INVERT_RX_DEFAULT = true;
+	static inline constexpr int PERIOD_US_DEFAULT = 60;
 	static inline constexpr const char* TAG = "HardwareRMT";
+	static inline constexpr int MIN_N_ITEMS_PER_CHAR = 9;
+	static inline constexpr size_t MIN_REQUIRED_RECEIVE_BUFFER_SIZE  
+		=  RMT_BUFFER_SIZE/(sizeof(rmt_item32_t)*MIN_N_ITEMS_PER_CHAR);
     HardwareRMT(
         int txChannel,
         int rxChannel,
         int txPin,
         int rxPin,
-        int periodUs = PERIOD_DEFAULT,
-		bool invertTx = false,
-		bool invertRx = false
+        int periodUs = PERIOD_US_DEFAULT,
+		bool invertTx = INVERT_TX_DEFAULT,
+		bool invertRx = INVERT_RX_DEFAULT
     );
 
     virtual ~HardwareRMT();
@@ -32,6 +37,7 @@ public:
     size_t writeBytes(const char* src, size_t len) override;
     void flushTx() override;
     const char* getDescription() const override;
+	size_t getMinRequiredReceiveBufferSize() const override;
 
 private:
     int _txChannel;
@@ -50,6 +56,8 @@ private:
     uint32_t _longPulseUs;
     uint32_t _longPulseLowUs;
     RingbufHandle_t _rb;
+	uint8_t _currentByte;
+	uint8_t _nextNBit;
     std::mutex _mutexTX;
     char _description[32];
 	rmt_item32_t _writeBuffer[ITEMS_WRITE_BUFFER_LENGTH];

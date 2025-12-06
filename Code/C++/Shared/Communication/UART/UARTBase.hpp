@@ -5,6 +5,7 @@
 class UARTBase: public IChannel{
 public:
 	inline static constexpr const char* TAG= "UARTBase";
+	inline static constexpr size_t MIN_REQUIRED_RECEIVE_BUFFER_SIZE = 256;
 private:
 	static std::mutex _mutexClaimReleaseNUart;	
 	static std::unordered_set<int> _usedUarts;
@@ -29,6 +30,8 @@ public:
 	const char* getDescription() const;
 protected:
 	bool checkNUARTValid(int nUART);
+private:
+	size_t getMinRequiredReceiveBufferSize() const override;
 public:
 	virtual bool configure() = 0;
 	virtual size_t readBytes(char* dst, size_t maxlen, uint32_t timeoutMs) = 0;

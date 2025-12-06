@@ -14,6 +14,11 @@ DuplexChannel::DuplexChannel(std::unique_ptr<IChannel> channel) :
 	_taskHandle(nullptr),
 	_channel(std::move(channel))
 {
+	_receiveBufferSize = _channel->getMinRequiredReceiveBufferSize();
+	if(_receiveBufferSize<256){
+		_receiveBufferSize = 256;
+	}
+	_receiveBuffer = new char[_receiveBufferSize];
 	if(!_channel->configure()){
 		_disposed = true;
 		return;
@@ -37,6 +42,7 @@ DuplexChannel::~DuplexChannel(){
 		}
 	}
 	_incomingMessageHandler.exchange(nullptr, std::memory_order_acq_rel);
+	delete[] _receiveBuffer;
 }
 void DuplexChannel::sendMessage(cJSON* message, bool deleteMessageAfter){
 	if (!message) {
@@ -71,7 +77,6 @@ void DuplexChannel::sendMessage(cJSON* message, bool deleteMessageAfter){
 	free(json_with_newline); 
 }
 void DuplexChannel::loop() {
-	char receiveBuffer[256];     // temporary buffer for reading from channel
 	char lineBuffer[512];     // assemble one full line here
 	size_t lineLength = 0;       // current line length
 	bool disgardingTillNewLine = false;
@@ -82,8 +87,8 @@ void DuplexChannel::loop() {
 		}
 		// Read up to N bytes with 100ms timeout
 		size_t len = _channel->readBytes(
-			receiveBuffer,     // destination buffer
-			sizeof(receiveBuffer),       // max bytes to read
+			_receiveBuffer,     // destination buffer
+			_receiveBufferSize,       // max bytes to read
 			100         // timeout
 		);
 		lock.unlock();
@@ -93,7 +98,7 @@ void DuplexChannel::loop() {
 			continue;
 		}
 		for (size_t i = 0; i < len; i++) {
-			char c = receiveBuffer[i];
+			char c = _receiveBuffer[i];
 			if(disgardingTillNewLine){
 				if (c == '\n') {
 					disgardingTillNewLine = false;

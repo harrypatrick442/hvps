@@ -12,4 +12,5 @@ public:
     virtual size_t writeBytes(const char* src, size_t len) = 0;
     virtual void flushTx() = 0;
     virtual const char* getDescription() const = 0;
+	virtual size_t getMinRequiredReceiveBufferSize() const = 0;
 };

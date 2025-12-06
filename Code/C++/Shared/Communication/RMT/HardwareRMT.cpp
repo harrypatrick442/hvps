@@ -3,67 +3,6 @@
 #include "Logging/Log.hpp"
 #include <cstdio>
 #include <cstring>
-/*
-   BYTE 0                    BYTE 1                    BYTE 2            END
-┌──────────┐            ┌──────────┐            ┌──────────┐      ┌──────────┐
-│ START S  │ B7 B6 B5…B0│ START S  │ B7 B6 B5…B0│ START S  │ B7…B0│ STOP (long)│
-└──────────┘            └──────────┘            └──────────┘      └──────────┘
-*/
-/*
-                   ONE FULL FRAME (1 BYTE)
-              -------------------------------------
-
-                   HIGH=meaningful    LOW=gap
-
-            ┌────────────────────────────────────────┐
-            │              HIGH Pulses               │
-            └────────────────────────────────────────┘
-
-start bit  data bit 7  data bit 6 ... data bit 0   stop bit
-─────────┬──────────┬──────────┬───────┬──────────┬─────────
-
-HIGH pulse:
-
-     SHORT         LONG or SHORT         LONG
-  (start mark)      (bit0 or bit1)      (stop mark)
-  duration ≤ _startPulseMaxUs
-                   duration <  _middlePulseUs  → ‘0’
-                   duration >= _middlePulseUs  → ‘1’
-                                            duration >= _stopPulseMinUs
-
-
-ASCII timeline (not drawn to scale, but structured):
-
-    TIME →
-    ┌──────────────────────────────────────────────────────────────┐
-    │                                                              │
-    │   START     BIT7      BIT6     …     BIT1      BIT0     STOP│
-    │                                                              │
-    └──────────────────────────────────────────────────────────────┘
-
-    HIGH pulse:
-    ┌───────┐  ┌──────────┐  ┌────┐        ┌──────────┐  ┌───────────────┐
-    │       │  │          │  │    │        │          │  │               │
-    │ SHORT │  │ SHORT/   │  │... │  ...   │ SHORT/   │  │    LONG       │
-    │  (S)  │  │  LONG    │  │    │        │  LONG    │  │   (STOP)      │
-    └───────┘  └──────────┘  └────┘        └──────────┘  └───────────────┘
-      ≤ _startBitMaxUs      < or ≥ _middlePulseUs     ≥ _stopPulseMinUs
-
-    LOW gap after each symbol:
-            ┌────┐    ┌────┐    ┌────┐ ...    ┌────┐    ┌────┐
-            │    │    │    │    │    │        │    │    │    │
-            │ LOW│    │LOW │    │LOW │        │LOW │    │LOW │
-            └────┘    └────┘    └────┘        └────┘    └────┘
-
-
-Legend:
-    S  = start pulse (very short)
-    0  = data bit 0  (short pulse)
-    1  = data bit 1  (long pulse)
-    STOP = long pulse marking byte termination
-
-This is what happens when the best of organic developers meet the best of AI developers :)
-*/
 HardwareRMT::HardwareRMT(
     int txChannel,
     int rxChannel,
@@ -88,11 +27,9 @@ HardwareRMT::HardwareRMT(
 	_shortPulseMaxUs((periodUs*4)/6),
     _longPulseUs((periodUs*5)/6),
     _longPulseLowUs(periodUs - _longPulseUs),
-	/*
-		Its also about conveying intent and underlying thinking through the code.
-		Hence the numerator and denominator :)
-	*/
-    _rb(nullptr)
+    _rb(nullptr),
+	_currentByte(0),
+	_nextNBit(0)
 {
 	if (periodUs < 6) {
 		Aborter::safeAbort(TAG, "periodUs too small for pulse scheme");
@@ -224,69 +161,61 @@ void HardwareRMT::flushTx() {
     }
 }
 size_t HardwareRMT::readBytes(char* destination, size_t maxLength, uint32_t timeoutMs) {
-	
+	if(maxLength<MIN_REQUIRED_RECEIVE_BUFFER_SIZE){
+		Aborter::safeAbort(TAG, "The maxLength (given as %zu) must always be greater or equal to MIN_REQUIRED_RECEIVE_BUFFER_SIZE", maxLength);
+		return 0;
+	}
     if (_rb == nullptr) return 0;
-
-	uint8_t currentByte = 0;
-	uint8_t nextNBit = 0;
 	uint32_t  duration;
 	size_t nextDestinationIndex = 0;
 	rmt_item32_t* item = nullptr;
-    while (true) {
-		size_t maxNItemsRetrieve = maxLength-nextDestinationIndex;
-		if(maxNItemsRetrieve<=0){
-			break;
-		}
-		if(maxNItemsRetrieve>MAX_N_ITEM_RETRIEVE_FROM_RING_BUFFER_AT_ONCE){
-			maxNItemsRetrieve = MAX_N_ITEM_RETRIEVE_FROM_RING_BUFFER_AT_ONCE;
-		}
-        size_t outSize = 0;
-        auto* items = (rmt_item32_t*)xRingbufferReceiveUpTo(
-            _rb,
-            &outSize,
-            pdMS_TO_TICKS(timeoutMs),
-			sizeof(rmt_item32_t)*maxNItemsRetrieve
-        );
-        if (!items) break;
-        size_t nItems = outSize / sizeof(rmt_item32_t);
-		size_t nextItemIndex = 0;
-		while(nextItemIndex<nItems){
-			item = &items[nextItemIndex++];
-			duration = item->level0>0?item->duration0:item->duration1;
-			if(duration<=_syncPulseMaxUs){
-				if(nextNBit>0){
-					if(nextNBit!=8){
-						handleMalformedByte(nextNBit);
-					}
-					destination[nextDestinationIndex++]=currentByte;
-					if(nextDestinationIndex>=maxLength){
-						break;
-					}
-					nextNBit = 0;
+	size_t outSize = 0;
+	auto* items = (rmt_item32_t*)xRingbufferReceive(
+		_rb,
+		&outSize,
+		pdMS_TO_TICKS(timeoutMs)
+	);
+	if (!items) return 0;
+	size_t nItems = outSize / sizeof(rmt_item32_t);
+	size_t nextItemIndex = 0;
+	while(nextItemIndex<nItems){
+		item = &items[nextItemIndex++];
+		duration = item->level0>0?item->duration0:item->duration1;
+		if(duration<=_syncPulseMaxUs){
+			if(_nextNBit>0){	
+				if(_nextNBit!=8){
+					handleMalformedByte(_nextNBit);
 				}
-				currentByte = 0;
-				continue;
+				destination[nextDestinationIndex++]=_currentByte;
+				if(nextDestinationIndex>=maxLength){
+					break;
+				}
+				_nextNBit = 0;
 			}
-			if(nextNBit<8){
-				uint8_t bit = ((duration>_shortPulseMaxUs)^_invertRx)?1:0;
-				currentByte = (currentByte << 1) | bit;
-			}
-            nextNBit++;
-        }
-        vRingbufferReturnItem(_rb, (void*)items);
-    }
-
+			_currentByte = 0;
+			continue;
+		}
+		if(_nextNBit<8){
+			uint8_t bit = ((duration>_shortPulseMaxUs)^_invertRx)?1:0;
+			_currentByte = (_currentByte << 1) | bit;
+		}
+		_nextNBit++;
+	}
+	vRingbufferReturnItem(_rb, (void*)items);
     return nextDestinationIndex;
 }
-void HardwareRMT::handleMalformedByte(uint8_t nextNBit){
+void HardwareRMT::handleMalformedByte(uint8_t _nextNBit){
 	//We dont really need this. Any noise will trigger it. Such as anything at startup*/
 	static bool firstMalformedWarning = true;
 	if(firstMalformedWarning){
-		Log::Warn(TAG, "Received malformed byte with a length of %d", nextNBit);
+		Log::Warn(TAG, "Received malformed byte with a length of %d", _nextNBit);
 		firstMalformedWarning = false;
 	}
 }
 
 const char* HardwareRMT::getDescription() const {
     return _description;
+}
+size_t HardwareRMT::getMinRequiredReceiveBufferSize() const{
+	return MIN_REQUIRED_RECEIVE_BUFFER_SIZE;
 }
