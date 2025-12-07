@@ -3,8 +3,6 @@
 #include <cstring>
 const char* RMTDuplexChannel::TAG = "RMTDuplexChannel";
 RMTDuplexChannel::RMTDuplexChannel(
-	int txChannel,
-	int rxChannel,
 	int txPin,
 	int rxPin,
 	int periodUs,
@@ -12,7 +10,7 @@ RMTDuplexChannel::RMTDuplexChannel(
 	bool invertRx
 ) :DuplexChannel(
 	std::unique_ptr<IChannel>(
-		new HardwareRMT(txChannel, rxChannel, txPin, rxPin, periodUs, invertTx, invertRx)
+		new HardwareRMT(txPin, rxPin, periodUs, invertTx, invertRx)
 	)
 )
 {

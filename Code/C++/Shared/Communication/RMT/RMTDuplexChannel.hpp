@@ -5,8 +5,6 @@ class RMTDuplexChannel : public DuplexChannel{
 	public:
 		static const char* TAG;
 		RMTDuplexChannel(
-			int txChannel,
-			int rxChannel,
 			int txPin,
 			int rxPin,
 			int periodUs = HardwareRMT::PERIOD_US_DEFAULT,
