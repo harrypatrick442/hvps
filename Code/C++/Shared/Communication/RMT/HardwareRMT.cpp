@@ -28,7 +28,7 @@ HardwareRMT::HardwareRMT(
 	_txChannelCreatedAndEnabled(false),
 	_rxChannelCreatedAndEnabled(false),
 	_txTransmitConfig(createTxConfig()),
-    _rxReceiveConfig(createRxConfig(periodUs))
+    _rxReceiveConfig(createRxConfig(periodUs)),
 	_rxSymbolQueue(nullptr)
 {
     std::snprintf(_description, sizeof(_description),
@@ -41,6 +41,11 @@ HardwareRMT::HardwareRMT(
         RECEIVE_QUEUE_SIZE_SYMBOLS,                        // number of items
         sizeof(rmt_symbol_word_t)    // each item size
     );
+	if (!_rxSymbolQueue) {
+		Aborter::safeAbort(TAG, "Failed to create RX symbol queue");
+		return;
+	}
+	memset(_rxBuffer, 0, sizeof(_rxBuffer));
 
 }
 
@@ -285,11 +290,22 @@ rmt_transmit_config_t HardwareRMT::createTxConfig() {
 	s.flags = { .eot_level = 0, .queue_nonblocking = 0 };
 	return s;
 }
-rmt_transmit_config_t HardwareRMT::createRxConfig(int periodUs) {
+rmt_receive_config_t  HardwareRMT::createRxConfig(int periodUs) {
     rmt_receive_config_t s;
-	s.signal_range_min_ns = 500; CHECK THIS AND BELLOW
-    s.signal_range_max_ns = periodUs * 1000 * 30;THIS TOO
-	s.extra_rmt_receive_flags = {.en_partial_rx = 1};
+	
+	s.signal_range_min_ns = 500;/*This is the minimum duration that the RMT will consider as a valid symbol.
+	half a micro second because the shortest period i allow as a parameter is 1us. Could make longer but safe for now*/
+    s.signal_range_max_ns = periodUs * 1200;
+	
+	/*This is the maximum duration the RMT will treat as a normal symbol before declaring an idle / end-of-packet event.
+	1000 for nano seconds, 1.2 so dont confuse full length as declaring an idle.*/
+	
+	//s.extra_rmt_receive_flags = {.en_partial_rx = 1};
+	s.flags.en_partial_rx = 1;
+	/*Enables partial receive events — i.e., RMT will fire callbacks even when only half the buffer
+	is filled (or when idle is detected), instead of waiting for the buffer to completely fill.
+	This is the setting that enables streaming / continuous RX mode.
+	*/
 	return s;
 }
 bool HardwareRMT::onReceiveStatic(

@@ -87,6 +87,7 @@ private:
 	void handleMalformedByte(uint8_t nextNBit);
 	void addSyncPulse(rmt_symbol_word_t* items, size_t& index) ;
 	static rmt_transmit_config_t createTxConfig();
+	static rmt_receive_config_t createRxConfig(int periodUs);
 	static bool onReceiveStatic(
 		rmt_channel_handle_t channel,
 		const rmt_rx_done_event_data_t* edata,
