@@ -22,6 +22,10 @@ public:
     // Release the latch (all current/future waiters pass)
     void unlatch();
 
+	void latchFromISR() ;
+	
+	void unlatchFromISR();
+
     // Block until unlatched
     void wait() const;
 

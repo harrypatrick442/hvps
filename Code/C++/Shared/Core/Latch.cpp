@@ -34,7 +34,17 @@ void Latch::unlatch()
     // Release all waiters and keep released for future waiters (manual-reset style).
     xEventGroupSetBits(eg_, UNLATCHED_BIT);
 }
+void Latch::unlatchFromISR() {
+    BaseType_t taskWoken = pdFALSE;
+    xEventGroupSetBitsFromISR(eg_, UNLATCHED_BIT, &taskWoken);
+    if (taskWoken) portYIELD_FROM_ISR();
+}
 
+void Latch::latchFromISR() {
+    BaseType_t taskWoken = pdFALSE;
+    xEventGroupClearBitsFromISR(eg_, UNLATCHED_BIT, &taskWoken);
+    if (taskWoken) portYIELD_FROM_ISR();
+}
 void Latch::wait() const
 {
     // Wait until the UNLATCHED_BIT is observed set. Do not clear it on exit.

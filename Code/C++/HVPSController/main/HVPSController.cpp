@@ -3,6 +3,7 @@
 #include "Communication/Bluetooth/Bluetooth_BR_EDR.hpp"
 #include "Communication/I2C/I2C.hpp"
 #include "Communication/I2C/I2CConfiguration.hpp"
+#include "Communication/RMT/RMTHelper.hpp"
 #include "IO/SoftStartHandler.hpp"
 #include "IO/Inputs.hpp"
 #include "IO/Outputs.hpp"
@@ -30,6 +31,12 @@ extern "C" void app_main(void)
 	Aborter::setToSafe(&Outputs::toSafe);
 	Outputs::initialize();
 	Outputs::toSafeReversible();
+	RMTHelper::dumpRMTState();
+	RMTHelper::analyseRMTUsage();
+	RMTHelper::forceHardwareReset();
+	RMTHelper::dumpRMTState();
+	RMTHelper::analyseRMTUsage();
+	Port_FirstStageVoltageFeedback& port_FirstStageVoltageFeedback = Port_FirstStageVoltageFeedback::initialize();
 	Delay::ms(10000);
 	Log::Info(TAG, "Starting HVPSController....");
 	Delay::ms(1000);
@@ -53,8 +60,10 @@ extern "C" void app_main(void)
     WatchdogFeeder
         ::initialize(WATCHDOG_TIMEOUT_MILLISECONDS);
 		
-	Port_FirstStageVoltageFeedback& port_FirstStageVoltageFeedback = Port_FirstStageVoltageFeedback::initialize();
+	Log::Info(TAG, "0");
+	Log::Info(TAG, "A");
 	Port_OutputVoltageFeedback& port_OutputVoltageFeedback = Port_OutputVoltageFeedback::initialize();
+	Log::Info(TAG, "B");
     Bluetooth::initialize(
         "HVPS", 
         "HVPSControllerServer"
@@ -72,6 +81,7 @@ extern "C" void app_main(void)
 		inError
 	);
 	Port_OtherPeripherals& port_OtherPeripherals = Port_OtherPeripherals::initialize(highSpeedCore);
+	Log::Info(TAG, "C");
 	Port_ControllingMachine& portControllingMachine 
 		= Port_ControllingMachine::initialize(
 			bluetooth, 

@@ -61,10 +61,18 @@ HardwareRMT::~HardwareRMT() {
 }
 
 bool HardwareRMT::configure() {
-	if(!configureRx()){
+	Log::Info(TAG, "configure called");
+    if(!configureTx()){
+		Log::Info(TAG, "failed Tx");
 		return false;
 	}
-    return configureTx();
+	Log::Info(TAG, "did Tx");
+	if(!configureRx()){
+		Log::Info(TAG, "failed Rx");
+		return false;
+	}
+	Log::Info(TAG, "did Rx");
+	return true;
 }
 bool HardwareRMT::configureRx() {
     rmt_rx_channel_config_t rx_config = {
