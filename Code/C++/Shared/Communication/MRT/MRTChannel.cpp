@@ -201,8 +201,8 @@ void IRAM_ATTR MRTChannel::handleTxTickFromISR(){
 }
 
 void IRAM_ATTR MRTChannel::handleRxEdgeFromISR(){
-	uint32_t nowCCycles = esp_cpu_get_ccount();
 	int level = gpio_get_level(_rxGPIONum);
+	uint32_t nowCCycles = esp_cpu_get_ccount();
 	if((level==1)^_invertRx){
 		//High
 		if(_rxHandlerLastWasHigh)return;
@@ -314,6 +314,8 @@ void MRTChannel::scheduleWriteBuffer(MRTSymbol* symbols, size_t symbolsLength){
 		delete[] _symbolsBeingWritten;
 		_symbolsBeingWritten = nullptr;
 		_symbolsBeingWrittenLength = 0;
+		_txISRSubPulsesIntoCurrentSymbol = N_SUB_PULSES_PER_PULSE;
+		_txISRSymbolIndex = 0;
 		_nextWriteBufferForISRFreeLatch.unlatch(); 
 		Aborter::safeAbort(TAG, "Failed to start TX timer");
 	}
