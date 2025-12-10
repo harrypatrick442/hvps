@@ -14,11 +14,7 @@ DuplexChannel::DuplexChannel(std::unique_ptr<IChannel> channel) :
 	_taskHandle(nullptr),
 	_channel(std::move(channel))
 {
-	_receiveBufferSize = _channel->getMinRequiredReceiveBufferSize();
-	if(_receiveBufferSize<256){
-		_receiveBufferSize = 256;
-	}
-	_receiveBuffer = new char[_receiveBufferSize];
+	_receiveBuffer = new char[256];
 	if(!_channel->configure()){
 		_disposed = true;
 		return;

@@ -38,6 +38,3 @@ bool UARTBase::checkNUARTValid(int nUART){
 	_claimedUartPort = true;
 	return true;
 }
-size_t UARTBase::getMinRequiredReceiveBufferSize() const{
-	return MIN_REQUIRED_RECEIVE_BUFFER_SIZE;
-}

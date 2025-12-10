@@ -279,18 +279,15 @@ size_t HardwareRMT::readBytes(char* destination, size_t maxLength, uint32_t time
 }
 void HardwareRMT::handleMalformedByte(uint8_t _nextNBit){
 	//We dont really need this. Any noise will trigger it. Such as anything at startup*/
-	static bool firstMalformedWarning = true;
-	if(firstMalformedWarning){
+	static bool _firstMalformedWarning = true;
+	if(_firstMalformedWarning){
 		Log::Warn(TAG, "Received malformed byte with a length of %d", _nextNBit);
-		firstMalformedWarning = false;
+		_firstMalformedWarning = false;
 	}
 }
 
 const char* HardwareRMT::getDescription() const {
     return _description;
-}
-size_t HardwareRMT::getMinRequiredReceiveBufferSize() const{
-	return MIN_REQUIRED_RECEIVE_BUFFER_SIZE;
 }
 rmt_transmit_config_t HardwareRMT::createTxConfig() {
     rmt_transmit_config_t s;

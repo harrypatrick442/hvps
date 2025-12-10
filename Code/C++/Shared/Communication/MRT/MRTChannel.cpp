@@ -1,0 +1,316 @@
+#include "MRTChannel.hpp"
+#include "System/Aborter.hpp"
+#include "Logging/Log.hpp"
+#include "IO/IOInteruptHelper.hpp"
+#include <cstdio>
+#include <cstring>
+MRTChannel::MRTChannel(
+    int txPin,
+    int rxPin,
+    int periodUs,
+	bool invertTx,
+	bool invertRx,
+	size_t receiveQueueSize
+) :
+    _txPin(txPin),
+    _rxPin(rxPin),
+	_txGPIONum((gpio_num_t)_txPin),
+	_rxGPIONum((gpio_num_t)_rxPin),
+	_invertTx(invertTx),
+	_invertRx(invertRx),
+	_periodUs(periodUs),
+	_syncPulseMinCCycles(nSubPulsesToCCycles(1)),
+	_syncPulseSubPulses(2),
+	_syncPulseMaxCCycles(nSubPulsesToCCycles(3)),
+    _zeroPulseSubPulses(4),
+	_zeroPulseMaxCCycles(nSubPulsesToCCycles(5)),
+    _onePulseSubPulses(6),
+	_onePulseMaxCCycles(nSubPulsesToCCycles(N_SUB_PULSES_PER_PULSE)),
+	_currentByte(0),
+	_nextNBit(0),
+	_writeTimer(nullptr),
+	_rxSymbolQueue(nullptr),
+	_symbolsBeingWritten(nullptr),
+	_symbolsBeingWrittenLength(0),
+	_txISRSymbolIndex(0),
+	_txISRSubPulsesIntoCurrentSymbol(N_SUB_PULSES_PER_PULSE),
+	_txISRCurrentSymbol(MRTSymbol::Sync),
+	_rxHandlerInitialized(false),
+	_rxHandlerLastWasHigh(false),
+	_rxHandlerHighStartTime(0)
+{
+    std::snprintf(_description, sizeof(_description),
+        "MRTChannel");
+	if (periodUs < 7) {
+		Aborter::safeAbort(TAG, "periodUs too small for pulse scheme");
+		return;
+	}
+	_rxSymbolQueue = xQueueCreate(
+        size_t receiveQueueSize,
+        sizeof(MRTSymbol)
+    );
+	if (!_rxSymbolQueue) {
+		Aborter::safeAbort(TAG, "Failed to create RX symbol queue");
+		return;
+	}
+}
+
+MRTChannel::~MRTChannel() {
+    std::lock_guard<std::mutex> lock(_txMutex);//Wait for exclusive thread access to the latch
+    _writeBufferForISRFreeLatch.wait();//Wait for the current write to finish before destroying timer
+	if(_writeTimer!=nullptr){
+		esp_err_t err = esp_timer_delete(_writeTimer);
+		_writeTimer = nullptr;
+		if(err!=ESP_OK){
+			Log::Warn(TAG, "Failed to delete timer with error: %s", esp_err_to_name(err));
+		}
+	}
+	IOInteruptHelper::removeHandlerAndDisableEdgeInterupt(_rxGPIONum);
+	if (_rxSymbolQueue != nullptr) {
+		vQueueDelete(_rxSymbolQueue);
+		_rxSymbolQueue = nullptr; // prevent accidental reuse
+	}
+	if(_symbolsBeingWritten!=nullptr){
+		delete[] _symbolsBeingWritten;
+		_symbolsBeingWritten = nullptr;
+	}
+}
+
+void MRTChannel::addSyncPulse(MRTSymbol* items, size_t& nextSymbolIndex) {
+    items[nextSymbolIndex++] = MRTSymbol::Sync;
+}
+
+bool MRTChannel::configure() {
+    if(!configureTx()){
+		return false;
+	}
+	if(!configureRx()){
+		return false;
+	}
+	if(!configureTxTimer()){
+		return false;
+	}
+	return true;
+}
+
+bool MRTChannel::configureRx() {
+	esp_err_t err = IOInteruptHelper::setupPinEdgeInterupt(
+		_rxPin,
+		gpio_isr_t rxEdgeISRTrampoline,
+		(void*)this,
+		true,	//risingEdg
+		true,	//fallingEdge
+		false,	//pullUpEnabled
+		false	//pullDownEnabled
+	);
+	if(err!=ESP_OK){
+		Aborter::safeAbort(TAG, "Failed to configure rx pin edge interupt with error: %s", esp_err_to_name(err));
+		return false;
+	}
+	return true;
+}
+
+bool MRTChannel::configureTx() {
+    gpio_config_t io_conf_tx = {};
+    io_conf_tx.pin_bit_mask = (1ULL << _txPin);
+    io_conf_tx.mode = GPIO_MODE_OUTPUT;
+    esp_err_t err = gpio_config(&io_conf_tx);
+	if(err!=ESP_OK){
+		Aborter::safeAbort(TAG, "Failed to configure tx pin with error: %s", esp_err_to_name(err));
+		return false;
+	}
+    gpio_set_level(_txGPIONum, _invertTx ? 1 : 0);
+	return true;
+}
+
+bool MRTChannel::configureTxTimer(){
+    esp_timer_create_args_t args = {
+        .callback =  MRTChannel::txTimerISRTrampoline,
+        .arg = this,
+        .dispatch_method = ESP_TIMER_TASK,
+        .name = "MRTChannel::_writeTimer"
+    };
+    esp_err_t err = esp_timer_create(&args, &_writeTimer);
+	if(err!= ESP_OK) {
+		Aborter::safeAbort(TAG, "Failed to create tx timer");
+		return false;
+	}
+	return true;
+}
+
+void MRTChannel::encodeByte(uint8_t b, MRTSymbol* items, size_t& nextSymbolIndex) {
+	addSyncPulse(items, nextSymbolIndex);
+    for (int bit = 7; bit >= 0; bit--) {
+        bool one = (b >> bit) & 0x01;	
+		items[nextSymbolIndex++] = one?(MRTSymbol::One):(MRTSymbol::Zero);
+    }
+}
+
+void MRTChannel::flushTx() {
+	
+}
+
+const char* MRTChannel::getDescription() const {
+    return _description;
+}
+
+void MRTChannel::handleMalformedByte(uint8_t _nextNBit){
+	return;
+	//We dont really need this. Any noise will trigger it. Such as anything at startup*/
+	static bool firstMalformedWarning = true;
+	if(firstMalformedWarning){
+		Log::Warn(TAG, "Received malformed byte with a length of %d", _nextNBit);
+		firstMalformedWarning = false;
+	}
+}
+
+void IRAM_ATTR MRTChannel::handleTxTickFromISR(){
+	if(_txISRSubPulsesIntoCurrentSymbol>=5){
+		if(_txISRSymbolIndex>=_symbolsBeingWrittenLength){			
+			_txISRSymbolIndex = 0;
+			esp_timer_stop(_writeTimer);
+			_nextWriteBufferForISRFreeLatch.unlatchFromISR();
+			return;
+		}
+		_txISRSubPulsesIntoCurrentSymbol = 0;
+		_txISRCurrentSymbol  = _symbolsBeingWritten[_txISRSymbolIndex++];
+	}
+	setIOBasedOnSymbol(_txISRSubPulsesIntoCurrentSymbol++, _txISRCurrentSymbol);
+}
+
+void IRAM_ATTR MRTChannel::handleRxEdgeFromISR(){
+	int level = gpio_get_level(_rxGPIONum);
+	if((level==1)^_invertRx){
+		//High
+		if(_rxHandlerLastWasHigh)return;
+		if(!_rxHandlerInitialized){
+			_rxHandlerInitialized = true;
+		}
+		_rxHandlerHighStartTime = esp_cpu_get_ccount();
+		_rxHandlerLastWasHigh = true;
+		return;
+	}
+	//Low
+	if(!_rxHandlerInitialized){
+		_rxHandlerLastWasHigh = false;
+		_rxHandlerInitialized = true;
+		return;
+	}
+	if(!_rxHandlerLastWasHigh)return;
+	_rxHandlerLastWasHigh = false;
+	uint32_t now = esp_cpu_get_ccount();
+	uint32_t dCycles = now - _rxHandlerHighStartTime;
+	 MRTSymbol symbol;
+    if (dCycles < _syncPulseMinCCycles) {
+        return; // reject noise
+    }
+    else if (dCycles < _syncPulseMaxCCycles) {
+        symbol = MRTSymbol::Sync;
+    }
+    else if (dCycles < _zeroPulseMaxCCycles) {
+        symbol = MRTSymbol::Zero;
+    }
+    else if(dCycles < _onePulseMaxCCycles) {
+        symbol = MRTSymbol::One;
+    }
+	BaseType_t higherPriorityTaskWoken = pdFALSE;
+	xQueueSendFromISR(queue, &value, &higherPriorityTaskWoken);
+	if (higherPriorityTaskWoken) {
+		portYIELD_FROM_ISR();
+	}
+}
+
+uint32_t MRTChannel::nSubPulsesToCCycles(int nSubPulses)
+{
+    uint64_t result =
+        (static_cast<uint64_t>(_periodUs) *
+         static_cast<uint64_t>(nSubPulses) *
+         static_cast<uint64_t>(CONFIG_ESP32_DEFAULT_CPU_FREQ_MHZ)) / 7ULL;
+
+    if(result > UINT32_MAX)
+        return UINT32_MAX;
+
+    return static_cast<uint32_t>(result);
+}
+
+size_t MRTChannel::readBytes(char* destination, size_t maxLength, uint32_t timeoutMs) {
+    if (!_rxSymbolQueue) return 0;
+	size_t nextDestinationIndex = 0;
+	MRTSymbol symbol;
+	while(nextDestinationIndex<maxLength){
+		if (xQueueReceive(_rxSymbolQueue, &symbol, pdMS_TO_TICKS(timeoutMs)) != pdTRUE) {
+			break;
+		}
+		if(symbol==MRTSymbol::Sync){
+			if(_nextNBit>0){	
+				if(_nextNBit!=8){
+					handleMalformedByte(_nextNBit);
+				}
+				destination[nextDestinationIndex++]=_currentByte;
+				if(nextDestinationIndex>=maxLength){
+					break;
+				}
+				_nextNBit = 0;
+			}
+			_currentByte = 0;
+			continue;
+		}
+		if(_nextNBit<8){
+			uint8_t bit = (symbol==MRTSymbol::One)?1:0;
+			_currentByte = (_currentByte << 1) | bit;
+		}
+		_nextNBit++;
+	}
+    return nextDestinationIndex;
+}
+
+void IRAM_ATTR MRTChannel::rxEdgeISRTrampoline(void* arg) {
+    static_cast<MRTChannel*>(arg)->handleRxEdgeFromISR();
+}
+
+void MRTChannel::scheduleWriteBuffer(MRTSymbol* symbols, size_t symbolsLength){
+    std::lock_guard<std::mutex> lock(_txMutex);
+    _writeBufferForISRFreeLatch.wait();
+    // Wait until ISR has freed the slot.
+
+	if(_symbolsBeingWritten!=nullptr){
+		delete[] _symbolsBeingWritten;
+	}
+    _symbolsBeingWritten = symbols;
+	_symbolsBeingWrittenLength = symbolsLength;
+	esp_timer_start_periodic(_writeTimer, _writeTimerPeriodUs);
+    _nextWriteBufferForISRFreeLatch.latch();
+}
+
+void IRAM_ATTR MRTChannel::setIOBasedOnSymbol(int8_t subPulsesIntoCurrentSymbol, MRTSymbol symbol){
+	bool on;
+	switch(symbol){
+		case MRTSymbol::Zero:
+			on = subPulsesIntoCurrentSymbol<=_zeroPulseSubPulses;
+			break;
+		case MRTSymbol::One:
+			on = subPulsesIntoCurrentSymbol<=_onePulseSubPulses;
+			break;
+		case MRTSymbol::Sync:
+		default:
+			on = subPulsesIntoCurrentSymbol<=_syncPulseSubPulses;
+			break;
+	}
+	gpio_set_level(_txGPIONum, (on^_invertTx)?1:0);
+}
+
+void IRAM_ATTR MRTChannel::txTimerISRTrampoline(void* arg)
+{
+    static_cast<MRTChannel*>(arg)->handleTxTickFromISR();
+}
+
+size_t MRTChannel::writeBytes(const char* src, size_t len) {
+    MRTSymbol* symbols = new MRTSymbol[len];
+	size_t nextSymbolIndex = 0;
+    for (size_t i = 0; i < len; i++) {
+        encodeByte(static_cast<uint8_t>(src[i]), symbols, nextSymbolIndex);
+    }
+	addSyncPulse(symbols, nextWriteBufferIndex);
+	scheduleWriteBuffer(HBuffer(symbols, len));
+    return len;
+}

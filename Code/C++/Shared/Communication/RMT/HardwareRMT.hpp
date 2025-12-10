@@ -50,7 +50,6 @@ public:
 	size_t writeBytes(const char* src, size_t len) override;
 	void flushTx() override;
 	const char* getDescription() const override;
-	size_t getMinRequiredReceiveBufferSize() const override;
 
 private:
 	int _txPin;

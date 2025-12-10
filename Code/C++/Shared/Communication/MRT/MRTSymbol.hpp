@@ -1,5 +1,5 @@
 #pragma once
-enum class HSymbol : uint8_t {
+enum class MRTSymbol : uint8_t {
     Sync,
     Zero,
     One
