@@ -55,7 +55,7 @@ esp_err_t IOInteruptHelper::installISRHandlerIfNotAlready(){
     {
 		return ESP_OK;
 	}
-    esp_err_t err = gpio_install_isr_service(ESP_INTR_FLAG_IRAM);
+    esp_err_t err = gpio_install_isr_service(ESP_INTR_FLAG_IRAM | ESP_INTR_FLAG_LEVEL4);
 	if(err!=ESP_OK){
 		return err;
 	}

@@ -4,6 +4,7 @@
 #include "IO/IOInteruptHelper.hpp"
 #include <cstdio>
 #include <cstring>
+const char* MRTChannel::NOT_INITIALIZED_PROPERLY_MESSAGE = "Did not initialize properly so cannot read or write bytes.";
 MRTChannel::MRTChannel(
     int txPin,
     int rxPin,
@@ -28,6 +29,7 @@ MRTChannel::MRTChannel(
 	_onePulseMaxCCycles(nSubPulsesToCCycles(N_SUB_PULSES_PER_PULSE)),
 	_currentByte(0),
 	_nextNBit(0),
+	_writeTimerPeriodUs(periodUs/N_SUB_PULSES_PER_PULSE),
 	_writeTimer(nullptr),
 	_rxSymbolQueue(nullptr),
 	_symbolsBeingWritten(nullptr),
@@ -37,34 +39,31 @@ MRTChannel::MRTChannel(
 	_txISRCurrentSymbol(MRTSymbol::Sync),
 	_rxHandlerInitialized(false),
 	_rxHandlerLastWasHigh(false),
-	_rxHandlerHighStartTime(0)
+	_rxHandlerHighCCycles(0),
+	_successfullyConfigured(false),
+	_createdRxEdgeInterupt(false)
 {
+	if(receiveQueueSize<=0){
+		receiveQueueSize = 256;
+	}
     std::snprintf(_description, sizeof(_description),
         "MRTChannel");
-	if (periodUs < 7) {
+	if (periodUs < N_SUB_PULSES_PER_PULSE) {
 		Aborter::safeAbort(TAG, "periodUs too small for pulse scheme");
-		return;
 	}
 	_rxSymbolQueue = xQueueCreate(
-        size_t receiveQueueSize,
+        receiveQueueSize,
         sizeof(MRTSymbol)
     );
 	if (!_rxSymbolQueue) {
 		Aborter::safeAbort(TAG, "Failed to create RX symbol queue");
-		return;
 	}
 }
 
 MRTChannel::~MRTChannel() {
     std::lock_guard<std::mutex> lock(_txMutex);//Wait for exclusive thread access to the latch
     _writeBufferForISRFreeLatch.wait();//Wait for the current write to finish before destroying timer
-	if(_writeTimer!=nullptr){
-		esp_err_t err = esp_timer_delete(_writeTimer);
-		_writeTimer = nullptr;
-		if(err!=ESP_OK){
-			Log::Warn(TAG, "Failed to delete timer with error: %s", esp_err_to_name(err));
-		}
-	}
+	freeWriteTimerIfCreated();
 	IOInteruptHelper::removeHandlerAndDisableEdgeInterupt(_rxGPIONum);
 	if (_rxSymbolQueue != nullptr) {
 		vQueueDelete(_rxSymbolQueue);
@@ -81,6 +80,11 @@ void MRTChannel::addSyncPulse(MRTSymbol* items, size_t& nextSymbolIndex) {
 }
 
 bool MRTChannel::configure() {
+    std::lock_guard<std::mutex> lock(_configureMutex);
+	if(_successfullyConfigured.load(std::memory_order_relaxed)){
+		Aborter::safeAbort(TAG, "Already configured");
+		return false;
+	}
     if(!configureTx()){
 		return false;
 	}
@@ -90,10 +94,14 @@ bool MRTChannel::configure() {
 	if(!configureTxTimer()){
 		return false;
 	}
+	_successfullyConfigured.store(true, std::memory_order_relaxed);
 	return true;
 }
 
 bool MRTChannel::configureRx() {
+	if(_createdRxEdgeInterupt.load(std::memory_order_relaxed)){
+		IOInteruptHelper::removeHandlerAndDisableEdgeInterupt(_rxGPIONum);
+	}
 	esp_err_t err = IOInteruptHelper::setupPinEdgeInterupt(
 		_rxPin,
 		gpio_isr_t rxEdgeISRTrampoline,
@@ -107,6 +115,7 @@ bool MRTChannel::configureRx() {
 		Aborter::safeAbort(TAG, "Failed to configure rx pin edge interupt with error: %s", esp_err_to_name(err));
 		return false;
 	}
+	_createdRxEdgeInterupt.store(true, std::memory_order_relaxed);
 	return true;
 }
 
@@ -124,10 +133,11 @@ bool MRTChannel::configureTx() {
 }
 
 bool MRTChannel::configureTxTimer(){
+	freeWriteTimerIfCreated();
     esp_timer_create_args_t args = {
         .callback =  MRTChannel::txTimerISRTrampoline,
         .arg = this,
-        .dispatch_method = ESP_TIMER_TASK,
+        .dispatch_method = ESP_TIMER_ISR,
         .name = "MRTChannel::_writeTimer"
     };
     esp_err_t err = esp_timer_create(&args, &_writeTimer);
@@ -147,25 +157,37 @@ void MRTChannel::encodeByte(uint8_t b, MRTSymbol* items, size_t& nextSymbolIndex
 }
 
 void MRTChannel::flushTx() {
-	
+    std::lock_guard<std::mutex> lock(_txMutex);
+    _writeBufferForISRFreeLatch.wait();
 }
 
+esp_err_t MRTChannel::freeWriteTimerIfCreated(){
+	if(_writeTimer==nullptr){
+		return ESP_OK;
+	}
+	esp_err_t err = esp_timer_delete(_writeTimer);
+	_writeTimer = nullptr;
+	if(err!=ESP_OK){
+		Log::Warn(TAG, "Failed to delete timer with error: %s", esp_err_to_name(err));
+	}
+	return err;
+}
 const char* MRTChannel::getDescription() const {
     return _description;
 }
 
-void MRTChannel::handleMalformedByte(uint8_t _nextNBit){
+void MRTChannel::handleMalformedByte(uint8_t nextNBit){
 	return;
 	//We dont really need this. Any noise will trigger it. Such as anything at startup*/
 	static bool firstMalformedWarning = true;
 	if(firstMalformedWarning){
-		Log::Warn(TAG, "Received malformed byte with a length of %d", _nextNBit);
+		Log::Warn(TAG, "Received malformed byte with a length of %d", nextNBit);
 		firstMalformedWarning = false;
 	}
 }
 
 void IRAM_ATTR MRTChannel::handleTxTickFromISR(){
-	if(_txISRSubPulsesIntoCurrentSymbol>=5){
+	if(_txISRSubPulsesIntoCurrentSymbol>=N_SUB_PULSES_PER_PULSE){
 		if(_txISRSymbolIndex>=_symbolsBeingWrittenLength){			
 			_txISRSymbolIndex = 0;
 			esp_timer_stop(_writeTimer);
@@ -179,6 +201,7 @@ void IRAM_ATTR MRTChannel::handleTxTickFromISR(){
 }
 
 void IRAM_ATTR MRTChannel::handleRxEdgeFromISR(){
+	uint32_t nowCCycles = esp_cpu_get_ccount();
 	int level = gpio_get_level(_rxGPIONum);
 	if((level==1)^_invertRx){
 		//High
@@ -186,7 +209,7 @@ void IRAM_ATTR MRTChannel::handleRxEdgeFromISR(){
 		if(!_rxHandlerInitialized){
 			_rxHandlerInitialized = true;
 		}
-		_rxHandlerHighStartTime = esp_cpu_get_ccount();
+		_rxHandlerHighCCycles = nowCCycles;
 		_rxHandlerLastWasHigh = true;
 		return;
 	}
@@ -198,26 +221,29 @@ void IRAM_ATTR MRTChannel::handleRxEdgeFromISR(){
 	}
 	if(!_rxHandlerLastWasHigh)return;
 	_rxHandlerLastWasHigh = false;
-	uint32_t now = esp_cpu_get_ccount();
-	uint32_t dCycles = now - _rxHandlerHighStartTime;
+	uint32_t dCycles = nowCCycles - _rxHandlerHighCCycles;
 	 MRTSymbol symbol;
     if (dCycles < _syncPulseMinCCycles) {
         return; // reject noise
     }
-    else if (dCycles < _syncPulseMaxCCycles) {
+    else if (dCycles <= _syncPulseMaxCCycles) {
         symbol = MRTSymbol::Sync;
     }
-    else if (dCycles < _zeroPulseMaxCCycles) {
+    else if (dCycles <= _zeroPulseMaxCCycles) {
         symbol = MRTSymbol::Zero;
     }
-    else if(dCycles < _onePulseMaxCCycles) {
+    else if(dCycles <= _onePulseMaxCCycles) {
         symbol = MRTSymbol::One;
     }
-	BaseType_t higherPriorityTaskWoken = pdFALSE;
-	xQueueSendFromISR(queue, &value, &higherPriorityTaskWoken);
-	if (higherPriorityTaskWoken) {
-		portYIELD_FROM_ISR();
+	else{
+		return;//Pulse too long something went wrong here so reject.
 	}
+	BaseType_t higherPriorityTaskWoken = pdFALSE;
+	if (xQueueSendFromISR(_rxSymbolQueue, &symbol, &higherPriorityTaskWoken) == pdTRUE) {
+        if (higherPriorityTaskWoken) {
+            portYIELD_FROM_ISR();
+        }
+    }
 }
 
 uint32_t MRTChannel::nSubPulsesToCCycles(int nSubPulses)
@@ -225,7 +251,7 @@ uint32_t MRTChannel::nSubPulsesToCCycles(int nSubPulses)
     uint64_t result =
         (static_cast<uint64_t>(_periodUs) *
          static_cast<uint64_t>(nSubPulses) *
-         static_cast<uint64_t>(CONFIG_ESP32_DEFAULT_CPU_FREQ_MHZ)) / 7ULL;
+         static_cast<uint64_t>(CONFIG_ESP32_DEFAULT_CPU_FREQ_MHZ)) / N_SUB_PULSES_PER_PULSE;
 
     if(result > UINT32_MAX)
         return UINT32_MAX;
@@ -234,7 +260,10 @@ uint32_t MRTChannel::nSubPulsesToCCycles(int nSubPulses)
 }
 
 size_t MRTChannel::readBytes(char* destination, size_t maxLength, uint32_t timeoutMs) {
-    if (!_rxSymbolQueue) return 0;
+	if(!_successfullyConfigured.load(std::memory_order_relaxed)){
+		Aborter::safeAbort(TAG, NOT_INITIALIZED_PROPERLY_MESSAGE);
+		return 0;
+	}
 	size_t nextDestinationIndex = 0;
 	MRTSymbol symbol;
 	while(nextDestinationIndex<maxLength){
@@ -270,7 +299,7 @@ void IRAM_ATTR MRTChannel::rxEdgeISRTrampoline(void* arg) {
 
 void MRTChannel::scheduleWriteBuffer(MRTSymbol* symbols, size_t symbolsLength){
     std::lock_guard<std::mutex> lock(_txMutex);
-    _writeBufferForISRFreeLatch.wait();
+    _nextWriteBufferForISRFreeLatch.wait();
     // Wait until ISR has freed the slot.
 
 	if(_symbolsBeingWritten!=nullptr){
@@ -278,8 +307,16 @@ void MRTChannel::scheduleWriteBuffer(MRTSymbol* symbols, size_t symbolsLength){
 	}
     _symbolsBeingWritten = symbols;
 	_symbolsBeingWrittenLength = symbolsLength;
-	esp_timer_start_periodic(_writeTimer, _writeTimerPeriodUs);
     _nextWriteBufferForISRFreeLatch.latch();
+	esp_err_t err = esp_timer_start_periodic(_writeTimer, _writeTimerPeriodUs);
+	if(err != ESP_OK){
+		// extremely rare but worth catching
+		delete[] _symbolsBeingWritten;
+		_symbolsBeingWritten = nullptr;
+		_symbolsBeingWrittenLength = 0;
+		_nextWriteBufferForISRFreeLatch.unlatch(); 
+		Aborter::safeAbort(TAG, "Failed to start TX timer");
+	}
 }
 
 void IRAM_ATTR MRTChannel::setIOBasedOnSymbol(int8_t subPulsesIntoCurrentSymbol, MRTSymbol symbol){
@@ -305,12 +342,16 @@ void IRAM_ATTR MRTChannel::txTimerISRTrampoline(void* arg)
 }
 
 size_t MRTChannel::writeBytes(const char* src, size_t len) {
-    MRTSymbol* symbols = new MRTSymbol[len];
+	if(!_successfullyConfigured.load(std::memory_order_relaxed)){
+		Aborter::safeAbort(TAG, NOT_INITIALIZED_PROPERLY_MESSAGE);
+		return 0;
+	}
+    MRTSymbol* symbols = new MRTSymbol[(len*9)+1];
 	size_t nextSymbolIndex = 0;
     for (size_t i = 0; i < len; i++) {
         encodeByte(static_cast<uint8_t>(src[i]), symbols, nextSymbolIndex);
     }
-	addSyncPulse(symbols, nextWriteBufferIndex);
-	scheduleWriteBuffer(HBuffer(symbols, len));
+	addSyncPulse(symbols, nextSymbolIndex);
+	scheduleWriteBuffer(symbols, nextSymbolIndex);
     return len;
 }

@@ -10,6 +10,8 @@ public:
 		bool pullUpEnabled,
 		bool pullDownEnabled
 	);
+	static esp_err_t removeHandlerAndDisableEdgeInterupt(int pin);
+	static esp_err_t removeHandlerAndDisableEdgeInterupt(gpio_num_t pinGPIONum);
 private:
 	static esp_err_t installISRHandlerIfNotAlready();
 };

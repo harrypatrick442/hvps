@@ -1,6 +1,7 @@
 // MRTChannel.hpp
 #pragma once
 #include "../Interfaces/IChannel.hpp"
+#include "MRTSymbol.hpp"
 #include <cstdint>
 #include <mutex>
 #include <vector>
@@ -25,6 +26,7 @@ public:
 	static inline constexpr bool INVERT_RX_DEFAULT = true;
 	static inline constexpr int PERIOD_US_DEFAULT = 600;
 	static inline constexpr int RECEIVE_QUEUE_SIZE_SYMBOLS_DEFAULT = 1000;
+	static const char* NOT_INITIALIZED_PROPERLY_MESSAGE;
 	
 private:
 	int _txPin;
@@ -41,10 +43,12 @@ private:
 	uint32_t _zeroPulseMaxCCycles;
 	uint32_t _onePulseSubPulses;
 	uint32_t _onePulseMaxCCycles;
-	u_int8_t _currentByte;
-	u_int8_t _nextNBit;
+	uint8_t _currentByte;
+	uint8_t _nextNBit;
+	uint64_t _writeTimerPeriodUs;
 	esp_timer_handle_t _writeTimer;
-	std::mutex _mutexTX;
+	std::mutex _configureMutex;
+	std::mutex _txMutex;
 	char _description[32];
 	QueueHandle_t _rxSymbolQueue;
 	
@@ -53,10 +57,14 @@ private:
 	volatile size_t _txISRSymbolIndex = 0;
 	volatile int32_t _txISRSubPulsesIntoCurrentSymbol = N_SUB_PULSES_PER_PULSE;
 	volatile MRTSymbol _txISRCurrentSymbol;
+	Latch _nextWriteBufferForISRFreeLatch;
+	
 	
 	bool _rxHandlerInitialized;
 	volatile bool _rxHandlerLastWasHigh;
-	volatile uint32_t _rxHandlerHighStartTime;
+	volatile uint32_t _rxHandlerHighCCycles;
+	std::atomic<bool> _successfullyConfigured;
+	std::atomic<bool> _createdRxEdgeInterupt;
 public:
 	MRTChannel(
 		int txPin,
@@ -81,13 +89,14 @@ private:
 	bool configureTx();
 	bool configureTxTimer();
 	void encodeByte(uint8_t b, MRTSymbol* items, size_t& nextSymbolIndex);
+	esp_err_t freeWriteTimerIfCreated();
 	const char* getDescription() const ;
 	void handleMalformedByte(uint8_t _nextNBit);
 	void IRAM_ATTR handleTxTickFromISR();
 	void IRAM_ATTR handleRxEdgeFromISR();
 	uint32_t nSubPulsesToCCycles(int nSubPulses);
-	void IRAM_ATTR rxEdgeISRTrampoline(void* arg);
+	static void IRAM_ATTR rxEdgeISRTrampoline(void* arg);
 	void scheduleWriteBuffer(MRTSymbol* symbols, size_t symbolsLength);
 	void IRAM_ATTR setIOBasedOnSymbol(int8_t subPulsesIntoCurrentSymbol, MRTSymbol symbol);
-	void IRAM_ATTR txTimerISRTrampoline(void* arg);
+	static void IRAM_ATTR txTimerISRTrampoline(void* arg);
 };
