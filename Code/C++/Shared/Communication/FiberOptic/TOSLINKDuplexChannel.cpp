@@ -2,5 +2,5 @@
 
 TOSLINKDuplexChannel::TOSLINKDuplexChannel(
 	int txPin,
-	int rxPin): RMTDuplexChannel(txPin, rxPin, 60, false, true) {
+	int rxPin): MRTDuplexChannel(txPin, rxPin, 600, false, true) {
 };

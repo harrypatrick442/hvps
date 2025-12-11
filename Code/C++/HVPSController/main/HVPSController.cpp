@@ -3,7 +3,6 @@
 #include "Communication/Bluetooth/Bluetooth_BR_EDR.hpp"
 #include "Communication/I2C/I2C.hpp"
 #include "Communication/I2C/I2CConfiguration.hpp"
-#include "Communication/RMT/RMTHelper.hpp"
 #include "IO/SoftStartHandler.hpp"
 #include "IO/Inputs.hpp"
 #include "IO/Outputs.hpp"
@@ -31,11 +30,6 @@ extern "C" void app_main(void)
 	Aborter::setToSafe(&Outputs::toSafe);
 	Outputs::initialize();
 	Outputs::toSafeReversible();
-	RMTHelper::dumpRMTState();
-	RMTHelper::analyseRMTUsage();
-	RMTHelper::forceHardwareReset();
-	RMTHelper::dumpRMTState();
-	RMTHelper::analyseRMTUsage();
 	Port_FirstStageVoltageFeedback& port_FirstStageVoltageFeedback = Port_FirstStageVoltageFeedback::initialize();
 	Delay::ms(10000);
 	Log::Info(TAG, "Starting HVPSController....");

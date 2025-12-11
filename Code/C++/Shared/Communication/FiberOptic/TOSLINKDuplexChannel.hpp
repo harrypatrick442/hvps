@@ -1,6 +1,6 @@
 #pragma once
-#include "../RMT/RMTDuplexChannel.hpp"
-class TOSLINKDuplexChannel: public RMTDuplexChannel{
+#include "../MRT/MRTDuplexChannel.hpp"
+class TOSLINKDuplexChannel: public MRTDuplexChannel{
 public:
 	TOSLINKDuplexChannel(
 		int txPin,

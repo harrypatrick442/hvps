@@ -41,9 +41,9 @@ void Latch::unlatchFromISR() {
 }
 
 void Latch::latchFromISR() {
-    BaseType_t taskWoken = pdFALSE;
-    xEventGroupClearBitsFromISR(eg_, UNLATCHED_BIT, &taskWoken);
-    if (taskWoken) portYIELD_FROM_ISR();
+    //BaseType_t taskWoken = pdFALSE;
+    xEventGroupClearBitsFromISR(eg_, UNLATCHED_BIT/* &taskWoken*/);
+    //if (taskWoken) portYIELD_FROM_ISR();
 }
 void Latch::wait() const
 {

@@ -1,6 +1,5 @@
 #include "IOInteruptHelper.hpp"
 #include "esp_intr_alloc.h"
-#include "esp_log.h"
 
 esp_err_t IOInteruptHelper::setupPinEdgeInterupt(
     int pin,
@@ -38,12 +37,8 @@ esp_err_t IOInteruptHelper::setupPinEdgeInterupt(
     return gpio_isr_handler_add((gpio_num_t)pin, staticHandlerMethod, arg);
 }
 esp_err_t IOInteruptHelper::removeHandlerAndDisableEdgeInterupt(int pin){
-	return removeHandlerAndDisableEdgeInterupt((gpio_num_t)pin);
-}
-
-esp_err_t IOInteruptHelper::removeHandlerAndDisableEdgeInterupt(gpio_num_t pinGPIONum){
-	esp_err_t err1 = gpio_isr_handler_remove(pinGPIONum);
-	esp_err_t err2 = gpio_set_intr_type(pinGPIONum, GPIO_INTR_DISABLE);
+	esp_err_t err1 = gpio_isr_handler_remove((gpio_num_t)pin);
+	esp_err_t err2 = gpio_set_intr_type((gpio_num_t)pin, GPIO_INTR_DISABLE);
 	if(err1!=ESP_OK){
 		return err1;
 	}

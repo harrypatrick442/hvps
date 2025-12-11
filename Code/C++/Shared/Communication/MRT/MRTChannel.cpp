@@ -2,6 +2,7 @@
 #include "System/Aborter.hpp"
 #include "Logging/Log.hpp"
 #include "IO/IOInteruptHelper.hpp"
+#include "driver/gptimer.h"
 #include <cstdio>
 #include <cstring>
 const char* MRTChannel::NOT_INITIALIZED_PROPERLY_MESSAGE = "Did not initialize properly so cannot read or write bytes.";
@@ -62,7 +63,7 @@ MRTChannel::MRTChannel(
 
 MRTChannel::~MRTChannel() {
     std::lock_guard<std::mutex> lock(_txMutex);//Wait for exclusive thread access to the latch
-    _writeBufferForISRFreeLatch.wait();//Wait for the current write to finish before destroying timer
+    _nextWriteBufferForISRFreeLatch.wait();//Wait for the current write to finish before destroying timer
 	freeWriteTimerIfCreated();
 	IOInteruptHelper::removeHandlerAndDisableEdgeInterupt(_rxGPIONum);
 	if (_rxSymbolQueue != nullptr) {
@@ -104,7 +105,7 @@ bool MRTChannel::configureRx() {
 	}
 	esp_err_t err = IOInteruptHelper::setupPinEdgeInterupt(
 		_rxPin,
-		gpio_isr_t rxEdgeISRTrampoline,
+		rxEdgeISRTrampoline,
 		(void*)this,
 		true,	//risingEdg
 		true,	//fallingEdge
@@ -134,18 +135,46 @@ bool MRTChannel::configureTx() {
 
 bool MRTChannel::configureTxTimer(){
 	freeWriteTimerIfCreated();
-    esp_timer_create_args_t args = {
-        .callback =  MRTChannel::txTimerISRTrampoline,
-        .arg = this,
-        .dispatch_method = ESP_TIMER_ISR,
-        .name = "MRTChannel::_writeTimer"
+	
+    gptimer_config_t config = {
+        .clk_src = GPTIMER_CLK_SRC_APB,
+        .direction = GPTIMER_COUNT_UP,
+        .resolution_hz = 1000000ULL, // 1 MHz = 1us per tick
     };
-    esp_err_t err = esp_timer_create(&args, &_writeTimer);
-	if(err!= ESP_OK) {
-		Aborter::safeAbort(TAG, "Failed to create tx timer");
-		return false;
+	esp_err_t err = gptimer_new_timer(&config, &_writeTimer);
+	char* methodNameFailedOn = nullptr;
+	while(true){
+		if(err!= ESP_OK) {
+			methodNameFailedOn = "gptimer_new_timer";
+			return false;
+		}
+		gptimer_event_callbacks_t cbs = {
+			.on_alarm = &MRTChannel::txTimerISRTrampoline, // must match signature
+		};
+		err = gptimer_register_event_callbacks(_writeTimer, &cbs, this);
+		if(err!= ESP_OK) {
+			methodNameFailedOn = "gptimer_register_event_callbacks";
+			break;
+		}
+		
+		err =gptimer_enable(_writeTimer);
+		if(err!= ESP_OK) {
+			methodNameFailedOn = "gptimer_enable";
+			break;
+		}
+		gptimer_alarm_config_t alarm_cfg = {};
+		alarm_cfg.alarm_count = _writeTimerPeriodUs;
+		alarm_cfg.reload_count = 0;
+		alarm_cfg.flags.auto_reload_on_alarm = true;
+		err = gptimer_set_alarm_action(_writeTimer, &alarm_cfg);
+		if(err!= ESP_OK) {
+			methodNameFailedOn = "gptimer_set_alarm_action";
+			break;
+		}
+		return true;
 	}
-	return true;
+	Aborter::safeAbort(TAG, "Failed to create tx timer on %s with error: %s", methodNameFailedOn, esp_err_to_name(err));
+	return false;
 }
 
 void MRTChannel::encodeByte(uint8_t b, MRTSymbol* items, size_t& nextSymbolIndex) {
@@ -158,19 +187,30 @@ void MRTChannel::encodeByte(uint8_t b, MRTSymbol* items, size_t& nextSymbolIndex
 
 void MRTChannel::flushTx() {
     std::lock_guard<std::mutex> lock(_txMutex);
-    _writeBufferForISRFreeLatch.wait();
+    _nextWriteBufferForISRFreeLatch.wait();
 }
 
-esp_err_t MRTChannel::freeWriteTimerIfCreated(){
-	if(_writeTimer==nullptr){
-		return ESP_OK;
-	}
-	esp_err_t err = esp_timer_delete(_writeTimer);
-	_writeTimer = nullptr;
-	if(err!=ESP_OK){
-		Log::Warn(TAG, "Failed to delete timer with error: %s", esp_err_to_name(err));
-	}
-	return err;
+esp_err_t MRTChannel::freeWriteTimerIfCreated() {
+    if (_writeTimer == nullptr)
+        return ESP_OK;
+
+    esp_err_t err = gptimer_stop(_writeTimer);
+    if (err != ESP_OK) {
+        Log::Warn(TAG, "Failed to stop gptimer: %s", esp_err_to_name(err));
+    }
+
+    err = gptimer_disable(_writeTimer);
+    if (err != ESP_OK) {
+        Log::Warn(TAG, "Failed to disable gptimer: %s", esp_err_to_name(err));
+    }
+
+    err = gptimer_del_timer(_writeTimer);
+    if (err != ESP_OK) {
+        Log::Warn(TAG, "Failed to delete gptimer: %s", esp_err_to_name(err));
+    }
+
+    _writeTimer = nullptr;
+    return err;
 }
 const char* MRTChannel::getDescription() const {
     return _description;
@@ -190,7 +230,7 @@ void IRAM_ATTR MRTChannel::handleTxTickFromISR(){
 	if(_txISRSubPulsesIntoCurrentSymbol>=N_SUB_PULSES_PER_PULSE){
 		if(_txISRSymbolIndex>=_symbolsBeingWrittenLength){			
 			_txISRSymbolIndex = 0;
-			esp_timer_stop(_writeTimer);
+			gptimer_stop(_writeTimer);
 			_nextWriteBufferForISRFreeLatch.unlatchFromISR();
 			return;
 		}
@@ -202,7 +242,7 @@ void IRAM_ATTR MRTChannel::handleTxTickFromISR(){
 
 void IRAM_ATTR MRTChannel::handleRxEdgeFromISR(){
 	int level = gpio_get_level(_rxGPIONum);
-	uint32_t nowCCycles = esp_cpu_get_ccount();
+	uint32_t nowCCycles = esp_cpu_get_cycle_count();
 	if((level==1)^_invertRx){
 		//High
 		if(_rxHandlerLastWasHigh)return;
@@ -307,15 +347,16 @@ void MRTChannel::scheduleWriteBuffer(MRTSymbol* symbols, size_t symbolsLength){
 	}
     _symbolsBeingWritten = symbols;
 	_symbolsBeingWrittenLength = symbolsLength;
+	_txISRSubPulsesIntoCurrentSymbol = N_SUB_PULSES_PER_PULSE;
+	_txISRSymbolIndex = 0;
     _nextWriteBufferForISRFreeLatch.latch();
-	esp_err_t err = esp_timer_start_periodic(_writeTimer, _writeTimerPeriodUs);
+
+	esp_err_t err = gptimer_start(_writeTimer);
 	if(err != ESP_OK){
 		// extremely rare but worth catching
 		delete[] _symbolsBeingWritten;
 		_symbolsBeingWritten = nullptr;
 		_symbolsBeingWrittenLength = 0;
-		_txISRSubPulsesIntoCurrentSymbol = N_SUB_PULSES_PER_PULSE;
-		_txISRSymbolIndex = 0;
 		_nextWriteBufferForISRFreeLatch.unlatch(); 
 		Aborter::safeAbort(TAG, "Failed to start TX timer");
 	}
@@ -338,9 +379,13 @@ void IRAM_ATTR MRTChannel::setIOBasedOnSymbol(int8_t subPulsesIntoCurrentSymbol,
 	gpio_set_level(_txGPIONum, (on^_invertTx)?1:0);
 }
 
-void IRAM_ATTR MRTChannel::txTimerISRTrampoline(void* arg)
+bool IRAM_ATTR MRTChannel::txTimerISRTrampoline(
+    gptimer_handle_t timer,
+    const gptimer_alarm_event_data_t *edata,
+    void *arg)
 {
     static_cast<MRTChannel*>(arg)->handleTxTickFromISR();
+    return false;  // no context switch needed
 }
 
 size_t MRTChannel::writeBytes(const char* src, size_t len) {

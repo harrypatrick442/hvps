@@ -2,11 +2,14 @@
 #pragma once
 #include "../Interfaces/IChannel.hpp"
 #include "MRTSymbol.hpp"
+#include "Core/Latch.hpp"
 #include <cstdint>
 #include <mutex>
 #include <vector>
 #include <atomic>
 #include "driver/gpio.h"
+#include "esp_timer.h"
+#include "driver/gptimer.h"
 // Include FreeRTOS headers for data types
 #ifdef __cplusplus
 extern "C" {
@@ -25,6 +28,7 @@ public:
 	static inline constexpr bool INVERT_TX_DEFAULT = false;
 	static inline constexpr bool INVERT_RX_DEFAULT = true;
 	static inline constexpr int PERIOD_US_DEFAULT = 600;
+	static inline constexpr int N_SUB_PULSES_PER_PULSE = 7;
 	static inline constexpr int RECEIVE_QUEUE_SIZE_SYMBOLS_DEFAULT = 1000;
 	static const char* NOT_INITIALIZED_PROPERLY_MESSAGE;
 	
@@ -46,7 +50,7 @@ private:
 	uint8_t _currentByte;
 	uint8_t _nextNBit;
 	uint64_t _writeTimerPeriodUs;
-	esp_timer_handle_t _writeTimer;
+	gptimer_handle_t _writeTimer;
 	std::mutex _configureMutex;
 	std::mutex _txMutex;
 	char _description[32];
@@ -90,7 +94,6 @@ private:
 	bool configureTxTimer();
 	void encodeByte(uint8_t b, MRTSymbol* items, size_t& nextSymbolIndex);
 	esp_err_t freeWriteTimerIfCreated();
-	const char* getDescription() const ;
 	void handleMalformedByte(uint8_t _nextNBit);
 	void IRAM_ATTR handleTxTickFromISR();
 	void IRAM_ATTR handleRxEdgeFromISR();
@@ -98,5 +101,8 @@ private:
 	static void IRAM_ATTR rxEdgeISRTrampoline(void* arg);
 	void scheduleWriteBuffer(MRTSymbol* symbols, size_t symbolsLength);
 	void IRAM_ATTR setIOBasedOnSymbol(int8_t subPulsesIntoCurrentSymbol, MRTSymbol symbol);
-	static void IRAM_ATTR txTimerISRTrampoline(void* arg);
+	static bool IRAM_ATTR txTimerISRTrampoline(
+		gptimer_handle_t timer,
+		const gptimer_alarm_event_data_t *edata,
+		void *arg);
 };

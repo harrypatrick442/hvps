@@ -1,7 +1,9 @@
 #pragma once
+#include "esp_err.h"
+#include "driver/gpio.h"
 class IOInteruptHelper {
 public:
-	static esp_err_t IOInteruptHelper::setupPinEdgeInterupt(
+	static esp_err_t setupPinEdgeInterupt(
 		int pin,
 		gpio_isr_t staticHandlerMethod,
 		void* arg,
@@ -11,7 +13,6 @@ public:
 		bool pullDownEnabled
 	);
 	static esp_err_t removeHandlerAndDisableEdgeInterupt(int pin);
-	static esp_err_t removeHandlerAndDisableEdgeInterupt(gpio_num_t pinGPIONum);
 private:
 	static esp_err_t installISRHandlerIfNotAlready();
 };
