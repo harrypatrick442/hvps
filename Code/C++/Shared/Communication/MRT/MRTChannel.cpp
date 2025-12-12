@@ -2,6 +2,7 @@
 #include "System/Aborter.hpp"
 #include "Logging/Log.hpp"
 #include "IO/IOInteruptHelper.hpp"
+#include "Timing/Delay.hpp"
 #include "driver/gptimer.h"
 #include <cstdio>
 #include <cstring>
@@ -38,6 +39,7 @@ MRTChannel::MRTChannel(
 	_txISRSymbolIndex(0),
 	_txISRSubPulsesIntoCurrentSymbol(N_SUB_PULSES_PER_PULSE),
 	_txISRCurrentSymbol(MRTSymbol::Sync),
+	_nextWriteBufferForISRFreeLatch(false),
 	_rxHandlerInitialized(false),
 	_rxHandlerLastWasHigh(false),
 	_rxHandlerHighCCycles(0),
@@ -228,8 +230,7 @@ void MRTChannel::handleMalformedByte(uint8_t nextNBit){
 
 void IRAM_ATTR MRTChannel::handleTxTickFromISR(){
 	if(_txISRSubPulsesIntoCurrentSymbol>=N_SUB_PULSES_PER_PULSE){
-		if(_txISRSymbolIndex>=_symbolsBeingWrittenLength){			
-			_txISRSymbolIndex = 0;
+		if(_txISRSymbolIndex>=_symbolsBeingWrittenLength){
 			gptimer_stop(_writeTimer);
 			_nextWriteBufferForISRFreeLatch.unlatchFromISR();
 			return;
@@ -359,21 +360,23 @@ void MRTChannel::scheduleWriteBuffer(MRTSymbol* symbols, size_t symbolsLength){
 		_symbolsBeingWrittenLength = 0;
 		_nextWriteBufferForISRFreeLatch.unlatch(); 
 		Aborter::safeAbort(TAG, "Failed to start TX timer");
+		return;
 	}
+    _nextWriteBufferForISRFreeLatch.wait();
 }
 
 void IRAM_ATTR MRTChannel::setIOBasedOnSymbol(int8_t subPulsesIntoCurrentSymbol, MRTSymbol symbol){
 	bool on;
 	switch(symbol){
 		case MRTSymbol::Zero:
-			on = subPulsesIntoCurrentSymbol<=_zeroPulseSubPulses;
+			on = subPulsesIntoCurrentSymbol<_zeroPulseSubPulses;
 			break;
 		case MRTSymbol::One:
-			on = subPulsesIntoCurrentSymbol<=_onePulseSubPulses;
+			on = subPulsesIntoCurrentSymbol<_onePulseSubPulses;
 			break;
 		case MRTSymbol::Sync:
 		default:
-			on = subPulsesIntoCurrentSymbol<=_syncPulseSubPulses;
+			on = subPulsesIntoCurrentSymbol<_syncPulseSubPulses;
 			break;
 	}
 	gpio_set_level(_txGPIONum, (on^_invertTx)?1:0);

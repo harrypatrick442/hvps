@@ -1,6 +1,6 @@
 #include "IOInteruptHelper.hpp"
 #include "esp_intr_alloc.h"
-
+#include "Logging/Log.hpp"
 esp_err_t IOInteruptHelper::setupPinEdgeInterupt(
     int pin,
     gpio_isr_t staticHandlerMethod,
@@ -48,9 +48,11 @@ esp_err_t IOInteruptHelper::installISRHandlerIfNotAlready(){
     static bool isr_service_installed = false;
     if (isr_service_installed)
     {
+		Log::Info(TAG, "Already installed gpio_install_isr_service");
 		return ESP_OK;
 	}
-    esp_err_t err = gpio_install_isr_service(ESP_INTR_FLAG_IRAM | ESP_INTR_FLAG_LEVEL4);
+	Log::Info(TAG, "Installing gpio_install_isr_service");
+    esp_err_t err = gpio_install_isr_service(ESP_INTR_FLAG_IRAM);
 	if(err!=ESP_OK){
 		return err;
 	}

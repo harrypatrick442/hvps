@@ -531,8 +531,7 @@
       },
       "Fundamental/1.0.0": {
         "dependencies": {
-          "ConfigurationCore": "1.0.0",
-          "DependencyManagement": "1.0.0"
+          "GlobalConstants": "1.0.0"
         },
         "runtime": {
           "Fundamental.dll": {}

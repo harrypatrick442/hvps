@@ -893,14 +893,23 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
-          "ConfigurationCore": "1.0.0",
-          "DependencyManagement": "1.0.0"
+          "GlobalConstants": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Fundamental.dll": {}
         },
         "runtime": {
           "bin/placeholder/Fundamental.dll": {}
+        }
+      },
+      "GlobalConstants/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/GlobalConstants.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/GlobalConstants.dll": {}
         }
       },
       "InfernoDispatcher/1.0.0": {
@@ -3612,6 +3621,11 @@
       "type": "project",
       "path": "../../../../shared-public/Fundamental/CSharp/Fundamental.csproj",
       "msbuildProject": "../../../../shared-public/Fundamental/CSharp/Fundamental.csproj"
+    },
+    "GlobalConstants/1.0.0": {
+      "type": "project",
+      "path": "../../../../echat/Constants/GlobalConstants.csproj",
+      "msbuildProject": "../../../../echat/Constants/GlobalConstants.csproj"
     },
     "InfernoDispatcher/1.0.0": {
       "type": "project",

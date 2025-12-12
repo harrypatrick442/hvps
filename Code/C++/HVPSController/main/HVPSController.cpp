@@ -30,7 +30,6 @@ extern "C" void app_main(void)
 	Aborter::setToSafe(&Outputs::toSafe);
 	Outputs::initialize();
 	Outputs::toSafeReversible();
-	Port_FirstStageVoltageFeedback& port_FirstStageVoltageFeedback = Port_FirstStageVoltageFeedback::initialize();
 	Delay::ms(10000);
 	Log::Info(TAG, "Starting HVPSController....");
 	Delay::ms(1000);
@@ -54,10 +53,8 @@ extern "C" void app_main(void)
     WatchdogFeeder
         ::initialize(WATCHDOG_TIMEOUT_MILLISECONDS);
 		
-	Log::Info(TAG, "0");
-	Log::Info(TAG, "A");
+	Port_FirstStageVoltageFeedback& port_FirstStageVoltageFeedback = Port_FirstStageVoltageFeedback::initialize();
 	Port_OutputVoltageFeedback& port_OutputVoltageFeedback = Port_OutputVoltageFeedback::initialize();
-	Log::Info(TAG, "B");
     Bluetooth::initialize(
         "HVPS", 
         "HVPSControllerServer"
