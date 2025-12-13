@@ -299,7 +299,35 @@ uint32_t MRTChannel::nSubPulsesToCCycles(int nSubPulses)
 
     return static_cast<uint32_t>(result);
 }
+void MRTChannel::printTimingConfig() const
+{
+    Log::Info(TAG, "=== MRT Timing Configuration ===");
 
+    Log::Info(TAG, "periodUs                = %u us", _periodUs);
+    Log::Info(TAG, "sub-pulses per pulse    = %d", N_SUB_PULSES_PER_PULSE);
+    Log::Info(TAG, "writeTimerPeriodUs      = %llu us", _writeTimerPeriodUs);
+
+    Log::Info(TAG, "--- Symbol sub-pulses ---");
+    Log::Info(TAG, "SYNC sub-pulses         = %u", _syncPulseSubPulses);
+    Log::Info(TAG, "ZERO sub-pulses         = %u", _zeroPulseSubPulses);
+    Log::Info(TAG, "ONE  sub-pulses         = %u", _onePulseSubPulses);
+
+    Log::Info(TAG, "--- Pulse width (CPU cycles) ---");
+    Log::Info(TAG, "SYNC min cycles         = %u", _syncPulseMinCCycles);
+    Log::Info(TAG, "SYNC max cycles         = %u", _syncPulseMaxCCycles);
+    Log::Info(TAG, "ZERO max cycles         = %u", _zeroPulseMaxCCycles);
+    Log::Info(TAG, "ONE  max cycles         = %u", _onePulseMaxCCycles);
+
+    Log::Info(TAG, "--- Derived rates ---");
+    uint32_t pulsesPerByte = 9 + 1; // 8 bits + sync + trailing sync
+    uint32_t usPerByte = pulsesPerByte * _periodUs;
+    uint32_t bytesPerSecond = 1'000'000 / usPerByte;
+
+    Log::Info(TAG, "us per byte             = %u us", usPerByte);
+    Log::Info(TAG, "approx bytes/sec        = %u B/s", bytesPerSecond);
+
+    Log::Info(TAG, "================================");
+}
 size_t MRTChannel::readBytes(char* destination, size_t maxLength, uint32_t timeoutMs) {
 	if(!_successfullyConfigured.load(std::memory_order_relaxed)){
 		Aborter::safeAbort(TAG, NOT_INITIALIZED_PROPERLY_MESSAGE);

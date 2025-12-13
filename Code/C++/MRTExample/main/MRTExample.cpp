@@ -30,13 +30,12 @@ extern "C" void app_main(void)
 	MRTChannel channel(
 		PinDefinitions::TX,
 		PinDefinitions::RX,
-		200,
+		400,
 		false,
 		true
 	);
-	Log::Info("MRTExample", "B");
+	channel.printTimingConfig();
 	channel.configure();
-	Log::Info("MRTExample", "C");
 	bool b = false;
 	const char* chars = "abcde";
 	const char* chars2 = "fghij";

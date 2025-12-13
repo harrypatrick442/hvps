@@ -85,7 +85,9 @@ public:
 	void flushTx() override;
 	const char* getDescription() const override;
 	size_t readBytes(char* dst, size_t maxlen, uint32_t timeoutMs) override;
-	size_t writeBytes(const char* src, size_t len) override;
+	size_t writeBytes(const char* src, size_t len) override;void 
+	printTimingConfig() const;
+
 private:	
 
 	void addSyncPulse(MRTSymbol* items, size_t& nextSymbolIndex);
