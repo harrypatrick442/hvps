@@ -30,7 +30,7 @@ _ticketedSender(
 		"sendSendStateToIndicate"
 	);
 }
-void Port_FiberOpticChannel1::handleIncomingMessage(cJSON* message, bool& dontDelete){
+void Port_FiberOpticChannel1::handleIncomingMessage(cJSON* message, bool& dontDelete, MessageIntegrity messageIntegrity){
 	if(_messageSender==nullptr){
         Log::Error(TAG, "_messageSender was null. You must set it with setMessageSender");
 		return;

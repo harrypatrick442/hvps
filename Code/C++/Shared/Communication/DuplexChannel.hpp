@@ -1,5 +1,6 @@
 #pragma once
 #include "./Interfaces/IIncomingMessageHandler.hpp"
+#include "./Enums/MessageIntegrity.hpp"
 #include "./Interfaces/IChannel.hpp"
 #include "./Interfaces/IDuplexChannel.hpp"
 #include "./Events/ChannelEvents.hpp"
@@ -30,4 +31,6 @@ class DuplexChannel : public IDuplexChannel, public ChannelEvents{
 		virtual ~DuplexChannel();
 	private: 
 		void loop();
+		MessageIntegrity inspectCRC32AndReturnJSONLength(char* lineBuffer, size_t& lineLength);
+		void findLengthToEndOfJSONObject(char* lineBuffer, size_t& lineLength);
 };

@@ -243,7 +243,7 @@ void Bluetooth::esp_spp_callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *p
 						return;
 					}
 					bool dontDelete = false;
-					_incomingMessageHandler->handleIncomingMessage(root, dontDelete);
+					_incomingMessageHandler->handleIncomingMessage(root, dontDelete, MessageIntegrity::Unverified);
 					if(!dontDelete){
 						cJSON_Delete(root);
 					}

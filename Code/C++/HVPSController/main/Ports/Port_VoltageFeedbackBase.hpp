@@ -11,6 +11,7 @@
 #include "cJSON/cJSON.h"
 #include "Core/Macros.hpp"
 #include "Core/Event.hpp"
+#include "Communication/Enums/MessageIntegrity.hpp"
 
 class Port_VoltageFeedbackBase : public IIncomingMessageHandler {
 public:
@@ -21,7 +22,7 @@ public:
     Event<GreetingMessage*> onGotGreetingMessage;
 	DISALLOW_COPY_MOVE(Port_VoltageFeedbackBase);
 
-    void handleIncomingMessage(cJSON* message, bool& dontDelete) override;
+    void handleIncomingMessage(cJSON* message, bool& dontDelete, MessageIntegrity messageIntegrity) override;
 	bool setVoltageThreshold(double voltage);
     bool getVoltageThreshold(double& voltage);
     bool getVoltage(double& voltage);

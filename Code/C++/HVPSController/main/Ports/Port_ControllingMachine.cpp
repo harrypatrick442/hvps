@@ -79,7 +79,7 @@ void Port_ControllingMachine::sendConsoleMessage(const std::string& str, bool is
 void Port_ControllingMachine::sendLiveData(LiveDataMessage liveDataMessage) {
     _channel.sendMessage(liveDataMessage.toJSON());
 }
-void Port_ControllingMachine::handleIncomingMessage(cJSON* message, bool& dontDelete){
+void Port_ControllingMachine::handleIncomingMessage(cJSON* message, bool& dontDelete, MessageIntegrity messageIntegrity){
 	bool success = true;
 	char* type = JHelper::getString(message, "tpe", success);
 	if (!success) {

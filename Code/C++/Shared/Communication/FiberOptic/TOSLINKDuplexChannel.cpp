@@ -11,7 +11,7 @@ TOSLINKDuplexChannel::TOSLINKDuplexChannel(
 	ChannelType channelType): DuplexChannel(
 		channelType==ChannelType::MRT
 		?std::unique_ptr<IChannel>(
-			new MRTChannel(txPin, rxPin, 400, false, true)
+			new MRTChannel(txPin, rxPin, 2000, false, true)
 		)
 		:std::unique_ptr<IChannel>(
 			new HardwareUART(takeNextNUart(), txPin, rxPin, 115200, false, true)

@@ -43,7 +43,7 @@ Port_OtherPeripherals::~Port_OtherPeripherals() noexcept
     delete _TOSLINKDuplexChannel;
 	_TOSLINKDuplexChannel = nullptr; 
 }
-void Port_OtherPeripherals::handleIncomingMessage(cJSON* message, bool& dontDelete){
+void Port_OtherPeripherals::handleIncomingMessage(cJSON* message, bool& dontDelete, MessageIntegrity messageIntegrity){
 	if(_messageSender==nullptr){
         Log::Error(TAG, "_messageSender was null. You must set it with setMessageSender");
 		return;

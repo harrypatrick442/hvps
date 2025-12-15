@@ -10,6 +10,7 @@
 #include "driver/gpio.h"
 #include "esp_timer.h"
 #include "driver/gptimer.h"
+#include "Timing/InterruptTimer.hpp"
 // Include FreeRTOS headers for data types
 #ifdef __cplusplus
 extern "C" {
@@ -50,7 +51,7 @@ private:
 	uint8_t _currentByte;
 	uint8_t _nextNBit;
 	uint64_t _writeTimerPeriodUs;
-	gptimer_handle_t _writeTimer;
+	InterruptTimer _writeTimer;
 	std::mutex _configureMutex;
 	std::mutex _txMutex;
 	char _description[32];
@@ -104,7 +105,5 @@ private:
 	void scheduleWriteBuffer(MRTSymbol* symbols, size_t symbolsLength);
 	void IRAM_ATTR setIOBasedOnSymbol(int8_t subPulsesIntoCurrentSymbol, MRTSymbol symbol);
 	static bool IRAM_ATTR txTimerISRTrampoline(
-		gptimer_handle_t timer,
-		const gptimer_alarm_event_data_t *edata,
 		void *arg);
 };

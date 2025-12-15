@@ -19,6 +19,7 @@
 #include "System/CrashReporter.hpp"
 #include "Enums/SubsystemIdentifiers.hpp"
 #include "System/SubsystemIdentifier.hpp"
+#include "IO/IOInteruptHelper.hpp"
 
 #define WATCHDOG_TIMEOUT_MILLISECONDS 10000
 
@@ -30,6 +31,7 @@ extern "C" void app_main(void)
 	Aborter::setToSafe(&Outputs::toSafe);
 	Outputs::initialize();
 	Outputs::toSafeReversible();
+	IOInteruptHelper::installISRHandlerIfNotAlready();
 	Delay::ms(10000);
 	Log::Info(TAG, "Starting HVPSController....");
 	Delay::ms(1000);

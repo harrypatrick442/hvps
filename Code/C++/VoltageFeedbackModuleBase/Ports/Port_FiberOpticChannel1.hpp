@@ -12,6 +12,7 @@
 #include "Generated/Messages/GetVoltageResponse.hpp"
 #include "Ticketing/TicketedSender.hpp"
 #include "cJSON/cJSON.h"
+#include "Communication/Enums/MessageIntegrity.hpp"
 class Port_FiberOpticChannel1  final:
 	public SingletonBase<Port_FiberOpticChannel1>,
 	public IIncomingMessageHandler
@@ -26,7 +27,8 @@ class Port_FiberOpticChannel1  final:
 		TicketedSender _ticketedSender;
     public :
 		static inline constexpr const char* TAG = "Port_FiberOpticChannel1";
-		void handleIncomingMessage(cJSON* message, bool& dontDelete) override;
+		void handleIncomingMessage(cJSON* message, bool& dontDelete,
+			MessageIntegrity messageIntegrity) override;
 		DISALLOW_COPY_MOVE(Port_FiberOpticChannel1);
 		
 		bool setVoltageThreshold(double voltage);

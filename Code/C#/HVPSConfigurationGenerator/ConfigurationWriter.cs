@@ -42,7 +42,8 @@ namespace HVPSConfigurationGenerator
             TConfigurationStruct configurationStruct,
             string structHppFileRelativePath,
             string dependenciesIncludePathPrefix,
-            AlreadyWroteWatcher alreadyWroteWatcher
+            AlreadyWroteWatcher alreadyWroteWatcher,
+            string instancePrefix = "Config"
         ) where TConfigurationStruct: unmanaged
         {
 
@@ -57,7 +58,9 @@ namespace HVPSConfigurationGenerator
             sb.AppendLine($"#include \"{structHppFileRelativePath}\"");
             sb.AppendLine($"#include \"{dependenciesIncludePathPrefix}System/Aborter.hpp\"");
             sb.AppendLine($"#include \"{dependenciesIncludePathPrefix}Core/Checksums/Crc32.hpp\"");
-            sb.AppendLine("inline constexpr Configuration Config1{");
+            string instance1Name = $"{instancePrefix}1";
+            string instance2Name = $"{instancePrefix}2";
+            sb.AppendLine($"inline constexpr Configuration {instance1Name}{{");
             foreach (var field in typeof(TConfigurationStruct).GetFields(BindingFlags.Public | BindingFlags.Instance))
             {
                 string cPlusPlusTypeName = GetCPlusPlusTypeName(field.FieldType);
@@ -77,20 +80,25 @@ namespace HVPSConfigurationGenerator
             sb.AppendLine("};");
             sb.AppendLine($"inline const uint32_t CONFIG_CRC32_EXPECTED = {crc};");
             //sbAll.AppendLine("static_assert(podConfig1 == CONFIG_CRC32_EXPECTED, \"pod did not match expected crc\"");
-            sb.AppendLine("inline Configuration Config2 = Config1;//This one is in RAM. Config1 is in ROM.");
-            sb.Append(@"inline bool validateConfiguration(){
-	uint32_t podConfig1 = Crc32::computePod(Config1);
-	uint32_t podConfig2 = Crc32::computePod(Config2);
-	if(podConfig1 != podConfig2){
-		Aborter::safeAbort(""Configuration"", ""The CRC32 computed for Config2 did not match the CRC32 for Config1"");
-		return false;
-	}
-    if (podConfig1 != CONFIG_CRC32_EXPECTED){
-		Aborter::safeAbort(""Configuration"", ""The CRC32 computed for Config1 did not match the expected value"");
-		return false;
-	};
-    return true;
-}");
+            sb.AppendLine($"inline Configuration {instance2Name} = {instance1Name};//This one is in RAM. {instance1Name} is in ROM.");
+            sb.AppendLine("inline bool validateConfiguration(){");
+            sb.AppendLine($"    uint32_t podConfig1 = Crc32::computePod({instance1Name});");
+            sb.AppendLine($"    uint32_t podConfig2 = Crc32::computePod({instance2Name});");
+
+            sb.AppendLine($"    if (podConfig1 != podConfig2){{");
+
+            sb.AppendLine($"        Aborter::safeAbort(\"Configuration\", \"The CRC32 computed for {instance2Name} did not match the CRC32 for {instance1Name}\");");
+            sb.AppendLine($"        return false;");
+
+            sb.AppendLine("    }");
+            sb.AppendLine($"    if (podConfig1 != CONFIG_CRC32_EXPECTED){{");
+
+            sb.AppendLine($"        Aborter::safeAbort(\"Configuration\", \"The CRC32 computed for {instance1Name} did not match the expected value\");");
+            sb.AppendLine("        return false;");
+
+            sb.AppendLine("    }");
+            sb.AppendLine("    return true;");
+            sb.AppendLine("}");
             alreadyWroteWatcher.ImGoingToWrite(projectSpecificConfigurationFilePath);
             Directory.CreateDirectory(Path.GetDirectoryName(projectSpecificConfigurationFilePath)!);
             File.WriteAllText(projectSpecificConfigurationFilePath, sb.ToString());

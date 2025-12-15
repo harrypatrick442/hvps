@@ -4,7 +4,12 @@
 #include "../Timing/Delay.hpp"
 #include "../JSON/CJsonRAII.hpp"
 #include "../Logging/Log.hpp"
+#include "../Communication/Enums/MessageIntegrity.hpp"
+#include "../Core/Checksums/Crc32.hpp"
 #include <cstring>
+#include <cstdint>
+#include <cstdlib>
+#include <cctype>
 //#include "driver/gpio.h"
 //#include "esp_log.h"
 const char* DuplexChannel::TAG = "DuplexChannel";
@@ -53,7 +58,11 @@ void DuplexChannel::sendMessage(cJSON* message, bool deleteMessageAfter){
 		return;
 	}
 	char* json_with_newline = NULL;
-	if (asprintf(&json_with_newline, "%s\n", json_str) == -1 || !json_with_newline) {
+	
+	uint32_t crc32 = Crc32::compute(json_str, strlen(json_str));
+	char crc32HexStr[9];
+	snprintf(crc32HexStr, sizeof(crc32HexStr), "%08X", crc32); 
+	if (asprintf(&json_with_newline, "%s%s\n", json_str, crc32HexStr) == -1 || !json_with_newline) {
 		Log::Error(TAG, "%s: sendMessage: asprintf failed", _channel->getDescription());
 		free(json_str);
 		return;
@@ -106,8 +115,12 @@ void DuplexChannel::loop() {
 				if(lineLength<1){
 					continue;
 				}
+				MessageIntegrity messageIntegrity = inspectCRC32AndReturnJSONLength(lineBuffer, lineLength);
+				if(lineLength<1){
+					continue;
+				}
 				lineBuffer[lineLength] = '\0';
-
+				
 				cJSON* json = cJSON_Parse(lineBuffer);
 				Log::Info(TAG, "Received line: %s", lineBuffer);  // <-- added print here
 				//Log::Info(TAG, "Line length was: %d", lineLength);
@@ -118,7 +131,7 @@ void DuplexChannel::loop() {
 					IIncomingMessageHandler* h = _incomingMessageHandler.load(std::memory_order_acquire); // copy shared_ptr atomically
 					if(h){
 						bool dontDelete = false;
-						h->handleIncomingMessage(json, dontDelete);
+						h->handleIncomingMessage(json, dontDelete, messageIntegrity);
 						if(!dontDelete){
 							cJSON_Delete(json);
 						}
@@ -144,6 +157,52 @@ void DuplexChannel::loop() {
 			lineLength = 0;
 			disgardingTillNewLine = true;
 		}
+	}
+}
+MessageIntegrity DuplexChannel::inspectCRC32AndReturnJSONLength(char* lineBuffer, size_t& lineLength){
+	if(lineLength<10){
+		findLengthToEndOfJSONObject(lineBuffer, lineLength);
+		return MessageIntegrity::UnableToCheck;
+	}
+	size_t index = lineLength - 9;
+	if(lineBuffer[index++]!='}'){
+		findLengthToEndOfJSONObject(lineBuffer, lineLength);
+		return MessageIntegrity::UnableToCheck;
+	}
+	char crc32Chars[8];
+	size_t crc32CharIndex = 0;
+	while(true){
+		char c = lineBuffer[index++];
+		if (!isxdigit(c)) {
+			findLengthToEndOfJSONObject(lineBuffer, lineLength);
+			return MessageIntegrity::UnableToCheck;
+		}
+		crc32Chars[crc32CharIndex++]=c;
+		if(crc32CharIndex>8){
+			break;
+		}
+	}
+	lineLength -= 8;
+	uint32_t crc32OffEnd = static_cast<uint32_t>(strtoul(crc32Chars, nullptr, 16));
+	uint32_t actualCrc32 = Crc32::compute(lineBuffer, lineLength);
+	if(crc32OffEnd!=actualCrc32){
+		return MessageIntegrity::VerifiedFailed;
+	}
+	return MessageIntegrity::VerifiedPassed;
+}
+void DuplexChannel::findLengthToEndOfJSONObject(char* lineBuffer, size_t& lineLength){
+	size_t index = lineLength - 1;
+	while(true){
+		char c = lineBuffer[index];
+		if(c=='}'){
+			lineLength = index+1;
+			return;
+		}
+		if(index<=0){
+			lineLength = 0;
+			return;
+		}
+		index--;
 	}
 }
 void DuplexChannel::setIncomingMessageHandler(IIncomingMessageHandler* incomingMessageHandler) {

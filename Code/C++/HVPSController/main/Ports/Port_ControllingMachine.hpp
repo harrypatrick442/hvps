@@ -12,6 +12,7 @@
 #include "../ControllerCore/HighSpeedCore.hpp"
 #include "Port_FirstStageVoltageFeedback.hpp"
 #include "Port_OutputVoltageFeedback.hpp"
+#include "Communication/Enums/MessageIntegrity.hpp"
 #include "cJSON/cJSON.h"
 #include <string>
 
@@ -23,7 +24,7 @@ public:
 	static inline constexpr const char* TAG = "Port_ControllingMachine";
     // Force derived classes to identify themselves
 
-    void handleIncomingMessage(cJSON* message, bool& dontDelete) override;
+    void handleIncomingMessage(cJSON* message, bool& dontDelete, MessageIntegrity messageIntegrity) override;
 
 	DISALLOW_COPY_MOVE(Port_ControllingMachine);
 	

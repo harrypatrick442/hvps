@@ -12,6 +12,7 @@
 #include "Ticketing/TicketedSender.hpp"
 #include "Interfaces/ISystemStateIndicator.hpp"
 #include "System/SubsystemIdentifier.hpp"
+#include "Communication/Enums/MessageIntegrity.hpp"
 #include "cJSON/cJSON.h"
 class Port_FiberOpticChannel1  final:
 	public SingletonBase<Port_FiberOpticChannel1>,
@@ -20,7 +21,7 @@ class Port_FiberOpticChannel1  final:
     friend class SingletonBase<Port_FiberOpticChannel1>;
     public :
 		static inline constexpr const char* TAG = "Port_FiberOpticChannel1";
-		void handleIncomingMessage(cJSON* message, bool& dontDelete) override;
+		void handleIncomingMessage(cJSON* message, bool& dontDelete, MessageIntegrity messageIntegrity) override;
 		DISALLOW_COPY_MOVE(Port_FiberOpticChannel1);
 		
 	protected:

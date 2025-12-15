@@ -2,6 +2,7 @@
 #define Port_FiberOpticChannel1_hpp
 #include "Communication/Interfaces/IIncomingMessageHandler.hpp"
 #include "Communication/Interfaces/IMessageSender.hpp"
+#include "Communication/Enums/MessageIntegrity.hpp"
 #include "Core/SingletonBase.hpp"
 #include "Core/Macros.hpp"
 #include "../IO/FiberOpticDuplexChannel_1.hpp"
@@ -18,7 +19,7 @@ class Port_FiberOpticChannel1  final:
     friend class SingletonBase<Port_FiberOpticChannel1>;
     public :
 		static inline constexpr const char* TAG = "Port_FiberOpticChannel1";
-		void handleIncomingMessage(cJSON* message, bool& dontDelete) override;
+		void handleIncomingMessage(cJSON* message, bool& dontDelete, MessageIntegrity messageIntegrity) override;
 		DISALLOW_COPY_MOVE(Port_FiberOpticChannel1);
 		
 		bool setVoltageThreshold(double voltage);

@@ -32,7 +32,7 @@ MRTChannel::MRTChannel(
 	_currentByte(0),
 	_nextNBit(0),
 	_writeTimerPeriodUs(periodUs/N_SUB_PULSES_PER_PULSE),
-	_writeTimer(nullptr),
+	_writeTimer(TIMER_GROUP_0, TIMER_0, _writeTimerPeriodUs, ESP_INTR_FLAG_LEVEL3, true),
 	_rxSymbolQueue(nullptr),
 	_symbolsBeingWritten(nullptr),
 	_symbolsBeingWrittenLength(0),
@@ -127,6 +127,7 @@ bool MRTChannel::configureTx() {
     io_conf_tx.pin_bit_mask = (1ULL << _txPin);
     io_conf_tx.mode = GPIO_MODE_OUTPUT;
     esp_err_t err = gpio_config(&io_conf_tx);
+	
 	if(err!=ESP_OK){
 		Aborter::safeAbort(TAG, "Failed to configure tx pin with error: %s", esp_err_to_name(err));
 		return false;
@@ -138,6 +139,8 @@ bool MRTChannel::configureTx() {
 bool MRTChannel::configureTxTimer(){
 	freeWriteTimerIfCreated();
 	
+	return _writeTimer.configure(&MRTChannel::txTimerISRTrampoline, this)==ESP_OK;
+	/*
     gptimer_config_t config = {
         .clk_src = GPTIMER_CLK_SRC_APB,
         .direction = GPTIMER_COUNT_UP,
@@ -176,7 +179,7 @@ bool MRTChannel::configureTxTimer(){
 		return true;
 	}
 	Aborter::safeAbort(TAG, "Failed to create tx timer on %s with error: %s", methodNameFailedOn, esp_err_to_name(err));
-	return false;
+	return false;*/
 }
 
 void MRTChannel::encodeByte(uint8_t b, MRTSymbol* items, size_t& nextSymbolIndex) {
@@ -193,9 +196,9 @@ void MRTChannel::flushTx() {
 }
 
 esp_err_t MRTChannel::freeWriteTimerIfCreated() {
+/*
     if (_writeTimer == nullptr)
         return ESP_OK;
-
     esp_err_t err = gptimer_stop(_writeTimer);
     if (err != ESP_OK) {
         Log::Warn(TAG, "Failed to stop gptimer: %s", esp_err_to_name(err));
@@ -210,9 +213,10 @@ esp_err_t MRTChannel::freeWriteTimerIfCreated() {
     if (err != ESP_OK) {
         Log::Warn(TAG, "Failed to delete gptimer: %s", esp_err_to_name(err));
     }
-
     _writeTimer = nullptr;
-    return err;
+*/
+	
+    return _writeTimer.release();
 }
 const char* MRTChannel::getDescription() const {
     return _description;
@@ -231,7 +235,7 @@ void MRTChannel::handleMalformedByte(uint8_t nextNBit){
 void IRAM_ATTR MRTChannel::handleTxTickFromISR(){
 	if(_txISRSubPulsesIntoCurrentSymbol>=N_SUB_PULSES_PER_PULSE){
 		if(_txISRSymbolIndex>=_symbolsBeingWrittenLength){
-			gptimer_stop(_writeTimer);
+			_writeTimer.stop();
 			_nextWriteBufferForISRFreeLatch.unlatchFromISR();
 			return;
 		}
@@ -379,8 +383,7 @@ void MRTChannel::scheduleWriteBuffer(MRTSymbol* symbols, size_t symbolsLength){
 	_txISRSubPulsesIntoCurrentSymbol = N_SUB_PULSES_PER_PULSE;
 	_txISRSymbolIndex = 0;
     _nextWriteBufferForISRFreeLatch.latch();
-
-	esp_err_t err = gptimer_start(_writeTimer);
+	esp_err_t err = _writeTimer.start();
 	if(err != ESP_OK){
 		// extremely rare but worth catching
 		delete[] _symbolsBeingWritten;
@@ -410,10 +413,7 @@ void IRAM_ATTR MRTChannel::setIOBasedOnSymbol(int8_t subPulsesIntoCurrentSymbol,
 	gpio_set_level(_txGPIONum, (on^_invertTx)?1:0);
 }
 
-bool IRAM_ATTR MRTChannel::txTimerISRTrampoline(
-    gptimer_handle_t timer,
-    const gptimer_alarm_event_data_t *edata,
-    void *arg)
+bool IRAM_ATTR MRTChannel::txTimerISRTrampoline(void *arg)
 {
     static_cast<MRTChannel*>(arg)->handleTxTickFromISR();
     return false;  // no context switch needed

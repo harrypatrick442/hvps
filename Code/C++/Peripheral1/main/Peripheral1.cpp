@@ -12,6 +12,7 @@
 #include "Generated/Peripheral1Config.hpp"
 #include "HVPSLEDDisplay.hpp"
 #include "SystemStateIndicator.hpp"
+#include "IO/IOInteruptHelper.hpp"
 #define WATCHDOG_TIMEOUT_MILLISECONDS 10000
 
 extern "C" void app_main(void)
@@ -19,6 +20,7 @@ extern "C" void app_main(void)
 	Aborter::setToSafe(&Outputs::toSafe);
 	Outputs::initialize();
 	Outputs::toSafeReversible();
+	IOInteruptHelper::installISRHandlerIfNotAlready();
     Flash::initialize();
 	esp_wifi_stop();
 	esp_wifi_deinit();

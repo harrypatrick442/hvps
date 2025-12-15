@@ -97,6 +97,35 @@ namespace HVPSConfigurationGenerator
                     alreadyWroteWatcher
                 );
             }
+            ConfigurationWriter.WriteConfigurationStructFile<HVPSConfig>(Path.Combine(
+                    reposDirectory,
+                    "hvps",
+                    "Code",
+                    "C++",
+                    "Peripheral1",
+                    "main",
+                    "Generated",
+                    "HVPSConfiguration.hpp"
+            ), alreadyWroteWatcher);
+            {
+                ConfigurationWriter.WriteProjectSpecificConfiguration(
+                    projectSpecificConfigurationFilePath: Path.Combine(
+                        reposDirectory,
+                        "hvps",
+                        "Code",
+                        "C++",
+                        "Peripheral1",
+                        "main",
+                        "Generated",
+                        "HVPSConfig.hpp"
+                ),
+                    configurationStruct,
+                    structHppFileRelativePath: "HVPSConfiguration.hpp",
+                    dependenciesIncludePathPrefix,
+                    alreadyWroteWatcher,
+                    instancePrefix:"HVPSConfig"
+                );
+            }
             ConfigurationWriter.WriteConfigurationStructFile<VoltageFeedbackModuleConfig>(
                 Path.Combine(reposDirectory, "hvps", "Code", "C++", "VoltageFeedbackModuleBase",
                     "Generated", "VoltageFeedbackModuleConfiguration.hpp"),

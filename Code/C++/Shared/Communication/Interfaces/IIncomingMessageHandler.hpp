@@ -7,7 +7,7 @@ class IIncomingMessageHandler {
 public:
     virtual ~IIncomingMessageHandler() = default;
 
-    virtual void handleIncomingMessage(cJSON* message, bool& dontDelete/*, MessageIntegrity messageIntegrity*/) = 0;
+    virtual void handleIncomingMessage(cJSON* message, bool& dontDelete, MessageIntegrity messageIntegrity) = 0;
 };
 
 #endif // I_INCOMING_MESSAGE_HANDLER_HPP

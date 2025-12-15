@@ -12,7 +12,7 @@
 #include "Ticketing/TicketedSender.hpp"
 #include "Core/Macros.hpp"
 #include "Core/Event.hpp"
-
+#include "Communication/Enums/MessageIntegrity.hpp"
 class Port_OtherPeripherals final:
 	public SingletonBase<Port_OtherPeripherals>,
 	public IIncomingMessageHandler{
@@ -23,7 +23,7 @@ public:
     // Force derived classes to identify themselves
 	DISALLOW_COPY_MOVE(Port_OtherPeripherals);
 
-    void handleIncomingMessage(cJSON* message, bool& dontDelete) override;
+    void handleIncomingMessage(cJSON* message, bool& dontDelete, MessageIntegrity messageIntegrity) override;
 	bool sendIndicateStateRequest();
 	void sendIndicateStateMessage();
 

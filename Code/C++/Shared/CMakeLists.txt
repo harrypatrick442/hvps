@@ -48,6 +48,7 @@ idf_component_register(
 	"Timing/Timer.cpp"
 	"Timing/TimeHelper.cpp"
 	"Timing/TimerSimple.cpp"
+	"Timing/InterruptTimer.cpp"
 	"Generated/Messages/ConsoleMessage.cpp"
 	"Generated/Messages/GetVoltageRequest.cpp"
 	"Generated/Messages/GetVoltageResponse.cpp"

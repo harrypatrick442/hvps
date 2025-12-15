@@ -14,6 +14,6 @@ public:
 		bool pullDownEnabled
 	);
 	static esp_err_t removeHandlerAndDisableEdgeInterupt(int pin);
-private:
 	static esp_err_t installISRHandlerIfNotAlready();
+private:
 };

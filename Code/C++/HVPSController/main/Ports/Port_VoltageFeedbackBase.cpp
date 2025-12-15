@@ -76,7 +76,7 @@ bool Port_VoltageFeedbackBase::setForceThresholdReachedFeedback(bool force){
     }
     return true;
 }
-void Port_VoltageFeedbackBase::handleIncomingMessage(cJSON* message, bool& dontDelete){
+void Port_VoltageFeedbackBase::handleIncomingMessage(cJSON* message, bool& dontDelete, MessageIntegrity messageIntegrity){
 	if(_messageSender==nullptr){
         Log::Error(getTag(), "_messageSender was null. You must set it with setMessageSender");
 		return;
