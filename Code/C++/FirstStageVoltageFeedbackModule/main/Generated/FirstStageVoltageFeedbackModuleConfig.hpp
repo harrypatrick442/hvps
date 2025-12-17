@@ -3,11 +3,11 @@
 #include "System/Aborter.hpp"
 #include "Core/Checksums/Crc32.hpp"
 inline constexpr Configuration Config1{
-    .vHvOverVadcRatio = 5600,
-    .defaultThreshold = 14255.603186895398,
-    .broadcastFrequencyHz = 2
+    .broadcastFrequencyHz = 2,
+    .defaultThreshold = 14255.604,
+    .vHvOverVadcRatio = 5600
 };
-inline const uint32_t CONFIG_CRC32_EXPECTED = 3437887048;
+inline const uint32_t CONFIG_CRC32_EXPECTED = 1513659569;
 inline Configuration Config2 = Config1;//This one is in RAM. Config1 is in ROM.
 inline bool validateConfiguration(){
     uint32_t podConfig1 = Crc32::computePod(Config1);

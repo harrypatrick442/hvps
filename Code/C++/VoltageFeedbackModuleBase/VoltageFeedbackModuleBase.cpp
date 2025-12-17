@@ -32,8 +32,7 @@ void VoltageFeedbackModuleBase::main(const Configuration& config1, const Configu
 			config1,
 			config2
 		);
-    Port_FiberOpticChannel1& port_FiberOpticChannel1 
-		= Port_FiberOpticChannel1::initialize(thresholdMonitor);
+	Port_FiberOpticChannel1::initialize(thresholdMonitor);
 /*
 	bool isHigh = true;
 	while(true){

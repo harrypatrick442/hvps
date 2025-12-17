@@ -61,7 +61,7 @@ void DuplexChannel::sendMessage(cJSON* message, bool deleteMessageAfter){
 	
 	uint32_t crc32 = Crc32::compute(json_str, strlen(json_str));
 	char crc32HexStr[9];
-	snprintf(crc32HexStr, sizeof(crc32HexStr), "%08X", crc32); 
+	snprintf(crc32HexStr, sizeof(crc32HexStr), "%08" PRIX32, crc32);
 	if (asprintf(&json_with_newline, "%s%s\n", json_str, crc32HexStr) == -1 || !json_with_newline) {
 		Log::Error(TAG, "%s: sendMessage: asprintf failed", _channel->getDescription());
 		free(json_str);

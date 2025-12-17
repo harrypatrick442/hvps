@@ -1,7 +1,7 @@
 #include "TransientWorker.hpp"
-#include "../System/Aborter.hpp";
-#include "TaskFactory.hpp";
-#include "../Timing/TimeHelper.hpp";
+#include "../System/Aborter.hpp"
+#include "TaskFactory.hpp"
+#include "../Timing/TimeHelper.hpp"
 TransientWorker::TransientWorker(
 	UBaseType_t maxQueueLength,
 	uint32_t idleTimeoutMs,

@@ -3,7 +3,7 @@
 #include "Enums/SubsystemIdentifiers.hpp"
 #include "System/SubsystemIdentifier.hpp"
 #include "Timing/Delay.hpp"
-static const char *TAG = "OutputVoltageFeedbackModule";
+//static const char *TAG = "OutputVoltageFeedbackModule";
 
 extern "C" void app_main(void)
 {

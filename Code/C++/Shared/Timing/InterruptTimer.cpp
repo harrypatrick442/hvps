@@ -32,9 +32,9 @@ esp_err_t InterruptTimer::configure(ISRHandler handler, void* context) {
 		.intr_type = TIMER_INTR_LEVEL,
 		.counter_dir = TIMER_COUNT_UP,
 		.auto_reload = TIMER_AUTORELOAD_EN,
+		.clk_src = TIMER_SRC_CLK_APB,
 		.divider = 80
     };
-	config.clk_src = TIMER_SRC_CLK_APB;
     esp_err_t err = timer_init(_group, _idx, &config);
     if (err != ESP_OK) {
         failed("timer_init", err);

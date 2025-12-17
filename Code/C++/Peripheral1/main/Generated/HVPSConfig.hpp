@@ -3,18 +3,20 @@
 #include "System/Aborter.hpp"
 #include "Core/Checksums/Crc32.hpp"
 inline constexpr Configuration HVPSConfig1{
-    .onTimeMicroSeconds = 31,
-    .offTimeMicroSeconds = 31,
-    .maxOutputVoltageThreshold = 80000,
-    .minOutputVoltageThreshold = 60000,
-    .firstStageVoltageThreshold = 14255.603186895398,
-    .maxAverageOutputPower = 12.5,
-    .nStages = 6,
-    .broadcastFrequencyHz = 0,
+    .broadcastFrequencyHz = 2,
+    .firstStageVoltageThresholdVolts = 14255.604,
+    .maxAverageOutputPowerWatts = 12.5,
+    .maxFlybackEnergyPerCycleJouls = 0.0098,
+    .maxOutputVoltageThresholdVolts = 80000,
+    .minOutputVoltageThresholdVolts = 60000,
     .vPsOverVadcRatio = 33,
+    .villardCapacitorCapacitanceFarads = 1E-09,
+    .nVillardStages = 6,
+    .offTimeMicroSeconds = 31,
+    .onTimeMicroSeconds = 31,
     .pingTimeoutMilliseconds = 3000
 };
-inline const uint32_t CONFIG_CRC32_EXPECTED = 2305277812;
+inline const uint32_t CONFIG_CRC32_EXPECTED = 4277806531;
 inline Configuration HVPSConfig2 = HVPSConfig1;//This one is in RAM. HVPSConfig1 is in ROM.
 inline bool validateConfiguration(){
     uint32_t podConfig1 = Crc32::computePod(HVPSConfig1);

@@ -58,15 +58,18 @@ namespace HVPSConfigurationGenerator
             maxOutputVoltageThreshold = Math.Floor(maxOutputVoltageThreshold);
             HVPSConfig configurationStruct = new HVPSConfig
             {
+                broadcastFrequencyHz = Constants.BroadcastFrequency,
+                firstStageVoltageThresholdVolts = (float)firstStageVoltageThreshold,
+                maxAverageOutputPowerWatts = (float)Constants.MaximumCompositeOutputCurrentLimitingResistorAveragePower,
+                maxFlybackEnergyPerCycleJouls = (float)maxFlybackEnergyPerCycle,
+                maxOutputVoltageThresholdVolts = (float)maxOutputVoltageThreshold,
+                minOutputVoltageThresholdVolts = (float)Constants.MinimumDesiredOutputVoltage,
+                nVillardStages = Constants.NStages,
                 onTimeMicroSeconds = onTimeMicroSeconds,
                 offTimeMicroSeconds = offTimeMicroSeconds,
-                maxOutputVoltageThreshold = maxOutputVoltageThreshold,
-                minOutputVoltageThreshold = Constants.MinimumDesiredOutputVoltage,
-                firstStageVoltageThreshold = firstStageVoltageThreshold,
-                maxAverageOutputPower = Constants.MaximumCompositeOutputCurrentLimitingResistorAveragePower,
-                nStages = Constants.NStages,
-                vPsOverVadcRatio = Constants.PowerSupplyVoltageFeedbackPotentialDividerRatio,
-                pingTimeoutMilliseconds = Constants.PingTimeoutMilliseconds
+                pingTimeoutMilliseconds = Constants.PingTimeoutMilliseconds,
+                villardCapacitorCapacitanceFarads = (float)Constants.VillardCapacitorCapacitance,
+                vPsOverVadcRatio = (float)Constants.PowerSupplyVoltageFeedbackPotentialDividerRatio,
             };
             AlreadyWroteWatcher alreadyWroteWatcher = new AlreadyWroteWatcher();
             ConfigurationWriter.WriteConfigurationStructFile<HVPSConfig>(Path.Combine(
@@ -131,12 +134,17 @@ namespace HVPSConfigurationGenerator
                     "Generated", "VoltageFeedbackModuleConfiguration.hpp"),
                 alreadyWroteWatcher
             );
+            ConfigurationWriter.WriteConfigurationStructFile<VoltageFeedbackModuleConfig>(
+                Path.Combine(reposDirectory, "hvps", "Code", "C++", "Peripheral1", "main",
+                    "Generated", "VoltageFeedbackModuleConfiguration.hpp"),
+                alreadyWroteWatcher
+            );
             {
                 VoltageFeedbackModuleConfig firstStageVoltageFeedbackModuleConfigStruct = new VoltageFeedbackModuleConfig
                 {
-                    vHvOverVadcRatio = Constants.FirstStageVoltageFeedbackPotentialDividerRatio,
-                    defaultThreshold = firstStageVoltageThreshold,
-                    broadcastFrequencyHz = Constants.BroadcastFrequency
+                    broadcastFrequencyHz = Constants.BroadcastFrequency,
+                    defaultThreshold = (float)firstStageVoltageThreshold,
+                    vHvOverVadcRatio = (float)Constants.FirstStageVoltageFeedbackPotentialDividerRatio
                 };
                 ConfigurationWriter.WriteProjectSpecificConfiguration(
                     projectSpecificConfigurationFilePath:
@@ -149,13 +157,25 @@ namespace HVPSConfigurationGenerator
                     alreadyWroteWatcher
 
                 );
+                ConfigurationWriter.WriteProjectSpecificConfiguration(
+                    projectSpecificConfigurationFilePath:
+                        Path.Combine(reposDirectory, "hvps", "Code", "C++",
+                        "Peripheral1", "main",
+                        "Generated", "FirstStageVoltageFeedbackModuleConfig.hpp"),
+                    firstStageVoltageFeedbackModuleConfigStruct,
+                    structHppFileRelativePath: "Generated/VoltageFeedbackModuleConfiguration.hpp",
+                    dependenciesIncludePathPrefix,
+                    alreadyWroteWatcher,
+                    instancePrefix:"FirstStageVoltageFeedbackModuleConfig"
+                );
             }
             {
                 VoltageFeedbackModuleConfig outputVoltageFeedbackModuleConfigStruct = new VoltageFeedbackModuleConfig
                 {
-                    vHvOverVadcRatio = Constants.OutputVoltageFeedbackPotentialDividerRatio,
-                    defaultThreshold = maxOutputVoltageThreshold,
-                    broadcastFrequencyHz = Constants.BroadcastFrequency
+                    broadcastFrequencyHz = Constants.BroadcastFrequency,
+                    defaultThreshold = (float)maxOutputVoltageThreshold,
+                    vHvOverVadcRatio = (float)Constants.OutputVoltageFeedbackPotentialDividerRatio
+
                 };
                 ConfigurationWriter.WriteProjectSpecificConfiguration(
                     projectSpecificConfigurationFilePath:
@@ -166,6 +186,18 @@ namespace HVPSConfigurationGenerator
                     structHppFileRelativePath: "Generated/VoltageFeedbackModuleConfiguration.hpp",
                     dependenciesIncludePathPrefix,
                     alreadyWroteWatcher
+
+                );
+                ConfigurationWriter.WriteProjectSpecificConfiguration(
+                    projectSpecificConfigurationFilePath:
+                        Path.Combine(reposDirectory, "hvps", "Code", "C++",
+                        "Peripheral1", "main",
+                        "Generated", "OutputVoltageFeedbackModuleConfig.hpp"),
+                    outputVoltageFeedbackModuleConfigStruct,
+                    structHppFileRelativePath: "Generated/VoltageFeedbackModuleConfiguration.hpp",
+                    dependenciesIncludePathPrefix,
+                    alreadyWroteWatcher,
+                    instancePrefix:"OutputVoltageFeedbackModuleConfig"
 
                 );
             }
