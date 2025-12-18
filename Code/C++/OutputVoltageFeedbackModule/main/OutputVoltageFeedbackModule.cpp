@@ -9,5 +9,5 @@ extern "C" void app_main(void)
 {
 	Delay::ms(3000);
 	SubsystemIdentifier::set(SubsystemIdentifiers::OutputVoltageFeedbackModule);
-	VoltageFeedbackModuleBase::main(Config1, Config2);
+	VoltageFeedbackModuleBase::main(Config1, Config2, validateConfig);
 }

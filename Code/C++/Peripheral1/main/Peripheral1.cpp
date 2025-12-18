@@ -10,9 +10,13 @@
 #include "Enums/SystemState.hpp"
 #include "esp_log.h"
 #include "Generated/Peripheral1Config.hpp"
+#include "Generated/HVPSConfig.hpp"
+#include "Generated/FirstStageVoltageFeedbackModuleConfig.hpp"
+#include "Generated/OutputVoltageFeedbackModuleConfig.hpp"
 #include "HVPSLEDDisplay.hpp"
 #include "SystemStateIndicator.hpp"
 #include "IO/IOInteruptHelper.hpp"
+#include "Emulation/HVPSCircuitEmulator.hpp"
 #define WATCHDOG_TIMEOUT_MILLISECONDS 10000
 
 extern "C" void app_main(void)
@@ -20,6 +24,9 @@ extern "C" void app_main(void)
 	Aborter::setToSafe(&Outputs::toSafe);
 	Outputs::initialize();
 	Outputs::toSafeReversible();
+	validateConfig();
+	validateHVPSConfig();
+	validateOutputVoltageFeedbackModuleConfig();
 	IOInteruptHelper::installISRHandlerIfNotAlready();
     Flash::initialize();
 	esp_wifi_stop();
@@ -32,6 +39,7 @@ extern "C" void app_main(void)
 		= HVPSLEDDisplay::initialize(Config1);
 	SystemStateIndicator& systemStateIndicator 
 		= SystemStateIndicator::initialize(hVPSLEDDisplay);
+	HVPSCircuitEmulator::initialize(HVPSConfig1, FirstStageVoltageFeedbackModuleConfig1, OutputVoltageFeedbackModuleConfig1);
     Port_FiberOpticChannel1& port_FiberOpticChannel1 
 		= Port_FiberOpticChannel1::initialize(
 			SubsystemIdentifiers::Peripheral1, systemStateIndicator);

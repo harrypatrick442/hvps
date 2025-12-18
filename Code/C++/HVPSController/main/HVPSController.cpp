@@ -42,7 +42,7 @@ extern "C" void app_main(void)
     esp_log_level_set("*", ESP_LOG_VERBOSE);
     ESP_LOGI(TAG, "Starting HVPSController...");
     StayTheFuckAwake::initialize();
-	validateConfiguration();
+	validateConfig();
 	ADC::initialize();
 	SoftStartHandler::doSoftStart(Config1, Config2);
 	Log::Info(TAG, "Did soft start");

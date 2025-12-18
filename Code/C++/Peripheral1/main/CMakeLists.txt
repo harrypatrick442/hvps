@@ -1,5 +1,6 @@
 idf_component_register(
     SRCS 
+	"Emulation/HVPSCircuitEmulator.cpp"
 	"HVPSLEDDisplay.cpp"
 	"IO/FiberOpticDuplexChannel_1.cpp"
 	"IO/Outputs.cpp"

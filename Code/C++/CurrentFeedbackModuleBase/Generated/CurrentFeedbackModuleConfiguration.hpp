@@ -1,5 +1,5 @@
 #pragma once
-struct Configuration {
+struct TConfigurationStruct {
     const double senseResistanceOhms;
     const double outputCurrentLimitingResistanceOhms;
     const double cumulativeEnergyThresholdJ;

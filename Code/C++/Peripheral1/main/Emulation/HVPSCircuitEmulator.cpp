@@ -2,7 +2,10 @@
 #include "HVPSCircuitEmulator.hpp"
 #include "IO/PinDefinitions.hpp"
 #include <cmath>
-HVPSCircuitEmulator::HVPSCircuitEmulator(const HVPSConfig& hvpsConfig):
+HVPSCircuitEmulator::HVPSCircuitEmulator(
+	const HVPSConfiguration& hvpsConfig, 
+	const VoltageFeedbackModuleConfiguration& firstStageVoltageFeedbackModuleConfig, 
+	const VoltageFeedbackModuleConfiguration& outputVoltageFeedbackModuleConfig):
 	_hvpsConfig(hvpsConfig),
 	_firstStageVoltageFeedbackModuleConfig(firstStageVoltageFeedbackModuleConfig),
 	_outputVoltageFeedbackModuleConfig(outputVoltageFeedbackModuleConfig)
@@ -62,6 +65,6 @@ void HVPSCircuitEmulator::run(){
 void HVPSCircuitEmulator::villardEnergyChanged(double currentVillardEnergyJouls, double firstStageVoltageToTapVoltage, double outputVoltageToTapVoltage){
 	double outputVoltageVolts = std::sqrt(currentVillardEnergyJouls*a);
 	double firstStageVoltageVolts = outputVoltageVolts/_hvpsConfig.nVillardStages;
-	_dac.setChannel1Voltage(outputVoltageVolts / _outputVoltageFeedbackModuleConfig.vHvOverVadcRatio);
-	_dac.setChannel2Voltage(firstStageVoltageVolts / _firstStageVoltageFeedbackModuleConfig.vHvOverVadcRatio);
+	_dac.setChannel1Voltage(firstStageVoltageVolts / _firstStageVoltageFeedbackModuleConfig.vHvOverVadcRatio);
+	_dac.setChannel2Voltage(outputVoltageVolts / _outputVoltageFeedbackModuleConfig.vHvOverVadcRatio);
 }

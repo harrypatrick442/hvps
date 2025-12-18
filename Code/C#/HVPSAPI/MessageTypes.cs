@@ -20,5 +20,7 @@ namespace HVPSAPI
         public const string IndicateState = "is";
         public const string IndicateStateRequest = "isr";
         public const string SendStateToIndicate = "ssti";
+        public const string StartEmulation = "stae";
+        public const string StopEmulation = "stoe";
     }
 }

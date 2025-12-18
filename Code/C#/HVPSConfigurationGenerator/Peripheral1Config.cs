@@ -2,7 +2,7 @@
 namespace HVPSConfigurationGenerator
 {
     [StructLayout(LayoutKind.Explicit)]
-    public struct Peripheral1Config
+    public struct Peripheral1Configuration
     {
         [FieldOffset(0)] public UInt32 idleColour;
         [FieldOffset(4)] public UInt32 liveColour;

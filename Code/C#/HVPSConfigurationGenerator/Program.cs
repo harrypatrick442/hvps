@@ -56,7 +56,7 @@ namespace HVPSConfigurationGenerator
             ulong onTimeMicroSeconds = (long)(1000000d * Constants.DutyCycle / Constants.Frequency);
             ulong offTimeMicroSeconds = (long)(1000000d * (1d - Constants.DutyCycle) / Constants.Frequency);
             maxOutputVoltageThreshold = Math.Floor(maxOutputVoltageThreshold);
-            HVPSConfig configurationStruct = new HVPSConfig
+            HVPSConfiguration configurationStruct = new HVPSConfiguration
             {
                 broadcastFrequencyHz = Constants.BroadcastFrequency,
                 firstStageVoltageThresholdVolts = (float)firstStageVoltageThreshold,
@@ -71,8 +71,22 @@ namespace HVPSConfigurationGenerator
                 villardCapacitorCapacitanceFarads = (float)Constants.VillardCapacitorCapacitance,
                 vPsOverVadcRatio = (float)Constants.PowerSupplyVoltageFeedbackPotentialDividerRatio,
             };
+            VoltageFeedbackModuleConfiguration firstStageVoltageFeedbackModuleConfigStruct = new VoltageFeedbackModuleConfiguration
+            {
+                broadcastFrequencyHz = Constants.BroadcastFrequency,
+                defaultThreshold = (float)firstStageVoltageThreshold,
+                vHvOverVadcRatio = (float)Constants.FirstStageVoltageFeedbackPotentialDividerRatio
+            };
+            VoltageFeedbackModuleConfiguration outputVoltageFeedbackModuleConfigStruct = new VoltageFeedbackModuleConfiguration
+            {
+                broadcastFrequencyHz = Constants.BroadcastFrequency,
+                defaultThreshold = (float)maxOutputVoltageThreshold,
+                vHvOverVadcRatio = (float)Constants.OutputVoltageFeedbackPotentialDividerRatio
+            };
             AlreadyWroteWatcher alreadyWroteWatcher = new AlreadyWroteWatcher();
-            ConfigurationWriter.WriteConfigurationStructFile<HVPSConfig>(Path.Combine(
+#region Write_HVPSConfiguration
+#region To_HVPSController
+            ConfigurationWriter.WriteConfigurationStructFile<HVPSConfiguration>(Path.Combine(
                     reposDirectory,
                     "hvps",
                     "Code",
@@ -100,7 +114,9 @@ namespace HVPSConfigurationGenerator
                     alreadyWroteWatcher
                 );
             }
-            ConfigurationWriter.WriteConfigurationStructFile<HVPSConfig>(Path.Combine(
+            #endregion
+#region To_Peripheral1
+            ConfigurationWriter.WriteConfigurationStructFile<HVPSConfiguration>(Path.Combine(
                     reposDirectory,
                     "hvps",
                     "Code",
@@ -129,24 +145,27 @@ namespace HVPSConfigurationGenerator
                     instancePrefix:"HVPSConfig"
                 );
             }
-            ConfigurationWriter.WriteConfigurationStructFile<VoltageFeedbackModuleConfig>(
+            #endregion
+            #endregion
+#region Write_VoltageFeedbackModuleConfigurationStruct
+#region To_VoltageFeedbackModuleBase
+            ConfigurationWriter.WriteConfigurationStructFile<VoltageFeedbackModuleConfiguration>(
                 Path.Combine(reposDirectory, "hvps", "Code", "C++", "VoltageFeedbackModuleBase",
                     "Generated", "VoltageFeedbackModuleConfiguration.hpp"),
                 alreadyWroteWatcher
             );
-            ConfigurationWriter.WriteConfigurationStructFile<VoltageFeedbackModuleConfig>(
+            #endregion
+#region To_Peripheral1
+            ConfigurationWriter.WriteConfigurationStructFile<VoltageFeedbackModuleConfiguration>(
                 Path.Combine(reposDirectory, "hvps", "Code", "C++", "Peripheral1", "main",
                     "Generated", "VoltageFeedbackModuleConfiguration.hpp"),
                 alreadyWroteWatcher
             );
-            {
-                VoltageFeedbackModuleConfig firstStageVoltageFeedbackModuleConfigStruct = new VoltageFeedbackModuleConfig
-                {
-                    broadcastFrequencyHz = Constants.BroadcastFrequency,
-                    defaultThreshold = (float)firstStageVoltageThreshold,
-                    vHvOverVadcRatio = (float)Constants.FirstStageVoltageFeedbackPotentialDividerRatio
-                };
-                ConfigurationWriter.WriteProjectSpecificConfiguration(
+            #endregion
+#endregion
+#region Write_FirstStageVoltageFeedbackModuleConfig
+            #region To_FirstStageVoltageFeedbackModule
+            ConfigurationWriter.WriteProjectSpecificConfiguration(
                     projectSpecificConfigurationFilePath:
                         Path.Combine(reposDirectory, "hvps", "Code", "C++",
                         "FirstStageVoltageFeedbackModule", "main",
@@ -157,7 +176,9 @@ namespace HVPSConfigurationGenerator
                     alreadyWroteWatcher
 
                 );
-                ConfigurationWriter.WriteProjectSpecificConfiguration(
+#endregion
+#region To_Peripheral1
+            ConfigurationWriter.WriteProjectSpecificConfiguration(
                     projectSpecificConfigurationFilePath:
                         Path.Combine(reposDirectory, "hvps", "Code", "C++",
                         "Peripheral1", "main",
@@ -168,15 +189,10 @@ namespace HVPSConfigurationGenerator
                     alreadyWroteWatcher,
                     instancePrefix:"FirstStageVoltageFeedbackModuleConfig"
                 );
-            }
-            {
-                VoltageFeedbackModuleConfig outputVoltageFeedbackModuleConfigStruct = new VoltageFeedbackModuleConfig
-                {
-                    broadcastFrequencyHz = Constants.BroadcastFrequency,
-                    defaultThreshold = (float)maxOutputVoltageThreshold,
-                    vHvOverVadcRatio = (float)Constants.OutputVoltageFeedbackPotentialDividerRatio
-
-                };
+#endregion
+#endregion
+#region Write_OutputVoltageFeedbackModuleConfig
+#region To_OutputVoltageFeedbackModule
                 ConfigurationWriter.WriteProjectSpecificConfiguration(
                     projectSpecificConfigurationFilePath:
                         Path.Combine(reposDirectory, "hvps", "Code", "C++",
@@ -188,6 +204,8 @@ namespace HVPSConfigurationGenerator
                     alreadyWroteWatcher
 
                 );
+                #endregion
+#region To_Peripherial1
                 ConfigurationWriter.WriteProjectSpecificConfiguration(
                     projectSpecificConfigurationFilePath:
                         Path.Combine(reposDirectory, "hvps", "Code", "C++",
@@ -200,12 +218,14 @@ namespace HVPSConfigurationGenerator
                     instancePrefix:"OutputVoltageFeedbackModuleConfig"
 
                 );
-            }
+            #endregion
+            #endregion
+            /*
             ConfigurationWriter.WriteConfigurationStructFile<CurrentFeedbackModuleConfig>(
                 Path.Combine(reposDirectory, "hvps", "Code", "C++", "CurrentFeedbackModuleBase",
                     "Generated", "CurrentFeedbackModuleConfiguration.hpp"),
                 alreadyWroteWatcher
-            );
+            );*/
             /*
             {
                 CurrentFeedbackModuleConfig outputCurrentFeedbackModuleConfigStruct = new CurrentFeedbackModuleConfig
@@ -230,57 +250,63 @@ namespace HVPSConfigurationGenerator
 
                 );
             }*/
+            WritePeripheral1(reposDirectory,
+                dependenciesIncludePathPrefix,
+                alreadyWroteWatcher);
+        }
+        private static void WritePeripheral1(string reposDirectory,
+            string dependenciesIncludePathPrefix, 
+            AlreadyWroteWatcher alreadyWroteWatcher) {
+
+            Peripheral1Configuration peripheral1Config = new Peripheral1Configuration
             {
-                Func<double, UInt32> flashHzToMilliseconds = (hz) => { 
-                    if(hz<=0)return 0;
-                    double delayMs = Math.Ceiling((double)500 / hz);
-                    if (delayMs <= 0) return 0;
-                    var delay =  (UInt32)delayMs;
-                    return delay;
-                };
-                Peripheral1Config peripheral1Config = new Peripheral1Config
-                {
-                    errorColour= Constants.ErrorColour.ToUInt32(),
-                    liveColour= Constants.LiveColour.ToUInt32(),
-                    idleColour= Constants.IdleColour.ToUInt32(),
-                    runningSystemChecksColour=Constants.RunningSystemChecksColour.ToUInt32(),
-                    shutDownColour= Constants.ShutDownColour.ToUInt32(),
-                    shuttingDownColour = Constants.ShuttingDownColour.ToUInt32(),
-                    unknownColour= Constants.UnknownColour.ToUInt32(),
+                errorColour = Constants.ErrorColour.ToUInt32(),
+                liveColour = Constants.LiveColour.ToUInt32(),
+                idleColour = Constants.IdleColour.ToUInt32(),
+                runningSystemChecksColour = Constants.RunningSystemChecksColour.ToUInt32(),
+                shutDownColour = Constants.ShutDownColour.ToUInt32(),
+                shuttingDownColour = Constants.ShuttingDownColour.ToUInt32(),
+                unknownColour = Constants.UnknownColour.ToUInt32(),
 
 
-                    idleFlashDelayMs = flashHzToMilliseconds(
-                        Constants.IdleFlashHz),
-                    liveFlashDelayMs = flashHzToMilliseconds(
-                        Constants.LiveFlashHz),
-                    runningSystemChecksFlashDelayMs = flashHzToMilliseconds(
-                        Constants.RunningSystemChecksFlashHz),
-                    shuttingDownFlashDelayMs = flashHzToMilliseconds(
-                        Constants.ShuttingDownFlashHz),
-                    shutDownFlashDelayMs = flashHzToMilliseconds(
-                        Constants.ShutDownFlashHz),
-                    errorFlashDelayMs = flashHzToMilliseconds(
-                        Constants.ErrorFlashHz),
-                    unknownFlashDelayMs = flashHzToMilliseconds(
-                        Constants.UnknownFlashHz),
-                };
-                ConfigurationWriter.WriteProjectSpecificConfiguration(
-                    projectSpecificConfigurationFilePath:
-                        Path.Combine(reposDirectory, "hvps", "Code", "C++",
-                        "Peripheral1", "main",
-                        "Generated", "Peripheral1Config.hpp"),
-                    peripheral1Config,
-                    structHppFileRelativePath: "Peripheral1Configuration.hpp",
-                    dependenciesIncludePathPrefix,
-                    alreadyWroteWatcher
-                );
-            }
-            ConfigurationWriter.WriteConfigurationStructFile<Peripheral1Config>(
+                idleFlashDelayMs = FlashHzToMilliseconds(
+                    Constants.IdleFlashHz),
+                liveFlashDelayMs = FlashHzToMilliseconds(
+                    Constants.LiveFlashHz),
+                runningSystemChecksFlashDelayMs = FlashHzToMilliseconds(
+                    Constants.RunningSystemChecksFlashHz),
+                shuttingDownFlashDelayMs = FlashHzToMilliseconds(
+                    Constants.ShuttingDownFlashHz),
+                shutDownFlashDelayMs = FlashHzToMilliseconds(
+                    Constants.ShutDownFlashHz),
+                errorFlashDelayMs = FlashHzToMilliseconds(
+                    Constants.ErrorFlashHz),
+                unknownFlashDelayMs = FlashHzToMilliseconds(
+                    Constants.UnknownFlashHz),
+            };
+            ConfigurationWriter.WriteProjectSpecificConfiguration(
+                projectSpecificConfigurationFilePath:
+                    Path.Combine(reposDirectory, "hvps", "Code", "C++",
+                    "Peripheral1", "main",
+                    "Generated", "Peripheral1Config.hpp"),
+                peripheral1Config,
+                structHppFileRelativePath: "Peripheral1Configuration.hpp",
+                dependenciesIncludePathPrefix,
+                alreadyWroteWatcher
+            );
+            ConfigurationWriter.WriteConfigurationStructFile<Peripheral1Configuration>(
                 Path.Combine(reposDirectory, "hvps", "Code", "C++", "Peripheral1",
                     "main",
                     "Generated", "Peripheral1Configuration.hpp"),
                 alreadyWroteWatcher
             );
+        }
+        private static UInt32 FlashHzToMilliseconds(double hz){
+            if (hz <= 0) return 0;
+            double delayMs = Math.Ceiling((double)500 / hz);
+            if (delayMs <= 0) return 0;
+            var delay = (UInt32)delayMs;
+            return delay;
         }
     }
 }

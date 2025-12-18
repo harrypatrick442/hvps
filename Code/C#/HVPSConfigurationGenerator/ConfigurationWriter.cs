@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -16,10 +17,11 @@ namespace HVPSConfigurationGenerator
             AlreadyWroteWatcher alreadyWroteWatcher
         ) where TConfigurationStruct : unmanaged
         {
+            string structName = typeof(TConfigurationStruct).Name;
             StringBuilder sbTop = new StringBuilder();
             sbTop.AppendLine("#pragma once");
             StringBuilder sbStruct = new StringBuilder();
-            sbStruct.AppendLine("struct Configuration {");
+            sbStruct.AppendLine($"struct {structName} {{");
             bool requiresCstdint = false;
             foreach (var field in typeof(TConfigurationStruct).GetFields(BindingFlags.Public | BindingFlags.Instance))
             {
@@ -48,6 +50,7 @@ namespace HVPSConfigurationGenerator
         {
 
 
+            string structName = typeof(TConfigurationStruct).Name;
             uint crc = Crc32.Compute(in configurationStruct);
             StringBuilder sb = new StringBuilder();
             Atomic<bool> isFirst = new Atomic<bool>(true);
@@ -60,7 +63,7 @@ namespace HVPSConfigurationGenerator
             sb.AppendLine($"#include \"{dependenciesIncludePathPrefix}Core/Checksums/Crc32.hpp\"");
             string instance1Name = $"{instancePrefix}1";
             string instance2Name = $"{instancePrefix}2";
-            sb.AppendLine($"inline constexpr Configuration {instance1Name}{{");
+            sb.AppendLine($"inline constexpr {structName} {instance1Name}{{");
             foreach (var field in typeof(TConfigurationStruct).GetFields(BindingFlags.Public | BindingFlags.Instance))
             {
                 string cPlusPlusTypeName = GetCPlusPlusTypeName(field.FieldType);
@@ -78,10 +81,10 @@ namespace HVPSConfigurationGenerator
             }
             sb.AppendLine();
             sb.AppendLine("};");
-            sb.AppendLine($"inline const uint32_t CONFIG_CRC32_EXPECTED = {crc};");
             //sbAll.AppendLine("static_assert(podConfig1 == CONFIG_CRC32_EXPECTED, \"pod did not match expected crc\"");
-            sb.AppendLine($"inline Configuration {instance2Name} = {instance1Name};//This one is in RAM. {instance1Name} is in ROM.");
-            sb.AppendLine("inline bool validateConfiguration(){");
+            sb.AppendLine($"inline {structName} {instance2Name} = {instance1Name};//This one is in RAM. {instance1Name} is in ROM.");
+            string validateMethodName = $"validate{instancePrefix}";
+            sb.AppendLine($"inline bool {validateMethodName}(){{");
             sb.AppendLine($"    uint32_t podConfig1 = Crc32::computePod({instance1Name});");
             sb.AppendLine($"    uint32_t podConfig2 = Crc32::computePod({instance2Name});");
 
@@ -91,7 +94,7 @@ namespace HVPSConfigurationGenerator
             sb.AppendLine($"        return false;");
 
             sb.AppendLine("    }");
-            sb.AppendLine($"    if (podConfig1 != CONFIG_CRC32_EXPECTED){{");
+            sb.AppendLine($"    if (podConfig1 != {crc}){{");
 
             sb.AppendLine($"        Aborter::safeAbort(\"Configuration\", \"The CRC32 computed for {instance1Name} did not match the expected value\");");
             sb.AppendLine("        return false;");

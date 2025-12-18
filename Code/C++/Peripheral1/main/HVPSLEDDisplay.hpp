@@ -1,6 +1,6 @@
 #pragma once
 #include "Enums/SystemState.hpp"
-#include "Generated/Peripheral1Config.hpp"
+#include "Generated/Peripheral1Configuration.hpp"
 #include "Core/SingletonBase.hpp"
 #include "Core/Macros.hpp"
 #include "Timing/Timer.hpp"
@@ -13,7 +13,7 @@ public:
 private:
 	static size_t LED_STRIP_LENGTH;
 	static uint32_t OFF_COLOUR;
-	const Configuration& _config;
+	const Peripheral1Configuration& _config;
 	volatile uint32_t**_pixels;
 	uint32_t _currentColour;
 	bool _flashing;
@@ -26,7 +26,7 @@ public:
 	DISALLOW_COPY_MOVE(HVPSLEDDisplay);
 	void indicateState(SystemState systemState);
 protected:
-	explicit HVPSLEDDisplay(const Configuration& config)noexcept;
+	explicit HVPSLEDDisplay(const Peripheral1Configuration& config)noexcept;
 	~HVPSLEDDisplay();
 private:
 	void timerCallback();

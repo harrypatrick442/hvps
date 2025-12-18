@@ -3,7 +3,7 @@
 namespace HVPSConfigurationGenerator
 {
     [StructLayout(LayoutKind.Explicit, Size = 64)]
-    public struct HVPSConfig
+    public struct HVPSConfiguration
     {
         // ─────────────────────────────
         // float fields (alphabetical)

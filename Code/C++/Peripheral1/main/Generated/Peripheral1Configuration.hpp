@@ -1,6 +1,6 @@
 #pragma once
 #include <cstdint>
-struct Configuration {
+struct Peripheral1Configuration {
     const uint32_t idleColour;
     const uint32_t liveColour;
     const uint32_t runningSystemChecksColour;

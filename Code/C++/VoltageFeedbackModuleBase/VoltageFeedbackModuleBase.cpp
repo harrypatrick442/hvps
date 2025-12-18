@@ -12,11 +12,13 @@
 #include "esp_log.h"
 #define WATCHDOG_TIMEOUT_MILLISECONDS 10000
 
-void VoltageFeedbackModuleBase::main(const Configuration& config1, const Configuration& config2)
+void VoltageFeedbackModuleBase::main(const VoltageFeedbackModuleConfiguration& config1,
+ const VoltageFeedbackModuleConfiguration& config2, std::function<void()> validateConfig)
 {
 	Aborter::setToSafe(&Outputs::toSafe);
 	Outputs::initialize();
 	Outputs::toSafeReversible();
+	validateConfig();
 	ADC::initialize();
 	Inputs::initialize();
 	esp_wifi_stop();

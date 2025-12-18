@@ -19,12 +19,12 @@ public:
 protected:
     explicit ThresholdMonitor(
 		adc_channel_t ch,
-		const Configuration& config1,
-		const Configuration& config2
+		const VoltageFeedbackModuleConfiguration& config1,
+		const VoltageFeedbackModuleConfiguration& config2
 	)noexcept;
 private:
-	const Configuration& _config1;
-	const Configuration& _config2;
+	const VoltageFeedbackModuleConfiguration& _config1;
+	const VoltageFeedbackModuleConfiguration& _config2;
 	std::shared_ptr<MonitorVoltageThresholdHandle> _monitorVoltageThresholdHandle;
 	
 	void onVoltageThresholdReachedChanged(bool reached)noexcept;

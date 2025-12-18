@@ -1,6 +1,6 @@
 #pragma once
 #include <cstdint>
-struct Configuration {
+struct HVPSConfiguration {
     const float broadcastFrequencyHz;
     const float firstStageVoltageThresholdVolts;
     const float maxAverageOutputPowerWatts;

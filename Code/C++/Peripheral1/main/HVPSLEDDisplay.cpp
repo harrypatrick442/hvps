@@ -3,7 +3,7 @@
 #include "IO/PinDefinitions.hpp"
 size_t HVPSLEDDisplay::LED_STRIP_LENGTH = 4;
 uint32_t HVPSLEDDisplay::OFF_COLOUR = 0;
-HVPSLEDDisplay::HVPSLEDDisplay(const Configuration& config):
+HVPSLEDDisplay::HVPSLEDDisplay(const Peripheral1Configuration& config):
 _config(config),
 _currentColour(0),
 _flashing(false),

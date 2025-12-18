@@ -2,7 +2,7 @@
 namespace HVPSConfigurationGenerator
 {
     [StructLayout(LayoutKind.Explicit)]
-    public struct VoltageFeedbackModuleConfig
+    public struct VoltageFeedbackModuleConfiguration
     {
         [FieldOffset(0)] public float broadcastFrequencyHz;
         [FieldOffset(4)] public float  defaultThreshold;
