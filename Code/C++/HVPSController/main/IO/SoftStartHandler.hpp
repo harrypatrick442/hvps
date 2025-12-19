@@ -9,7 +9,7 @@ class SoftStartHandler{
 		static constexpr int MINIMUM_VOLTAGE_TO_REACH = 4;//TODO
 		static inline constexpr const char* TAG = "SoftStartHandler";
 	public:
-		static double doSoftStart(const HVPSConfiguration& config1, const HVPSConfiguration& config2);
+		static float doSoftStart(const HVPSConfiguration& config1, const HVPSConfiguration& config2);
 	private:
 		static const char* tellWhatWaitingOn(bool reachedMinimumVoltage, bool voltageStoppedIncreasing);
 };

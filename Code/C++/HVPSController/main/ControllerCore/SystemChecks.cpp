@@ -81,7 +81,7 @@ bool SystemChecks::_suspended_voltageFeedbackAbstractComs_replies(
 	std::string& errorMessage,
 	Port_VoltageFeedbackBase& port
 ){
-	double voltage;
+	float voltage;
 	if(port.getVoltage(voltage))
 	{
 		return true;

@@ -4,7 +4,7 @@
 #include "../IO/Outputs.hpp"
 #include "Timing/Delay.hpp"
 #include "Timing/TimeHelper.hpp"
-#include "Core/DoubleAndTime.hpp"
+#include "Core/FloatAndTime.hpp"
 #include "SystemChecks.hpp"
 HighSpeedCore::HighSpeedCore(
 	Port_FirstStageVoltageFeedback& portFirstStageVoltageFeedback, 
@@ -120,7 +120,7 @@ void HighSpeedCore::doShutDown(){
 		{
 			return;
 		}
-		DoubleAndTime outputVoltageAndTime = _liveDataCache.getOutputVoltage();
+		FloatAndTime outputVoltageAndTime = _liveDataCache.getOutputVoltage();
 		if(outputVoltageAndTime.t!=lastTime){
 			if(outputVoltageAndTime.d<=SAFE_OUTPUT_VOLTAGE){
 				setActualSystemState(SystemState::ShutDown);

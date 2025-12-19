@@ -46,8 +46,8 @@ private:
 
     // --- calibration & bookkeeping
     static esp_adc_cal_characteristics_t* _adc_chars;
-    static double _correctionFactor;      // user tweak multiplier
-    static double _voltageToRaw;          // helper – volts → raw
+    static float _correctionFactor;      // user tweak multiplier
+    static float _voltageToRaw;          // helper – volts → raw
 
     // channel we are currently sampling on (for simple single-channel use-case)
     static std::optional<adc_channel_t> _currentChannel;
@@ -62,30 +62,30 @@ public:
     uint16_t singleRawLatestSampleSelectedChannel();
     uint16_t averagedRawSampleSelectedChannel(int nSamples = 32);
 
-    double   singleCorrectedVoltageSampleSelectedChannel();
-    double   averagedCorrectedVoltageSampleSelectedChannel(int nSamples = 32);
+    float   singleCorrectedVoltageSampleSelectedChannel();
+    float   averagedCorrectedVoltageSampleSelectedChannel(int nSamples = 32);
 
-    static double   convertRawToVoltage(uint16_t raw);
-    static uint16_t convertVoltageToApproximateRaw(double voltage);
+    static float   convertRawToVoltage(uint16_t raw);
+    static uint16_t convertVoltageToApproximateRaw(float voltage);
 
     void setChannel(adc_channel_t ch);
-    double   getCorrection();
-    double   getVoltage();
+    float   getCorrection();
+    float   getVoltage();
 	void measureNReadsPerSecond();
 	static std::shared_ptr<MonitorVoltageThresholdHandle> 
 		monitorVoltageThresholdWithNewPriorityTask(
 			adc_channel_t channel,
-			double initialVoltage, 
+			float initialVoltage, 
 			std::function<void(bool)> callback
 	);
 	std::shared_ptr<IMonitorCurrentAndPowerHandle> monitorCurrentAndPower(
-		double senseResistanceOhms, 
-		double outputCurrentLimitingResistanceOhms,
-		double cumulativeEnergyThresholdJ,
-		double energyDisipatedJPerS,
+		float senseResistanceOhms, 
+		float outputCurrentLimitingResistanceOhms,
+		float cumulativeEnergyThresholdJ,
+		float energyDisipatedJPerS,
 		std::function<void(bool)> callback
 	);
-	static double getMinimumVoltageCanRead();
+	static float getMinimumVoltageCanRead();
 private:
     static void start();
     static void stop();

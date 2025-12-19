@@ -18,14 +18,14 @@ public:
 
     // Force derived classes to identify themselves
     virtual const char* getTag() const = 0;
-    Event<double> onGotVoltage;
+    Event<float> onGotVoltage;
     Event<GreetingMessage*> onGotGreetingMessage;
 	DISALLOW_COPY_MOVE(Port_VoltageFeedbackBase);
 
     void handleIncomingMessage(cJSON* message, bool& dontDelete, MessageIntegrity messageIntegrity) override;
-	bool setVoltageThreshold(double voltage);
-    bool getVoltageThreshold(double& voltage);
-    bool getVoltage(double& voltage);
+	bool setVoltageThreshold(float voltage);
+    bool getVoltageThreshold(float& voltage);
+    bool getVoltage(float& voltage);
 	bool setForceThresholdReachedFeedback(bool force);
 	void handleVoltageMessage(cJSON* message);
 	void sendClearLoggedErrors();

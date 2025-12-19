@@ -12,9 +12,9 @@ _config1(config1),
 _config2(config2),
 _monitorVoltageThresholdHandle(nullptr)
 {
-	double initialUnscaledVoltageThreshold = _config1.defaultThreshold;
-	Flash::getDouble(FLASH_NAMESPACE, THRESHOLD_VOLTAGE_KEY, initialUnscaledVoltageThreshold);
-	double scaledThreshold = toScaledADCThreshold(initialUnscaledVoltageThreshold);
+	float initialUnscaledVoltageThreshold = _config1.defaultThreshold;
+	Flash::getFloat(FLASH_NAMESPACE, THRESHOLD_VOLTAGE_KEY, initialUnscaledVoltageThreshold);
+	float scaledThreshold = toScaledADCThreshold(initialUnscaledVoltageThreshold);
 	//Inputs::selectADCVoltageDividerInputAsChannel();
 	_monitorVoltageThresholdHandle = 
 		ADC::monitorVoltageThresholdWithNewPriorityTask(
@@ -23,16 +23,16 @@ _monitorVoltageThresholdHandle(nullptr)
 			[this](bool reached) { onVoltageThresholdReachedChanged(reached); }
 		);
 }
-double ThresholdMonitor::getVoltage(){
+float ThresholdMonitor::getVoltage(){
 	return _monitorVoltageThresholdHandle->getVoltage();
 }
-void ThresholdMonitor::setThresholdVoltage(double voltage){
+void ThresholdMonitor::setThresholdVoltage(float voltage){
 	_monitorVoltageThresholdHandle->setThresholdVoltage(voltage);
-	Flash::setDouble(FLASH_NAMESPACE, THRESHOLD_VOLTAGE_KEY, voltage);
+	Flash::setFloat(FLASH_NAMESPACE, THRESHOLD_VOLTAGE_KEY, voltage);
 }
 void ThresholdMonitor::onVoltageThresholdReachedChanged(bool reached)noexcept{
 	Outputs::setThresholdReachedFiberOpticOnOff(reached);
 }
-double ThresholdMonitor::toScaledADCThreshold(double vUnscaled)noexcept{
+float ThresholdMonitor::toScaledADCThreshold(float vUnscaled)noexcept{
 	return vUnscaled/_config1.vHvOverVadcRatio;
 }

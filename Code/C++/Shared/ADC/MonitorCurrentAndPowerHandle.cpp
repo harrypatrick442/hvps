@@ -1,10 +1,10 @@
 #include "MonitorCurrentAndPowerHandle.hpp"
 
 MonitorCurrentAndPowerHandle::MonitorCurrentAndPowerHandle(
-    double senseResistanceOhms,
-    double outputCurrentLimitingResistanceOhms,
-    double cumulativeEnergyThresholdJ,
-    double energyDisipatedJPerS,
+    float senseResistanceOhms,
+    float outputCurrentLimitingResistanceOhms,
+    float cumulativeEnergyThresholdJ,
+    float energyDisipatedJPerS,
     std::function<void(bool)> callback
 ) noexcept
     : _exit(false),
@@ -29,30 +29,30 @@ bool MonitorCurrentAndPowerHandle::getExitFlag() const noexcept {
     return _exit.load(std::memory_order_relaxed);
 }
 
-void MonitorCurrentAndPowerHandle::setCurrentA(double value) noexcept {
+void MonitorCurrentAndPowerHandle::setCurrentA(float value) noexcept {
     _currentA.store(value, std::memory_order_relaxed);
 }
 
-double MonitorCurrentAndPowerHandle::getCurrentA() const noexcept {
+float MonitorCurrentAndPowerHandle::getCurrentA() const noexcept {
     return _currentA.load(std::memory_order_relaxed);
 }
 
-void MonitorCurrentAndPowerHandle::setEnergyDisipatedJPerS(double value) noexcept {
+void MonitorCurrentAndPowerHandle::setEnergyDisipatedJPerS(float value) noexcept {
     _energyDisipatedJPerUs.store(value * 1000.0, std::memory_order_relaxed);
 }
 
-double MonitorCurrentAndPowerHandle::getEnergyDisipatedUjPerUs() const noexcept {
+float MonitorCurrentAndPowerHandle::getEnergyDisipatedUjPerUs() const noexcept {
     return _energyDisipatedJPerUs.load(std::memory_order_relaxed);
 }
 
-double MonitorCurrentAndPowerHandle::getSenseResistanceOhms() const noexcept {
+float MonitorCurrentAndPowerHandle::getSenseResistanceOhms() const noexcept {
     return _senseResistanceOhms;
 }
 
-double MonitorCurrentAndPowerHandle::getOutputCurrentLimitingResistanceOhms() const noexcept {
+float MonitorCurrentAndPowerHandle::getOutputCurrentLimitingResistanceOhms() const noexcept {
     return _outputCurrentLimitingResistanceOhms;
 }
 
-double MonitorCurrentAndPowerHandle::getCumulativeEnergyThresholdJ() const noexcept {
+float MonitorCurrentAndPowerHandle::getCumulativeEnergyThresholdJ() const noexcept {
     return _cumulativeEnergyThresholdJ;
 }

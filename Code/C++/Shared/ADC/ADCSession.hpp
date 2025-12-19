@@ -50,12 +50,12 @@ public:
         return _real->averagedRawSampleSelectedChannel(nSamples);
     }
 
-    double singleCorrectedVoltageSampleSelectedChannel() override {
+    float singleCorrectedVoltageSampleSelectedChannel() override {
         check();
         return _real->singleCorrectedVoltageSampleSelectedChannel();
     }
 
-    double averagedCorrectedVoltageSampleSelectedChannel(int nSamples = 32) override {
+    float averagedCorrectedVoltageSampleSelectedChannel(int nSamples = 32) override {
         check();
         return _real->averagedCorrectedVoltageSampleSelectedChannel(nSamples);
     }
@@ -65,12 +65,12 @@ public:
         _real->setChannel(ch);
     }
 
-    double getCorrection() override {
+    float getCorrection() override {
         check();
         return _real->getCorrection();
     }
 
-    double getVoltage() override {
+    float getVoltage() override {
         check();
         return _real->getVoltage();
     }
@@ -79,20 +79,12 @@ public:
         check();
         _real->measureNReadsPerSecond();
     }
-/*
-    std::shared_ptr<MonitorVoltageThresholdHandle> monitorVoltageThresholdWithNewPriorityTask(
-        double initialVoltage,
-        std::function<void(bool)> callback
-    ) override {
-        check();
-        return _real->monitorVoltageThresholdWithNewPriorityTask(initialVoltage, std::move(callback));
-    }*/
 
     std::shared_ptr<IMonitorCurrentAndPowerHandle> monitorCurrentAndPower(
-        double senseResistanceOhms,
-        double outputCurrentLimitingResistanceOhms,
-        double cumulativeEnergyThresholdJ,
-        double energyDisipatedJPerS,
+        float senseResistanceOhms,
+        float outputCurrentLimitingResistanceOhms,
+        float cumulativeEnergyThresholdJ,
+        float energyDisipatedJPerS,
         std::function<void(bool)> callback
     ) override {
         check();

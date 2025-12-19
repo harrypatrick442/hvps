@@ -21,7 +21,7 @@ IRAM_ATTR void PerformanceProfiler::profileMaxDelay(){
 			maxDelay = delay;
 		}
 		if(time> doneTime){
-			double average = 1000000.0/nLoops;
+			float average = 1000000.0f/nLoops;
 			Log::Info(TAG, "max delay was:  %" PRIu64, maxDelay);
 			Log::Info(TAG, "nLoops : %d", nLoops);
 			Log::Info(TAG, "average delay was : %f", average);

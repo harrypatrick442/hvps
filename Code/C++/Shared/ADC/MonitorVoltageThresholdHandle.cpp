@@ -2,7 +2,7 @@
 #include "ADC.hpp"
 MonitorVoltageThresholdHandle::MonitorVoltageThresholdHandle(
     adc_channel_t channel,
-    double initialThresholdVoltage,
+    float initialThresholdVoltage,
     ReverseVoltageToRawLookup* reverseLookup,
     std::function<void(bool)> cb
 )
@@ -20,7 +20,7 @@ adc_channel_t MonitorVoltageThresholdHandle::getChannel() {
     return _channel;
 }
 
-void MonitorVoltageThresholdHandle::setThresholdVoltage(double voltage) {
+void MonitorVoltageThresholdHandle::setThresholdVoltage(float voltage) {
     rawThreshold.store(_reverseLookup->lookupVolts(voltage),
                        std::memory_order_relaxed);
 }
@@ -29,7 +29,7 @@ void MonitorVoltageThresholdHandle::setVoltageRaw(uint16_t raw) {
     _currentVoltageRaw.store(raw, std::memory_order_relaxed);
 }
 
-double MonitorVoltageThresholdHandle::getVoltage() {
+float MonitorVoltageThresholdHandle::getVoltage() {
     uint16_t raw = _currentVoltageRaw.load(std::memory_order_relaxed);
 	return ADC::convertRawToVoltage(raw);
 }

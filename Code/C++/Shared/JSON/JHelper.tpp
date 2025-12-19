@@ -20,24 +20,6 @@
 		}
 		cJSON_AddItemToObject(parent, key, arr);
 	}
-	template <typename T>
-	constexpr double JHelper::toDoubleSafe(T value) noexcept {
-		static_assert(std::is_arithmetic_v<T>, "T must be numeric");
-
-		if constexpr (std::is_floating_point_v<T>) {
-			// already float/double/long double
-			return static_cast<double>(value);
-		} else if constexpr (std::is_unsigned_v<T>) {
-			// promote to 64-bit first to avoid overflow on small doubles
-			return static_cast<double>(static_cast<uint64_t>(value));
-		} else if constexpr (std::is_signed_v<T>) {
-			// promote to signed 64-bit before converting
-			return static_cast<double>(static_cast<int64_t>(value));
-		} else {
-			// shouldn't ever happen, fallback
-			return static_cast<double>(value);
-		}
-	}
 
 	// --------------------------
 	// Add an std::vector

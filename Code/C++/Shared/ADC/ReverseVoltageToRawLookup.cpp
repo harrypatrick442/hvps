@@ -41,13 +41,13 @@ uint32_t ReverseVoltageToRawLookup::lookupMillivolts(uint32_t voltageMillivolts)
 	while (true) {
 		int midIndex = (lowIndex + highIndex) / 2;
 		if(midIndex==lowIndex||midIndex==highIndex){
-			double denominator = (double)(_entries[highIndex].voltage - _entries[lowIndex].voltage);
+			float denominator = (float)(_entries[highIndex].voltage - _entries[lowIndex].voltage);
 			if (denominator <= 0) {
 				return _entries[lowIndex].raw;
 			}
 			
-			double fraction = (double)(voltageMillivolts - _entries[lowIndex].voltage) / denominator;
-			double interpolated = ((double)(_entries[highIndex].raw - _entries[lowIndex].raw) 
+			float fraction = (float)(voltageMillivolts - _entries[lowIndex].voltage) / denominator;
+			float interpolated = ((float)(_entries[highIndex].raw - _entries[lowIndex].raw) 
 				* fraction) + _entries[lowIndex].raw;
 
 			return (uint32_t)interpolated;
@@ -65,7 +65,7 @@ uint32_t ReverseVoltageToRawLookup::lookupMillivolts(uint32_t voltageMillivolts)
 	}
 }
 
-uint32_t ReverseVoltageToRawLookup::lookupVolts(double volts) {
+uint32_t ReverseVoltageToRawLookup::lookupVolts(float volts) {
 	uint32_t millivolts = static_cast<uint32_t>(volts * 1000.0);
 	return lookupMillivolts(millivolts);
 }

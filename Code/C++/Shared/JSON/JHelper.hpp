@@ -26,7 +26,7 @@ public:
     static uint32_t getUInt32(cJSON* obj, const char* key, bool& success);
     static int64_t getInt64(cJSON* obj, const char* key, bool& success);
 	static uint64_t getUInt64(cJSON* obj, const char* key, bool& success);
-    static double getDouble(cJSON* obj, const char* key, bool& success);
+    static float getFloat(cJSON* obj, const char* key, bool& success);
     static bool getBool(cJSON* obj, const char* key, bool& success);
 
     // --- Nullable accessors using std::optional ---
@@ -50,7 +50,7 @@ public:
 		cJSON* obj, const char* key, bool& success);
     static std::optional<uint64_t> getNullableUInt64(
 		cJSON* obj, const char* key, bool& success);
-    static std::optional<double> getNullableDouble(
+    static std::optional<float> getNullableFloat(
 		cJSON* obj, const char* key, bool& success);
     static std::optional<bool> getNullableBool(
 		cJSON* obj, const char* key, bool& success);
@@ -69,7 +69,7 @@ public:
     static void addInt64(cJSON* obj, const char* key, int64_t value);
 	static void addUInt64(cJSON* obj, const char* key, uint64_t value);
 	static void setUInt64(cJSON* obj, const char* key, uint64_t value);
-    static void addDouble(cJSON* obj, const char* key, double value);
+    static void addFloat(cJSON* obj, const char* key, float value);
     static void addBool(cJSON* obj, const char* key, bool value);
 	
 	
@@ -84,7 +84,7 @@ public:
     static void addNullableUInt32(cJSON* obj, const char* key, std::optional<uint32_t> value);
     static void addNullableInt64(cJSON* obj, const char* key, std::optional<int64_t> value);
     static void addNullableUInt64(cJSON* obj, const char* key, std::optional<uint64_t> value);
-    static void addNullableDouble(cJSON* obj, const char* key, std::optional<double> value);
+    static void addNullableFloat(cJSON* obj, const char* key, std::optional<float> value);
     static void addNullableBool(cJSON* obj, const char* key, std::optional<bool> value);
 	
 	
@@ -102,7 +102,7 @@ public:
 	static bool getVector(const cJSON* parent, const char* key, std::vector<T>& outVec);
 	
 	template <typename T>
-	static constexpr double toDoubleSafe(T value) noexcept;
+	static constexpr float toFloatSafe(T value) noexcept;
 	
 	static void printJsonKeysAndValues(cJSON* json);
 	static void escapeForJson(const std::string& str, std::ostream& out);

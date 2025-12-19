@@ -13,23 +13,18 @@ public:
     virtual uint16_t singleRawLatestSampleSelectedChannel() = 0;
     virtual uint16_t averagedRawSampleSelectedChannel(int nSamples = 32) = 0;
 
-    virtual double   singleCorrectedVoltageSampleSelectedChannel() = 0;
-    virtual double   averagedCorrectedVoltageSampleSelectedChannel(int nSamples = 32) = 0;
+    virtual float   singleCorrectedVoltageSampleSelectedChannel() = 0;
+    virtual float   averagedCorrectedVoltageSampleSelectedChannel(int nSamples = 32) = 0;
 
     virtual void setChannel(adc_channel_t ch) = 0;
-    virtual double getCorrection() = 0;
-    virtual double getVoltage() = 0;
+    virtual float getCorrection() = 0;
+    virtual float getVoltage() = 0;
 	virtual void measureNReadsPerSecond() = 0;
-	/*virtual std::shared_ptr<MonitorVoltageThresholdHandle> 
-	monitorVoltageThresholdWithNewPriorityTask(
-		double initialVoltage, 
-		std::function<void(bool)> callback
-	) = 0;*/
 	virtual std::shared_ptr<IMonitorCurrentAndPowerHandle> monitorCurrentAndPower(
-		double senseResistanceOhms, 
-		double outputCurrentLimitingResistanceOhms,
-		double cumulativeEnergyThresholdJ,
-		double energyDisipatedJPerS,
+		float senseResistanceOhms, 
+		float outputCurrentLimitingResistanceOhms,
+		float cumulativeEnergyThresholdJ,
+		float energyDisipatedJPerS,
 		std::function<void(bool)> callback
 	) = 0;
 };

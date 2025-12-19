@@ -19,7 +19,7 @@ _ticketedSender(
 	_fiberOpticChannel_1.startAsNewNonPriorityTask();
 }
 //TOREMOVE
-bool Port_FiberOpticChannel1::setVoltageThreshold(double voltage){
+bool Port_FiberOpticChannel1::setVoltageThreshold(float voltage){
 	SetVoltageThresholdRequest request(voltage);
 	std::shared_ptr<cJSON> response = _ticketedSender.send(request.toJSON(), TIMEOUT);
 	if(response==nullptr){
@@ -57,7 +57,7 @@ void Port_FiberOpticChannel1::handleIncomingMessage(cJSON* message, bool& dontDe
 }
 void Port_FiberOpticChannel1::handleSetVoltageThresholdRequest(cJSON* message){
 	std::shared_ptr<SetVoltageThresholdRequest> request= SetVoltageThresholdRequest::fromJSON(message);
-	double voltage = request->getVoltage();
+	float voltage = request->getVoltage();
 	uint64_t ticket = request->getTicket();
 	NonVolatileState::setVoltageThreshold(voltage);
 	
@@ -73,7 +73,7 @@ void Port_FiberOpticChannel1::handleGetVoltageRequest(cJSON* message){
 	std::shared_ptr<GetVoltageRequest> request = GetVoltageRequest::fromJSON(message);
 	uint64_t ticket = request->getTicket();
 	Inputs::selectADCVoltageDividerInputAsChannel();
-	double voltage = Inputs::getADCVoltage();
+	float voltage = Inputs::getADCVoltage();
 	GetVoltageResponse* response = new GetVoltageResponse(voltage, ticket);
 	_messageSender->sendMessage(response->toJSON());
 	delete response;

@@ -35,7 +35,7 @@ Port_VoltageFeedbackBase::~Port_VoltageFeedbackBase() noexcept
     delete _TOSLINKDuplexChannel;
 	_TOSLINKDuplexChannel = nullptr; 
 }
-bool Port_VoltageFeedbackBase::setVoltageThreshold(double voltage){
+bool Port_VoltageFeedbackBase::setVoltageThreshold(float voltage){
 	SetVoltageThresholdRequest request(voltage);
 	std::shared_ptr<cJSON> response = _ticketedSender.send(request.toJSON(), TIMEOUT);
 	if(response==nullptr){
@@ -43,8 +43,8 @@ bool Port_VoltageFeedbackBase::setVoltageThreshold(double voltage){
 	}
 	return true;
 }
-bool Port_VoltageFeedbackBase::getVoltageThreshold(double& voltage) {
-    voltage = -1.0;
+bool Port_VoltageFeedbackBase::getVoltageThreshold(float& voltage) {
+    voltage = -1.0f;
 
     GetVoltageThresholdRequest request;   // NOTE: not request()
     std::shared_ptr<cJSON> jsonResponse = _ticketedSender.send(request.toJSON(), TIMEOUT);
@@ -56,8 +56,8 @@ bool Port_VoltageFeedbackBase::getVoltageThreshold(double& voltage) {
     voltage = response->getVoltage();
     return true;
 }
-bool Port_VoltageFeedbackBase::getVoltage(double& voltage) {
-    voltage = -1.0;
+bool Port_VoltageFeedbackBase::getVoltage(float& voltage) {
+    voltage = -1.0f;
     GetVoltageRequest request;   // NOTE: not request()
     std::shared_ptr<cJSON> jsonResponse = _ticketedSender.send(request.toJSON(), TIMEOUT);
     if (!jsonResponse) {
@@ -104,7 +104,7 @@ void Port_VoltageFeedbackBase::handleIncomingMessage(cJSON* message, bool& dontD
 void Port_VoltageFeedbackBase::handleVoltageMessage(cJSON* message){
 	CleanupBucket cleanupBucket;
 	VoltageMessage* voltageMessage = VoltageMessage::fromJSON(message, cleanupBucket);
-	double voltage = voltageMessage->getVoltage();
+	float voltage = voltageMessage->getVoltage();
 	onGotVoltage.dispatch(voltage);
 }
 GreetingResponse* Port_VoltageFeedbackBase::greet(

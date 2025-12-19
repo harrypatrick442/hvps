@@ -7,8 +7,8 @@ public:
 
     virtual void stop() noexcept = 0;
 
-    virtual double getCurrentA() const noexcept = 0;
-    virtual void setEnergyDisipatedJPerS(double value) noexcept = 0;
+    virtual float getCurrentA() const noexcept = 0;
+    virtual void setEnergyDisipatedJPerS(float value) noexcept = 0;
 };
 
 #endif

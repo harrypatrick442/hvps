@@ -2,7 +2,7 @@
 #include <atomic>
 #include "Core/SingletonBase.hpp"
 #include "Core/Macros.hpp"
-#include "Core/DoubleAndTime.hpp"
+#include "Core/FloatAndTime.hpp"
 #include "../Ports/Port_FirstStageVoltageFeedback.hpp"
 #include "../Ports/Port_OutputVoltageFeedback.hpp"
 #include "Core/Event.hpp"
@@ -13,22 +13,22 @@ public:
 	
 	DISALLOW_COPY_MOVE(LiveDataCache);
     // Output Voltage (V)
-    DoubleAndTime getOutputVoltage()const noexcept;
+    FloatAndTime getOutputVoltage()const noexcept;
 
     // Output Current (A)
-    DoubleAndTime getOutputCurrent()const noexcept;
+    FloatAndTime getOutputCurrent()const noexcept;
 
     // Total Output Energy (J)
-    DoubleAndTime getTotalOutputEnergy()const noexcept;
-    void   setTotalOutputEnergy(double v) noexcept;
+    FloatAndTime getTotalOutputEnergy()const noexcept;
+    void   setTotalOutputEnergy(float v) noexcept;
 
     // First Stage Voltage (V)
-    DoubleAndTime getFirstStageVoltage()const noexcept;
-    void   setFirstStageVoltage(double v) noexcept;
+    FloatAndTime getFirstStageVoltage()const noexcept;
+    void   setFirstStageVoltage(float v) noexcept;
 
     // Peak Primary Current (A)
-    DoubleAndTime getPeakPrimaryCurrent()const noexcept;
-    void   setPeakPrimaryCurrent(double v) noexcept;
+    FloatAndTime getPeakPrimaryCurrent()const noexcept;
+    void   setPeakPrimaryCurrent(float v) noexcept;
 
 private:
     // Let the base construct us
@@ -41,17 +41,17 @@ private:
 	Port_FirstStageVoltageFeedback& _portFirstStageVoltageFeedback;
 	Port_OutputVoltageFeedback& _portOutputVoltageFeedback;
 	
-    std::atomic<DoubleAndTime> _outputVoltage{DoubleAndTime{0.0, 0}};
-    std::atomic<DoubleAndTime> _outputCurrent{DoubleAndTime{0.0, 0}};
-    std::atomic<DoubleAndTime> _totalOutputEnergy{DoubleAndTime{0.0, 0}};
-    std::atomic<DoubleAndTime> _firstStageVoltage{DoubleAndTime{0.0, 0}};
-    std::atomic<DoubleAndTime> _peakPrimaryCurrent{DoubleAndTime{0.0, 0}};
+    std::atomic<FloatAndTime> _outputVoltage{FloatAndTime{0.0, 0}};
+    std::atomic<FloatAndTime> _outputCurrent{FloatAndTime{0.0, 0}};
+    std::atomic<FloatAndTime> _totalOutputEnergy{FloatAndTime{0.0, 0}};
+    std::atomic<FloatAndTime> _firstStageVoltage{FloatAndTime{0.0, 0}};
+    std::atomic<FloatAndTime> _peakPrimaryCurrent{FloatAndTime{0.0, 0}};
 	EventConnection _eventConnectionGotOutputVoltage;
 	EventConnection _eventConnectionGotFirstStageVoltage;
 	
-    void   setOutputVoltage(double v) noexcept;
-    void   setOutputCurrent(double v) noexcept;
-	void handleGotOutputVoltage(double voltage) noexcept;
-	void handleGotFirstStageVoltage(double voltage) noexcept;
+    void   setOutputVoltage(float v) noexcept;
+    void   setOutputCurrent(float v) noexcept;
+	void handleGotOutputVoltage(float voltage) noexcept;
+	void handleGotFirstStageVoltage(float voltage) noexcept;
 };
 

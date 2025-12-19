@@ -6,6 +6,7 @@
 #include "Timing/Timer.hpp"
 #include "Generated/HVPSConfiguration.hpp"
 #include "Generated/VoltageFeedbackModuleConfiguration.hpp"
+#include "IO/Inputs.hpp"
 class HVPSCircuitEmulator:public SingletonBase<HVPSCircuitEmulator>{
     friend class SingletonBase<HVPSCircuitEmulator>;
 public:
@@ -20,7 +21,14 @@ protected:
 	explicit HVPSCircuitEmulator(
 		const HVPSConfiguration& hvpsConfig, 
 		const VoltageFeedbackModuleConfiguration& firstStageVoltageFeedbackModuleConfig, 
-		const VoltageFeedbackModuleConfiguration& outputVoltageFeedbackModuleConfig)noexcept;
+		const VoltageFeedbackModuleConfiguration& outputVoltageFeedbackModuleConfig
+	)noexcept;
 	~HVPSCircuitEmulator();
 private:
+	void run();
+	bool mosfetIsOn();
+	void villardEnergyChanged(
+		float currentVillardEnergyJouls, 
+		float firstStageVoltageToTapVoltage, 
+		float outputVoltageToTapVoltage);
 };

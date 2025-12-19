@@ -26,17 +26,17 @@ public:
     // Constructor
     MonitorVoltageThresholdHandle(
         adc_channel_t channel,
-        double initialThresholdVoltage,
+        float initialThresholdVoltage,
         ReverseVoltageToRawLookup* reverseLookup,
         std::function<void(bool)> cb
     );
 
     adc_channel_t getChannel();
 
-    void setThresholdVoltage(double voltage);
+    void setThresholdVoltage(float voltage);
 
     void setVoltageRaw(uint16_t voltage);
-    double getVoltage();
+    float getVoltage();
 
     void stop();
 };

@@ -11,23 +11,23 @@ class LiveDataMessage
    public:
        static const char* TYPE;
    private:
-        double _firstStageVoltage;
-        double _outputCurrent;
-        double _outputVoltage;
-        double _peakPrimaryCurrent;
-        double _totalOutputEnergy;
+        float _firstStageVoltage;
+        float _outputCurrent;
+        float _outputVoltage;
+        float _peakPrimaryCurrent;
+        float _totalOutputEnergy;
    public:
-        double getFirstStageVoltage()const noexcept;
-        double getOutputCurrent()const noexcept;
-        double getOutputVoltage()const noexcept;
-        double getPeakPrimaryCurrent()const noexcept;
-        double getTotalOutputEnergy()const noexcept;
+        float getFirstStageVoltage()const noexcept;
+        float getOutputCurrent()const noexcept;
+        float getOutputVoltage()const noexcept;
+        float getPeakPrimaryCurrent()const noexcept;
+        float getTotalOutputEnergy()const noexcept;
         LiveDataMessage(
-           double firstStageVoltage, 
-           double outputCurrent, 
-           double outputVoltage, 
-           double peakPrimaryCurrent, 
-           double totalOutputEnergy) noexcept;
+           float firstStageVoltage, 
+           float outputCurrent, 
+           float outputVoltage, 
+           float peakPrimaryCurrent, 
+           float totalOutputEnergy) noexcept;
         ~LiveDataMessage();
         static LiveDataMessage* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;

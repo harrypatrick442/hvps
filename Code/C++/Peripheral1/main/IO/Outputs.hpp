@@ -1,6 +1,7 @@
 #ifndef OUTPUTS_HPP
 #define OUTPUTS_HPP
 #include <cstdint>
+#include "DAC/DAC.hpp"
 class Outputs{
 	
 	private:
@@ -14,5 +15,7 @@ class Outputs{
 		static void toSafe();
 		static void toSafeReversible();
 		static void setLEDsDataOnOff(bool onElseOff);
+		void setOutputVoltageFeedbackModuleTapVoltage(float voltage);
+		void setFirstStageVoltageFeedbackModuleTapVoltage(float voltage);
 };
 #endif

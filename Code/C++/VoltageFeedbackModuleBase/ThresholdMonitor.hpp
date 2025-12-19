@@ -14,8 +14,8 @@ private:
 public:
 	static inline constexpr const char* TAG = "ThresholdMonitor";
 	DISALLOW_COPY_MOVE(ThresholdMonitor);
-	double getVoltage();
-	void setThresholdVoltage(double voltage);
+	float getVoltage();
+	void setThresholdVoltage(float voltage);
 protected:
     explicit ThresholdMonitor(
 		adc_channel_t ch,
@@ -28,5 +28,5 @@ private:
 	std::shared_ptr<MonitorVoltageThresholdHandle> _monitorVoltageThresholdHandle;
 	
 	void onVoltageThresholdReachedChanged(bool reached)noexcept;
-	double toScaledADCThreshold(double vUnscaled)noexcept;
+	float toScaledADCThreshold(float vUnscaled)noexcept;
 };

@@ -3,5 +3,5 @@ class IGetCurrentVoltage {
 public:
     virtual ~IGetCurrentVoltage() = default;
 
-    virtual double getVoltage() = 0;
+    virtual float getVoltage() = 0;
 };

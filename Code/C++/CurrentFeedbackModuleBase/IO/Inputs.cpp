@@ -38,7 +38,7 @@ int Inputs::readReceiver() {
 void Inputs::selectADCVoltageDividerInputAsChannel(){
     ADC::setChannel(ADCChannels::VOLTAGE_DIVIDER_INPUT);
 }
-double Inputs::getADCVoltage()
+float Inputs::getADCVoltage()
 {
     return ADC::getVoltage();
 }

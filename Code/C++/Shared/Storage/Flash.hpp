@@ -5,10 +5,10 @@ class Flash{
     public:
         static void initialize();
         static bool getIsInitialized();
-		static bool getDouble(
-			const char* namespaceName, const char* key, double &outValue);
-		static bool setDouble(
-			const char* namespaceName, const char* key, double value);
+		static bool getFloat(
+			const char* namespaceName, const char* key, float &outValue);
+		static bool setFloat(
+			const char* namespaceName, const char* key, float value);
 			
 		template<typename T>
 		static bool setNumber(const char* namespaceName, const char* key, T value);

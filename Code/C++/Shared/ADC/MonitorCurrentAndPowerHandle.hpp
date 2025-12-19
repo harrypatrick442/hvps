@@ -7,21 +7,21 @@
 
 class MonitorCurrentAndPowerHandle : public IMonitorCurrentAndPowerHandle {
     std::atomic<bool> _exit;
-    std::atomic<double> _currentA;
-    std::atomic<double> _energyDisipatedJPerUs;
+    std::atomic<float> _currentA;
+    std::atomic<float> _energyDisipatedJPerUs;
 
-    double _senseResistanceOhms;
-    double _outputCurrentLimitingResistanceOhms;
-    double _cumulativeEnergyThresholdJ;
+    float _senseResistanceOhms;
+    float _outputCurrentLimitingResistanceOhms;
+    float _cumulativeEnergyThresholdJ;
 
 public:
     std::function<void(bool)> callbackReachedThreshold;
 
     MonitorCurrentAndPowerHandle(
-        double senseResistanceOhms,
-        double outputCurrentLimitingResistanceOhms,
-        double cumulativeEnergyThresholdJ,
-        double energyDisipatedJPerS,
+        float senseResistanceOhms,
+        float outputCurrentLimitingResistanceOhms,
+        float cumulativeEnergyThresholdJ,
+        float energyDisipatedJPerS,
         std::function<void(bool)> callbackReachedThreshold
     ) noexcept;
 
@@ -29,14 +29,14 @@ public:
 
     void stop() noexcept override;
 
-    double getCurrentA() const noexcept override;
-    void setCurrentA(double value) noexcept;
+    float getCurrentA() const noexcept override;
+    void setCurrentA(float value) noexcept;
 
-    double getSenseResistanceOhms() const noexcept;
-    double getOutputCurrentLimitingResistanceOhms() const noexcept;
-    double getCumulativeEnergyThresholdJ() const noexcept;
-    void setEnergyDisipatedJPerS(double value) noexcept override;
-    double getEnergyDisipatedUjPerUs() const noexcept;
+    float getSenseResistanceOhms() const noexcept;
+    float getOutputCurrentLimitingResistanceOhms() const noexcept;
+    float getCumulativeEnergyThresholdJ() const noexcept;
+    void setEnergyDisipatedJPerS(float value) noexcept override;
+    float getEnergyDisipatedUjPerUs() const noexcept;
     bool getExitFlag() const noexcept;
 };
 

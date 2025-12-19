@@ -1,8 +1,8 @@
-export default class Emulate
+export default class StartEmulate
 {
  static toJSON(o){ 
     const r = {};
-   r["tpe"]="em";
+   r["tpe"]="stae";
     return r;
  }
  static fromJSON(o){

@@ -32,7 +32,7 @@ _ticketedSender(
 		"greetControllingMachine"
 	);
 }
-bool Port_FiberOpticChannel1::setVoltageThreshold(double voltage){
+bool Port_FiberOpticChannel1::setVoltageThreshold(float voltage){
 	SetVoltageThresholdRequest request(voltage);
 	std::shared_ptr<cJSON> response = _ticketedSender.send(request.toJSON(), TIMEOUT);
 	if(response==nullptr){
@@ -83,7 +83,7 @@ void Port_FiberOpticChannel1::handleIncomingMessage(cJSON* message, bool& dontDe
 void Port_FiberOpticChannel1::handleSetVoltageThresholdRequest(cJSON* message){
 	CleanupBucket cleanupBucket;
 	SetVoltageThresholdRequest* request= SetVoltageThresholdRequest::fromJSON(message, cleanupBucket);
-	double voltage = request->getVoltage();
+	float voltage = request->getVoltage();
 	uint64_t ticket = request->getTicket();
 	_thesholdMonitor.setThresholdVoltage(voltage);
 	
@@ -98,7 +98,7 @@ void Port_FiberOpticChannel1::handleGetVoltageRequest(cJSON* message){
 	CleanupBucket cleanupBucket;
 	GetVoltageRequest* request = GetVoltageRequest::fromJSON(message, cleanupBucket);
 	uint64_t ticket = request->getTicket();
-	double voltage = _thesholdMonitor.getVoltage();
+	float voltage = _thesholdMonitor.getVoltage();
 	GetVoltageResponse response(voltage, ticket);
 	_messageSender->sendMessage(response.toJSON());
 }

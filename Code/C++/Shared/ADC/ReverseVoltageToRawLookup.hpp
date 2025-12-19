@@ -17,7 +17,7 @@ public:
 	~ReverseVoltageToRawLookup();
 
 	uint32_t lookupMillivolts(uint32_t voltageMillivolts);
-	uint32_t lookupVolts(double volts);
+	uint32_t lookupVolts(float volts);
 
 private:
 	uint32_t findRawForVoltage(uint32_t targetVoltageMillivolts, esp_adc_cal_characteristics_t* adc_chars);

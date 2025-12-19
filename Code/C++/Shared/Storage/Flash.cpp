@@ -38,8 +38,7 @@ void Flash::initialize() {
     _isInitialized = true;
     Log::Info(TAG, "NVS initialized successfully");
 }
-// Store a double in NVS
-bool Flash::setDouble(const char* namespaceName, const char* key, double value) {
+bool Flash::setFloat(const char* namespaceName, const char* key, float value) {
     if (!_isInitialized) {
         Aborter::safeAbort(TAG, NVS_NOT_INITIALIZED);
         return false;
@@ -52,28 +51,28 @@ bool Flash::setDouble(const char* namespaceName, const char* key, double value) 
         return false;
     }
 
-    // Store double as uint64_t to preserve exact binary representation
-    uint64_t raw;
-    std::memcpy(&raw, &value, sizeof(double));
-    err = nvs_set_u64(handle, key, raw);
+    // Store float as uint64_t to preserve exact binary representation
+    uint32_t raw;
+    std::memcpy(&raw, &value, sizeof(float));
+    err = nvs_set_u32(handle, key, raw);
     if (err != ESP_OK) {
         nvs_close(handle);
-        Log::Warn(TAG, "Failed to set double: %s", esp_err_to_name(err));
+        Log::Warn(TAG, "Failed to set float: %s", esp_err_to_name(err));
         return false;
     }
 
     err = nvs_commit(handle);
     nvs_close(handle);
     if (err != ESP_OK) {
-        Log::Warn(TAG, "Failed to commit double: %s", esp_err_to_name(err));
+        Log::Warn(TAG, "Failed to commit float: %s", esp_err_to_name(err));
         return false;
     }
     return true;
 }
 
 
-// Retrieve a double from NVS
-bool Flash::getDouble(const char* namespaceName, const char* key, double &outValue) {
+// Retrieve a float from NVS
+bool Flash::getFloat(const char* namespaceName, const char* key, float &outValue) {
     if (!_isInitialized) {
         Aborter::safeAbort(TAG, NVS_NOT_INITIALIZED);
         return false;
@@ -89,20 +88,20 @@ bool Flash::getDouble(const char* namespaceName, const char* key, double &outVal
         return false;
     }
 
-    uint64_t raw;
-    err = nvs_get_u64(handle, key, &raw);
+    uint32_t raw;
+    err = nvs_get_u32(handle, key, &raw);
     nvs_close(handle);
 
     if (err == ESP_ERR_NVS_NOT_FOUND) {
-        //Log::Warn(TAG, "Double value not found for key '%s'", key);
+        //Log::Warn(TAG, "Float value not found for key '%s'", key);
         return false;
     }
     if (err != ESP_OK) {
-        Log::Warn(TAG, "Failed to read double: %s", esp_err_to_name(err));
+        Log::Warn(TAG, "Failed to read float: %s", esp_err_to_name(err));
         return false;
     }
 
-    std::memcpy(&outValue, &raw, sizeof(double));
+    std::memcpy(&outValue, &raw, sizeof(float));
     return true;
 }
 

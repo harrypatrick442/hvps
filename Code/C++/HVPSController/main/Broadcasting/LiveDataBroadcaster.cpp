@@ -20,10 +20,10 @@ void LiveDataBroadcaster::stop(){
 }
 void LiveDataBroadcaster::_run(){
 	LiveDataMessage liveDataMessage(
-		_liveDataCache.getFirstStageVoltage().d, 
-		_liveDataCache.getOutputCurrent().d, 
-		_liveDataCache.getOutputVoltage().d, 
-		_liveDataCache.getPeakPrimaryCurrent().d, 
-		_liveDataCache.getTotalOutputEnergy().d);
+		_liveDataCache.getFirstStageVoltage().f, 
+		_liveDataCache.getOutputCurrent().f, 
+		_liveDataCache.getOutputVoltage().f, 
+		_liveDataCache.getPeakPrimaryCurrent().f, 
+		_liveDataCache.getTotalOutputEnergy().f);
 	_portControllingMachine.sendLiveData(liveDataMessage);
 }

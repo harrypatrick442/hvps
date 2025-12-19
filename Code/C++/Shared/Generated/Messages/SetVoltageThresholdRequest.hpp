@@ -11,13 +11,13 @@ class SetVoltageThresholdRequest
    public:
        static const char* TYPE;
    private:
-        double _voltage;
+        float _voltage;
         uint64_t _ticket;
    public:
-        double getVoltage()const noexcept;
+        float getVoltage()const noexcept;
         uint64_t getTicket()const noexcept;
         SetVoltageThresholdRequest(
-           double voltage, 
+           float voltage, 
            uint64_t ticket = 0) noexcept;
         ~SetVoltageThresholdRequest();
         static SetVoltageThresholdRequest* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;

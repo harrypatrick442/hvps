@@ -23,7 +23,7 @@ private:
 	const uint64_t ON_TIME_US_2 = 62;
 	const uint64_t OFF_TIME_US = 62;
 	const uint64_t OFF_TIME_US_2 = 62;
-	const double SAFE_OUTPUT_VOLTAGE = 30;
+	const float SAFE_OUTPUT_VOLTAGE = 30;
 	
 	HighSpeedCore(
 		Port_FirstStageVoltageFeedback& portFirstStageVoltageFeedback, 

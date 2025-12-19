@@ -19,8 +19,8 @@ ADC* ADC::_instance = new ADC();
 std::atomic<bool> ADC::_inUse(false);
 adc_continuous_handle_t ADC::_adc_hdl = nullptr;
 esp_adc_cal_characteristics_t* ADC::_adc_chars = nullptr;
-double ADC::_correctionFactor = 1.0;
-double ADC::_voltageToRaw     = 0.0;
+float ADC::_correctionFactor = 1.0;
+float ADC::_voltageToRaw     = 0.0;
 std::optional<adc_channel_t> ADC::_currentChannel = std::nullopt;
 ReverseVoltageToRawLookup* ADC::_reverseLookup = nullptr;
 std::mutex ADC::_mutexSetChannel;
@@ -199,43 +199,43 @@ uint16_t ADC::averagedRawSampleSelectedChannel(int nSamples)
 
 
 // -------------------- Voltage helpers ------------------------------------
-double ADC::convertRawToVoltage(uint16_t raw)
+float ADC::convertRawToVoltage(uint16_t raw)
 {
-    double mv = esp_adc_cal_raw_to_voltage(
+    float mv = esp_adc_cal_raw_to_voltage(
         raw,        // raw ADC reading
         _adc_chars  // pointer to previously characterized calibration data
     );
-    return (mv * _correctionFactor) / 1000.0; // convert mV to V
+    return (mv * _correctionFactor) / 1000.0f; // convert mV to V
 }
 
 
-uint16_t ADC::convertVoltageToApproximateRaw(double voltage)
+uint16_t ADC::convertVoltageToApproximateRaw(float voltage)
 {
 	return (uint16_t)_reverseLookup->lookupVolts(voltage);
 }
 
 // ---------------- public wrap‑ups ----------------------------------------
-double ADC::singleCorrectedVoltageSampleSelectedChannel()
+float ADC::singleCorrectedVoltageSampleSelectedChannel()
 {
     return convertRawToVoltage(singleRawLatestSampleSelectedChannel());
 }
 
-double ADC::averagedCorrectedVoltageSampleSelectedChannel(int nSamples)
+float ADC::averagedCorrectedVoltageSampleSelectedChannel(int nSamples)
 {
     return convertRawToVoltage(averagedRawSampleSelectedChannel(nSamples));
 }
 
-double ADC::getCorrection()
+float ADC::getCorrection()
 {
     return _correctionFactor;
 }
-double ADC::getMinimumVoltageCanRead(){
+float ADC::getMinimumVoltageCanRead(){
 	return convertRawToVoltage(0);
 }
 std::shared_ptr<MonitorVoltageThresholdHandle> 
 	ADC::monitorVoltageThresholdWithNewPriorityTask(
 		adc_channel_t channel,
-		double initialVoltage, 
+		float initialVoltage, 
 		std::function<void(bool)> callback
 	) {
 	if(!callback){
@@ -298,10 +298,10 @@ void ADC::_monitorVoltageThreshold(std::shared_ptr<MonitorVoltageThresholdHandle
 
 std::shared_ptr<IMonitorCurrentAndPowerHandle> 
 ADC::monitorCurrentAndPower(
-	double senseResistanceOhms, 
-	double outputCurrentLimitingResistanceOhms,
-	double cumulativeEnergyThresholdJ,
-	double energyDisipatedJPerS,
+	float senseResistanceOhms, 
+	float outputCurrentLimitingResistanceOhms,
+	float cumulativeEnergyThresholdJ,
+	float energyDisipatedJPerS,
 	std::function<void(bool)> callback
 ) {
 	if (!callback){
@@ -331,12 +331,12 @@ void ADC::_monitorCurrentAndPower(
 	std::shared_ptr<MonitorCurrentAndPowerHandle> handle
 ){
 	esp_err_t err;
-	double cumulativeEnergyUj = 0;
-	double cumulativeEnergyThresholdUj = handle->getCumulativeEnergyThresholdJ() * 1000.0;
+	float cumulativeEnergyUj = 0;
+	float cumulativeEnergyThresholdUj = handle->getCumulativeEnergyThresholdJ() * 1000.0;
 	uint64_t lastTimeUs = esp_timer_get_time();
 	uint64_t nextTimeUs;
 	uint64_t dTUs;
-	double currentA, powerW;
+	float currentA, powerW;
 	bool set = false;
 	bool isOn = false;
 	adc_digi_output_data_t d; // Stores a single read value
@@ -364,7 +364,7 @@ void ADC::_monitorCurrentAndPower(
 		handle->setCurrentA(currentA);
 		powerW = currentA * currentA * handle->getOutputCurrentLimitingResistanceOhms();
 		cumulativeEnergyUj += powerW * dTUs;
-		cumulativeEnergyUj -= static_cast<double>(dTUs) * handle->getEnergyDisipatedUjPerUs();
+		cumulativeEnergyUj -= static_cast<float>(dTUs) * handle->getEnergyDisipatedUjPerUs();
 		if(cumulativeEnergyUj<0){
 			cumulativeEnergyUj =0;
 		}
@@ -386,7 +386,7 @@ void ADC::_monitorCurrentAndPower(
 
 
 
-double ADC::getVoltage(){
+float ADC::getVoltage(){
 	adc_digi_output_data_t d;
 	uint32_t len = 0;
 	esp_err_t err;

@@ -118,14 +118,14 @@
 		return 0;
 	}
 
-	double JHelper::getDouble(
+	float JHelper::getFloat(
 		cJSON* obj, const char* key, bool& success) {
 		cJSON* item = cJSON_GetObjectItem(obj, key);
 		if (cJSON_IsNumber(item)) {
-			return item->valuedouble;
+			return static_cast<float>(item->valuedouble);
 		}
 		success = false;
-		return 0.0;
+		return 0.0f;
 	}
 
 	bool JHelper::getBool(
@@ -298,7 +298,7 @@
 		return std::nullopt;
 	}
 
-	std::optional<double> JHelper::getNullableDouble(
+	std::optional<float> JHelper::getNullableFloat(
 	cJSON* obj, const char* key, bool& success) {
 		cJSON* item = cJSON_GetObjectItem(obj, key);
 		if(item==nullptr){
@@ -370,7 +370,7 @@
 		cJSON_DeleteItemFromObjectCaseSensitive(obj, key);
 		cJSON_AddNumberToObject(obj, key, value);
 	}
-    void JHelper::addDouble(cJSON* obj, const char* key, double value){
+    void JHelper::addFloat(cJSON* obj, const char* key, float value){
 		cJSON_AddNumberToObject(obj, key, value);
 	}
     void JHelper::addBool(cJSON* obj, const char* key, bool value){
@@ -442,7 +442,7 @@
 		}
 		cJSON_AddNumberToObject(obj, key, *value);
 	}
-    void JHelper::addNullableDouble(cJSON* obj, const char* key, std::optional<double> value){
+    void JHelper::addNullableFloat(cJSON* obj, const char* key, std::optional<float> value){
 		if(!value.has_value())
 		{
 			cJSON_AddNullToObject(obj, key);

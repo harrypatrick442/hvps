@@ -5,6 +5,7 @@
 #include "driver/gpio.h"
 #include "Logging/Log.hpp"
 #include "PinDefinitions.hpp"
+#include "DAC/DAC.hpp"
 
 const char* Outputs::TAG = "Outputs";
 static portMUX_TYPE s_outputsMux = portMUX_INITIALIZER_UNLOCKED;
@@ -60,4 +61,10 @@ void Outputs::setLEDsDataOnOff(bool onElseOff){
 }
 void Outputs::_setLEDsDataOnOff(bool onElseOff){
 	gpio_set_level((gpio_num_t)PinDefinitions::LEDS_D_OUT, onElseOff?1:0);
+}
+void Outputs::setOutputVoltageFeedbackModuleTapVoltage(float voltage){
+	DAC::getInstance().setChannel2Voltage(voltage);
+}
+void Outputs::setFirstStageVoltageFeedbackModuleTapVoltage(float voltage){
+	DAC::getInstance().setChannel1Voltage(voltage);
 }

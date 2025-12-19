@@ -3,6 +3,7 @@
 #include "System/StayTheFuckAwake.hpp"
 #include "System/Aborter.hpp"
 #include "IO/Outputs.hpp"
+#include "IO/Inputs.hpp"
 #include "Storage/Flash.hpp"
 #include "Timing/Delay.hpp"
 #include "Ports/Port_FiberOpticChannel1.hpp"
@@ -24,6 +25,7 @@ extern "C" void app_main(void)
 	Aborter::setToSafe(&Outputs::toSafe);
 	Outputs::initialize();
 	Outputs::toSafeReversible();
+	Inputs::initialize();
 	validateConfig();
 	validateHVPSConfig();
 	validateOutputVoltageFeedbackModuleConfig();
@@ -39,7 +41,11 @@ extern "C" void app_main(void)
 		= HVPSLEDDisplay::initialize(Config1);
 	SystemStateIndicator& systemStateIndicator 
 		= SystemStateIndicator::initialize(hVPSLEDDisplay);
-	HVPSCircuitEmulator::initialize(HVPSConfig1, FirstStageVoltageFeedbackModuleConfig1, OutputVoltageFeedbackModuleConfig1);
+	HVPSCircuitEmulator::initialize(
+		HVPSConfig1, 
+		FirstStageVoltageFeedbackModuleConfig1, 
+		OutputVoltageFeedbackModuleConfig1
+	);
     Port_FiberOpticChannel1& port_FiberOpticChannel1 
 		= Port_FiberOpticChannel1::initialize(
 			SubsystemIdentifiers::Peripheral1, systemStateIndicator);

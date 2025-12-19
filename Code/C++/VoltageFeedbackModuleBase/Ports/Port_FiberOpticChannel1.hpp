@@ -31,7 +31,7 @@ class Port_FiberOpticChannel1  final:
 			MessageIntegrity messageIntegrity) override;
 		DISALLOW_COPY_MOVE(Port_FiberOpticChannel1);
 		
-		bool setVoltageThreshold(double voltage);
+		bool setVoltageThreshold(float voltage);
 		
 	protected:
 		explicit Port_FiberOpticChannel1(

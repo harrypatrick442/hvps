@@ -49,7 +49,8 @@ const MessageTypes ={
      indicateState:"is",
      indicateStateRequest:"isr",
      sendStateToIndicate:"ssti",
-     emulate:"em",
+     startEmulation:"stae",
+     stopEmulation:"stoe",
      getAvaialbleBluetoothDevices:"gabd",
      connectToBluetoothDevice:"ctbd",
      hasBus:"hb"
