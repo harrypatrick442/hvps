@@ -39,17 +39,11 @@ void HighSpeedCore::stop(){
 	setDesiredSystemState(SystemState::Idle);
 }
 std::shared_ptr<SystemChecksResult> HighSpeedCore::runSystemChecksOnly(){
-	Log::Info(TAG, "runSystemChecksOnly...");
 	_runSystemChecksLatch.latch();
-	Log::Info(TAG, "runSystemChecksOnly...2");
 	setDesiredSystemState(SystemState::RunningSystemChecks);
-	Log::Info(TAG, "runSystemChecksOnly...3");
 	_runSystemChecksLatch.wait();
-	Log::Info(TAG, "runSystemChecksOnly...4");
 	std::unique_lock<std::mutex> lock(_mutexSystemChecksResult);
-	Log::Info(TAG, "runSystemChecksOnly...5");
     auto result = _systemChecksResult; // copy under lock
-	Log::Info(TAG, "runSystemChecksOnly...6");
 	//lock.unlock();
     return result; // refcount is incremented, safe after unlock
 }

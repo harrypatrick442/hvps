@@ -184,14 +184,22 @@ uint32_t Port_ControllingMachine::greetVoltageFeedbackModules(){
 	GreetingResponse* greetingResponse = _port_FirstStageVoltageFeedback.greet(
 		cleanupBucket);
 	int32_t subsystemIdentifierWithError = 0;
-	if(greetingResponse!=nullptr){
+	if(
+		(greetingResponse!=nullptr)
+		&&(greetingResponse->getCoreDumpSummaryMessage()!=nullptr)
+		&&(greetingResponse->getLastAbortMessage()!=nullptr)
+	){
 		subsystemIdentifierWithError = SubsystemIdentifiers::FirstStageVoltageFeedbackModule;
 		sendErrors(greetingResponse->getCoreDumpSummaryMessage(),
 			greetingResponse->getLastAbortMessage());
 	}
 	greetingResponse = _port_OutputVoltageFeedback.greet(cleanupBucket);
-	if(greetingResponse!=nullptr){
-		subsystemIdentifierWithError = SubsystemIdentifiers::FirstStageVoltageFeedbackModule;
+	if(
+		(greetingResponse!=nullptr)
+		&&(greetingResponse->getCoreDumpSummaryMessage()!=nullptr)
+		&&(greetingResponse->getLastAbortMessage()!=nullptr)
+	){
+		subsystemIdentifierWithError = SubsystemIdentifiers::OutputVoltageFeedbackModule;
 		sendErrors(greetingResponse->getCoreDumpSummaryMessage(),
 			greetingResponse->getLastAbortMessage());
 	}

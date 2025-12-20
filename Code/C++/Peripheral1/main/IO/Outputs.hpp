@@ -15,7 +15,7 @@ class Outputs{
 		static void toSafe();
 		static void toSafeReversible();
 		static void setLEDsDataOnOff(bool onElseOff);
-		void setOutputVoltageFeedbackModuleTapVoltage(float voltage);
-		void setFirstStageVoltageFeedbackModuleTapVoltage(float voltage);
+		static void setOutputVoltageFeedbackModuleTapVoltage(float voltage);
+		static void setFirstStageVoltageFeedbackModuleTapVoltage(float voltage);
 };
 #endif

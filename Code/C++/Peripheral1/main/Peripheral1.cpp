@@ -29,6 +29,7 @@ extern "C" void app_main(void)
 	validateConfig();
 	validateHVPSConfig();
 	validateOutputVoltageFeedbackModuleConfig();
+	DAC::initialize(true, true);
 	IOInteruptHelper::installISRHandlerIfNotAlready();
     Flash::initialize();
 	esp_wifi_stop();

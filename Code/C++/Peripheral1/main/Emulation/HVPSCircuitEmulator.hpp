@@ -11,10 +11,13 @@ class HVPSCircuitEmulator:public SingletonBase<HVPSCircuitEmulator>{
     friend class SingletonBase<HVPSCircuitEmulator>;
 public:
 	static inline constexpr const char* TAG = "HVPSCircuitEmulator";
+	static inline constexpr float CONTINUOUS_OUTPUT_POWER_WATTS = 10.0f;
 private:
-	HVPSConfiguration& _hvpsConfiguration;
-	VoltageFeedbackModuleConfiguration& _firstStageVoltageFeedbackModuleConfig;
-	VoltageFeedbackModuleConfiguration& _outputVoltageFeedbackModuleConfig;
+	const HVPSConfiguration& _hvpsConfig;
+	const VoltageFeedbackModuleConfiguration& _firstStageVoltageFeedbackModuleConfig;
+	const VoltageFeedbackModuleConfiguration& _outputVoltageFeedbackModuleConfig;
+	float _a, _b;
+	float _currentVillardEnergyJouls;
 public:
 	DISALLOW_COPY_MOVE(HVPSCircuitEmulator);
 protected:
@@ -28,7 +31,5 @@ private:
 	void run();
 	bool mosfetIsOn();
 	void villardEnergyChanged(
-		float currentVillardEnergyJouls, 
-		float firstStageVoltageToTapVoltage, 
-		float outputVoltageToTapVoltage);
+		float currentVillardEnergyJouls);
 };

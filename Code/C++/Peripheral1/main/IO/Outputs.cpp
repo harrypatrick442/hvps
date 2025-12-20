@@ -63,8 +63,8 @@ void Outputs::_setLEDsDataOnOff(bool onElseOff){
 	gpio_set_level((gpio_num_t)PinDefinitions::LEDS_D_OUT, onElseOff?1:0);
 }
 void Outputs::setOutputVoltageFeedbackModuleTapVoltage(float voltage){
-	DAC::getInstance().setChannel2Voltage(voltage);
+	DAC::getInstance().setChannel1Voltage(voltage);
 }
 void Outputs::setFirstStageVoltageFeedbackModuleTapVoltage(float voltage){
-	DAC::getInstance().setChannel1Voltage(voltage);
+	DAC::getInstance().setChannel0Voltage(voltage);
 }

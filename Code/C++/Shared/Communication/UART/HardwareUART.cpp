@@ -96,6 +96,7 @@ size_t HardwareUART::readBytes(char* receiveBuffer, size_t maxlen, uint32_t time
 	return static_cast<size_t>(res);
 }
 size_t HardwareUART::writeBytes(const char* jsonWithNewLine, size_t length){
+	Log::Info(TAG, "HardwareUART::writeBytes");
 	int res = uart_write_bytes(
 		/*uart_num*/   _uartPort,   /*uart_port_t*/
 		/*src*/        jsonWithNewLine,          /*const char* or const void* */
@@ -104,6 +105,7 @@ size_t HardwareUART::writeBytes(const char* jsonWithNewLine, size_t length){
 	if(res<0){
 		return 0;
 	}
+	Log::Info(TAG, "HardwareUART::wrote bytes");
 	return static_cast<size_t>(res);
 }
 void HardwareUART::flushTx(){

@@ -14,12 +14,14 @@ TOSLINKDuplexChannel::TOSLINKDuplexChannel(
 			new MRTChannel(txPin, rxPin, 2000, false, true)
 		)
 		:std::unique_ptr<IChannel>(
-			new HardwareUART(takeNextNUart(), txPin, rxPin, 115200, false, true)
+			new HardwareUART(takeNextNUart(), txPin, rxPin, 9600, false, true)
 		)
 		
 	) {
+	Log::Info(TAG, "Doing a");
 };
 int TOSLINKDuplexChannel::takeNextNUart(){
+	Log::Info(TAG, "takeNextNUart");
 	int nUart = _nextNUart++;
 	if(nUart>2){
 		Aborter::safeAbort(TAG, "nUart doesnt exist");

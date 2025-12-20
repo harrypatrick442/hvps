@@ -4,7 +4,8 @@
 #include "IO/Inputs.hpp"
 #include "IO/Outputs.hpp"
 #include "Timing/TimeHelper.hpp"
-#include <mathf>
+#include "Tasks/TaskFactory.hpp"
+#include <cmath>
 HVPSCircuitEmulator::HVPSCircuitEmulator(
 	const HVPSConfiguration& hvpsConfig, 
 	const VoltageFeedbackModuleConfiguration& firstStageVoltageFeedbackModuleConfig, 
@@ -12,11 +13,12 @@ HVPSCircuitEmulator::HVPSCircuitEmulator(
 	_hvpsConfig(hvpsConfig),
 	_firstStageVoltageFeedbackModuleConfig(firstStageVoltageFeedbackModuleConfig),
 	_outputVoltageFeedbackModuleConfig(outputVoltageFeedbackModuleConfig),
+	_b(CONTINUOUS_OUTPUT_POWER_WATTS/1000000.0f),
+	_currentVillardEnergyJouls(0)
 {
-	float totalVillardCapacitanceFarads = _hvpsConfig.nVillardStages * 2d * _hvpsConfig.villardCapacitorCapacitanceFarads;
-	_a = 2d/totalVillardCapacitanceFarads;
-}
-HVPSCircuitEmulator::~HVPSCircuitEmulator(){
+	float totalVillardCapacitanceFarads = _hvpsConfig.nVillardStages * 2.0f * _hvpsConfig.villardCapacitorCapacitanceFarads;
+	_a = 2.0f/totalVillardCapacitanceFarads;
+		Log::Info(TAG, "starting task");
 	if(!TaskFactory::createPriorityTask(
 		[this](){
 			run();
@@ -25,14 +27,16 @@ HVPSCircuitEmulator::~HVPSCircuitEmulator(){
 	){
 			Aborter::safeAbort(TAG, "Failed to start loop");
 	}
+	
+}
+HVPSCircuitEmulator::~HVPSCircuitEmulator(){
 }
 void HVPSCircuitEmulator::run(){
-	float currentVillardEnergyJouls = 0;
 	uint64_t now = TimeHelper::us();
 	while(true){
+		Log::Info(TAG, "looping");
 		uint64_t turnOnTimeUs = now;
 		while(mosfetIsOn()){
-			
 		}
 		now = TimeHelper::us();
 		uint64_t turnOffTimeUs = now;
@@ -47,38 +51,43 @@ void HVPSCircuitEmulator::run(){
 			energyIntoFlyback = _hvpsConfig.maxFlybackEnergyPerCycleJouls;
 		}
 		else if(timePrimaryWasOnUs<_hvpsConfig.onTimeMicroSeconds){
-			energyIntoFlyback = _hvpsConfig.maxFlybackEnergyPerCycleJouls * std::pow(static_cast<float>(timePrimaryWasOnUs)/ _hvpsConfig.onTimeMicroSeconds, 2d);
+			energyIntoFlyback = _hvpsConfig.maxFlybackEnergyPerCycleJouls *
+				powf(static_cast<float>(timePrimaryWasOnUs)/ _hvpsConfig.onTimeMicroSeconds, 2.0f);
 		}
 		else{
 			energyIntoFlyback = _hvpsConfig.maxFlybackEnergyPerCycleJouls;
 		}
-		float energyOutOfVillardWhileMosefetOn = continuousOutputPowerWatts * static_cast<float>(timePrimaryWasOnUs)/1000000f;
-		float newVillardEnergyJouls = currentVillardEnergyJouls + energyIntoFlyback - energyOutOfVillardWhileMosefetOn;
+		float energyOutOfVillardWhileMosefetOn = _b * static_cast<float>(timePrimaryWasOnUs);
+		float newVillardEnergyJouls = _currentVillardEnergyJouls + energyIntoFlyback - energyOutOfVillardWhileMosefetOn;
 		if(newVillardEnergyJouls<0)newVillardEnergyJouls = 0;
 		villardEnergyChanged(newVillardEnergyJouls);
 		while(!mosfetIsOn()){
 			
+			Log::Info(TAG, "mosfet off");
 		}
 		now = TimeHelper::us();
-		float offTimeUs = static_cast<float>(now - turnOffTimeUs);
-		float energyOutOfVillardWhileMosfetOff = continuousOutputPowerWatts * offTimeUs;
+		float timePrimaryWasOffUs = static_cast<float>(now - turnOffTimeUs);
+		float energyOutOfVillardWhileMosfetOff = _b * timePrimaryWasOffUs;
 		
-		newVillardEnergyJouls = currentVillardEnergyJouls - energyOutOfVillardWhileMosfetOff;
+		newVillardEnergyJouls = _currentVillardEnergyJouls - energyOutOfVillardWhileMosfetOff;
 		if(newVillardEnergyJouls<0)newVillardEnergyJouls = 0;
 		villardEnergyChanged(newVillardEnergyJouls);
 	}
 }
 void HVPSCircuitEmulator::villardEnergyChanged(
-	float currentVillardEnergyJouls, 
-	float firstStageVoltageToTapVoltage, 
-	float outputVoltageToTapVoltage)
+	float newVillardEnergyJouls)
 {
-	float outputVoltageVolts = std::sqrtf(currentVillardEnergyJouls*a);
+	_currentVillardEnergyJouls = newVillardEnergyJouls;
+	float outputVoltageVolts = std::sqrtf(_currentVillardEnergyJouls*_a);
 	float firstStageVoltageVolts = outputVoltageVolts/_hvpsConfig.nVillardStages;
 	Outputs::setFirstStageVoltageFeedbackModuleTapVoltage(
-		firstStageVoltageVolts / _firstStageVoltageFeedbackModuleConfig.vHvOverVadcRatio);
+		2.0f
+		//firstStageVoltageVolts / _firstStageVoltageFeedbackModuleConfig.vHvOverVadcRatio
+	);
 	Outputs::setOutputVoltageFeedbackModuleTapVoltage(
-		outputVoltageVolts / _outputVoltageFeedbackModuleConfig.vHvOverVadcRatio);
+		2.3f
+		//outputVoltageVolts / _outputVoltageFeedbackModuleConfig.vHvOverVadcRatio
+	);
 }
 bool HVPSCircuitEmulator::mosfetIsOn(){
 	return ! Inputs::getDriveSignal();

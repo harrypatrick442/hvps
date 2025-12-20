@@ -3,6 +3,7 @@ idf_component_register(
 	"Emulation/HVPSCircuitEmulator.cpp"
 	"HVPSLEDDisplay.cpp"
 	"IO/FiberOpticDuplexChannel_1.cpp"
+	"IO/Inputs.cpp"
 	"IO/Outputs.cpp"
 	"IO/PinDefinitions.cpp"
 	"Graphics/LEDStrip.cpp"
