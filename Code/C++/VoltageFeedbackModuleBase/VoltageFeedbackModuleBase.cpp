@@ -40,7 +40,7 @@ void VoltageFeedbackModuleBase::main(const VoltageFeedbackModuleConfiguration& c
 	while(true){
 		Delay::ms(10000);
 		if(port_FiberOpticChannel1.setVoltageThreshold(isHigh?3.0:0.0)){
-			Log::Info(TAG, "Set voltage successfully");
+			LOG_INFO("Set voltage successfully");
 		}
 		isHigh = ! isHigh;
 	}*/

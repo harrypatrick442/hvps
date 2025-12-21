@@ -9,7 +9,7 @@
 bool Outputs::_initialized = false;
 void Outputs::initialize(){
 	if(Outputs::_initialized){
-        Log::Error(TAG, "Already Initialized!");
+        LOG_ERROR("Already Initialized!");
 		return;
 	}
 	Outputs::_initialized = true;
@@ -24,7 +24,7 @@ void Outputs::toSafe(){
 }
 void Outputs::setThresholdReachedFiberOpticOnOff(bool onElseOff){
 	if(!Outputs::_initialized){
-        Log::Error(TAG, "Not Initialized!");
+        LOG_ERROR("Not Initialized!");
 		return;
 	}
 	//0 IS USED FOR THRESHOLD REACHED. USING 0 MEANS IN EVENT OF POWER FAILURE DRIVE STOPS.

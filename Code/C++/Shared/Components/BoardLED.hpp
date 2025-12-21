@@ -28,7 +28,6 @@ private:
 
     static BoardLED* instance;
     static const gpio_num_t ledPin;
-    static const char* TAG;
 };
 
 #endif // BOARD_LED_H

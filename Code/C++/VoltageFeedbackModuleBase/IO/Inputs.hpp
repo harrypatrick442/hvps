@@ -6,7 +6,6 @@
 class Inputs {
 	private:
 		static inline constexpr int RECEIVER_INPUT_PIN = 22;
-		static inline constexpr const char* TAG = "Inputs";
 		static bool _initialized;
 
 	public:

@@ -22,10 +22,10 @@ IRAM_ATTR void PerformanceProfiler::profileMaxDelay(){
 		}
 		if(time> doneTime){
 			float average = 1000000.0f/nLoops;
-			Log::Info(TAG, "max delay was:  %" PRIu64, maxDelay);
-			Log::Info(TAG, "nLoops : %d", nLoops);
-			Log::Info(TAG, "average delay was : %f", average);
-			Log::Info(TAG, "core is : %d", xPortGetCoreID());
+			LOG_INFO("max delay was:  %" PRIu64, maxDelay);
+			LOG_INFO("nLoops : %d", nLoops);
+			LOG_INFO("average delay was : %f", average);
+			LOG_INFO("core is : %d", xPortGetCoreID());
 			maxDelay= 0;
 			nLoops = 0;
 			doneTime = time + 1000000;
@@ -33,7 +33,7 @@ IRAM_ATTR void PerformanceProfiler::profileMaxDelay(){
 			
 		}
 		
-		//Log::Info("VoltageFeedbackModule", "Sending");
+		//LOG_INFO("VoltageFeedbackModule", "Sending");
 		//Outputs::setThresholdReachedFiberOpticOnOff(on);
 		//on = !on;
 		
@@ -42,7 +42,7 @@ IRAM_ATTR void PerformanceProfiler::profileMaxDelay(){
 		Delay::ms(1000);
 		*/
 		//int value = Inputs::readReceiver();
-		//Log::Info("VoltageFeedbackModule", "Receiver: %d", value);
+		//LOG_INFO("VoltageFeedbackModule", "Receiver: %d", value);
 		//Delay::ms(1000);
 	}
 }

@@ -4,15 +4,9 @@
 #include "SubsystemIdentifier.hpp"
 #include "esp_attr.h"
 #include "esp_system.h"
-
-[[noreturn]] void Aborter::safeAbortFromMacro(const char* fileName, int lineNumber){
-    char formatted[64];
-    std::snprintf(formatted, sizeof(formatted), "line: %d", lineNumber);
-	_safeAbort(fileName, formatted);
-}
-	
+const char* Aborter::TAG = "Aborter";
 [[noreturn]] void Aborter::_safeAbort(const char* fileName, char* formatted){
-    Log::Fatal(fileName, formatted);
+    LOG_FATAL(fileName, formatted);
 	
     constexpr int BACKTRACE_DEPTH = 16;
     uint32_t backtrace[BACKTRACE_DEPTH] = {0};
@@ -26,7 +20,7 @@
 			backtrace, backtraceLength);
 	}
 	else{
-		Log::Warn(TAG, "Flash was not initialized when trying to set last abort reason");
+		LOG_WARN("Flash was not initialized when trying to set last abort reason");
 	}
 	
 	Delay::ms(200);
@@ -65,7 +59,7 @@ bool Aborter::hasLastAbortReason(){
 }
 void Aborter::clearLastAbortReason(){
 	if(!Flash::getIsInitialized()){
-		Log::Warn(TAG, "Flash was not initialized when calling clearLastAbortReason");
+		LOG_WARN("Flash was not initialized when calling clearLastAbortReason");
 		return;
 	}
 	Flash::erase(TAG, REASON_KEY);

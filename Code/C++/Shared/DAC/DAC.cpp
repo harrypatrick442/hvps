@@ -1,5 +1,7 @@
 #include "DAC.hpp"
 #include "esp_log.h"
+#include "Macros/GetFileName.hpp"
+const char* DAC::getTag() {return GET_FILE_NAME;}
 
 DAC::DAC(bool enableChannel0, bool enableChannel1) noexcept :
 _ch0(nullptr),
@@ -10,7 +12,7 @@ _ch1(nullptr) {
         };
 		esp_err_t err = dac_oneshot_new_channel(&cfg, &_ch0);
         if (err == ESP_OK) {
-			Log::Info(TAG, "DAC_CHAN_0  (GPIO25) enabled");
+			LOG_INFO("DAC_CHAN_0  (GPIO25) enabled");
         }
 		else{
             SAFE_ABORT("Failed to init DAC_CHAN_0 with error: %s", esp_err_to_name(err));
@@ -22,7 +24,7 @@ _ch1(nullptr) {
         };
 		esp_err_t err = dac_oneshot_new_channel(&cfg, &_ch1);
         if (err == ESP_OK) {
-			Log::Info(TAG, "DAC_CHAN_1 (GPIO26) enabled");
+			LOG_INFO("DAC_CHAN_1 (GPIO26) enabled");
         }
 		else{
             SAFE_ABORT("Failed to init DAC_CHAN_1 with error: %s", esp_err_to_name(err));

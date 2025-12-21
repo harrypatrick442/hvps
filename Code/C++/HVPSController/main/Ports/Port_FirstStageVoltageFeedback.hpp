@@ -5,8 +5,7 @@ class Port_FirstStageVoltageFeedback final :
 	public Port_VoltageFeedbackBase,
 	public SingletonBase<Port_FirstStageVoltageFeedback>{
     public :
-		static inline constexpr const char* TAG = "Port_FirstStageVoltageFeedback";
-		const char* getTag() const override { return TAG; }
+		static const char* getTag();
 		static Port_FirstStageVoltageFeedback& initialize() noexcept;
     private:
 		friend class SingletonBase<Port_FirstStageVoltageFeedback>; // lets SingletonBase call our ctor

@@ -10,7 +10,6 @@ cJSON* TestMessage::toJSON(){
     return j;
 }
 TestMessage* TestMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
-    bool s = true;
     auto r = new TestMessage();
     cleanupBucket.addDelete(r);
     return r;

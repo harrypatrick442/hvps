@@ -10,7 +10,7 @@
 class HVPSCircuitEmulator:public SingletonBase<HVPSCircuitEmulator>{
     friend class SingletonBase<HVPSCircuitEmulator>;
 public:
-	static inline constexpr const char* TAG = "HVPSCircuitEmulator";
+	static const char* getTag();
 	static inline constexpr float CONTINUOUS_OUTPUT_POWER_WATTS = 10.0f;
 private:
 	const HVPSConfiguration& _hvpsConfig;

@@ -10,7 +10,7 @@ private:
     dac_oneshot_handle_t _ch0;
     dac_oneshot_handle_t _ch1;
 public:
-    static inline constexpr const char* TAG = "DAC";
+	static const char* getTag();
     static inline constexpr float DEFUALT_V_MAX = 3.1;
     DISALLOW_COPY_MOVE(DAC);
 	

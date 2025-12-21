@@ -1,8 +1,6 @@
 #include "MPU6050.hpp"
-#include "esp_log.h"
 #include <cstring>
-#include "../../Logging/Log.hpp"
-static const char *TAG = "MPU6050";
+#include "Logging/Log.hpp"
 
 MPU6050::MPU6050(IReadWrite& readWrite, uint8_t address) : readWrite(readWrite), address(address) {
     // Initialization code if needed
@@ -25,7 +23,7 @@ esp_err_t MPU6050::GetAcceleration(float& ax, float& ay, float& az) {
     uint8_t data[6];
     esp_err_t err = readRegister(ACCEL_XOUT_H_REGISTER, data, 6);
     if (err != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to read acceleration data");
+        LOG_ERROR("Failed to read acceleration data");
         return err;
     }
 
@@ -44,7 +42,7 @@ esp_err_t MPU6050::GetGyroscope(float& gx, float& gy, float& gz) {
     uint8_t data[6];
     esp_err_t err = readRegister(GYRO_XOUT_H_REGISTER, data, 6);
     if (err != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to read gyroscope data");
+        LOG_ERROR("Failed to read gyroscope data");
         return err;
     }
 

@@ -10,7 +10,6 @@ cJSON* ShutDownMessage::toJSON(){
     return j;
 }
 ShutDownMessage* ShutDownMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
-    bool s = true;
     auto r = new ShutDownMessage();
     cleanupBucket.addDelete(r);
     return r;

@@ -10,7 +10,6 @@ cJSON* StopMessage::toJSON(){
     return j;
 }
 StopMessage* StopMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
-    bool s = true;
     auto r = new StopMessage();
     cleanupBucket.addDelete(r);
     return r;

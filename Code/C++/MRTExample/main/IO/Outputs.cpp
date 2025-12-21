@@ -15,7 +15,7 @@ void Outputs::initialize(){
     //portENTER_CRITICAL(&s_outputsMux);
     if (s_initialized) {
         //portEXIT_CRITICAL(&s_outputsMux);
-        Log::Error(TAG, "Already Initialized!");
+        LOG_ERROR("Already Initialized!");
         return;
     }
 	configureOutputPin(PinDefinitions::LEDS_D_OUT, false);
@@ -32,7 +32,7 @@ void Outputs::configureOutputPin(int pin, bool onElseOff){
     };
     esp_err_t err = gpio_config(&io_conf);
     if (err != ESP_OK) {
-        Log::Error(TAG, "gpio_config failed for pin %d with err %d", pin, err);
+        LOG_ERROR("gpio_config failed for pin %d with err %d", pin, err);
     }
     gpio_set_level((gpio_num_t)pin, onElseOff ? 1 : 0);
 }

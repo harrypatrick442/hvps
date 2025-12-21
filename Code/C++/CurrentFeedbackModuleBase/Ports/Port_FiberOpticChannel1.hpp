@@ -18,7 +18,7 @@ class Port_FiberOpticChannel1  final:
 {
     friend class SingletonBase<Port_FiberOpticChannel1>;
     public :
-		static inline constexpr const char* TAG = "Port_FiberOpticChannel1";
+		static const char* getTag();
 		void handleIncomingMessage(cJSON* message, bool& dontDelete, MessageIntegrity messageIntegrity) override;
 		DISALLOW_COPY_MOVE(Port_FiberOpticChannel1);
 		

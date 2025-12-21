@@ -16,7 +16,7 @@ bool Flash::setNumber(const char* namespaceName, const char* key, T value) {
 	nvs_handle_t handle;
 	esp_err_t err = nvs_open(namespaceName, NVS_READWRITE, &handle);
 	if (err != ESP_OK) {
-		Log::Warn(TAG, FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
+		LOG_WARN(FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
 		return false;
 	}
 
@@ -51,7 +51,7 @@ bool Flash::setNumber(const char* namespaceName, const char* key, T value) {
 
 	if (writeErr != ESP_OK) {
 		nvs_close(handle);
-		Log::Warn(TAG, "Failed to set number: %s", esp_err_to_name(writeErr));
+		LOG_WARN("Failed to set number: %s", esp_err_to_name(writeErr));
 		return false;
 	}
 
@@ -59,7 +59,7 @@ bool Flash::setNumber(const char* namespaceName, const char* key, T value) {
 	err = nvs_commit(handle);
 	nvs_close(handle);
 	if (err != ESP_OK) {
-		Log::Warn(TAG, "Failed to commit NVS number: %s", esp_err_to_name(err));
+		LOG_WARN("Failed to commit NVS number: %s", esp_err_to_name(err));
 		return false;
 	}
 
@@ -77,7 +77,7 @@ bool Flash::getNumber(const char* namespaceName, const char* key, T& outValue) {
 	nvs_handle_t handle;
 	esp_err_t err = nvs_open(namespaceName, NVS_READONLY, &handle);
 	if (err != ESP_OK) {
-		Log::Warn(TAG, FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
+		LOG_WARN(FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
 		return false;
 	}
 
@@ -117,7 +117,7 @@ bool Flash::getNumber(const char* namespaceName, const char* key, T& outValue) {
 	if (readErr == ESP_ERR_NVS_NOT_FOUND) 
 		return false;
 	if (readErr != ESP_OK) {
-		Log::Warn(TAG, "Failed to get number: %s", esp_err_to_name(readErr));
+		LOG_WARN("Failed to get number: %s", esp_err_to_name(readErr));
 		return false;
 	}
 
@@ -144,7 +144,7 @@ bool Flash::getArray(const char* namespaceName, const char* key,
         return false;
     }
     if (err != ESP_OK) {
-        Log::Warn(TAG, FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
+        LOG_WARN(FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
         return false;
     }
 
@@ -156,13 +156,13 @@ bool Flash::getArray(const char* namespaceName, const char* key,
     }
     if (err != ESP_OK) {
         nvs_close(handle);
-        Log::Warn(TAG, "Failed to get blob size for key '%s': %s", key, esp_err_to_name(err));
+        LOG_WARN("Failed to get blob size for key '%s': %s", key, esp_err_to_name(err));
         return false;
     }
 
     if (sizeBytes % sizeof(T) != 0) {
         nvs_close(handle);
-        Log::Warn(TAG, "Invalid blob size for key '%s': not divisible by sizeof(T)", key);
+        LOG_WARN("Invalid blob size for key '%s': not divisible by sizeof(T)", key);
         return false;
     }
 
@@ -170,7 +170,7 @@ bool Flash::getArray(const char* namespaceName, const char* key,
     T* data = new(std::nothrow) T[count];
     if (!data) {
         nvs_close(handle);
-        Log::Warn(TAG, "Memory allocation failed for key '%s'", key);
+        LOG_WARN("Memory allocation failed for key '%s'", key);
         return false;
     }
 
@@ -178,7 +178,7 @@ bool Flash::getArray(const char* namespaceName, const char* key,
     nvs_close(handle);
     if (err != ESP_OK) {
         delete[] data;
-        Log::Warn(TAG, "Failed to read blob for key '%s': %s", key, esp_err_to_name(err));
+        LOG_WARN("Failed to read blob for key '%s': %s", key, esp_err_to_name(err));
         return false;
     }
 
@@ -197,28 +197,28 @@ bool Flash::setArray(const char* namespaceName, const char* key, const T* array,
     }
 
     if (!array || count == 0) {
-        Log::Warn(TAG, "Invalid array or count for key '%s'", key);
+        LOG_WARN("Invalid array or count for key '%s'", key);
         return false;
     }
 
     nvs_handle_t handle;
     esp_err_t err = nvs_open(namespaceName, NVS_READWRITE, &handle);
     if (err != ESP_OK) {
-        Log::Warn(TAG, FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
+        LOG_WARN(FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
         return false;
     }
 
     err = nvs_set_blob(handle, key, array, sizeof(T) * count);
     if (err != ESP_OK) {
         nvs_close(handle);
-        Log::Warn(TAG, "Failed to store blob '%s': %s", key, esp_err_to_name(err));
+        LOG_WARN("Failed to store blob '%s': %s", key, esp_err_to_name(err));
         return false;
     }
 
     err = nvs_commit(handle);
     nvs_close(handle);
     if (err != ESP_OK) {
-        Log::Warn(TAG, "Failed to commit blob '%s': %s", key, esp_err_to_name(err));
+        LOG_WARN("Failed to commit blob '%s': %s", key, esp_err_to_name(err));
         return false;
     }
 

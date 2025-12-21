@@ -15,7 +15,7 @@ ReverseVoltageToRawLookup::ReverseVoltageToRawLookup(
 		uint32_t voltage = i * intervalMillivolts;
 		uint32_t raw = findRawForVoltage(voltage, adc_chars);
 		if(raw>4095){
-			Log::Info(TAG, "Out of range raw was returned with value %u", raw);
+			LOG_INFO("Out of range raw was returned with value %u", raw);
 			abort();
 		}
 		_entries[i] = ReverseVoltageToRawLookup_Entry(voltage, raw);

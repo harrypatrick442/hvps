@@ -51,9 +51,9 @@ void TicketedSender::removeFromInstances(TicketedSender* ticketedSender){
 }
 std::shared_ptr<cJSON> TicketedSender::send(cJSON* request, uint64_t timeoutMilliseconds, CancellationToken* cancellationToken){	
 	uint64_t ticket = TicketSource::next();
-	Log::Info(TAG, "Ticket sent was %" PRIu64 "", ticket);
+	LOG_INFO("Ticket sent was %" PRIu64 "", ticket);
 	JHelper::setUInt64(request, MessageConstants::TICKET_KEY, ticket);
-	Log::Info(TAG, "Modified ticketed message to send key value pairs");
+	LOG_INFO("Modified ticketed message to send key value pairs");
 	JHelper::printJsonKeysAndValues(request);
 	TicketedSenderHandle* handle = new TicketedSenderHandle(
 		TimeHelper::ms() + timeoutMilliseconds);
@@ -93,15 +93,15 @@ bool TicketedSender::handleTicketedMessage(cJSON* message, char* type){
 		return false;
 	}
 	if(ticket==0){
-		Log::Error(TAG, "Got 0 ticket!");
+		LOG_ERROR("Got 0 ticket!");
 		return false;
 	}
 	
-	//Log::Info(TAG, "Ticket received was %" PRIu64 "", ticket);
+	//LOG_INFO("Ticket received was %" PRIu64 "", ticket);
 	std::unique_lock<std::mutex> lock(_mutex);
-	/*Log::Info(TAG, "Map had %d", _mapTicketToHandle.size());
+	/*LOG_INFO("Map had %d", _mapTicketToHandle.size());
 	for (const auto& [t, handlePtr] : _mapTicketToHandle) {
-		Log::Info(TAG, "map ticket  %" PRIu64 "", t);
+		LOG_INFO("map ticket  %" PRIu64 "", t);
 	}*/
 	auto it = _mapTicketToHandle.find(ticket);
 	if (it == _mapTicketToHandle.end()) {

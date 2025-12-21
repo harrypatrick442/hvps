@@ -4,7 +4,6 @@
 #include "../Interfaces/IChannel.hpp"
 class UARTBase: public IChannel{
 public:
-	inline static constexpr const char* TAG= "UARTBase";
 	inline static constexpr size_t MIN_REQUIRED_RECEIVE_BUFFER_SIZE = 256;
 private:
 	static std::mutex _mutexClaimReleaseNUart;	

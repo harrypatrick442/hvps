@@ -1,50 +1,56 @@
-// SingletonBase.hpp
 #pragma once
 #include <mutex>
 #include <utility>
 #include <type_traits>
 #include "System/SafeAbort.hpp"
 
-// detect Derived::TAG
-template<class T, class = void>
-struct has_tag : std::false_type {};
-template<class T>
-struct has_tag<T, std::void_t<decltype(T::TAG)>> : std::true_type {};
+// Trait to check for static getTag() method
+template<typename T>
+class has_static_getTag {
+private:
+    template<typename U>
+    static auto test(int) -> decltype(
+        std::is_same<
+            decltype(U::getTag()),
+            const char*
+        >{},
+        std::true_type{}
+    );
+    template<typename>
+    static std::false_type test(...);
+public:
+    static constexpr bool value = decltype(test<T>(0))::value;
+};
 
 template<class Derived>
 class SingletonBase {
 public:
-  template<class... Args>
-  static Derived& initialize(const char* tag, Args&&... args) noexcept {
-    bool ran = false;
-    std::call_once(_once, [&]{
-      _instance = new Derived(std::forward<Args>(args)...);
-      _tag = tag;
-      ran = true;
-    });
-    if (!ran) SAFE_ABORT("Already initialized");
-    return *_instance;
-  }
+    template<class... Args>
+    static Derived& initialize(Args&&... args) noexcept {
+        static_assert(has_static_getTag<Derived>::value,
+            "Derived must implement: static const char* getTag()");
 
-  // convenience overload: uses Derived::TAG
-  template<class... Args>
-  static Derived& initialize(Args&&... args) noexcept {
-    static_assert(has_tag<Derived>::value,
-                  "Derived must define static TAG or use initialize(tag, ...)");
-    return initialize(Derived::TAG, std::forward<Args>(args)...);
-  }
+        bool ran = false;
+        std::call_once(_once, [&]{
+            _instance = new Derived(std::forward<Args>(args)...);
+            ran = true;
+        });
+        if (!ran) {
+            SAFE_ABORT("[%s] Already initialized", Derived::getTag());
+        }
+        return *_instance;
+    }
 
-  static Derived& getInstance() noexcept {
-    if (_instance) return *_instance;
-    SAFE_ABORT("getInstance() before initialize()");
-    return *_instance; // unreachable post-abort
-  }
+    static Derived& getInstance() noexcept {
+        if (_instance) return *_instance;
+        SAFE_ABORT("[%s] getInstance() before initialize()", Derived::getTag());
+        return *_instance; // unreachable
+    }
 
 protected:
-  ~SingletonBase() = default;
+    ~SingletonBase() = default;
 
 private:
-  static inline std::once_flag _once;
-  static inline Derived*       _instance = nullptr;
-  static inline const char*    _tag      = nullptr;
+    static inline std::once_flag _once;
+    static inline Derived*       _instance = nullptr;
 };

@@ -19,7 +19,7 @@ class Port_OtherPeripherals final:
     friend class SingletonBase<Port_OtherPeripherals>;
 public:
 
-	inline static constexpr const char* TAG = "Port_OtherPeripherals";
+	static const char* getTag();
     // Force derived classes to identify themselves
 	DISALLOW_COPY_MOVE(Port_OtherPeripherals);
 

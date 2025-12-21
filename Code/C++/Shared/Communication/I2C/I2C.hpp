@@ -36,7 +36,6 @@ private:
     static I2C* _instance;
 	I2CConfiguration _configuration;
     i2c_port_t _port;
-    static const char* TAG;
 };
 
 #endif // I2C_H

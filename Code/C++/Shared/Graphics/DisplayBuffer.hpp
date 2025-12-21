@@ -2,8 +2,6 @@
 #include <stdint.h>
 #include <cstddef>
 class DisplayBuffer{
-public:
-	inline static constexpr const char* TAG = "DisplayBuffer";
 private:
 	size_t _length;
 	size_t _nextIndex;

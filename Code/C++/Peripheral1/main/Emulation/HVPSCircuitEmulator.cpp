@@ -6,6 +6,8 @@
 #include "Timing/TimeHelper.hpp"
 #include "Tasks/TaskFactory.hpp"
 #include <cmath>
+#include "Macros/GetFileName.hpp"
+const char* HVPSCircuitEmulator::getTag() {return GET_FILE_NAME;}
 HVPSCircuitEmulator::HVPSCircuitEmulator(
 	const HVPSConfiguration& hvpsConfig, 
 	const VoltageFeedbackModuleConfiguration& firstStageVoltageFeedbackModuleConfig, 
@@ -18,7 +20,7 @@ HVPSCircuitEmulator::HVPSCircuitEmulator(
 {
 	float totalVillardCapacitanceFarads = _hvpsConfig.nVillardStages * 2.0f * _hvpsConfig.villardCapacitorCapacitanceFarads;
 	_a = 2.0f/totalVillardCapacitanceFarads;
-		Log::Info(TAG, "starting task");
+		LOG_INFO("starting task");
 	if(!TaskFactory::createPriorityTask(
 		[this](){
 			run();
@@ -34,7 +36,7 @@ HVPSCircuitEmulator::~HVPSCircuitEmulator(){
 void HVPSCircuitEmulator::run(){
 	uint64_t now = TimeHelper::us();
 	while(true){
-		Log::Info(TAG, "looping");
+		LOG_INFO("looping");
 		uint64_t turnOnTimeUs = now;
 		while(mosfetIsOn()){
 		}
@@ -63,7 +65,7 @@ void HVPSCircuitEmulator::run(){
 		villardEnergyChanged(newVillardEnergyJouls);
 		while(!mosfetIsOn()){
 			
-			Log::Info(TAG, "mosfet off");
+			LOG_INFO("mosfet off");
 		}
 		now = TimeHelper::us();
 		float timePrimaryWasOffUs = static_cast<float>(now - turnOffTimeUs);

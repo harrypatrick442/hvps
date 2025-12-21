@@ -13,7 +13,7 @@ bool Inputs::_initialized = false;
 
 void Inputs::initialize() {
 	if (_initialized) {
-		Log::Error(TAG, "Already Initialized!");
+		LOG_ERROR("Already Initialized!");
 		return;
 	}
 	_initialized = true;

@@ -20,7 +20,7 @@ float SoftStartHandler::doSoftStart(const HVPSConfiguration& config1, const HVPS
 	float result = -1.0f;
 	Inputs::useADCPowerSupplyVoltageFeedbackChannel([&](IADCSession&& adc){
 		float minimumVoltageCanRead = ADC::getMinimumVoltageCanRead();
-		Log::Info(TAG, "Minimum voltage can read was: %f", minimumVoltageCanRead);
+		LOG_INFO("Minimum voltage can read was: %f", minimumVoltageCanRead);
 		while(true){
 			Delay::ms(SAMPLE_INTERVAL_MS);
 			if(config1.vPsOverVadcRatio!=config2.vPsOverVadcRatio){
@@ -33,12 +33,12 @@ float SoftStartHandler::doSoftStart(const HVPSConfiguration& config1, const HVPS
 			}
 			index=0;
 			float averageVoltage = ArrayHelper::average(voltages, WINDOW_SAMPLES);
-			Log::Info(TAG, "averageVoltage %f", averageVoltage);
+			LOG_INFO("averageVoltage %f", averageVoltage);
 			float dVoltage = averageVoltage - lastAverageVoltage;
 			reachedMinimumVoltage = averageVoltage>=MINIMUM_VOLTAGE_TO_REACH;
 			voltageStoppedIncreasing = dVoltage <=0.0f;
 			if(reachedMinimumVoltage&&voltageStoppedIncreasing){
-				Log::Info(TAG, "Reached minimum voltage and voltage stopped increasing", lastAverageVoltage);
+				LOG_INFO("Reached minimum voltage and voltage stopped increasing", lastAverageVoltage);
 				Outputs::setSoftStartResistorBypassOnOff(true);
 				Delay::ms(RELAY_SWITCH_TIME_MILLISECONDS);
 				result = averageVoltage;
@@ -47,7 +47,7 @@ float SoftStartHandler::doSoftStart(const HVPSConfiguration& config1, const HVPS
 			lastAverageVoltage = averageVoltage;
 			uint64_t now = TimeHelper::ms();
 			if(now>talkNext){
-				Log::Info(TAG, tellWhatWaitingOn(reachedMinimumVoltage, voltageStoppedIncreasing));
+				LOG_INFO(tellWhatWaitingOn(reachedMinimumVoltage, voltageStoppedIncreasing));
 				talkNext = now+TALK_INTERVAL_MILLISECONDS;
 			}
 		}

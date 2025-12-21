@@ -11,7 +11,7 @@ bool Inputs::_initialized = false;
 
 void Inputs::initialize() {
 	if (_initialized) {
-		Log::Error(TAG, "Already Initialized!");
+		LOG_ERROR("Already Initialized!");
 		return;
 	}
 	_initialized = true;
@@ -24,12 +24,12 @@ void Inputs::initialize() {
 	io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
 
 	gpio_config(&io_conf);
-	Log::Info(TAG, "Receiver input on GPIO%d initialized", RECEIVER_INPUT_PIN);
+	LOG_INFO("Receiver input on GPIO%d initialized", RECEIVER_INPUT_PIN);
 }
 
 int Inputs::readReceiver() {
 	if (!_initialized) {
-		Log::Error(TAG, "Not Initialized!");
+		LOG_ERROR("Not Initialized!");
 		return -1;
 	}
 	return gpio_get_level((gpio_num_t)RECEIVER_INPUT_PIN);

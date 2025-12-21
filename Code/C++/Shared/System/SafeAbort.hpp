@@ -1,6 +1,5 @@
 #pragma once
 #include "Aborter.hpp"
-
-#define __SAFE_ABORT__FILE_NAME__  (__builtin_strrchr(__FILE__, '/') ? __builtin_strrchr(__FILE__, '/') + 1 : __FILE__)
+#include "Macros/GetFileName.hpp"
 #define SAFE_ABORT(msg, ...) \
-    Aborter::safeAbortFromMacro(__SAFE_ABORT__FILE_NAME__, __LINE__)
+    Aborter::safeAbortFromMacro(GET_FILE_NAME, __LINE__, msg, ##__VA_ARGS__)

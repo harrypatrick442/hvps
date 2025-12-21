@@ -5,7 +5,6 @@
 
 BoardLED* BoardLED::instance = nullptr;
 const gpio_num_t BoardLED::ledPin = GPIO_NUM_2;
-const char* BoardLED::TAG = "BoardLED";
 
 // Private constructor to initialize the LED pin
 BoardLED::BoardLED() {
@@ -24,7 +23,7 @@ void BoardLED::initialize() {
 // Get the singleton instance of the BoardLED class
 BoardLED& BoardLED::getInstance() {
     if (instance == nullptr) {
-        ESP_LOGE(TAG, "BoardLED not initialized. Call initialize() first.");
+        LOG_ERROR("BoardLED not initialized. Call initialize() first.");
         // Optionally, you could throw an exception here if exceptions are enabled
     }
     return *instance;

@@ -10,7 +10,6 @@ cJSON* RanSystemChecksMessage::toJSON(){
     return j;
 }
 RanSystemChecksMessage* RanSystemChecksMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
-    bool s = true;
     auto r = new RanSystemChecksMessage();
     cleanupBucket.addDelete(r);
     return r;

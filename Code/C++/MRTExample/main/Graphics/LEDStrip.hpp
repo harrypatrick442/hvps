@@ -5,8 +5,6 @@
 #include <stdint.h>
 #include <cstddef>
 class LEDStrip: public IDisplayElement{
-	public:
-		inline static constexpr const char* TAG = "LEDStrip";
 	private:
 		size_t _length;
 		volatile uint32_t* _pixels;

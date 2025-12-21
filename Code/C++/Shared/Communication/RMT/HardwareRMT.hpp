@@ -31,7 +31,6 @@ public:
 	static inline constexpr bool INVERT_TX_DEFAULT = false;
 	static inline constexpr bool INVERT_RX_DEFAULT = true;
 	static inline constexpr int PERIOD_US_DEFAULT = 60;
-	static inline constexpr const char* TAG = "HardwareRMT";
 	static inline constexpr int MIN_N_ITEMS_PER_CHAR = 9;
 	static inline constexpr size_t MIN_REQUIRED_RECEIVE_BUFFER_SIZE  = 256;
 

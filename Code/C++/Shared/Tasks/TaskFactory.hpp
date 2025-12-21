@@ -8,7 +8,6 @@
 
 class TaskFactory {
 private:
-    inline static constexpr const char* TAG = "TaskFactory";
     inline static constexpr int CORE_NON_PRIORITY = 0;
     inline static constexpr int CORE_PRIORITY = 1;
     inline static constexpr size_t  STACK_SIZE_NON_PRIORITY = 8192;

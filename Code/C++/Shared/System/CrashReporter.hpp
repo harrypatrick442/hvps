@@ -14,10 +14,6 @@
 class Aborter;
 
 class CrashReporter {
-private:
-
-    static inline constexpr const char* TAG = "CrashReporter";
-
 public:
 
 	static inline bool hasCoreDumpSummary() {
@@ -31,7 +27,7 @@ public:
 		esp_core_dump_summary_t* summary = new esp_core_dump_summary_t();
 		cleanupBucket.addDelete(summary);
 		if (esp_core_dump_get_summary(summary) != ESP_OK) {
-			Log::Info(TAG, "No valid core dump summary (or not ELF-to-flash).");
+			LOG_INFO("No valid core dump summary (or not ELF-to-flash).");
 			return nullptr;
 		}
 		//printUsefulSummaryInfo(summary);
@@ -82,13 +78,13 @@ public:
 	}
 	static inline void printUsefulSummaryInfo(esp_core_dump_summary_t* summary){
 		esp_core_dump_bt_info_t& backtrace_info = summary->exc_bt_info;
-		Log::Info(TAG, "Crash task: %s  PC=0x%08" PRIx32, summary->exc_task, summary->exc_pc);
-		Log::Info(TAG, "Backtrace depth=%u  corrupted=%u", (unsigned)backtrace_info.depth, (unsigned)backtrace_info.corrupted);
+		LOG_INFO("Crash task: %s  PC=0x%08" PRIx32, summary->exc_task, summary->exc_pc);
+		LOG_INFO("Backtrace depth=%u  corrupted=%u", (unsigned)backtrace_info.depth, (unsigned)backtrace_info.corrupted);
 		for (uint32_t i = 0; i < backtrace_info.depth; ++i) {
-			Log::Info(TAG, "  #%u 0x%08" PRIxPTR, (unsigned)i, (uintptr_t)backtrace_info.bt[i]);
+			LOG_INFO("  #%u 0x%08" PRIxPTR, (unsigned)i, (uintptr_t)backtrace_info.bt[i]);
 		}
 		for (uint32_t i = 0; i < 16; ++i) {
-			Log::Info(TAG, "A[%u] = 0x%08" PRIx32, i, summary->ex_info.exc_a[i]);
+			LOG_INFO("A[%u] = 0x%08" PRIx32, i, summary->ex_info.exc_a[i]);
 		}
 	}
 /*
@@ -98,11 +94,11 @@ public:
 			return false;
 		}
 		if(err==ESP_ERR_INVALID_SIZE){
-			Log::Warn(TAG, "Core dump was present but had invalid size!");
+			LOG_WARN("Core dump was present but had invalid size!");
 			return false;
 		}
 		if(err==ESP_ERR_INVALID_CRC){
-			Log::Warn(TAG, "Core dump but was corrupted!");
+			LOG_WARN("Core dump but was corrupted!");
 			return false;
 		}
 
@@ -143,7 +139,7 @@ public:
 		spi_flash_munmap(handle);
 
 		crashRecord.message = "Core dump retrieved.";
-		//Log::Info(TAG, "Core dump length: %lu bytes", (unsigned long)dumpLen);
+		//LOG_INFO("Core dump length: %lu bytes", (unsigned long)dumpLen);
 
 		return true;
 	}*/

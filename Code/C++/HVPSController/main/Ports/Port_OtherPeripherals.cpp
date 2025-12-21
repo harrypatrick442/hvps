@@ -14,6 +14,8 @@
 #include "cJSON/cJSON.h"
 #include <memory>
 #include <cstring>
+#include "Macros/GetFileName.hpp"
+const char* Port_OtherPeripherals::getTag() {return GET_FILE_NAME;}
 Port_OtherPeripherals::Port_OtherPeripherals(HighSpeedCore& highSpeedCore)
 :
 _highSpeedCore(highSpeedCore),
@@ -46,7 +48,7 @@ Port_OtherPeripherals::~Port_OtherPeripherals() noexcept
 }
 void Port_OtherPeripherals::handleIncomingMessage(cJSON* message, bool& dontDelete, MessageIntegrity messageIntegrity){
 	if(_messageSender==nullptr){
-        Log::Error(TAG, "_messageSender was null. You must set it with setMessageSender");
+        LOG_ERROR("_messageSender was null. You must set it with setMessageSender");
 		return;
 	}
 	bool success = true;
@@ -60,7 +62,7 @@ void Port_OtherPeripherals::handleIncomingMessage(cJSON* message, bool& dontDele
 		return;
 	}
 	if(strcmp(type, SendStateToIndicateMessage::TYPE) == 0){
-		Log::Info(TAG, "got SendStateToIndicateMessage");
+		LOG_INFO("got SendStateToIndicateMessage");
 		handleSendStateToIndicateMessage();
 		return;
 	}

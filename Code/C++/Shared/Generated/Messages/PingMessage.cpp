@@ -10,7 +10,6 @@ cJSON* PingMessage::toJSON(){
     return j;
 }
 PingMessage* PingMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
-    bool s = true;
     auto r = new PingMessage();
     cleanupBucket.addDelete(r);
     return r;

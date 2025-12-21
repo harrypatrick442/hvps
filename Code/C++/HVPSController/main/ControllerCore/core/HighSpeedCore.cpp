@@ -6,6 +6,8 @@
 #include "Timing/TimeHelper.hpp"
 #include "Core/FloatAndTime.hpp"
 #include "SystemChecks.hpp"
+#include "Macros/GetFileName.hpp"
+const char* HighSpeedCore::getTag() {return GET_FILE_NAME;}
 HighSpeedCore::HighSpeedCore(
 	Port_FirstStageVoltageFeedback& portFirstStageVoltageFeedback, 
 	Port_OutputVoltageFeedback& portOutputVoltageFeedback,

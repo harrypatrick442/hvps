@@ -18,10 +18,10 @@ TOSLINKDuplexChannel::TOSLINKDuplexChannel(
 		)
 		
 	) {
-	Log::Info(TAG, "Doing a");
+	LOG_INFO("Doing a");
 };
 int TOSLINKDuplexChannel::takeNextNUart(){
-	Log::Info(TAG, "takeNextNUart");
+	LOG_INFO("takeNextNUart");
 	int nUart = _nextNUart++;
 	if(nUart>2){
 		SAFE_ABORT("nUart doesnt exist");

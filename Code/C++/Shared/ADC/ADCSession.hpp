@@ -6,8 +6,6 @@
 #include "System/SafeAbort.hpp"
 
 class ADCSession : public IADCSession {
-private:
-    static inline constexpr const char* TAG = "ADCSession";
 
 public:
     explicit ADCSession(IADCSession* real) : _real(real) {}

@@ -10,7 +10,6 @@ cJSON* NativeReadyMessage::toJSON(){
     return j;
 }
 NativeReadyMessage* NativeReadyMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
-    bool s = true;
     auto r = new NativeReadyMessage();
     cleanupBucket.addDelete(r);
     return r;

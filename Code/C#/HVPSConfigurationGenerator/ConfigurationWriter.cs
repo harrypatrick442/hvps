@@ -59,7 +59,7 @@ namespace HVPSConfigurationGenerator
                 throw new ArgumentException(nameof(structHppFileRelativePath));
             }
             sb.AppendLine($"#include \"{structHppFileRelativePath}\"");
-            sb.AppendLine($"#include \"{dependenciesIncludePathPrefix}System/Aborter.hpp\"");
+            sb.AppendLine($"#include \"{dependenciesIncludePathPrefix}System/SafeAbort.hpp\"");
             sb.AppendLine($"#include \"{dependenciesIncludePathPrefix}Core/Checksums/Crc32.hpp\"");
             string instance1Name = $"{instancePrefix}1";
             string instance2Name = $"{instancePrefix}2";
@@ -90,13 +90,13 @@ namespace HVPSConfigurationGenerator
 
             sb.AppendLine($"    if (podConfig1 != podConfig2){{");
 
-            sb.AppendLine($"        Aborter::safeAbort(\"Configuration\", \"The CRC32 computed for {instance2Name} did not match the CRC32 for {instance1Name}\");");
+            sb.AppendLine($"        SAFE_ABORT(\"The CRC32 computed for {instance2Name} did not match the CRC32 for {instance1Name}\");");
             sb.AppendLine($"        return false;");
 
             sb.AppendLine("    }");
             sb.AppendLine($"    if (podConfig1 != {crc}){{");
 
-            sb.AppendLine($"        Aborter::safeAbort(\"Configuration\", \"The CRC32 computed for {instance1Name} did not match the expected value\");");
+            sb.AppendLine($"        SAFE_ABORT(\"The CRC32 computed for {instance1Name} did not match the expected value\");");
             sb.AppendLine("        return false;");
 
             sb.AppendLine("    }");

@@ -20,7 +20,7 @@ InterruptTimer::~InterruptTimer() {
 esp_err_t InterruptTimer::configure(ISRHandler handler, void* context) {
     std::lock_guard<std::mutex> lock(_mutex);
 	if(_configured){
-		Log::Warn(TAG, "Already configured");
+		LOG_WARN("Already configured");
 		return ESP_ERR_INVALID_STATE;
 	}
     _handler = handler;
@@ -104,7 +104,7 @@ void InterruptTimer::failed(const char* methodName, esp_err_t err){
 		SAFE_ABORT("%s failed %s", methodName, esp_err_to_name(err));
 		return;
 	}
-	Log::Warn("%s failed %s", methodName, esp_err_to_name(err));
+	LOG_WARN("%s failed %s", methodName, esp_err_to_name(err));
 }
 
 esp_err_t InterruptTimer::release() {

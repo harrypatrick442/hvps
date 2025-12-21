@@ -30,7 +30,6 @@ public:
     bool enqueue(Job job);
 
 private:
-	static inline constexpr const char* TAG = "TransientWorker";
     const uint32_t _idleTimeoutMs;
 	const bool _abortOnQueueOverflow;
 	uint64_t _maxDesiredJobTimeUs;

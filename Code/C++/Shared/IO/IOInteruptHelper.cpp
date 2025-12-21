@@ -49,10 +49,10 @@ esp_err_t IOInteruptHelper::installISRHandlerIfNotAlready(){
     static bool isr_service_installed = false;
     if (isr_service_installed)
     {
-		Log::Info(TAG, "Already installed gpio_install_isr_service");
+		LOG_INFO("Already installed gpio_install_isr_service");
 		return ESP_OK;
 	}
-	Log::Info(TAG, "Installing gpio_install_isr_service");
+	LOG_INFO("Installing gpio_install_isr_service");
     esp_err_t err = gpio_install_isr_service(ESP_INTR_FLAG_LEVEL3 | ESP_INTR_FLAG_IRAM );
 	if(err!=ESP_OK){
 		return err;

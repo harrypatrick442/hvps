@@ -21,7 +21,7 @@ class Port_ControllingMachine final:
 	public IIncomingMessageHandler {
     friend class SingletonBase<Port_ControllingMachine>;
 public:
-	static inline constexpr const char* TAG = "Port_ControllingMachine";
+	static const char* getTag();
     // Force derived classes to identify themselves
 
     void handleIncomingMessage(cJSON* message, bool& dontDelete, MessageIntegrity messageIntegrity) override;

@@ -78,7 +78,7 @@ bool Port_VoltageFeedbackBase::setForceThresholdReachedFeedback(bool force){
 }
 void Port_VoltageFeedbackBase::handleIncomingMessage(cJSON* message, bool& dontDelete, MessageIntegrity messageIntegrity){
 	if(_messageSender==nullptr){
-        Log::Error(getTag(), "_messageSender was null. You must set it with setMessageSender");
+        LOG_ERROR("_messageSender was null. You must set it with setMessageSender");
 		return;
 	}
 	bool success = true;
@@ -87,7 +87,6 @@ void Port_VoltageFeedbackBase::handleIncomingMessage(cJSON* message, bool& dontD
 		return;
 	}
 	if(strcmp(type, MessageConstants::TYPE_TICKETED_VALUE) == 0){
-		//Log::Info(getTag(), "Got ticketed");
 		_ticketedSender.handleTicketedMessage(message, type);
 		dontDelete = true;
 		return;

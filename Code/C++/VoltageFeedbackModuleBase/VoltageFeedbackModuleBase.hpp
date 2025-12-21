@@ -2,8 +2,6 @@
 #include "Generated/VoltageFeedbackModuleConfiguration.hpp"
 #include <functional>
 class VoltageFeedbackModuleBase{
-	private:
-		static inline constexpr const char* TAG = "VoltageFeedbackModuleBase";
 	public:
 		static void main(
 			const VoltageFeedbackModuleConfiguration& config1,

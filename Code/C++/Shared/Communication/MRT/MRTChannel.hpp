@@ -25,7 +25,6 @@ extern "C" {
 
 class MRTChannel : public IChannel {
 public:
-	static inline constexpr const char* TAG = "MRTChannel";
 	static inline constexpr bool INVERT_TX_DEFAULT = false;
 	static inline constexpr bool INVERT_RX_DEFAULT = true;
 	static inline constexpr int PERIOD_US_DEFAULT = 600;

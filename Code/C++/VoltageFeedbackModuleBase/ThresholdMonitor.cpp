@@ -3,6 +3,8 @@
 #include "ADC/ADC.hpp"
 #include "Storage/Flash.hpp"
 #include <functional>
+#include "Macros/GetFileName.hpp"
+const char* ThresholdMonitor::getTag() {return GET_FILE_NAME;}
 
 ThresholdMonitor::ThresholdMonitor(
 	adc_channel_t ch, 

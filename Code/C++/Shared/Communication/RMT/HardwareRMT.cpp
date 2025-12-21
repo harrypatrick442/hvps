@@ -61,17 +61,17 @@ HardwareRMT::~HardwareRMT() {
 }
 
 bool HardwareRMT::configure() {
-	Log::Info(TAG, "configure called");
+	LOG_INFO("configure called");
     if(!configureTx()){
-		Log::Info(TAG, "failed Tx");
+		LOG_INFO("failed Tx");
 		return false;
 	}
-	Log::Info(TAG, "did Tx");
+	LOG_INFO("did Tx");
 	if(!configureRx()){
-		Log::Info(TAG, "failed Rx");
+		LOG_INFO("failed Rx");
 		return false;
 	}
-	Log::Info(TAG, "did Rx");
+	LOG_INFO("did Rx");
 	return true;
 }
 bool HardwareRMT::configureRx() {
@@ -275,7 +275,7 @@ void HardwareRMT::handleMalformedByte(uint8_t _nextNBit){
 	//We dont really need this. Any noise will trigger it. Such as anything at startup*/
 	static bool _firstMalformedWarning = true;
 	if(_firstMalformedWarning){
-		Log::Warn(TAG, "Received malformed byte with a length of %d", _nextNBit);
+		LOG_WARN("Received malformed byte with a length of %d", _nextNBit);
 		_firstMalformedWarning = false;
 	}
 }

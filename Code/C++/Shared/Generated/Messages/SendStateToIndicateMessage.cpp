@@ -10,7 +10,6 @@ cJSON* SendStateToIndicateMessage::toJSON(){
     return j;
 }
 SendStateToIndicateMessage* SendStateToIndicateMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
-    bool s = true;
     auto r = new SendStateToIndicateMessage();
     cleanupBucket.addDelete(r);
     return r;

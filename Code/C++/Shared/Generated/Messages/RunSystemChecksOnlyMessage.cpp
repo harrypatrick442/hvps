@@ -10,7 +10,6 @@ cJSON* RunSystemChecksOnlyMessage::toJSON(){
     return j;
 }
 RunSystemChecksOnlyMessage* RunSystemChecksOnlyMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
-    bool s = true;
     auto r = new RunSystemChecksOnlyMessage();
     cleanupBucket.addDelete(r);
     return r;

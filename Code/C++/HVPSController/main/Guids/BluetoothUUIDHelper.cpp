@@ -65,14 +65,14 @@ uint8_t BluetoothUUIDHelper::hexCharacterToByte(char c){
     if (c >= '0' && c <= '9') return c - '0';
     if (c >= 'A' && c <= 'F') return c - 'A' + 10;
     if (c >= 'a' && c <= 'f') return c - 'a' + 10;
-    Log::Error(TAG, "Invalid hex character: %c", c);
+    LOG_ERROR("Invalid hex character: %c", c);
     abort();
 }
 // Check if the UUID format is valid (length and dash positions)
 bool BluetoothUUIDHelper::isValidUUIDFormat(const std::string& uuid) {
     size_t size = uuid.size();
     if (size != 36) {
-        Log::Error(TAG, "UUID length is incorrect: %d", size);
+        LOG_ERROR("UUID length is incorrect: %d", size);
         return false;
     }
 
@@ -81,17 +81,17 @@ bool BluetoothUUIDHelper::isValidUUIDFormat(const std::string& uuid) {
         char c = uuid[i];
         if(i==8 || i==13 || i==18 || i==23) {
             if(c != '-') {
-                Log::Error(TAG, "UUID dash position is incorrect: %d", i);
+                LOG_ERROR("UUID dash position is incorrect: %d", i);
                 return false;
             }
             continue;
         }
         if (c == '-') {
-            Log::Error(TAG, "UUID contains invalid dash at position: %d", i);
+            LOG_ERROR("UUID contains invalid dash at position: %d", i);
             return false;
         }
         if (!std::isxdigit(c)) {
-            Log::Error(TAG, "UUID contains invalid character: %c", c);
+            LOG_ERROR("UUID contains invalid character: %c", c);
             return false;
         }
     }

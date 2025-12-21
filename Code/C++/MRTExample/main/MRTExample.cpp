@@ -16,7 +16,7 @@
 
 extern "C" void app_main(void)
 {
-	Log::Info("MRTExample", "A");
+	LOG_INFO("MRTExample", "A");
 	Aborter::setToSafe(&Outputs::toSafe);
 	Outputs::initialize();
 	Outputs::toSafeReversible();
@@ -41,14 +41,14 @@ extern "C" void app_main(void)
 	const char* chars2 = "fghij";
 	char* received = new char[101];
 	while(true){
-		//Log::Info("MRTExample", "D");
+		//LOG_INFO("MRTExample", "D");
 		size_t nWrote = channel.writeBytes(b?chars:chars2, 5);
 		b=!b;
-		//Log::Info("MRTExample", "wrote %zu", nWrote);
+		//LOG_INFO("MRTExample", "wrote %zu", nWrote);
 		size_t nRead = channel.readBytes(received, 100, 0);
 		received[nRead] = '\0';
-		//Log::Info("MRTExample", "read %zu", nRead);
-		Log::Info("MRTExample", "read %s", received);
+		//LOG_INFO("MRTExample", "read %zu", nRead);
+		LOG_INFO("MRTExample", "read %s", received);
 	}
 	vTaskDelete(NULL); // Delete the current task
 }

@@ -8,7 +8,7 @@ class SystemStateIndicator final:
 {
     friend class SingletonBase<SystemStateIndicator>;
 	public:
-		static inline constexpr const char* TAG = "SystemStateIndicator";
+		static const char* getTag();
 	private:
 		HVPSLEDDisplay& _hVPSLEDDisplay;
 	public:

@@ -9,7 +9,7 @@
 class HVPSLEDDisplay:public SingletonBase<HVPSLEDDisplay>{
     friend class SingletonBase<HVPSLEDDisplay>;
 public:
-	static inline constexpr const char* TAG = "HVPSLEDDisplay";
+	static const char* getTag();
 private:
 	static size_t LED_STRIP_LENGTH;
 	static uint32_t OFF_COLOUR;

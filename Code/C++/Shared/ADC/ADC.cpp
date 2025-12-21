@@ -28,7 +28,7 @@ std::mutex ADC::_mutexSetChannel;
 void ADC::initialize()
 {
     if (_initialized) {
-        Log::Info(TAG, "Already initialized"); // (tag, warning format...)
+        LOG_INFO("Already initialized"); // (tag, warning format...)
         return;
     }
     _initialized = true;
@@ -97,13 +97,13 @@ void ADC::setChannel(adc_channel_t ch)
     _currentChannel = ch;
 }
 void ADC::use(adc_channel_t ch, const std::function<void(IADCSession&&)>& fn) {
-	Log::Info(TAG, "ADC::use");
+	LOG_INFO("ADC::use");
     bool expected = false;
     if (!_inUse.compare_exchange_strong(expected, true)) {
         SAFE_ABORT("ADC::use() called while already in use");
         return;
     }
-	Log::Info(TAG, "ADC::use2");
+	LOG_INFO("ADC::use2");
 
     CleanupBucket cleanup;
     cleanup.addCallback([&]() noexcept {
@@ -111,22 +111,22 @@ void ADC::use(adc_channel_t ch, const std::function<void(IADCSession&&)>& fn) {
         stop();
     });
 
-	Log::Info(TAG, "ADC::use3");
+	LOG_INFO("ADC::use3");
     _instance->setChannel(ch);  // Set desired channel first
-	Log::Info(TAG, "ADC::use3");
+	LOG_INFO("ADC::use3");
     start();
-	Log::Info(TAG, "ADC::use4");
+	LOG_INFO("ADC::use4");
 
-	Log::Info(TAG, "ADC::use5");
+	LOG_INFO("ADC::use5");
     ADCSession proxy(static_cast<IADCSession*>(_instance));
 
-	Log::Info(TAG, "ADC::use6");
+	LOG_INFO("ADC::use6");
     fn(std::move(proxy));  // pass it to closure
 
-	Log::Info(TAG, "ADC::use7");
+	LOG_INFO("ADC::use7");
     // Invalidate after call
     proxy.invalidate();  // ensures no external code kept it
-	Log::Info(TAG, "ADC::use8");
+	LOG_INFO("ADC::use8");
 }
 
 void ADC::start(){
@@ -439,7 +439,7 @@ void ADC::measureNReadsPerSecond() {
 		}
 		uint64_t delay  = esp_timer_get_time() - startTime;
 		uint64_t readsPerSecond = (10000ULL*1000000ULL)/delay;
-		Log::Info(TAG, "Achieving %"PRIu64 " reads per second", readsPerSecond);
+		LOG_INFO("Achieving %"PRIu64 " reads per second", readsPerSecond);
 	}
 }
 

@@ -9,7 +9,7 @@
 #include "LiveDataCache.hpp"
 class HighSpeedCore final : public SingletonBase<HighSpeedCore>{
 public:
-    static inline constexpr const char* TAG = "HighSpeedCore";
+	static const char* getTag();
     Event<SystemState> onSystemStateChanged;
     Event<std::string> onError;
 	void start();

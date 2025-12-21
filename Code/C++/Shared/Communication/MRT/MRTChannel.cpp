@@ -201,17 +201,17 @@ esp_err_t MRTChannel::freeWriteTimerIfCreated() {
         return ESP_OK;
     esp_err_t err = gptimer_stop(_writeTimer);
     if (err != ESP_OK) {
-        Log::Warn(TAG, "Failed to stop gptimer: %s", esp_err_to_name(err));
+        LOG_WARN("Failed to stop gptimer: %s", esp_err_to_name(err));
     }
 
     err = gptimer_disable(_writeTimer);
     if (err != ESP_OK) {
-        Log::Warn(TAG, "Failed to disable gptimer: %s", esp_err_to_name(err));
+        LOG_WARN("Failed to disable gptimer: %s", esp_err_to_name(err));
     }
 
     err = gptimer_del_timer(_writeTimer);
     if (err != ESP_OK) {
-        Log::Warn(TAG, "Failed to delete gptimer: %s", esp_err_to_name(err));
+        LOG_WARN("Failed to delete gptimer: %s", esp_err_to_name(err));
     }
     _writeTimer = nullptr;
 */
@@ -227,7 +227,7 @@ void MRTChannel::handleMalformedByte(uint8_t nextNBit){
 	//We dont really need this. Any noise will trigger it. Such as anything at startup*/
 	static bool firstMalformedWarning = true;
 	if(firstMalformedWarning){
-		Log::Warn(TAG, "Received malformed byte with a length of %d", nextNBit);
+		LOG_WARN("Received malformed byte with a length of %d", nextNBit);
 		firstMalformedWarning = false;
 	}
 }
@@ -305,32 +305,32 @@ uint32_t MRTChannel::nSubPulsesToCCycles(int nSubPulses)
 }
 void MRTChannel::printTimingConfig() const
 {
-    Log::Info(TAG, "=== MRT Timing Configuration ===");
+    LOG_INFO("=== MRT Timing Configuration ===");
 
-    Log::Info(TAG, "periodUs                = %u us", _periodUs);
-    Log::Info(TAG, "sub-pulses per pulse    = %d", N_SUB_PULSES_PER_PULSE);
-    Log::Info(TAG, "writeTimerPeriodUs      = %llu us", _writeTimerPeriodUs);
+    LOG_INFO("periodUs                = %u us", _periodUs);
+    LOG_INFO("sub-pulses per pulse    = %d", N_SUB_PULSES_PER_PULSE);
+    LOG_INFO("writeTimerPeriodUs      = %llu us", _writeTimerPeriodUs);
 
-    Log::Info(TAG, "--- Symbol sub-pulses ---");
-    Log::Info(TAG, "SYNC sub-pulses         = %u", _syncPulseSubPulses);
-    Log::Info(TAG, "ZERO sub-pulses         = %u", _zeroPulseSubPulses);
-    Log::Info(TAG, "ONE  sub-pulses         = %u", _onePulseSubPulses);
+    LOG_INFO("--- Symbol sub-pulses ---");
+    LOG_INFO("SYNC sub-pulses         = %u", _syncPulseSubPulses);
+    LOG_INFO("ZERO sub-pulses         = %u", _zeroPulseSubPulses);
+    LOG_INFO("ONE  sub-pulses         = %u", _onePulseSubPulses);
 
-    Log::Info(TAG, "--- Pulse width (CPU cycles) ---");
-    Log::Info(TAG, "SYNC min cycles         = %u", _syncPulseMinCCycles);
-    Log::Info(TAG, "SYNC max cycles         = %u", _syncPulseMaxCCycles);
-    Log::Info(TAG, "ZERO max cycles         = %u", _zeroPulseMaxCCycles);
-    Log::Info(TAG, "ONE  max cycles         = %u", _onePulseMaxCCycles);
+    LOG_INFO("--- Pulse width (CPU cycles) ---");
+    LOG_INFO("SYNC min cycles         = %u", _syncPulseMinCCycles);
+    LOG_INFO("SYNC max cycles         = %u", _syncPulseMaxCCycles);
+    LOG_INFO("ZERO max cycles         = %u", _zeroPulseMaxCCycles);
+    LOG_INFO("ONE  max cycles         = %u", _onePulseMaxCCycles);
 
-    Log::Info(TAG, "--- Derived rates ---");
+    LOG_INFO("--- Derived rates ---");
     uint32_t pulsesPerByte = 9 + 1; // 8 bits + sync + trailing sync
     uint32_t usPerByte = pulsesPerByte * _periodUs;
     uint32_t bytesPerSecond = 1'000'000 / usPerByte;
 
-    Log::Info(TAG, "us per byte             = %u us", usPerByte);
-    Log::Info(TAG, "approx bytes/sec        = %u B/s", bytesPerSecond);
+    LOG_INFO("us per byte             = %u us", usPerByte);
+    LOG_INFO("approx bytes/sec        = %u B/s", bytesPerSecond);
 
-    Log::Info(TAG, "================================");
+    LOG_INFO("================================");
 }
 size_t MRTChannel::readBytes(char* destination, size_t maxLength, uint32_t timeoutMs) {
 	if(!_successfullyConfigured.load(std::memory_order_relaxed)){

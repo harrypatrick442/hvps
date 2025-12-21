@@ -3,7 +3,6 @@
 #include "driver/gpio.h"
 class IOInteruptHelper {
 public:
-	static inline constexpr const char* TAG = "IOInteruptHelper";
 	static esp_err_t setupPinEdgeInterupt(
 		int pin,
 		gpio_isr_t staticHandlerMethod,

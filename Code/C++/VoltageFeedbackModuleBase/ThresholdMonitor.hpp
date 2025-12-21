@@ -12,7 +12,7 @@ private:
 	static inline constexpr const char* FLASH_NAMESPACE = "s";
 	static inline constexpr const char* THRESHOLD_VOLTAGE_KEY = "tv";
 public:
-	static inline constexpr const char* TAG = "ThresholdMonitor";
+	static const char* getTag();
 	DISALLOW_COPY_MOVE(ThresholdMonitor);
 	float getVoltage();
 	void setThresholdVoltage(float voltage);

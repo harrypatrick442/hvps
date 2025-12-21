@@ -16,8 +16,6 @@ class CrashReporter {
 private:
     // Lives in RTC slow memory; survives soft resets
     static RTC_NOINIT_ATTR volatile CrashRecord _crashRecord;
-
-    static inline constexpr const char* TAG = "CrashReporter";
     static inline constexpr uint32_t CRASH_MAGIC = 0xC0DEBEEF;
     static inline constexpr size_t N_WORDS_FROM_STACK = 8;
     static inline bool inAbort = false;
@@ -61,7 +59,7 @@ public:
 			snprintf(buf, sizeof(buf),
 					 "Failed to read core dump from flash (err=%d).", (int)err);
 			_crashRecord.message = buf;
-			Log::Error(TAG, "%s", buf);
+			LOG_ERROR("%s", buf);
 			return;
 		}
 
@@ -70,7 +68,7 @@ public:
 			reinterpret_cast<const char*>(dumpData),
 			reinterpret_cast<const char*>(dumpData) + dumpLen
 		);
-		Log::Info(TAG, "Read %lu-byte core dump from flash.", (unsigned long)dumpLen);
+		LOG_INFO("Read %lu-byte core dump from flash.", (unsigned long)dumpLen);
 
 		// Optional: erase the dump once stored
 		// esp_core_dump_image_erase();
@@ -94,15 +92,15 @@ public:
     static inline void printRecord() {
         CrashRecord rec;
         if (!getRecord(rec)) {
-            Log::Info(TAG, "There was no previous crash record.");
+            LOG_INFO("There was no previous crash record.");
             return;
         }
 
-        Log::Warn(TAG, "Previous crash detected:");
-        Log::Warn(TAG, "Reason: %d", rec.reason);
-        Log::Warn(TAG, "Core dump size: %lu bytes", rec.coreDumpSize);
-        Log::Warn(TAG, "Read err: %d", rec.coreDumpReadErr);
-        Log::Warn(TAG, "Message: %s", rec.message);
+        LOG_WARN("Previous crash detected:");
+        LOG_WARN("Reason: %d", rec.reason);
+        LOG_WARN("Core dump size: %lu bytes", rec.coreDumpSize);
+        LOG_WARN("Read err: %d", rec.coreDumpReadErr);
+        LOG_WARN("Message: %s", rec.message);
     }
 /*
     //-----------------------------------------------------------------

@@ -6,6 +6,8 @@
 #include "Timing/TimeHelper.hpp"
 #include "Core/FloatAndTime.hpp"
 #include "SystemChecks.hpp"
+#include "Macros/GetFileName.hpp"
+const char* HighSpeedCore::getTag() {return GET_FILE_NAME;}
 HighSpeedCore::HighSpeedCore(
 	Port_FirstStageVoltageFeedback& portFirstStageVoltageFeedback, 
 	Port_OutputVoltageFeedback& portOutputVoltageFeedback,
@@ -113,34 +115,34 @@ void HighSpeedCore::startCoreTask(){
 }
 void HighSpeedCore::_run(){
 	while(true){
-		Log::Info(TAG, "looping...");
+		LOG_INFO("looping...");
 		Delay::ms(100);
 		if(isShuttingDownOrShutDown()||getActualSystemState()==SystemState::ShutDown){
-			Log::Info(TAG, "Is shut down");
+			LOG_INFO("Is shut down");
 			doShutDown();
 			continue;
 		}
 		switch(getDesiredSystemState()){
 			case SystemState::Idle:
-				Log::Info(TAG, "Idle");
+				LOG_INFO("Idle");
 				doIdle();
 				continue;
 			case SystemState::Live:
-				Log::Info(TAG, "Live");
+				LOG_INFO("Live");
 				doLive();
 				Outputs::setMOSFETOnOff(false);
 				//Second set for backup
 				continue;
 			case SystemState::ShutDown:
-				Log::Info(TAG, "ShutDown");
+				LOG_INFO("ShutDown");
 				doShutDown();
 				continue;
 			case SystemState::RunningSystemChecks:
-				Log::Info(TAG, "RunningSystemChecks");
+				LOG_INFO("RunningSystemChecks");
 				doSystemChecks();
 				continue;
 			case SystemState::Error:
-				Log::Info(TAG, "Error");
+				LOG_INFO("Error");
 				doError();
 				continue;
 			default:
@@ -151,7 +153,7 @@ void HighSpeedCore::_run(){
 	}
 }
 std::shared_ptr<SystemChecksResult> HighSpeedCore::doSystemChecks(){
-	Log::Info(TAG, "doSystemChecks");
+	LOG_INFO("doSystemChecks");
 	std::shared_ptr<SystemChecksResult> result = SystemChecks::run();
 	std::unique_lock<std::mutex> lock(_mutexSystemChecksResult);
 	_systemChecksResult = result;

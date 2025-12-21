@@ -26,8 +26,6 @@ class CrashReporter {
 private:
     // Lives in RTC slow memory, survives soft resets
     static volatile CrashRecord _crashRecord;
-
-    static inline constexpr const char* TAG = "CrashReporter";
     static inline constexpr uint32_t CRASH_MAGIC  = 0xC0DEBEEF;
     static inline constexpr size_t N_WORDS_FROM_STACK  = 8;
     static inline bool inAbort = false;
@@ -95,12 +93,12 @@ public:
     static inline void printRecord() {
         CrashRecord rec;
         if (!getRecord(rec)) {
-            Log::Info(TAG, "There was no previous crash record :)");
+            LOG_INFO("There was no previous crash record :)");
             return;
         }
-        Log::Warn(TAG, "Previous crash detected:");
-        Log::Warn(TAG, "Reason: %d", rec.reason);
-        Log::Warn(TAG, "Message: %s", rec.message);
+        LOG_WARN("Previous crash detected:");
+        LOG_WARN("Reason: %d", rec.reason);
+        LOG_WARN("Message: %s", rec.message);
     }
 
     //----------------------------------------------------

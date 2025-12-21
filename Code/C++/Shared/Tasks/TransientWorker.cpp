@@ -36,7 +36,7 @@ bool TransientWorker::enqueue(Job job) {
 			SAFE_ABORT("Queue overflowed");
 			return false;
 		}
-        Log::Warn(TAG, "TransientWorker queue full; dropping job.");
+        LOG_WARN("TransientWorker queue full; dropping job.");
         delete j;
         return false;
     }
@@ -51,17 +51,17 @@ bool TransientWorker::enqueue(Job job) {
 	bool startedTaskSuccessfully = TaskFactory::createNonPriorityTask<TransientWorker>(
 		TransientWorker::runTask,
 		self,
-		TAG
+		"TransientWorker"
 	);
 	if(!startedTaskSuccessfully){
-		Log::Warn(TAG, "Failed to start runTask successfully");
+		LOG_WARN("Failed to start runTask successfully");
 		return false;
 	}
 	return true;
 }
 void TransientWorker::runTask(std::shared_ptr<TransientWorker> selfPtr) {
 	selfPtr->taskLoop();
-	Log::Info(TAG, "Worker exiting after idle timeout");
+	LOG_INFO("Worker exiting after idle timeout");
 	vTaskDelete(nullptr);
 }
 
@@ -74,7 +74,7 @@ void TransientWorker::taskLoop() {
 			(*job)();
 			uint64_t endTimeUs = TimeHelper::us();
 			if(endTimeUs - startTimeUs > _maxDesiredJobTimeUs){
-				Log::Info(TAG, "Warning, a task caused a delay greater than max allowed job time: %" PRIu64 " us", _maxDesiredJobTimeUs);
+				LOG_INFO("Warning, a task caused a delay greater than max allowed job time: %" PRIu64 " us", _maxDesiredJobTimeUs);
 			}
 			startTimeUs = endTimeUs;
 			continue;

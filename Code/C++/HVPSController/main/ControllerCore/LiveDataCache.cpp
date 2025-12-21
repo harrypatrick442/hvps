@@ -1,5 +1,7 @@
 #include "LiveDataCache.hpp"
 #include "Timing/TimeHelper.hpp"
+#include "Macros/GetFileName.hpp"
+const char* LiveDataCache::getTag() {return GET_FILE_NAME;}
 LiveDataCache::LiveDataCache(Port_FirstStageVoltageFeedback& portFirstStageVoltageFeedback,
                              Port_OutputVoltageFeedback& portOutputVoltageFeedback) noexcept
 : _portFirstStageVoltageFeedback(portFirstStageVoltageFeedback)

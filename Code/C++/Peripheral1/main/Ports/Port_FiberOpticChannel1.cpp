@@ -9,6 +9,8 @@
 #include "Tasks/TaskFactory.hpp"
 #include <cstring>
 #include <memory>
+#include "Macros/GetFileName.hpp"
+const char* Port_FiberOpticChannel1::getTag() {return GET_FILE_NAME;}
 Port_FiberOpticChannel1::Port_FiberOpticChannel1(
 	uint32_t subsystemIdentifier,
 	ISystemStateIndicator& systemStateIndicator
@@ -32,7 +34,7 @@ _ticketedSender(
 }
 void Port_FiberOpticChannel1::handleIncomingMessage(cJSON* message, bool& dontDelete, MessageIntegrity messageIntegrity){
 	if(_messageSender==nullptr){
-        Log::Error(TAG, "_messageSender was null. You must set it with setMessageSender");
+        LOG_ERROR("_messageSender was null. You must set it with setMessageSender");
 		return;
 	}
 	bool success = true;
@@ -49,18 +51,18 @@ void Port_FiberOpticChannel1::handleIncomingMessage(cJSON* message, bool& dontDe
 		return;
 	}
 	if(strcmp(type, MessageConstants::TYPE_TICKETED_VALUE) == 0){
-		Log::Info(TAG, "Got ticketed");
+		LOG_INFO("Got ticketed");
 		_ticketedSender.handleTicketedMessage(message, type);
 		dontDelete = true;
 		return;
 	}
 	if(strcmp(type, IndicateStateRequest::TYPE) == 0){
-		Log::Info(TAG, "Got indicate state request");
+		LOG_INFO("Got indicate state request");
 		handleIndicateStateRequest(message);
 		return;
 	}
 	if(strcmp(type, IndicateStateMessage::TYPE) == 0){
-		Log::Info(TAG, "Got indicate state message");
+		LOG_INFO("Got indicate state message");
 		handleIndicateStateMessage(message);
 		return;
 	}
@@ -80,7 +82,7 @@ void Port_FiberOpticChannel1::handleIndicateStateMessage(cJSON* message){
 void Port_FiberOpticChannel1::sendSendStateToIndicate(){
 	CleanupBucket cleanupBucket;
 	SendStateToIndicateMessage request;
-	Log::Info(TAG, "sent sendStateToIndicate");
+	LOG_INFO("sent sendStateToIndicate");
 	_messageSender->sendMessage(request.toJSON());
 }
 

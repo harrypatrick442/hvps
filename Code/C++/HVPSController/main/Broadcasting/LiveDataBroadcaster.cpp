@@ -1,5 +1,7 @@
 #include "LiveDataBroadcaster.hpp"
 #include "Generated/Messages/LiveDataMessage.hpp"
+#include "Macros/GetFileName.hpp"
+const char* LiveDataBroadcaster::getTag() {return GET_FILE_NAME;}
 LiveDataBroadcaster::LiveDataBroadcaster(
 	LiveDataCache& liveDataCache, 
 	Port_ControllingMachine& portControllingMachine

@@ -1,12 +1,10 @@
 #include "I2C.hpp"
 #include "driver/i2c.h"
-#include "esp_log.h"
 #include "driver/i2c.h"
-#include "../../Logging/Log.hpp"
+#include "Logging/Log.hpp"
 #include "System/SafeAbort.hpp"
 #define I2C_MASTER_TIMEOUT_MS 1000
 #include <utility>
-const char* I2C::TAG = "I2C";
 I2C* I2C::_instance = nullptr;
 
 // Private constructor to initialize the I2C driver
@@ -99,7 +97,7 @@ esp_err_t I2C::readRegister(uint8_t i2c_addr, uint8_t reg, uint8_t *data_rd, siz
     return ret;
 }
 void I2C::scanAndLog() {
-    Log::Info(TAG, "I2C Scanner starting...");
+    LOG_INFO("I2C Scanner starting...");
 
     for (uint8_t address = 1; address < 127; ++address) {
         i2c_cmd_handle_t cmd = i2c_cmd_link_create();
@@ -110,11 +108,10 @@ void I2C::scanAndLog() {
         i2c_cmd_link_delete(cmd);
 
         if (ret == ESP_OK) {
-            Log::Info(TAG, "I2C device found at address 0x%02X", address);
+            LOG_INFO("I2C device found at address 0x%02X", address);
         } else if (ret == ESP_ERR_TIMEOUT) {
-            Log::Warn(TAG, "I2C device at address 0x%02X not responding", address);
+            LOG_WARN("I2C device at address 0x%02X not responding", address);
         }
     }
-
-    ESP_LOGI(TAG, "I2C Scanner finished.");
+    LOG_ERROR("I2C Scanner finished.");
 }

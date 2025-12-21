@@ -12,6 +12,9 @@
 #include "System/CrashReporter.hpp"
 #include <cstring>
 #include <memory>
+#include "Macros/GetFileName.hpp"
+const char* Port_FiberOpticChannel1::getTag() {return GET_FILE_NAME;}
+
 Port_FiberOpticChannel1::Port_FiberOpticChannel1(
 	ThresholdMonitor& thesholdMonitor
 )
@@ -42,9 +45,9 @@ bool Port_FiberOpticChannel1::setVoltageThreshold(float voltage){
 	return true;
 }
 void Port_FiberOpticChannel1::handleIncomingMessage(cJSON* message, bool& dontDelete, MessageIntegrity messageIntegrity){
-	Log::Info(TAG, "Handling message");
+	LOG_INFO("Handling message");
 	if(_messageSender==nullptr){
-        Log::Error(TAG, "_messageSender was null. You must set it with setMessageSender");
+        LOG_ERROR("_messageSender was null. You must set it with setMessageSender");
 		return;
 	}
 	bool success = true;
@@ -52,30 +55,30 @@ void Port_FiberOpticChannel1::handleIncomingMessage(cJSON* message, bool& dontDe
 	if (!success) {
 		return;
 	}
-	Log::Info(TAG, "type: %s", type);
+	LOG_INFO("type: %s", type);
 	if(strcmp(type, MessageConstants::TYPE_TICKETED_VALUE) == 0){
-		Log::Info(TAG, "Got ticketed");
+		LOG_INFO("Got ticketed");
 		_ticketedSender.handleTicketedMessage(message, type);
 		dontDelete = true;
 		return;
 	}
 	if(strcmp(type, SetVoltageThresholdRequest::TYPE) == 0){
-		Log::Info(TAG, "Got set voltage");
+		LOG_INFO("Got set voltage");
 		handleSetVoltageThresholdRequest(message);
 		return;
 	}
 	if(strcmp(type, GetVoltageRequest::TYPE) == 0){
-		Log::Info(TAG, "Got get voltage");
+		LOG_INFO("Got get voltage");
 		handleGetVoltageRequest(message);
 		return;
 	}
 	if(strcmp(type, GreetingRequest::TYPE) == 0){
-		Log::Info(TAG, "Got greeting!");
+		LOG_INFO("Got greeting!");
 		handleGreetingRequest(message);
 		return;
 	}
 	if(strcmp(type, ClearLoggedErrorsMessage::TYPE) == 0){
-		Log::Info(TAG, "Got clear logged errors!");
+		LOG_INFO("Got clear logged errors!");
 		handleClearLoggedErrorsMessage();
 		return;
 	}
@@ -87,12 +90,12 @@ void Port_FiberOpticChannel1::handleSetVoltageThresholdRequest(cJSON* message){
 	uint64_t ticket = request->getTicket();
 	_thesholdMonitor.setThresholdVoltage(voltage);
 	
-	//Log::Info(TAG, "handleSetVoltageThresholdRequest");
+	//LOG_INFO("handleSetVoltageThresholdRequest");
 	
-	//Log::Info(TAG, "ticket from request was %" PRIu64 "", ticket);
+	//LOG_INFO("ticket from request was %" PRIu64 "", ticket);
 	SetVoltageThresholdResponse response(ticket);
 	_messageSender->sendMessage(response.toJSON());
-	//Log::Info(TAG, "handleSetVoltageThresholdRequest sent response");
+	//LOG_INFO("handleSetVoltageThresholdRequest sent response");
 }
 void Port_FiberOpticChannel1::handleGetVoltageRequest(cJSON* message){
 	CleanupBucket cleanupBucket;
@@ -124,6 +127,6 @@ void Port_FiberOpticChannel1::greetControllingMachine(){
 void Port_FiberOpticChannel1::handleClearLoggedErrorsMessage(){
 	CrashReporter::clearRecord();
 	Aborter::clearLastAbortReason();
-	Log::Info(TAG, "Cleared logged errors!");
+	LOG_INFO("Cleared logged errors!");
 }
 

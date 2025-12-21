@@ -9,7 +9,6 @@
 
 class InterruptTimer {
 public:
-	static inline constexpr const char* TAG = "InterruptTimer";
     typedef bool  (*ISRHandler)(void*);
 
     InterruptTimer(timer_group_t group, timer_idx_t idx, uint32_t periodUs, int intrLevel = ESP_INTR_FLAG_LEVEL4, bool abortOnConfigureFailed = true);

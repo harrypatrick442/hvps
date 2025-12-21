@@ -25,12 +25,12 @@ Bluetooth& Bluetooth::initialize(
         //^^noreturn^^
     }
     _instance = new Bluetooth(deviceName, serverName);
-    Log::Info(TAG, "Initializing Classic Bluetooth SPP...");
+    LOG_INFO("Initializing Classic Bluetooth SPP...");
 	esp_err_t ret;
     // Enable Bluetooth Controller
     ret = esp_bt_controller_mem_release(ESP_BT_MODE_BLE); // Disable BLE if not needed
     if (ret) {
-        Log::Warn(TAG, "BLE Memory Release Failed");
+        LOG_WARN("BLE Memory Release Failed");
     }
 
     esp_bt_controller_config_t bt_cfg = BT_CONTROLLER_INIT_CONFIG_DEFAULT();
@@ -58,14 +58,14 @@ Bluetooth& Bluetooth::initialize(
         SAFE_ABORT("Set Device Name Failed: %s", esp_err_to_name(ret));
         //^^noreturn^^
     }
-    Log::Info(TAG, "Set device name to %s", deviceName);
+    LOG_INFO("Set device name to %s", deviceName);
 
     // Register GAP callback for Secure Connections
     if((ret = esp_bt_gap_register_callback(esp_gap_callback_static))!=ESP_OK){
         SAFE_ABORT("GAP Register Callback Failed: %s", esp_err_to_name(ret));
         //^^noreturn^^
     }
-    Log::Info(TAG, "GAP Callback registered for Secure Connections.");
+    LOG_INFO("GAP Callback registered for Secure Connections.");
 
     // Enable Secure Simple Pairing (SSP) with Secure Connections (SC)
     esp_bt_sp_param_t param_type = ESP_BT_SP_IOCAP_MODE;
@@ -74,15 +74,15 @@ Bluetooth& Bluetooth::initialize(
         SAFE_ABORT("Set Security Param Failed: %s", esp_err_to_name(ret));
         //^^noreturn^^
     }
-    Log::Info(TAG, "Secure Connections (SC) enabled. Numeric Comparison & Passkey authentication.");
+    LOG_INFO("Secure Connections (SC) enabled. Numeric Comparison & Passkey authentication.");
 
     /*uint32_t auth_timeout_ms = 60000;  // Set to 60 seconds (60000 ms)
     if ((ret = esp_bt_gap_set_security_param(ESP_BT_GAP_, &auth_timeout_ms, sizeof(uint32_t))) != ESP_OK) {
-        Log::Error(TAG, "Set Authentication Timeout Failed: %s", esp_err_to_name(ret));
+        LOG_ERROR("Set Authentication Timeout Failed: %s", esp_err_to_name(ret));
         abort();
         return;
     }*/
-    Log::Info(TAG, "Increased authentication timeout to 60 seconds.");
+    LOG_INFO("Increased authentication timeout to 60 seconds.");
 
 
     // Register SPP callback
@@ -102,8 +102,8 @@ Bluetooth& Bluetooth::initialize(
         //^^noreturn^^
     }
 
-    Log::Info(TAG, "Bluetooth SPP Ready. Connect using a Bluetooth terminal.");
-    Log::Info(TAG, "Bluetooth initialized. Device name: %s", deviceName);
+    LOG_INFO("Bluetooth SPP Ready. Connect using a Bluetooth terminal.");
+    LOG_INFO("Bluetooth initialized. Device name: %s", deviceName);
 	return *Bluetooth::_instance;
 }
 
@@ -131,7 +131,7 @@ Bluetooth::Bluetooth(
 
 void Bluetooth::esp_gap_callback_static(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *param) {
     if (_instance == nullptr) {
-        Log::Error(TAG, "Bluetooth instance is NULL");
+        LOG_ERROR("Bluetooth instance is NULL");
 		return;
     }
     _instance->esp_gap_callback(event, param);
@@ -141,43 +141,43 @@ void Bluetooth::esp_gap_callback(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_para
     switch (event) {
         case ESP_BT_GAP_AUTH_CMPL_EVT:
             if (param->auth_cmpl.stat == ESP_BT_STATUS_SUCCESS) {
-                Log::Info(TAG, "Pairing successful with device: %s", param->auth_cmpl.device_name);
+                LOG_INFO("Pairing successful with device: %s", param->auth_cmpl.device_name);
             } else {
-                Log::Error(TAG, "Pairing failed. Error Code: %d", param->auth_cmpl.stat);
+                LOG_ERROR("Pairing failed. Error Code: %d", param->auth_cmpl.stat);
             }
             break;
 
         case ESP_BT_GAP_CFM_REQ_EVT:  // Numeric Comparison
-            Log::Info(TAG, "Confirm pairing with PIN: %d", param->cfm_req.num_val);
+            LOG_INFO("Confirm pairing with PIN: %d", param->cfm_req.num_val);
             if((ret = esp_bt_gap_ssp_confirm_reply(param->cfm_req.bda, true))!=ESP_OK){
                 SAFE_ABORT("Confirm Reply Failed: %s", esp_err_to_name(ret));
                 return;
             }
-            Log::Info(TAG, "Pairing confirmed.");
+            LOG_INFO("Pairing confirmed.");
             break;
 
         case ESP_BT_GAP_KEY_NOTIF_EVT:  // Show passkey for manual entry
-            Log::Info(TAG, "Enter this passkey on the client: %06d", param->key_notif.passkey);
+            LOG_INFO("Enter this passkey on the client: %06d", param->key_notif.passkey);
             break;
 
         case ESP_BT_GAP_KEY_REQ_EVT:  // Passkey entry requested (only for legacy devices)
-            Log::Info(TAG, "Passkey entry requested. Auto-entering passkey.");
+            LOG_INFO("Passkey entry requested. Auto-entering passkey.");
             if((ret = esp_bt_gap_pin_reply(param->key_req.bda, true, 6, (uint8_t*)"123456"))!=ESP_OK){
                 SAFE_ABORT("PIN Reply Failed: %s", esp_err_to_name(ret));
                 return;
             }
             break;
         case ESP_BT_GAP_ACL_CONN_CMPL_STAT_EVT:
-            Log::Info(TAG, "ACL Connection Complete.");
+            LOG_INFO("ACL Connection Complete.");
             break;
         case ESP_BT_GAP_ENC_CHG_EVT:
-            Log::Info(TAG, "Encryption Changed.");
+            LOG_INFO("Encryption Changed.");
             break;
         case ESP_BT_GAP_MODE_CHG_EVT:
-            Log::Info(TAG, "Mode Changed.");
+            LOG_INFO("Mode Changed.");
             break;
         default:
-            Log::Info(TAG, "Unhandled GAP event: %d", event);
+            LOG_INFO("Unhandled GAP event: %d", event);
             break;
     }
 }
@@ -185,7 +185,7 @@ void Bluetooth::esp_gap_callback(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_para
 void Bluetooth::esp_spp_callback_static(
     esp_spp_cb_event_t event, esp_spp_cb_param_t *param) {
     if (_instance == nullptr) {
-        Log::Error(TAG, "Bluetooth instance is NULL");
+        LOG_ERROR("Bluetooth instance is NULL");
 		return;
     }
     _instance->esp_spp_callback(event, param);
@@ -194,7 +194,7 @@ void Bluetooth::esp_spp_callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *p
     esp_err_t ret;
     switch (event) {
         case ESP_SPP_INIT_EVT:
-            Log::Info(TAG, "SPP Initialized, making ESP32 discoverable with server name %s", _instance->_serverName);
+            LOG_INFO("SPP Initialized, making ESP32 discoverable with server name %s", _instance->_serverName);
             if((ret = esp_bt_gap_set_scan_mode(ESP_BT_CONNECTABLE, ESP_BT_GENERAL_DISCOVERABLE))!=ESP_OK){
                 SAFE_ABORT("Set Scan Mode Failed: %s", esp_err_to_name(ret));
                 return;
@@ -206,14 +206,14 @@ void Bluetooth::esp_spp_callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *p
             }
             break;
 		case ESP_SPP_DISCOVERY_COMP_EVT:
-			Log::Info(TAG, "ESP_SPP_DISCOVERY_COMP_EVT, status=%d scn_num=%d", param->disc_comp.status, param->disc_comp.scn_num);
+			LOG_INFO("ESP_SPP_DISCOVERY_COMP_EVT, status=%d scn_num=%d", param->disc_comp.status, param->disc_comp.scn_num);
 			
 			break;
 		case ESP_SPP_START_EVT:
-			Log::Info(TAG, "SPP server started, handle = %d", param->start.handle);
+			LOG_INFO("SPP server started, handle = %d", param->start.handle);
 			break;
 		case ESP_SPP_CONG_EVT:
-			Log::Info(TAG, "SPP Congestion status: %d", param->cong.cong);
+			LOG_INFO("SPP Congestion status: %d", param->cong.cong);
 			break;
         case ESP_SPP_SRV_OPEN_EVT :
             _connectionHandle = param->open.handle;
@@ -229,17 +229,17 @@ void Bluetooth::esp_spp_callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *p
 			_connectionHandle = 0;
 			dispatchOnClosed();
 			emptyOutgoingQueue();
-            Log::Info(TAG, "Client Disconnected");
+            LOG_INFO("Client Disconnected");
             break;
 
         case ESP_SPP_DATA_IND_EVT:
 			{
-				//Log::Info(TAG, "Received %d bytes: %.*s", param->data_ind.len, param->data_ind.len, param->data_ind.data);
+				//LOG_INFO("Received %d bytes: %.*s", param->data_ind.len, param->data_ind.len, param->data_ind.data);
 				
 				cJSON *root = cJSON_ParseWithLength((const char*)param->data_ind.data, param->data_ind.len);
 				if(_incomingMessageWorker->enqueue([this, root]{ 
 					if(_incomingMessageHandler==nullptr){
-						Log::Warn(TAG, "Incoming Message Handler is NULL. Cannot handle incoming message.");
+						LOG_WARN("Incoming Message Handler is NULL. Cannot handle incoming message.");
 						return;
 					}
 					bool dontDelete = false;
@@ -254,7 +254,7 @@ void Bluetooth::esp_spp_callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *p
 				break;
 			}
 		case ESP_SPP_WRITE_EVT:
-            //Log::Info(TAG, "Data Sent: %d bytes", param->write.len);
+            //LOG_INFO("Data Sent: %d bytes", param->write.len);
 			_mutexWrite.lock();
 			if (!_outgoingQueue.empty()) {
 				char* sentMsg = _outgoingQueue.front();
@@ -275,22 +275,22 @@ void Bluetooth::setIncomingMessageHandler(IIncomingMessageHandler* incomingMessa
 }
 void Bluetooth::sendMessage(cJSON* message, bool deleteMessageAfter) {
     if (!message) {
-        Log::Error(TAG, "sendMessage: message is null");
+        LOG_ERROR("sendMessage: message is null");
         return;
     }
 	CJsonRAII cJsonRAII(deleteMessageAfter?message:nullptr);
     // Serialize cJSON object to string
     char* json_str = cJSON_PrintUnformatted(message);  // Or cJSON_Print() if you prefer pretty output
     if (!json_str) {
-        Log::Error(TAG, "sendMessage: failed to serialize JSON");
+        LOG_ERROR("sendMessage: failed to serialize JSON");
         return;
     }
 	if(_connectionHandle==0){
-		Log::Warn(TAG, "Called sendMessage while not connected");
+		LOG_WARN("Called sendMessage while not connected");
 		return;
 	}
     if (_outgoingQueue.size() >= MAX_BT_SEND_QUEUE) {
-        Log::Error(TAG, "Bluetooth TX queue overflow! Dropping message.");
+        LOG_ERROR("Bluetooth TX queue overflow! Dropping message.");
         free(json_str);
         return;
     }
@@ -298,7 +298,7 @@ void Bluetooth::sendMessage(cJSON* message, bool deleteMessageAfter) {
 	
 	char* json_with_newline = NULL;
 	if (asprintf(&json_with_newline, "%s\n", json_str) == -1 || !json_with_newline) {
-		Log::Error(TAG, "sendMessage: asprintf failed");
+		LOG_ERROR("sendMessage: asprintf failed");
 		free(json_str);
 		return;
 	}
@@ -309,7 +309,7 @@ void Bluetooth::sendMessage(cJSON* message, bool deleteMessageAfter) {
 }
 void Bluetooth::tryFlushSendQueue() {
     if (_connectionHandle==0){
-        Log::Warn(TAG, "_connectionHandle not set at this time...");
+        LOG_WARN("_connectionHandle not set at this time...");
 		return;
 	}
     _mutexWrite.lock();
@@ -319,7 +319,7 @@ void Bluetooth::tryFlushSendQueue() {
 	}	
     _writeInProgress = true;
 	_mutexWrite.unlock();
-	//Log::Info(TAG, "There are %zu entries in queue", _outgoingQueue.size());
+	//LOG_INFO("There are %zu entries in queue", _outgoingQueue.size());
     char* nextMsg = _outgoingQueue.front();
     size_t len = strlen(nextMsg);
     esp_err_t ret = esp_spp_write(_connectionHandle, len, (uint8_t*)nextMsg);
@@ -328,7 +328,7 @@ void Bluetooth::tryFlushSendQueue() {
 		_mutexWrite.lock();
         _writeInProgress = false;
 		_mutexWrite.unlock();
-        Log::Error(TAG, "esp_spp_write failed: %s", esp_err_to_name(ret));
+        LOG_ERROR("esp_spp_write failed: %s", esp_err_to_name(ret));
     }
 }
 void Bluetooth::emptyOutgoingQueue(){

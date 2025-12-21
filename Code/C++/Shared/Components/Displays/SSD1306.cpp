@@ -304,7 +304,7 @@ void SSD1306::SendDataFrom(const uint8_t* data, uint16_t startIndex, uint16_t si
 }
 void SSD1306::InitializeForMonochromeDisplayBuffer(){
     /*//Mr copilot please implement here
-    Log::Info(TAG, "Initializing SSD1306 for monochrome display buffer");
+    LOG_INFO("Initializing SSD1306 for monochrome display buffer");
     SetDisplayOnOff(false);// Display OFF (sleep mode)
     SetClockDivideRatioOscillatorFrequency(0x0,0x8); // Set display clock divide ratio/oscillator frequency
     SetMultiplexRatio(0x3F); // Set multiplex ratio(1 to 64). In this case all rows active
@@ -322,66 +322,66 @@ void SSD1306::InitializeForMonochromeDisplayBuffer(){
     SetNormalInverseDisplay(true);
     DeactivateScroll();
     SetDisplayOnOff(true); // Display ON in normal mode
-    Log::Info(TAG, "SSD1306 initialization complete");
+    LOG_INFO("SSD1306 initialization complete");
     */
-    Log::Info(TAG, "Initializing SSD1306 for monochrome display buffer");
+    LOG_INFO("Initializing SSD1306 for monochrome display buffer");
 
     SetDisplayOnOff(false); // Display OFF (sleep mode)
-    Log::Info(TAG, "Display OFF");
+    LOG_INFO("Display OFF");
 
     SetClockDivideRatioOscillatorFrequency(0x0, 0x8); // Set display clock divide ratio/oscillator frequency
-    Log::Info(TAG, "Clock divide ratio/oscillator frequency set");
+    LOG_INFO("Clock divide ratio/oscillator frequency set");
 
     SetMultiplexRatio(0x3F); // Set multiplex ratio (1 to 64). In this case, all rows active
-    Log::Info(TAG, "Multiplex ratio set");
+    LOG_INFO("Multiplex ratio set");
 
     SetDisplayStartLine(0x00); // Set display start line to 0
-    Log::Info(TAG, "Display start line set");
+    LOG_INFO("Display start line set");
 
     SetDisplayOffset(0x00); // Set display offset to no offset
-    Log::Info(TAG, "Display offset set");
+    LOG_INFO("Display offset set");
 
     SetChargePumpEnabled(true); // Enable charge pump regulator
-    Log::Info(TAG, "Charge pump enabled");
+    LOG_INFO("Charge pump enabled");
 
     SetMemoryAddressingMode(HORIZONTAL_ADDRESSING_MODE); // Set Memory Addressing Mode
-    Log::Info(TAG, "Memory addressing mode set");
+    LOG_INFO("Memory addressing mode set");
 
     SetSegmentRemap(true); // Set segment re-map (0xA1/0xA0)
-    Log::Info(TAG, "Segment re-map set");
+    LOG_INFO("Segment re-map set");
 
     SetCOMOutputScanDirection(true); // Set COM Output Scan Direction (0xC8/0xC0)
-    Log::Info(TAG, "COM output scan direction set");
+    LOG_INFO("COM output scan direction set");
 
     SetCOMPinsHardwareConfiguration(0x12); // Set COM Pins hardware configuration
-    Log::Info(TAG, "COM pins hardware configuration set");
+    LOG_INFO("COM pins hardware configuration set");
 
     SetContrastControl(0x7F); // Set contrast control register
-    Log::Info(TAG, "Contrast control set");
+    LOG_INFO("Contrast control set");
 
     SetPreChargePeriod(0xF1); // Set pre-charge period
-    Log::Info(TAG, "Pre-charge period set");
+    LOG_INFO("Pre-charge period set");
 
     SetVcomhDeselectLevel(0x40); // Set VCOMH deselect level
-    Log::Info(TAG, "VCOMH deselect level set");
+    LOG_INFO("VCOMH deselect level set");
 
     EntireDisplayOn(false); // Display ON in normal mode
-    Log::Info(TAG, "Entire display ON in normal mode");
+    LOG_INFO("Entire display ON in normal mode");
 
     SetNormalInverseDisplay(true); // Set display to normal mode
-    Log::Info(TAG, "Display set to normal mode");
+    LOG_INFO("Display set to normal mode");
 
     DeactivateScroll(); // Deactivate scrolling
-    Log::Info(TAG, "Scrolling deactivated");
+    LOG_INFO("Scrolling deactivated");
 
     SetDisplayOnOff(true); // Display ON in normal mode
-    Log::Info(TAG, "Display ON");
+    LOG_INFO("Display ON");
 
-    Log::Info(TAG, "SSD1306 initialization complete");
+    LOG_INFO("SSD1306 initialization complete");
 
     // Clear the display buffer
    // ClearDisplay();
-    Log::Info(TAG, "Display cleared");
+    LOG_INFO("Display cleared");
 
     // Draw some initial pixels to form a pattern
     SetPixel(10, 10, true);
@@ -389,19 +389,19 @@ void SSD1306::InitializeForMonochromeDisplayBuffer(){
     SetPixel(12, 12, true);
     SetPixel(13, 13, true);
     SetPixel(14, 14, true);
-    Log::Info(TAG, "Initial pixels set");
+    LOG_INFO("Initial pixels set");
 
     // Draw a horizontal line
     for (int x = 20; x < 50; x++) {
         SetPixel(x, 20, true);
     }
-    Log::Info(TAG, "Horizontal line drawn");
+    LOG_INFO("Horizontal line drawn");
 
     // Draw a vertical line
     for (int y = 30; y < 50; y++) {
         SetPixel(30, y, true);
     }
-    Log::Info(TAG, "Vertical line drawn");
+    LOG_INFO("Vertical line drawn");
 
-    Log::Info(TAG, "Display content updated");
+    LOG_INFO("Display content updated");
 }

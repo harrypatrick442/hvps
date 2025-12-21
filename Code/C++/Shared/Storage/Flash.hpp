@@ -45,7 +45,6 @@ class Flash{
 		static bool hasKey(const char* namespaceName, const char* key);
 
     private:
-		static inline constexpr const char* TAG = "Flash";
 		static inline constexpr const char* STRING_VALUE_NOT_FOUND_FOR_KEY 
 					= "String value not found for key '%s'";
 		static inline constexpr const char* NVS_NOT_INITIALIZED = "NVS not initialized";

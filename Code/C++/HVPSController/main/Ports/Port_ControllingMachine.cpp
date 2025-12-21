@@ -21,6 +21,8 @@
 #include "Enums/ErrorType.hpp"
 //#include "Generated/Messages/SetVoltageThresholdRequest.hpp"
 #include <cstring>
+#include "Macros/GetFileName.hpp"
+const char* Port_ControllingMachine::getTag() {return GET_FILE_NAME;}
 Port_ControllingMachine::Port_ControllingMachine(
 	IDuplexChannel& channel, HighSpeedCore& highSpeedCore,
 	uint32_t pingTimeoutMilliseconds,
@@ -113,7 +115,7 @@ void Port_ControllingMachine::handleIncomingMessage(cJSON* message, bool& dontDe
 	if(strcmp(type, PingMessage::TYPE) == 0){
 		return;
 	}
-	Log::Warn(TAG, "Unhandled message type %s", type);
+	LOG_WARN("Unhandled message type %s", type);
 }
 void Port_ControllingMachine::handleRunSystemChecksOnlyMessage(cJSON* message){
 	TaskFactory::createNonPriorityTask([this](){

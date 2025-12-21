@@ -7,7 +7,7 @@ class LiveDataBroadcaster final
 	:
 	public SingletonBase<LiveDataBroadcaster>{
 	public:
-		static inline constexpr const char* TAG = "LiveDataBroadcaster";
+		static const char* getTag();
 		using Callback = std::function<void()>;
 		void start();
 		void stop();

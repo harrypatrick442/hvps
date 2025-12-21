@@ -1,7 +1,6 @@
 #pragma once
 class Outputs{
 	private:
-		static inline constexpr const char* TAG = "Outputs";
 		static bool _initialized;
 	public:
 		static void initialize();

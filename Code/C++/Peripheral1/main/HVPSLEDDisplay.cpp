@@ -1,8 +1,10 @@
 #pragma once
 #include "HVPSLEDDisplay.hpp"
 #include "IO/PinDefinitions.hpp"
+#include "Macros/GetFileName.hpp"
 size_t HVPSLEDDisplay::LED_STRIP_LENGTH = 4;
 uint32_t HVPSLEDDisplay::OFF_COLOUR = 0;
+const char* HVPSLEDDisplay::getTag() {return GET_FILE_NAME;}
 HVPSLEDDisplay::HVPSLEDDisplay(const Peripheral1Configuration& config):
 _config(config),
 _currentColour(0),
@@ -32,31 +34,31 @@ HVPSLEDDisplay::~HVPSLEDDisplay(){
 void HVPSLEDDisplay::indicateState(SystemState systemState){
 	switch(systemState){
 		case SystemState::Idle:
-			//Log::Info(TAG, "Idle");
+			//LOG_INFO("Idle");
 			show(_config.idleColour, _config.idleFlashDelayMs);
 			break;
 		case SystemState::Live:
-			//Log::Info(TAG, "Live");
+			//LOG_INFO("Live");
 			show(_config.liveColour, _config.liveFlashDelayMs);
 			break;
 		case SystemState::RunningSystemChecks:
-			//Log::Info(TAG, "RunningSystemChecks");
+			//LOG_INFO("RunningSystemChecks");
 			show(_config.runningSystemChecksColour, _config.runningSystemChecksFlashDelayMs);
 			break;
 		case SystemState::ShuttingDown:
-			//Log::Info(TAG, "ShuttingDown");
+			//LOG_INFO("ShuttingDown");
 			show(_config.shuttingDownColour, _config.shuttingDownFlashDelayMs);
 			break;
 		case SystemState::ShutDown:
-			//Log::Info(TAG, "ShutDown");
+			//LOG_INFO("ShutDown");
 			show(_config.shutDownColour, _config.shutDownFlashDelayMs);
 			break;
 		case SystemState::Error:
-			//Log::Info(TAG, "Error");
+			//LOG_INFO("Error");
 			show(_config.errorColour, _config.errorFlashDelayMs);
 			break;
 		case SystemState::Unknown:
-			//Log::Info(TAG, "Unknown");
+			//LOG_INFO("Unknown");
 		default:
 			show(_config.unknownColour, _config.unknownFlashDelayMs);
 			break;

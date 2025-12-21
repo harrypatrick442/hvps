@@ -20,10 +20,9 @@
 
 Bluetooth_BLE* Bluetooth_BLE::_instance = nullptr;
 const char* Bluetooth_BLE::TAG = "Bluetooth";
-
 Bluetooth_BLE& Bluetooth_BLE::getInstance(){
     if(_instance==nullptr){
-        Log::Error(TAG, "Bluetooth not initialized. Call initialize() first.");
+        LOG_ERROR("Bluetooth not initialized. Call initialize() first.");
         Aborter::run();
     }
     return *Bluetooth_BLE::_instance;
@@ -44,7 +43,7 @@ Bluetooth_BLE::Bluetooth_BLE(
     service_handle = 0;
     characteristic_value = "{\"status\":\"ok\"}";
     ESP_LOG_BUFFER_HEX("Service UUID", _serviceUUID.data(), ESP_UUID_LEN_128);
-    Log::Info(TAG, "Characteristics UUID: %d", characteristicUUID);
+    LOG_INFO("Characteristics UUID: %d", characteristicUUID);
     
     // Initialize ESP UUID structure
     esp_service_uuid.len = ESP_UUID_LEN_128;
@@ -53,8 +52,8 @@ Bluetooth_BLE::Bluetooth_BLE(
     esp_char_uuid.uuid.uuid16 = _characteristicUUID;
     
     _feedWatchdog();
-    Log::Info(TAG, "sizeof is: %d", sizeof(_serviceUUID));
-    Log::Info(TAG, "sizeof is: %d", sizeof(_characteristicUUID));
+    LOG_INFO("sizeof is: %d", sizeof(_serviceUUID));
+    LOG_INFO("sizeof is: %d", sizeof(_characteristicUUID));
     service_table = new esp_gatts_attr_db_t[2]{
         { {ESP_GATT_AUTO_RSP}, 
             {ESP_UUID_LEN_128, _serviceUUID.data(), ESP_GATT_PERM_READ|ESP_GATT_PERM_WRITE, 
@@ -66,7 +65,7 @@ Bluetooth_BLE::Bluetooth_BLE(
     
     _feedWatchdog();
     if (!service_table) {
-        Log::Error(TAG, "service_table allocation failed!");
+        LOG_ERROR("service_table allocation failed!");
         Aborter::run(); // Prevent further execution
     }
     adv_params = new esp_ble_adv_params_t{
@@ -89,7 +88,7 @@ Bluetooth_BLE::Bluetooth_BLE(
     };
     _feedWatchdog();
     if (!adv_params) {
-        Log::Error(TAG, "adv_params allocation failed!");
+        LOG_ERROR("adv_params allocation failed!");
         Aborter::run();
     }
     adv_data = new esp_ble_adv_data_t{
@@ -107,9 +106,9 @@ Bluetooth_BLE::Bluetooth_BLE(
         //.p_service_uuid = _serviceUUID.data(),// ✅ Service UUID
         .flag = (ESP_BLE_ADV_FLAG_GEN_DISC | ESP_BLE_ADV_FLAG_BREDR_NOT_SPT),// ✅ Flags
     };
-    Log::Info(TAG, "The size of adv_data is: %d", sizeof(adv_data));
+    LOG_INFO("The size of adv_data is: %d", sizeof(adv_data));
     if (!adv_data) {
-        Log::Error(TAG, "adv_data allocation failed!");
+        LOG_ERROR("adv_data allocation failed!");
         Aborter::run();
     }
     _feedWatchdog();
@@ -130,7 +129,7 @@ void Bluetooth_BLE::initialize(
     DelegateFeedWatchdog& feedWatchdog) {
 
     if (_instance != nullptr) {
-        Log::Error(TAG, "Bluetooth already initialized");
+        LOG_ERROR("Bluetooth already initialized");
         Aborter::run();
     }
 
@@ -138,7 +137,7 @@ void Bluetooth_BLE::initialize(
         serverName, serviceUUID, characteristicUUID,
         feedWatchdog);
     Flash::initialize();
-    Log::Info(TAG, "Initializing Bluetooth...");esp_pm_lock_handle_t pm_lock;
+    LOG_INFO("Initializing Bluetooth...");esp_pm_lock_handle_t pm_lock;
     esp_err_t err = esp_pm_lock_create(ESP_PM_APB_FREQ_MAX, 0, "disable_sleep", &pm_lock);
     if (err == ESP_OK) {
         esp_pm_lock_acquire(pm_lock);
@@ -148,76 +147,76 @@ void Bluetooth_BLE::initialize(
     // Enable Bluetooth Controller
     /*esp_err_t ret = esp_bt_controller_mem_release(ESP_BT_MODE_BLE); // Disable BLE if not needed
     if (ret) {
-        Log::Warn(TAG, "BLE Memory Release Failed");
+        LOG_WARN("BLE Memory Release Failed");
     }*/
     esp_err_t ret;
     esp_bt_controller_config_t bt_cfg = BT_CONTROLLER_INIT_CONFIG_DEFAULT();
     if ((ret = esp_bt_controller_init(&bt_cfg)) != ESP_OK) {
-        Log::Error(TAG, "BT Controller Init Failed: %s", esp_err_to_name(ret));
+        LOG_ERROR("BT Controller Init Failed: %s", esp_err_to_name(ret));
         Aborter::run();
         return;
     }
 
     if ((ret = esp_bt_controller_enable(ESP_BT_MODE_BLE)) != ESP_OK) {
-        Log::Error(TAG, "BT Controller Enable Failed: %s", esp_err_to_name(ret));
+        LOG_ERROR("BT Controller Enable Failed: %s", esp_err_to_name(ret));
         Aborter::run();
         return;
     }
 
     if ((ret = esp_bluedroid_init()) != ESP_OK) {
-        Log::Error(TAG, "Bluedroid Init Failed: %s", esp_err_to_name(ret));
+        LOG_ERROR("Bluedroid Init Failed: %s", esp_err_to_name(ret));
         Aborter::run();
         return;
     }
 
     if ((ret = esp_bluedroid_enable()) != ESP_OK) {
-        Log::Error(TAG, "Bluedroid Enable Failed: %s", esp_err_to_name(ret));
+        LOG_ERROR("Bluedroid Enable Failed: %s", esp_err_to_name(ret));
         Aborter::run();
         return;
     }
 
     if (esp_bluedroid_get_status() != ESP_BLUEDROID_STATUS_ENABLED) {
-        Log::Error(TAG, "Bluedroid not enabled!");
+        LOG_ERROR("Bluedroid not enabled!");
         Aborter::run();
         return;
     }
     // Set device name AFTER Bluedroid is enabled
     if ((ret = esp_ble_gap_set_device_name(deviceName)) != ESP_OK) {
-        Log::Error(TAG, "Set Device Name Failed: %s", esp_err_to_name(ret));
+        LOG_ERROR("Set Device Name Failed: %s", esp_err_to_name(ret));
         Aborter::run();
         return;
     }
-    Log::Info(TAG, "Setting device name to %s", deviceName);
+    LOG_INFO("Setting device name to %s", deviceName);
     // Register GAP and GATT event handlers
    if ((ret = esp_ble_gap_register_callback(gap_event_handler_static)) != ESP_OK) {
-        Log::Error(TAG, "GAP Register Callback Failed: %s", esp_err_to_name(ret));
+        LOG_ERROR("GAP Register Callback Failed: %s", esp_err_to_name(ret));
         Aborter::run();
         return;
     }
     if ((ret = esp_ble_gatts_register_callback(gatt_event_handler_static)) != ESP_OK) {
-        Log::Error(TAG, "GATTS Register Callback Failed: %s", esp_err_to_name(ret));
+        LOG_ERROR("GATTS Register Callback Failed: %s", esp_err_to_name(ret));
         Aborter::run();
         return;
     }
     if ((ret = esp_ble_gatts_app_register(0)) != ESP_OK) {
-        Log::Error(TAG, "GATT App Register Failed: %s", esp_err_to_name(ret));
+        LOG_ERROR("GATT App Register Failed: %s", esp_err_to_name(ret));
         Aborter::run();
         return;
     }
     // Start BLE Advertising
     if ((ret = esp_ble_gap_config_adv_data(_instance->adv_data)) != ESP_OK) {
-        Log::Error(TAG, "Config Adv Data Failed: %s", esp_err_to_name(ret));
+        LOG_ERROR("Config Adv Data Failed: %s", esp_err_to_name(ret));
         Aborter::run();
         return;
     }
 
-    Log::Info(TAG, "Bluetooth Initialized and ready!");
+    LOG_INFO("Bluetooth Initialized and ready!");
 }
 void Bluetooth_BLE::checkInitialized(){
     if(_instance != nullptr) {
         return;
     }
-    Log::Error(Bluetooth_BLE::TAG, "Bluetooth instance is null");
+    LOG_ERROR("Bluetooth instance is null");
     Aborter::run();
 }
 // GAP Event Handler (Advertising & Scanning)
@@ -235,41 +234,41 @@ void Bluetooth_BLE::gatt_event_handler_static(esp_gatts_cb_event_t event, esp_ga
 // GAP Event Handler (Advertising & Scanning)
 void Bluetooth_BLE::gap_event_handler(esp_gap_ble_cb_event_t event, esp_ble_gap_cb_param_t *param) {
     _feedWatchdog();
-    Log::Info(TAG, "GAP Event Handler called with event: %d", event);
+    LOG_INFO("GAP Event Handler called with event: %d", event);
     switch (event) {
         case ESP_GAP_BLE_ADV_DATA_SET_COMPLETE_EVT:
-            Log::Info(TAG, "Advertisement Data Set. Starting Advertising...");
+            LOG_INFO("Advertisement Data Set. Starting Advertising...");
             vTaskDelay(pdMS_TO_TICKS(500));
             if (esp_bluedroid_get_status() != ESP_BLUEDROID_STATUS_ENABLED) {
-                Log::Error(TAG, "Bluedroid not enabled before advertising!");
+                LOG_ERROR("Bluedroid not enabled before advertising!");
                 return;
             }
             startAdvertising();
             break;
         case ESP_GAP_BLE_ADV_START_COMPLETE_EVT:
             if (param->adv_start_cmpl.status != ESP_BT_STATUS_SUCCESS) {
-                Log::Error(TAG, "Advertising start failed");
+                LOG_ERROR("Advertising start failed");
             } else {
-                Log::Info(TAG, "Advertising start successfully");
+                LOG_INFO("Advertising start successfully");
             }
             break;
         case ESP_GAP_BLE_SCAN_PARAM_SET_COMPLETE_EVT:
-            Log::Info(TAG, "Scan parameters set.");
+            LOG_INFO("Scan parameters set.");
             break;
         case ESP_GAP_BLE_SCAN_RESULT_EVT:
-            Log::Info(TAG, "Scan result event.");
+            LOG_INFO("Scan result event.");
             break;
         case ESP_GAP_BLE_ADV_STOP_COMPLETE_EVT:
-            Log::Info(TAG, "Advertising stopped.");
+            LOG_INFO("Advertising stopped.");
             break;
         case ESP_GAP_BLE_UPDATE_CONN_PARAMS_EVT:
-            Log::Info(TAG, "Connection parameters updated.");
+            LOG_INFO("Connection parameters updated.");
             break;
         case ESP_GAP_BLE_SET_PKT_LENGTH_COMPLETE_EVT:
-            Log::Info(TAG, "Packet length set.");
+            LOG_INFO("Packet length set.");
             break;
         default:
-            Log::Debug(TAG, "Unhandled GAP event: %d", event);
+            LOG_DEBUG("Unhandled GAP event: %d", event);
             break;
     }
     _feedWatchdog();
@@ -282,7 +281,7 @@ void Bluetooth_BLE::gatt_event_handler(esp_gatts_cb_event_t event, esp_gatt_if_t
     switch (event) {
         case ESP_GATTS_REG_EVT:     /*!< When register application id, the event comes */
             {
-                Log::Info(TAG, "GATT Server Registered.");
+                LOG_INFO("GATT Server Registered.");
                 esp_gatt_srvc_id_t service_id = {
                     .id = {
                         .uuid = esp_service_uuid,
@@ -293,7 +292,7 @@ void Bluetooth_BLE::gatt_event_handler(esp_gatts_cb_event_t event, esp_gatt_if_t
                 ret = esp_ble_gatts_create_service(gatts_if,
                  &service_id, 1); // Create Service
                 if (ret != ESP_OK) {
-                    Log::Error(TAG, "Failed to create service: %s", esp_err_to_name(ret));
+                    LOG_ERROR("Failed to create service: %s", esp_err_to_name(ret));
                     // Handle the error appropriately
                     return;
                 }
@@ -302,18 +301,18 @@ void Bluetooth_BLE::gatt_event_handler(esp_gatts_cb_event_t event, esp_gatt_if_t
             break;
         case ESP_GATTS_READ_EVT:      /*!< When gatt client request read operation, the event comes */
             {  
-                Log::Info(TAG, "BLE Read Received!");
+                LOG_INFO("BLE Read Received!");
                 handle_read_event(gatts_if, param);
             }
             break;
         case ESP_GATTS_WRITE_EVT:/*!< When gatt client request write operation, the event comes */
             {
-                Log::Info(TAG, "BLE Write Received!");
+                LOG_INFO("BLE Write Received!");
 
                 // Store the received JSON string
                 characteristic_value = std::string((char*)param->write.value, param->write.len);
 
-                Log::Info(TAG, "Updated Characteristic Value: %s", characteristic_value.c_str());
+                LOG_INFO("Updated Characteristic Value: %s", characteristic_value.c_str());
 
                 // Acknowledge the write
                 esp_gatt_rsp_t rsp;
@@ -327,28 +326,28 @@ void Bluetooth_BLE::gatt_event_handler(esp_gatts_cb_event_t event, esp_gatt_if_t
             }
             break;
         case ESP_GATTS_EXEC_WRITE_EVT:/*!< When gatt client request execute write, the event comes */
-            Log::Info(TAG, "Execute Write event.");
+            LOG_INFO("Execute Write event.");
             break;
         case ESP_GATTS_MTU_EVT:/*!< When set mtu complete, the event comes */
-            Log::Info(TAG, "MTU event.");
+            LOG_INFO("MTU event.");
             break;
         case ESP_GATTS_CONF_EVT:/*!< When receive confirm, the event comes */
-            Log::Info(TAG, "Confirmation event.");
+            LOG_INFO("Confirmation event.");
             break;
         case ESP_GATTS_UNREG_EVT:/*!< When unregister application id, the event comes */
-            Log::Info(TAG, "Unregister event.");
+            LOG_INFO("Unregister event.");
             break;
         case ESP_GATTS_CREATE_EVT: /*!< When service creation is complete, the event comes */
         {
-            Log::Info(TAG, "Service Created, Adding Characteristic...");
+            LOG_INFO("Service Created, Adding Characteristic...");
 
             if (service_handle != 0) {
-                Log::Warn(TAG, "Service handle already set. It is getting replaced???");
+                LOG_WARN("Service handle already set. It is getting replaced???");
             }
             service_handle = param->create.service_handle;
 
             if (service_handle == 0) {
-                Log::Error(TAG, "Invalid service handle. Something went wrong.");
+                LOG_ERROR("Invalid service handle. Something went wrong.");
                 return;
             }
 
@@ -384,32 +383,32 @@ void Bluetooth_BLE::gatt_event_handler(esp_gatts_cb_event_t event, esp_gatt_if_t
             );
 
             if (ret != ESP_OK) {
-                Log::Error(TAG, "Failed to add characteristic: %s", esp_err_to_name(ret));
+                LOG_ERROR("Failed to add characteristic: %s", esp_err_to_name(ret));
                 Aborter::run();
                 return;
             }
 
-            Log::Info(TAG, "Added the characteristic!");
-            Log::Info(TAG, "Service handle: %d", service_handle);
+            LOG_INFO("Added the characteristic!");
+            LOG_INFO("Service handle: %d", service_handle);
         }
         break;
         case ESP_GATTS_ADD_INCL_SRVC_EVT:/*!< When add included service complete, the event comes */
-            Log::Info(TAG, "Included Service Added.");
+            LOG_INFO("Included Service Added.");
             break;
         case ESP_GATTS_ADD_CHAR_EVT:/*!< When add characteristic complete, the event comes */
             {
                 uint16_t char_handle= param->add_char.attr_handle;
     
-                Log::Info(TAG, "Characteristic add, status %d, attr_handle %d, service_handle %d",
+                LOG_INFO("Characteristic add, status %d, attr_handle %d, service_handle %d",
                 param->add_char.status, param->add_char.attr_handle, param->add_char.service_handle);
                 if (char_handle == 0) {
-                    ESP_LOGE(TAG, "Invalid characteristic handle. Something went wrong.");
+                    ESP_LOGE("Invalid characteristic handle. Something went wrong.");
                 }
-                Log::Info(TAG, "Characteristic Added.");
+                LOG_INFO("Characteristic Added.");
                 
                 ret = esp_ble_gatts_start_service(service_handle);
                 if (ret != ESP_OK) {
-                    Log::Error(TAG, "Failed to start service: %s", esp_err_to_name(ret));
+                    LOG_ERROR("Failed to start service: %s", esp_err_to_name(ret));
                     Aborter::run();
                     // Handle the error appropriately
                     return;
@@ -422,66 +421,66 @@ void Bluetooth_BLE::gatt_event_handler(esp_gatts_cb_event_t event, esp_gatt_if_t
             }
             break;
         case ESP_GATTS_DELETE_EVT:/*!< When delete service complete, the event comes */
-            Log::Info(TAG, "Service Deleted.");
+            LOG_INFO("Service Deleted.");
             break;
         case ESP_GATTS_START_EVT:/*!< When start service complete, the event comes */
-            Log::Info(TAG, "Service Started.");
+            LOG_INFO("Service Started.");
             break;
         case ESP_GATTS_STOP_EVT:/*!< When stop service complete, the event comes */
-            Log::Info(TAG, "Service Stopped.");
+            LOG_INFO("Service Stopped.");
             break;
         case ESP_GATTS_CONNECT_EVT:/*!< When gatt client connect, the event comes */
-            Log::Info(TAG, "Device connected.");
+            LOG_INFO("Device connected.");
             break;
         case ESP_GATTS_DISCONNECT_EVT:/*!< When gatt client disconnect, the event comes */
-            Log::Info(TAG, "Device disconnected. Restarting advertising...");
+            LOG_INFO("Device disconnected. Restarting advertising...");
             startAdvertising(); // Restart advertising
             break;
         case ESP_GATTS_OPEN_EVT:/*!< When connect to peer, the event comes */
-            Log::Info(TAG, "Connected to peer.");
+            LOG_INFO("Connected to peer.");
             break;
         case ESP_GATTS_CANCEL_OPEN_EVT:/*!< When disconnect from peer, the event comes */
-            Log::Info(TAG, "Disconnected from peer.");
+            LOG_INFO("Disconnected from peer.");
             break;
         case ESP_GATTS_CLOSE_EVT:/*!< When gatt server close, the event comes */
-            Log::Info(TAG, "GATT Server Closed.");
+            LOG_INFO("GATT Server Closed.");
             break;
         case ESP_GATTS_LISTEN_EVT:/*!< When gatt listen to be connected the event comes */
-            Log::Info(TAG, "GATT Listening.");
+            LOG_INFO("GATT Listening.");
             break;
         case ESP_GATTS_CONGEST_EVT:/*!< When congest happen, the event comes */
-            Log::Info(TAG, "GATT Congestion.");
+            LOG_INFO("GATT Congestion.");
             break;
         /* following is extra event */
         case ESP_GATTS_RESPONSE_EVT:/*!< When gatt send response complete, the event comes */
-            Log::Info(TAG, "GATT Response.");
+            LOG_INFO("GATT Response.");
             break;
         case ESP_GATTS_CREAT_ATTR_TAB_EVT:/*!< When gatt create table complete, the event comes */
-            Log::Info(TAG, "GATT Attribute Table Created.");
+            LOG_INFO("GATT Attribute Table Created.");
             break;
         case ESP_GATTS_SET_ATTR_VAL_EVT:
-            Log::Info(TAG, "GATT Attribute Value Set.");
+            LOG_INFO("GATT Attribute Value Set.");
             break;
         case ESP_GATTS_SEND_SERVICE_CHANGE_EVT:
-            Log::Info(TAG, "GATT Service Change Sent.");
+            LOG_INFO("GATT Service Change Sent.");
             break;
         default:
-            Log::Debug(TAG, "Unhandled GATT event: %d", event);
+            LOG_DEBUG("Unhandled GATT event: %d", event);
             break;
     }
     _feedWatchdog();
 }
 void Bluetooth_BLE::log_adv_data(const esp_ble_adv_data_t* adv_data) {
     if (!adv_data) {
-        Log::Error(TAG, "adv_data is NULL");
+        LOG_ERROR("adv_data is NULL");
         return;
     }
-    Log::Info(TAG, "Adv Data:");
-    Log::Info(TAG, "  set_scan_rsp: %d, include_name: %d, include_txpower: %d", 
+    LOG_INFO("Adv Data:");
+    LOG_INFO("  set_scan_rsp: %d, include_name: %d, include_txpower: %d", 
         adv_data->set_scan_rsp, adv_data->include_name, adv_data->include_txpower);
-    Log::Info(TAG, "  min_interval: %d, max_interval: %d, appearance: %d", 
+    LOG_INFO("  min_interval: %d, max_interval: %d, appearance: %d", 
         adv_data->min_interval, adv_data->max_interval, adv_data->appearance);
-    Log::Info(TAG, "  manufacturer_len: %d, service_data_len: %d, service_uuid_len: %d", 
+    LOG_INFO("  manufacturer_len: %d, service_data_len: %d, service_uuid_len: %d", 
         adv_data->manufacturer_len, adv_data->service_data_len, adv_data->service_uuid_len);
     
     if (adv_data->manufacturer_len > 0 && adv_data->p_manufacturer_data) {
@@ -493,31 +492,31 @@ void Bluetooth_BLE::log_adv_data(const esp_ble_adv_data_t* adv_data) {
     if (adv_data->service_uuid_len > 0 && adv_data->p_service_uuid) {
         ESP_LOG_BUFFER_HEX(TAG, adv_data->p_service_uuid, adv_data->service_uuid_len);
     }
-    Log::Info(TAG, "  flag: 0x%02X", adv_data->flag);
+    LOG_INFO("  flag: 0x%02X", adv_data->flag);
 }
 void Bluetooth_BLE::log_adv_params(const esp_ble_adv_params_t* adv_params) {
     if (!adv_params) {
-        Log::Error(TAG, "adv_params is NULL");
+        LOG_ERROR("adv_params is NULL");
         return;
     }
-    Log::Info(TAG, "Adv Params:");
-    Log::Info(TAG, "  adv_int_min: %d, adv_int_max: %d, adv_type: %d", 
+    LOG_INFO("Adv Params:");
+    LOG_INFO("  adv_int_min: %d, adv_int_max: %d, adv_type: %d", 
         adv_params->adv_int_min, adv_params->adv_int_max, adv_params->adv_type);
-    Log::Info(TAG, "  own_addr_type: %d, peer_addr_type: %d, channel_map: %d", 
+    LOG_INFO("  own_addr_type: %d, peer_addr_type: %d, channel_map: %d", 
         adv_params->own_addr_type, adv_params->peer_addr_type, adv_params->channel_map);
-    Log::Info(TAG, "  adv_filter_policy: %d", adv_params->adv_filter_policy);
+    LOG_INFO("  adv_filter_policy: %d", adv_params->adv_filter_policy);
 }
 void Bluetooth_BLE::log_service_table(const esp_gatts_attr_db_t* service_table) {
     if (!service_table) {
-        Log::Error(TAG, "service_table is NULL");
+        LOG_ERROR("service_table is NULL");
         return;
     }
-    Log::Info(TAG, "Service Table:");
+    LOG_INFO("Service Table:");
     for (int i = 0; i < 2; ++i) {
-        Log::Info(TAG, "  Attribute %d:", i);
-        Log::Info(TAG, "    attr_control: %d", 
+        LOG_INFO("  Attribute %d:", i);
+        LOG_INFO("    attr_control: %d", 
             service_table[i].attr_control);
-        Log::Info(TAG, "    attr_value: {len: %d, max_len: %d, value: %p}", 
+        LOG_INFO("    attr_value: {len: %d, max_len: %d, value: %p}", 
             service_table[i].att_desc.length, service_table[i].att_desc.max_length, service_table[i].att_desc.value);
     }
 }
@@ -536,7 +535,7 @@ void Bluetooth_BLE::handle_read_event(esp_gatt_if_t gatts_if, esp_ble_gatts_cb_p
 void Bluetooth_BLE::handle_write_event(esp_gatt_if_t gatts_if, esp_ble_gatts_cb_param_t *param) {
     // Process the received JSON data
     std::string received_data((char*)param->write.value, param->write.len);
-    ESP_LOGI(TAG, "Received JSON data: %s", received_data.c_str());
+    LOG_ERROR("Received JSON data: %s", received_data.c_str());
 
     // Send a response if needed
     esp_gatt_rsp_t rsp;
@@ -548,6 +547,6 @@ void Bluetooth_BLE::handle_write_event(esp_gatt_if_t gatts_if, esp_ble_gatts_cb_
 void Bluetooth_BLE:: startAdvertising(){
     esp_err_t err;
         if ((err = esp_ble_gap_start_advertising(adv_params)) != ESP_OK) {
-        Log::Error(TAG, "Advertising failed to start: %s", esp_err_to_name(err));
+        LOG_ERROR("Advertising failed to start: %s", esp_err_to_name(err));
         }
 }

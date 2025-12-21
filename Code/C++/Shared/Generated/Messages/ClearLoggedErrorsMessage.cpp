@@ -10,7 +10,6 @@ cJSON* ClearLoggedErrorsMessage::toJSON(){
     return j;
 }
 ClearLoggedErrorsMessage* ClearLoggedErrorsMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
-    bool s = true;
     auto r = new ClearLoggedErrorsMessage();
     cleanupBucket.addDelete(r);
     return r;

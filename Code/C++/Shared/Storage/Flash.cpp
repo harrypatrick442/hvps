@@ -13,22 +13,22 @@ bool Flash::getIsInitialized(){
 
 void Flash::initialize() {
     if (_isInitialized) {
-        Log::Info(TAG, "NVS is already initialized");
+        LOG_INFO("NVS is already initialized");
         return;
     }
 
     esp_err_t ret;
-    Log::Info(TAG, "Initializing NVS");
+    LOG_INFO("Initializing NVS");
     // Initialize NVS
     ret = nvs_flash_init();
     bool noFreePages = ret == ESP_ERR_NVS_NO_FREE_PAGES;
     bool newVersionFound = ret == ESP_ERR_NVS_NEW_VERSION_FOUND;
     if (noFreePages || newVersionFound) {
         if (noFreePages) {
-            Log::Info(TAG, "Erasing NVS because of no free pages");
+            LOG_INFO("Erasing NVS because of no free pages");
         }
         if (newVersionFound) {
-            Log::Info(TAG, "Erasing NVS because of new version found");
+            LOG_INFO("Erasing NVS because of new version found");
         }
         ESP_ERROR_CHECK(nvs_flash_erase());
         ret = nvs_flash_init();
@@ -36,7 +36,7 @@ void Flash::initialize() {
     ESP_ERROR_CHECK(ret);
 
     _isInitialized = true;
-    Log::Info(TAG, "NVS initialized successfully");
+    LOG_INFO("NVS initialized successfully");
 }
 bool Flash::setFloat(const char* namespaceName, const char* key, float value) {
     if (!_isInitialized) {
@@ -47,7 +47,7 @@ bool Flash::setFloat(const char* namespaceName, const char* key, float value) {
     nvs_handle_t handle;
     esp_err_t err = nvs_open(namespaceName, NVS_READWRITE, &handle);
     if (err != ESP_OK) {
-        Log::Warn(TAG, FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
+        LOG_WARN(FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
         return false;
     }
 
@@ -57,14 +57,14 @@ bool Flash::setFloat(const char* namespaceName, const char* key, float value) {
     err = nvs_set_u32(handle, key, raw);
     if (err != ESP_OK) {
         nvs_close(handle);
-        Log::Warn(TAG, "Failed to set float: %s", esp_err_to_name(err));
+        LOG_WARN("Failed to set float: %s", esp_err_to_name(err));
         return false;
     }
 
     err = nvs_commit(handle);
     nvs_close(handle);
     if (err != ESP_OK) {
-        Log::Warn(TAG, "Failed to commit float: %s", esp_err_to_name(err));
+        LOG_WARN("Failed to commit float: %s", esp_err_to_name(err));
         return false;
     }
     return true;
@@ -84,7 +84,7 @@ bool Flash::getFloat(const char* namespaceName, const char* key, float &outValue
         return false;
     }
     if (err != ESP_OK) {
-        Log::Warn(TAG, FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
+        LOG_WARN(FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
         return false;
     }
 
@@ -93,11 +93,11 @@ bool Flash::getFloat(const char* namespaceName, const char* key, float &outValue
     nvs_close(handle);
 
     if (err == ESP_ERR_NVS_NOT_FOUND) {
-        //Log::Warn(TAG, "Float value not found for key '%s'", key);
+        //LOG_WARN("Float value not found for key '%s'", key);
         return false;
     }
     if (err != ESP_OK) {
-        Log::Warn(TAG, "Failed to read float: %s", esp_err_to_name(err));
+        LOG_WARN("Failed to read float: %s", esp_err_to_name(err));
         return false;
     }
 
@@ -120,7 +120,7 @@ bool Flash::setString(const char* namespaceName, const char* key,
     nvs_handle_t handle;
     esp_err_t err = nvs_open(namespaceName, NVS_READWRITE, &handle);
     if (err != ESP_OK) {
-        Log::Warn(TAG, FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
+        LOG_WARN(FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
         return false;
     }
 
@@ -131,7 +131,7 @@ bool Flash::setString(const char* namespaceName, const char* key,
 			err = nvs_commit(handle);
             nvs_close(handle);
 			if (err != ESP_OK) {
-				Log::Warn(TAG, "Failed to commit NVS changes for key '%s': %s",
+				LOG_WARN("Failed to commit NVS changes for key '%s': %s",
 						  key, esp_err_to_name(err));
 				return false;
 			}
@@ -142,7 +142,7 @@ bool Flash::setString(const char* namespaceName, const char* key,
 			return true;
         }
 		nvs_close(handle);
-		Log::Warn(TAG, "Failed to erase key '%s': %s", key, esp_err_to_name(err));
+		LOG_WARN("Failed to erase key '%s': %s", key, esp_err_to_name(err));
 		return false;
     } 
 	
@@ -150,7 +150,7 @@ bool Flash::setString(const char* namespaceName, const char* key,
 	err = nvs_set_str(handle, key, value.c_str());
 	if (err != ESP_OK) {
 		nvs_close(handle);
-		Log::Warn(TAG, "Failed to set string for key '%s': %s",
+		LOG_WARN("Failed to set string for key '%s': %s",
 				  key, esp_err_to_name(err));
 		return false;
 	}
@@ -159,7 +159,7 @@ bool Flash::setString(const char* namespaceName, const char* key,
     err = nvs_commit(handle);
     nvs_close(handle);
     if (err != ESP_OK) {
-        Log::Warn(TAG, "Failed to commit NVS changes for key '%s': %s",
+        LOG_WARN("Failed to commit NVS changes for key '%s': %s",
                   key, esp_err_to_name(err));
         return false;
     }
@@ -184,7 +184,7 @@ bool Flash::getString(const char* namespaceName, const char* key,
         return false; // namespace never created
     }
     if (err != ESP_OK) {
-        Log::Warn(TAG, FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
+        LOG_WARN(FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
         return false;
     }
 
@@ -197,7 +197,7 @@ bool Flash::getString(const char* namespaceName, const char* key,
     }
     if (err != ESP_OK) {
         nvs_close(handle);
-        Log::Warn(TAG, "Failed to determine string length for key '%s': %s",
+        LOG_WARN("Failed to determine string length for key '%s': %s",
                   key, esp_err_to_name(err));
         return false;
     }
@@ -213,12 +213,12 @@ bool Flash::getString(const char* namespaceName, const char* key,
     size_t bufferSize = requiredSize;
     if (maxLength > 0 && requiredSize > maxLength) {
         if (!allowTruncate) {
-            Log::Warn(TAG, "String for key '%s' was too long (%zu > %zu bytes) and allowTruncate was false.",
+            LOG_WARN("String for key '%s' was too long (%zu > %zu bytes) and allowTruncate was false.",
                       key, requiredSize, maxLength);
             nvs_close(handle);
             return false;
         }
-        Log::Warn(TAG, "Stored string too long for key '%s' (%zu > %zu bytes). Truncating.",
+        LOG_WARN("Stored string too long for key '%s' (%zu > %zu bytes). Truncating.",
                   key, requiredSize, maxLength);
         bufferSize = maxLength;
     }
@@ -228,7 +228,7 @@ bool Flash::getString(const char* namespaceName, const char* key,
     nvs_close(handle);
 
     if (err != ESP_OK) {
-        Log::Warn(TAG, "Failed to read string for key '%s': %s",
+        LOG_WARN("Failed to read string for key '%s': %s",
                   key, esp_err_to_name(err));
         return false;
     }
@@ -261,7 +261,7 @@ bool Flash::getCharStringOnHeap(
         return false; // namespace never created
     }
     if (err != ESP_OK) {
-        Log::Warn(TAG, FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
+        LOG_WARN(FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
         return false;
     }
 
@@ -274,7 +274,7 @@ bool Flash::getCharStringOnHeap(
     }
     if (err != ESP_OK) {
         nvs_close(handle);
-        Log::Warn(TAG, "Failed to determine string length for key '%s': %s",
+        LOG_WARN("Failed to determine string length for key '%s': %s",
                   key, esp_err_to_name(err));
         return false;
     }
@@ -291,12 +291,12 @@ bool Flash::getCharStringOnHeap(
     size_t bufferSize = requiredSize;
     if (maxLength > 0 && bufferSize > maxLength) {
         if (!allowTruncate) {
-            Log::Warn(TAG, "Stored string too long for key '%s' (%zu > %zu bytes) and allowTruncate is false",
+            LOG_WARN("Stored string too long for key '%s' (%zu > %zu bytes) and allowTruncate is false",
                       key, bufferSize, maxLength);
             nvs_close(handle);
             return false;
         }
-        Log::Warn(TAG, "Truncating stored string for key '%s' from %zu to %zu bytes",
+        LOG_WARN("Truncating stored string for key '%s' from %zu to %zu bytes",
                   key, bufferSize, maxLength);
         bufferSize = maxLength;
     }
@@ -308,7 +308,7 @@ bool Flash::getCharStringOnHeap(
     nvs_close(handle);
 
     if (err != ESP_OK) {
-        Log::Warn(TAG, "Failed to read string for key '%s': %s",
+        LOG_WARN("Failed to read string for key '%s': %s",
                   key, esp_err_to_name(err));
         return false;
     }
@@ -327,7 +327,7 @@ bool Flash::erase(const char* namespaceName, const char* key)
     nvs_handle_t handle;
     esp_err_t err = nvs_open(namespaceName, NVS_READWRITE, &handle);
     if (err != ESP_OK) {
-        Log::Warn(TAG, FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
+        LOG_WARN(FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
         return false;
     }
 	err = nvs_erase_key(handle, key);
@@ -337,13 +337,13 @@ bool Flash::erase(const char* namespaceName, const char* key)
 	}
 	if (err != ESP_OK) {
 		nvs_close(handle);
-		Log::Warn(TAG, "Failed to erase key '%s': %s", key, esp_err_to_name(err));
+		LOG_WARN("Failed to erase key '%s': %s", key, esp_err_to_name(err));
 		return false;
 	}
 	err = nvs_commit(handle);
 	nvs_close(handle);
 	if (err != ESP_OK) {
-		Log::Warn(TAG, "Failed to commit NVS changes for key '%s': %s",
+		LOG_WARN("Failed to commit NVS changes for key '%s': %s",
 				  key, esp_err_to_name(err));
 		return false;
 	}
@@ -366,7 +366,7 @@ bool Flash::hasKey(const char* namespaceName, const char* key)
     }
 
     if (err != ESP_OK) {
-        Log::Warn(TAG, FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
+        LOG_WARN(FAILED_OPEN_NAMESPACE, esp_err_to_name(err));
         return false;
     }
 
@@ -387,7 +387,7 @@ bool Flash::hasKey(const char* namespaceName, const char* key)
     }
 
     // Any other error is a real failure
-    Log::Warn(TAG, "Failed to probe existence of key '%s': %s",
+    LOG_WARN("Failed to probe existence of key '%s': %s",
               key, esp_err_to_name(err));
     return false;
 }

@@ -9,7 +9,7 @@ class CurrentAndPowerThresholdMonitor final:
 	public SingletonBase<CurrentAndPowerThresholdMonitor>{
     friend class SingletonBase<CurrentAndPowerThresholdMonitor>;
 public:
-	static inline constexpr const char* TAG = "CurrentAndPowerThresholdMonitor";
+	static const char* getTag();
 	DISALLOW_COPY_MOVE(CurrentAndPowerThresholdMonitor);
 protected:
     explicit CurrentAndPowerThresholdMonitor(const Configuration& config1, const Configuration& config2)noexcept;

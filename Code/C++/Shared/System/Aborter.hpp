@@ -10,23 +10,32 @@
 #include "../Core/CleanupBucket.hpp"
 #include "BacktraceHelper.hpp"
 class Aborter {
-private: 
-	static inline constexpr const char* TAG = "Aborter";
+private:
 	static inline constexpr const char*  REASON_KEY = "reason";
 	static inline constexpr const char*  BACKTRACE_KEY = "bt";
     static inline std::function<void()> _toSafe = nullptr;
+	static const char* TAG;
 	
 public:
 	static inline void setToSafe(const std::function<void()>& fn) {
 		_toSafe = fn;
 	}
 	
-    //template<typename... Args>
+    template<typename... Args>
     [[noreturn]] static void safeAbortFromMacro(
-		const char* fileName,
-		int lineNumber
-		//, Args&&... args
-	);
+		const char* fileName, 
+		int lineNumber,
+		const char* msg,
+		Args&&... args
+	){		
+		char message[256];
+		std::snprintf(message, sizeof(message), msg, std::forward<Args>(args)...);
+
+		char finalMessage[320];
+		std::snprintf(finalMessage, sizeof(finalMessage), "line %d: %s", lineNumber, message);
+
+		_safeAbort(fileName, finalMessage);
+	}
 	
 	static LastAbortMessage* getLastAbortReason(
 			CleanupBucket& cleanupBucket);

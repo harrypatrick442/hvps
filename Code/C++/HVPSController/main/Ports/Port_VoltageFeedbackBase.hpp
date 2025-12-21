@@ -17,7 +17,7 @@ class Port_VoltageFeedbackBase : public IIncomingMessageHandler {
 public:
 
     // Force derived classes to identify themselves
-    virtual const char* getTag() const = 0;
+    //virtual const char* getTag() const = 0;
     Event<float> onGotVoltage;
     Event<GreetingMessage*> onGotGreetingMessage;
 	DISALLOW_COPY_MOVE(Port_VoltageFeedbackBase);

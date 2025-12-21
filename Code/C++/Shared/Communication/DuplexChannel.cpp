@@ -47,14 +47,14 @@ DuplexChannel::~DuplexChannel(){
 }
 void DuplexChannel::sendMessage(cJSON* message, bool deleteMessageAfter){
 	if (!message) {
-		Log::Error(TAG, "%s: sendMessage: message is null", _channel->getDescription());
+		LOG_ERROR("%s: sendMessage: message is null", _channel->getDescription());
 		return;
 	}
 	CJsonRAII cJsonRAII(deleteMessageAfter?message:nullptr);
 	// Serialize cJSON object to string
 	char* json_str = cJSON_PrintUnformatted(message);  // Or cJSON_Print() if you prefer pretty output
 	if (!json_str) {
-		Log::Error(TAG, "%s: sendMessage: failed to serialize JSON", _channel->getDescription());
+		LOG_ERROR("%s: sendMessage: failed to serialize JSON", _channel->getDescription());
 		return;
 	}
 	char* json_with_newline = NULL;
@@ -63,7 +63,7 @@ void DuplexChannel::sendMessage(cJSON* message, bool deleteMessageAfter){
 	char crc32HexStr[9];
 	snprintf(crc32HexStr, sizeof(crc32HexStr), "%08" PRIX32, crc32);
 	if (asprintf(&json_with_newline, "%s%s\n", json_str, crc32HexStr) == -1 || !json_with_newline) {
-		Log::Error(TAG, "%s: sendMessage: asprintf failed", _channel->getDescription());
+		LOG_ERROR("%s: sendMessage: asprintf failed", _channel->getDescription());
 		free(json_str);
 		return;
 	}
@@ -122,10 +122,10 @@ void DuplexChannel::loop() {
 				lineBuffer[lineLength] = '\0';
 				
 				cJSON* json = cJSON_Parse(lineBuffer);
-				Log::Info(TAG, "Received line: %s", lineBuffer);  // <-- added print here
-				//Log::Info(TAG, "Line length was: %d", lineLength);
+				LOG_INFO("Received line: %s", lineBuffer);  // <-- added print here
+				//LOG_INFO("Line length was: %d", lineLength);
 				/*for (int i = 0; i<lineLength; i++) {
-					Log::Info(TAG, "Char: '%c'  Code: %d\n", lineBuffer[i], (unsigned char)lineBuffer[i]);
+					LOG_INFO("Char: '%c'  Code: %d\n", lineBuffer[i], (unsigned char)lineBuffer[i]);
 				}*/
 				if (json) {
 					IIncomingMessageHandler* h = _incomingMessageHandler.load(std::memory_order_acquire); // copy shared_ptr atomically
@@ -138,10 +138,10 @@ void DuplexChannel::loop() {
 					}
 					else{
 						cJSON_Delete(json);
-						Log::Error(TAG, "%s: _incomingMessageHandler not set", _channel->getDescription());
+						LOG_ERROR("%s: _incomingMessageHandler not set", _channel->getDescription());
 					}
 				} else {
-					Log::Error(TAG, "%s: Invalid JSON: %s", _channel->getDescription(), lineBuffer);
+					LOG_ERROR("%s: Invalid JSON: %s", _channel->getDescription(), lineBuffer);
 				}
 
 				// Reset line buffer
@@ -153,7 +153,7 @@ void DuplexChannel::loop() {
 				continue;
 			}
 			// Overflowed line buffer
-			Log::Error(TAG, "%s: Line too long — discarding", _channel->getDescription());
+			LOG_ERROR("%s: Line too long — discarding", _channel->getDescription());
 			lineLength = 0;
 			disgardingTillNewLine = true;
 		}

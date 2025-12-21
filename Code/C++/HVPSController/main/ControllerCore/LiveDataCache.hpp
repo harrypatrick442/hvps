@@ -9,7 +9,8 @@
 #include <atomic>
 class LiveDataCache final: public SingletonBase<LiveDataCache>{
 public:
-    static inline constexpr const char* TAG = "LiveDataCache";
+
+	static const char* getTag();
 	
 	DISALLOW_COPY_MOVE(LiveDataCache);
     // Output Voltage (V)
