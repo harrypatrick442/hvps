@@ -1,5 +1,5 @@
 #include "TransientWorker.hpp"
-#include "../System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 #include "TaskFactory.hpp"
 #include "../Timing/TimeHelper.hpp"
 TransientWorker::TransientWorker(
@@ -17,7 +17,7 @@ TransientWorker::TransientWorker(
 	_alive(false),
 	_idleTicks(pdMS_TO_TICKS(idleTimeoutMs)){
 		if (!_queue || !_mutex) {
-			Aborter::safeAbort(TAG, "Failed to initialize TransientWorker resources");
+			SAFE_ABORT("Failed to initialize TransientWorker resources");
 		}
 	}
 
@@ -33,7 +33,7 @@ bool TransientWorker::enqueue(Job job) {
 	Job* j = new (std::nothrow) Job(std::move(job));
     if (xQueueSend(_queue, &j, 0) != pdPASS) {
 		if(_abortOnQueueOverflow){
-			Aborter::safeAbort(TAG, "Queue overflowed");
+			SAFE_ABORT("Queue overflowed");
 			return false;
 		}
         Log::Warn(TAG, "TransientWorker queue full; dropping job.");
@@ -90,7 +90,7 @@ void TransientWorker::taskLoop() {
 }
 void TransientWorker::takeSemaphore(){
 	if(xSemaphoreTake(_mutex, portMAX_DELAY)!=pdTRUE){
-		Aborter::safeAbort(TAG, "Failed to take semaphore");
+		SAFE_ABORT("Failed to take semaphore");
 	}
 }
 void TransientWorker::giveSemaphore(){

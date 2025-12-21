@@ -1,7 +1,7 @@
 #include "VoltageFeedbackModuleBase.hpp"
 #include "System/WatchdogFeeder.hpp"
 #include "System/StayTheFuckAwake.hpp"
-#include "System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 #include "IO/Outputs.hpp"
 #include "IO/Inputs.hpp"
 #include "IO/ADCChannels.hpp"

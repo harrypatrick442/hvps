@@ -1,6 +1,6 @@
 #include "./Flash.hpp"
 #include "../Logging/Log.hpp"
-#include "../System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 #include "esp_err.h"
 #include "nvs_flash.h" // Ensure ESP-IDF include path is set correctly
 #include <cstring>
@@ -40,7 +40,7 @@ void Flash::initialize() {
 }
 bool Flash::setFloat(const char* namespaceName, const char* key, float value) {
     if (!_isInitialized) {
-        Aborter::safeAbort(TAG, NVS_NOT_INITIALIZED);
+        SAFE_ABORT(NVS_NOT_INITIALIZED);
         return false;
     }
 
@@ -74,7 +74,7 @@ bool Flash::setFloat(const char* namespaceName, const char* key, float value) {
 // Retrieve a float from NVS
 bool Flash::getFloat(const char* namespaceName, const char* key, float &outValue) {
     if (!_isInitialized) {
-        Aborter::safeAbort(TAG, NVS_NOT_INITIALIZED);
+        SAFE_ABORT(NVS_NOT_INITIALIZED);
         return false;
     }
 
@@ -113,7 +113,7 @@ bool Flash::setString(const char* namespaceName, const char* key,
                       bool allowEmptyErase /* = true */)
 {
     if (!_isInitialized) {
-        Aborter::safeAbort(TAG, NVS_NOT_INITIALIZED);
+        SAFE_ABORT(NVS_NOT_INITIALIZED);
         return false;
     }
 
@@ -174,7 +174,7 @@ bool Flash::getString(const char* namespaceName, const char* key,
     std::string& outValue, size_t maxLength /* = 0 */, bool allowTruncate /* = true */)
 {
     if (!_isInitialized) {
-        Aborter::safeAbort(TAG, NVS_NOT_INITIALIZED);
+        SAFE_ABORT(NVS_NOT_INITIALIZED);
         return false;
     }
 
@@ -251,7 +251,7 @@ bool Flash::getCharStringOnHeap(
     outStr = nullptr;
 
     if (!_isInitialized) {
-        Aborter::safeAbort(TAG, NVS_NOT_INITIALIZED);
+        SAFE_ABORT(NVS_NOT_INITIALIZED);
         return false;
     }
 
@@ -321,7 +321,7 @@ bool Flash::getCharStringOnHeap(
 bool Flash::erase(const char* namespaceName, const char* key)
 {
     if (!_isInitialized) {
-        Aborter::safeAbort(TAG, NVS_NOT_INITIALIZED);
+        SAFE_ABORT(NVS_NOT_INITIALIZED);
         return false;
     }
     nvs_handle_t handle;
@@ -353,7 +353,7 @@ bool Flash::erase(const char* namespaceName, const char* key)
 bool Flash::hasKey(const char* namespaceName, const char* key)
 {
     if (!_isInitialized) {
-        Aborter::safeAbort(TAG, NVS_NOT_INITIALIZED);
+        SAFE_ABORT(NVS_NOT_INITIALIZED);
         return false;
     }
 

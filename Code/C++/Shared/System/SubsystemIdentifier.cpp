@@ -1,9 +1,9 @@
-#include "SubsystemIdentifier.hpp";
-#include "Aborter.hpp";
+#include "SubsystemIdentifier.hpp"
+#include "SafeAbort.hpp"
 int SubsystemIdentifier::_value = 0;
 void SubsystemIdentifier::set(int value){
 	if(_value !=0)
-		Aborter::safeAbort(TAG, "SystemIdentifier already set");
+		SAFE_ABORT("SystemIdentifier already set");
 	_value = value;
 }
 int SubsystemIdentifier::get(){

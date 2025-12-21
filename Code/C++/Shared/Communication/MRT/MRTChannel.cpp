@@ -1,12 +1,12 @@
 #include "MRTChannel.hpp"
-#include "System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 #include "Logging/Log.hpp"
 #include "IO/IOInteruptHelper.hpp"
 #include "Timing/Delay.hpp"
 #include "driver/gptimer.h"
 #include <cstdio>
 #include <cstring>
-const char* MRTChannel::NOT_INITIALIZED_PROPERLY_MESSAGE = "Did not initialize properly so cannot read or write bytes.";
+
 MRTChannel::MRTChannel(
     int txPin,
     int rxPin,
@@ -52,14 +52,14 @@ MRTChannel::MRTChannel(
     std::snprintf(_description, sizeof(_description),
         "MRTChannel");
 	if (periodUs < N_SUB_PULSES_PER_PULSE) {
-		Aborter::safeAbort(TAG, "periodUs too small for pulse scheme");
+		SAFE_ABORT("periodUs too small for pulse scheme");
 	}
 	_rxSymbolQueue = xQueueCreate(
         receiveQueueSize,
         sizeof(MRTSymbol)
     );
 	if (!_rxSymbolQueue) {
-		Aborter::safeAbort(TAG, "Failed to create RX symbol queue");
+		SAFE_ABORT("Failed to create RX symbol queue");
 	}
 }
 
@@ -85,7 +85,7 @@ void MRTChannel::addSyncPulse(MRTSymbol* items, size_t& nextSymbolIndex) {
 bool MRTChannel::configure() {
     std::lock_guard<std::mutex> lock(_configureMutex);
 	if(_successfullyConfigured.load(std::memory_order_relaxed)){
-		Aborter::safeAbort(TAG, "Already configured");
+		SAFE_ABORT("Already configured");
 		return false;
 	}
     if(!configureTx()){
@@ -115,7 +115,7 @@ bool MRTChannel::configureRx() {
 		false	//pullDownEnabled
 	);
 	if(err!=ESP_OK){
-		Aborter::safeAbort(TAG, "Failed to configure rx pin edge interupt with error: %s", esp_err_to_name(err));
+		SAFE_ABORT("Failed to configure rx pin edge interupt with error: %s", esp_err_to_name(err));
 		return false;
 	}
 	_createdRxEdgeInterupt.store(true, std::memory_order_relaxed);
@@ -129,7 +129,7 @@ bool MRTChannel::configureTx() {
     esp_err_t err = gpio_config(&io_conf_tx);
 	
 	if(err!=ESP_OK){
-		Aborter::safeAbort(TAG, "Failed to configure tx pin with error: %s", esp_err_to_name(err));
+		SAFE_ABORT("Failed to configure tx pin with error: %s", esp_err_to_name(err));
 		return false;
 	}
     gpio_set_level(_txGPIONum, _invertTx ? 1 : 0);
@@ -178,7 +178,7 @@ bool MRTChannel::configureTxTimer(){
 		}
 		return true;
 	}
-	Aborter::safeAbort(TAG, "Failed to create tx timer on %s with error: %s", methodNameFailedOn, esp_err_to_name(err));
+	SAFE_ABORT("Failed to create tx timer on %s with error: %s", methodNameFailedOn, esp_err_to_name(err));
 	return false;*/
 }
 
@@ -334,7 +334,7 @@ void MRTChannel::printTimingConfig() const
 }
 size_t MRTChannel::readBytes(char* destination, size_t maxLength, uint32_t timeoutMs) {
 	if(!_successfullyConfigured.load(std::memory_order_relaxed)){
-		Aborter::safeAbort(TAG, NOT_INITIALIZED_PROPERLY_MESSAGE);
+		SAFE_ABORT("Did not initialize properly so cannot read or write bytes.");
 		return 0;
 	}
 	size_t nextDestinationIndex = 0;
@@ -390,7 +390,7 @@ void MRTChannel::scheduleWriteBuffer(MRTSymbol* symbols, size_t symbolsLength){
 		_symbolsBeingWritten = nullptr;
 		_symbolsBeingWrittenLength = 0;
 		_nextWriteBufferForISRFreeLatch.unlatch(); 
-		Aborter::safeAbort(TAG, "Failed to start TX timer");
+		SAFE_ABORT("Failed to start TX timer");
 		return;
 	}
     _nextWriteBufferForISRFreeLatch.wait();
@@ -421,7 +421,7 @@ bool IRAM_ATTR MRTChannel::txTimerISRTrampoline(void *arg)
 
 size_t MRTChannel::writeBytes(const char* src, size_t len) {
 	if(!_successfullyConfigured.load(std::memory_order_relaxed)){
-		Aborter::safeAbort(TAG, NOT_INITIALIZED_PROPERLY_MESSAGE);
+		SAFE_ABORT("Did not initialize properly so cannot read or write bytes.");
 		return 0;
 	}
     MRTSymbol* symbols = new MRTSymbol[(len*9)+1];

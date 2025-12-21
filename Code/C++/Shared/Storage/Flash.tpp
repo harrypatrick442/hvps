@@ -1,6 +1,6 @@
 
 #include "../Logging/Log.hpp"
-#include "../System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 #include "esp_err.h"
 #include "nvs_flash.h" // Ensure ESP-IDF include path is set correctly
 #include <cstring>
@@ -8,7 +8,7 @@
 template<typename T>
 bool Flash::setNumber(const char* namespaceName, const char* key, T value) {
 	if (!_isInitialized) {
-		Aborter::safeAbort(TAG, NVS_NOT_INITIALIZED);
+		SAFE_ABORT("NVS not initialized");
 		return false;
 	}
 
@@ -69,7 +69,7 @@ bool Flash::setNumber(const char* namespaceName, const char* key, T value) {
 template<typename T>
 bool Flash::getNumber(const char* namespaceName, const char* key, T& outValue) {
 	if (!_isInitialized) {
-		Aborter::safeAbort(TAG, NVS_NOT_INITIALIZED);
+		SAFE_ABORT("NVS not initialized");
 		return false;
 	}
 
@@ -134,7 +134,7 @@ bool Flash::getArray(const char* namespaceName, const char* key,
     outCount = 0;
 
     if (!_isInitialized) {
-        Aborter::safeAbort(TAG, NVS_NOT_INITIALIZED);
+        SAFE_ABORT("NVS not initialized");
         return false;
     }
 
@@ -192,7 +192,7 @@ template <typename T>
 bool Flash::setArray(const char* namespaceName, const char* key, const T* array, size_t count)
 {
     if (!_isInitialized) {
-        Aborter::safeAbort(TAG, NVS_NOT_INITIALIZED);
+        SAFE_ABORT("NVS not initialized");
         return false;
     }
 

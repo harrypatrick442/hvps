@@ -38,7 +38,7 @@ public:
         static bool initialized = false;   // persists across calls
         if (initialized) {
             // already initialized — this is a fatal logic error
-            Aborter::safeAbort(TAG, "CrashReporter already initialized!");
+            SAFE_ABORT("CrashReporter already initialized!");
         }
 		
 		//Ensures garbage in RTC RAM after brownouts doesn’t get misread as a valid crash.

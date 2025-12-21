@@ -1,6 +1,6 @@
 #include "Port_VoltageFeedbackBase.hpp"
 #include "Logging/Log.hpp"
-#include "System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 #include "JSON/JHelper.hpp"
 #include "Messaging/MessageConstants.hpp"
 #include "Tasks/TaskFactory.hpp"

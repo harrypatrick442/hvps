@@ -1,6 +1,6 @@
 #include "../Tasks/TaskFactory.hpp"
 #include "DuplexChannel.hpp"
-#include "../System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 #include "../Timing/Delay.hpp"
 #include "../JSON/CJsonRAII.hpp"
 #include "../Logging/Log.hpp"

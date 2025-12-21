@@ -15,7 +15,7 @@
 #include "esp_spp_api.h"
 #include "../../Logging/Log.hpp"
 #include "../../Storage/Flash.hpp"
-#include "../../System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 #include "../../System/WatchdogFeeder.hpp"
 
 Bluetooth_BLE* Bluetooth_BLE::_instance = nullptr;

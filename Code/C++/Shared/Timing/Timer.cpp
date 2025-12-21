@@ -1,11 +1,11 @@
 #include "Timer.hpp"
-#include "../System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 const char* Timer::TAG = "Timer";
 Timer::Timer(uint32_t intervalMs, Callback callback, bool repeat)
     : _intervalMs(intervalMs), _callback(callback), 
       _repeat(repeat), _current(nullptr) {
 	if(callback==nullptr){
-		Aborter::safeAbort(TAG, "Callback was null");
+		SAFE_ABORT("Callback was null");
 	}
 }
 

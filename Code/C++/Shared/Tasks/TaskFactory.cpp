@@ -51,7 +51,7 @@ bool TaskFactory::launchTrampolineTask(
 
     if (result != pdPASS) {
         delete wrapper;
-        Aborter::safeAbort("TaskFactory", "Failed to create task: %s", name);
+        SAFE_ABORT("Failed to create task: %s", name);
 		return false;
     }
 	return true;
@@ -74,7 +74,7 @@ bool TaskFactory::createNonPriorityTask(void (*taskFunc)(void*),
 	);
 
 	if (result != pdPASS) {
-		Aborter::safeAbort(TAG, "Failed to create non-priority task: %s", name);
+		SAFE_ABORT("Failed to create non-priority task: %s", name);
 		return false;
 	}
 	return true;
@@ -96,7 +96,7 @@ bool TaskFactory::createPriorityTask(void (*taskFunc)(void*),
 	);
 
 	if (result != pdPASS) {
-		Aborter::safeAbort(TAG, "Failed to create priority task: %s", name);
+		SAFE_ABORT("Failed to create priority task: %s", name);
 		return false;
 	}
 	return true;

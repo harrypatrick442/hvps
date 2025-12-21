@@ -6,7 +6,7 @@
 #include "PinDefinitions.hpp"
 #include "ADCChannels.hpp"
 #include "ADC/ADC.hpp"
-#include "System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 
 const char* Inputs::TAG = "Inputs";
 bool Inputs::_initialized = false;
@@ -67,7 +67,7 @@ bool Inputs::getOutputCurrentFeedbackThresholdReached(){
 }
 void Inputs::checkInitialized(){
 	if(!Inputs::_initialized){
-        Aborter::safeAbort(TAG, "Not Initialized!");
+        SAFE_ABORT("Not Initialized!");
 	}
 }
 

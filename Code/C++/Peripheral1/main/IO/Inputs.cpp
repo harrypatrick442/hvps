@@ -4,7 +4,7 @@
 #include "freertos/task.h"
 #include <stdio.h>
 #include "PinDefinitions.hpp"
-#include "System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 #include "driver/gpio.h"
 #include <optional>
 
@@ -51,6 +51,6 @@ bool Inputs::getDriveSignal(){
 }
 void Inputs::checkInitialized(){
 	if(!Inputs::_initialized){
-        Aborter::safeAbort(TAG, "Not Initialized!");
+        SAFE_ABORT("Not Initialized!");
 	}
 }

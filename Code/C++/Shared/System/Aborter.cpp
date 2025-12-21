@@ -1,10 +1,12 @@
 #include "Aborter.hpp"
 #include "../Storage/Flash.hpp"
+#include "../Timing/Delay.hpp"
+#include "SubsystemIdentifier.hpp"
 #include "esp_attr.h"
-
+#include "esp_system.h"
 
 [[noreturn]] void Aborter::safeAbortFromMacro(const char* fileName, int lineNumber){
-    char formatted[128];
+    char formatted[64];
     std::snprintf(formatted, sizeof(formatted), "line: %d", lineNumber);
 	_safeAbort(fileName, formatted);
 }
@@ -36,7 +38,7 @@
 LastAbortMessage* Aborter::getLastAbortReason(
 	CleanupBucket& cleanupBucket){
 	if(!Flash::getIsInitialized()){
-		safeAbort(TAG, "Flash was not initialized when calling getLastAbortReason");
+		SAFE_ABORT("Flash was not initialized when calling getLastAbortReason");
 		return nullptr;
 	}
 	char* reason = nullptr;
@@ -55,7 +57,7 @@ LastAbortMessage* Aborter::getLastAbortReason(
 }
 bool Aborter::hasLastAbortReason(){
 	if(!Flash::getIsInitialized()){
-		safeAbort(TAG, "Flash was not initialized when calling getLastAbortReason");
+		SAFE_ABORT("Flash was not initialized when calling getLastAbortReason");
 		return true;
 	}
 	return Flash::hasKey(TAG, REASON_KEY)

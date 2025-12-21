@@ -1,7 +1,7 @@
 #include "HardwareUART.hpp"
 #include "driver/gpio.h"
 #include "esp_log.h"
-#include "System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 HardwareUART::HardwareUART(
 	int nUART,
 	int txPin, 
@@ -37,7 +37,7 @@ bool HardwareUART::configure(){
 		/*uart_config*/  &uartConfig   /*const uart_config_t* */
 	);
 	if(err!=ESP_OK){
-		Aborter::safeAbort(TAG, "uart_param_config failed for UART%d: %s (0x%x)",
+		SAFE_ABORT("uart_param_config failed for UART%d: %s (0x%x)",
 			_uartPort, esp_err_to_name(err), err);
 		return false;
 	}
@@ -49,7 +49,7 @@ bool HardwareUART::configure(){
 		/*cts_io_num*/ UART_PIN_NO_CHANGE  /*int*/
 	);
 	if(err!=ESP_OK){
-		Aborter::safeAbort(TAG, "uart_set_pin failed for UART%d: %s (0x%x)",
+		SAFE_ABORT("uart_set_pin failed for UART%d: %s (0x%x)",
 			_uartPort, esp_err_to_name(err), err);
 		return false;
 	}
@@ -63,7 +63,7 @@ bool HardwareUART::configure(){
 		/*intr_alloc_flags*/   0          /*int (interrupt flags, e.g. ESP_INTR_FLAG_LEVEL1)*/
 	);
 	if(err!=ESP_OK){
-		Aborter::safeAbort(TAG, "uart_driver_install failed for UART%d: %s (0x%x)",
+		SAFE_ABORT("uart_driver_install failed for UART%d: %s (0x%x)",
 			_uartPort, esp_err_to_name(err), err);
 		return false;
 	}
@@ -76,7 +76,7 @@ bool HardwareUART::configure(){
 		uart_set_line_inverse(_uartPort, inversionMask);
 	}
 	if(err!=ESP_OK){
-		Aborter::safeAbort(TAG, "uart_driver_install failed for UART%d: %s (0x%x)",
+		SAFE_ABORT("uart_driver_install failed for UART%d: %s (0x%x)",
 			_uartPort, esp_err_to_name(err), err);
 		return false;
 	}

@@ -6,7 +6,7 @@
 #include "../../Core/CleanupBucket.hpp"
 #include <memory>
 #include "CoreDumpSummaryMessage.hpp"
-#include "../../System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 #include "LastAbortMessage.hpp"
 #include "../../JSON/JHelper.hpp"
 class GreetingResponse

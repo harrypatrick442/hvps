@@ -25,7 +25,7 @@ HVPSCircuitEmulator::HVPSCircuitEmulator(
 		},
 		"HVPSCircuitEmulator")
 	){
-			Aborter::safeAbort(TAG, "Failed to start loop");
+			SAFE_ABORT("Failed to start loop");
 	}
 	
 }

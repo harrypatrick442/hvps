@@ -13,7 +13,7 @@ _ch1(nullptr) {
 			Log::Info(TAG, "DAC_CHAN_0  (GPIO25) enabled");
         }
 		else{
-            Aborter::safeAbort("DAC", "Failed to init DAC_CHAN_0 with error: %s", esp_err_to_name(err));
+            SAFE_ABORT("Failed to init DAC_CHAN_0 with error: %s", esp_err_to_name(err));
 		}
     }
     if (enableChannel1) {
@@ -25,7 +25,7 @@ _ch1(nullptr) {
 			Log::Info(TAG, "DAC_CHAN_1 (GPIO26) enabled");
         }
 		else{
-            Aborter::safeAbort("DAC", "Failed to init DAC_CHAN_1 with error: %s", esp_err_to_name(err));
+            SAFE_ABORT("Failed to init DAC_CHAN_1 with error: %s", esp_err_to_name(err));
 		}
     }
 }
@@ -41,14 +41,14 @@ void DAC::setChannel1Voltage(float voltage, float vMax) {
 }
 void DAC::setChannel0Value(uint8_t value) {
 	if(_ch0==nullptr){
-		Aborter::safeAbort(TAG, "DAC_CHAN_0 not initialized");
+		SAFE_ABORT("DAC_CHAN_0 not initialized");
 		return;
 	}
     dac_oneshot_output_voltage(_ch0, value);
 }
 void DAC::setChannel1Value(uint8_t value) {
 	if(_ch1==nullptr){
-		Aborter::safeAbort(TAG, "DAC_CHAN_1 not initialized");
+		SAFE_ABORT("DAC_CHAN_1 not initialized");
 		return;
 	}
     dac_oneshot_output_voltage(_ch1, value);

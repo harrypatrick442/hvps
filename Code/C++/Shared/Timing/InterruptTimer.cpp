@@ -1,7 +1,7 @@
 // InterruptTimer.cpp
 #include "InterruptTimer.hpp"
 #include "esp_log.h"
-#include "System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 #include "Logging/Log.hpp"
 #include "driver/timer.h"
 
@@ -67,7 +67,7 @@ esp_err_t InterruptTimer::configure(ISRHandler handler, void* context) {
         (_intrLevel != ESP_INTR_FLAG_LEVEL3)
 	)
     {
-        Aborter::safeAbort(TAG, "Invalid interrupt level flag with value %d", _intrLevel);
+        SAFE_ABORT("Invalid interrupt level flag with value %d", _intrLevel);
         _release();
         return err;
     }
@@ -101,7 +101,7 @@ bool IRAM_ATTR InterruptTimer::timerISRTrampoline(void* arg)
 
 void InterruptTimer::failed(const char* methodName, esp_err_t err){
 	if(!_abortOnConfigureFailed){
-		Aborter::safeAbort("%s failed %s", methodName, esp_err_to_name(err));
+		SAFE_ABORT("%s failed %s", methodName, esp_err_to_name(err));
 		return;
 	}
 	Log::Warn("%s failed %s", methodName, esp_err_to_name(err));

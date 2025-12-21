@@ -1,5 +1,5 @@
 #include "TimerSimple.hpp"
-#include "../System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 #include "../Tasks/TaskFactory.hpp"
 #include "Delay.hpp"
 #include "../Core/UsageGuard.hpp"
@@ -8,7 +8,7 @@ TimerSimple::TimerSimple(uint32_t intervalMs, Callback callback, bool repeat)
     : _intervalMs(intervalMs), _callback(callback), 
       _repeat(repeat) {
 	if(callback==nullptr){
-		Aborter::safeAbort(TAG, "Callback was null");
+		SAFE_ABORT("Callback was null");
 	}
 }
 TimerSimple::~TimerSimple() {

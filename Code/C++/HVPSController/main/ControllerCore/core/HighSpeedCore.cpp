@@ -92,7 +92,7 @@ void HighSpeedCore::_run(){
 				doSystemChecks();
 				continue;
 			default:
-				Aborter::safeAbort(TAG, "Illegal state");
+				SAFE_ABORT("Illegal state");
 				break;
 				
 		}

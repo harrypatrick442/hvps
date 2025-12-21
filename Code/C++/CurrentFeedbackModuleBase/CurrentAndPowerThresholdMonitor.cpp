@@ -22,19 +22,19 @@ _monitorCurrentAndPowerHandle(nullptr)
 }
 void CurrentAndPowerThresholdMonitor::validateConfigs(Configuration& config1, Configuration& config2){
 	if(_config1.senseResistanceOhms != _config2.senseResistanceOhms){
-		Aborter::safeAbort(TAG, "senseResistanceOhms corrupted");
+		SAFE_ABORT("senseResistanceOhms corrupted");
 		return;
 	}
 	if(_config1.outputCurrentLimitingResistanceOhms != _config2.outputCurrentLimitingResistanceOhms){
-		Aborter::safeAbort(TAG, "outputCurrentLimitingResistanceOhms corrupted");
+		SAFE_ABORT("outputCurrentLimitingResistanceOhms corrupted");
 		return;
 	}
 	if(_config1.cumulativeEnergyThresholdJ != _config2.cumulativeEnergyThresholdJ){
-		Aborter::safeAbort(TAG, "cumulativeEnergyThresholdJ corrupted");
+		SAFE_ABORT("cumulativeEnergyThresholdJ corrupted");
 		return;
 	}
 	if(_config1.energyDisipatedJPerS != _config2.energyDisipatedJPerS){
-		Aborter::safeAbort(TAG, "energyDisipatedJPerS corrupted");
+		SAFE_ABORT("energyDisipatedJPerS corrupted");
 		return;
 	}
 }

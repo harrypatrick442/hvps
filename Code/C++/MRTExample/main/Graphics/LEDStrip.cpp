@@ -1,5 +1,5 @@
 #include "LEDStrip.hpp"
-#include "System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 #include "Graphics/PixelHelper.hpp"
 LEDStrip::LEDStrip(
 	int dOutPin, 
@@ -48,7 +48,7 @@ void LEDStrip::initialize(DisplayBuffer* displayBuffer){
 }
 void LEDStrip::refresh(){
 	if(_pixels==nullptr){
-		Aborter::safeAbort(TAG, "Not initialized");
+		SAFE_ABORT("Not initialized");
 	}
 	uint8_t r = 0, g = 0, b = 0;
 	for(int i=0; i<_length; i++){
@@ -60,7 +60,7 @@ void LEDStrip::refresh(){
 }
 void LEDStrip::getPixels(size_t& length, volatile uint32_t** pixels){
 	if(length>_length){
-		Aborter::safeAbort(TAG, "Tried to take %zu pixels when only has %zu available", length, _length);
+		SAFE_ABORT("Tried to take %zu pixels when only has %zu available", length, _length);
 	}
 	for(int i=0; i<length; i++){
 		pixels[i]=_pixels+i;

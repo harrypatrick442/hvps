@@ -3,7 +3,7 @@
 #include <mutex>
 #include <utility>
 #include <type_traits>
-#include "../System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 
 // detect Derived::TAG
 template<class T, class = void>
@@ -22,7 +22,7 @@ public:
       _tag = tag;
       ran = true;
     });
-    if (!ran) Aborter::safeAbort(_tag ? _tag : tag, "Already initialized");
+    if (!ran) SAFE_ABORT("Already initialized");
     return *_instance;
   }
 
@@ -36,7 +36,7 @@ public:
 
   static Derived& getInstance() noexcept {
     if (_instance) return *_instance;
-    Aborter::safeAbort(_tag ? _tag : "Singleton", "getInstance() before initialize()");
+    SAFE_ABORT("getInstance() before initialize()");
     return *_instance; // unreachable post-abort
   }
 

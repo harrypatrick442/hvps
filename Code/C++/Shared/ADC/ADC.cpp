@@ -6,7 +6,7 @@
 #include "freertos/FreeRTOS.h"
 #include "../Timing/Delay.hpp"
 #include "../Logging/Log.hpp"
-#include "../System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 #include "esp_timer.h"
 #include "../Tasks/TaskFactory.hpp"
 #include "../Tasks/TaskFactory.hpp"
@@ -100,7 +100,7 @@ void ADC::use(adc_channel_t ch, const std::function<void(IADCSession&&)>& fn) {
 	Log::Info(TAG, "ADC::use");
     bool expected = false;
     if (!_inUse.compare_exchange_strong(expected, true)) {
-        Aborter::safeAbort(TAG, "ADC::use() called while already in use");
+        SAFE_ABORT("ADC::use() called while already in use");
         return;
     }
 	Log::Info(TAG, "ADC::use2");
@@ -239,7 +239,7 @@ std::shared_ptr<MonitorVoltageThresholdHandle>
 		std::function<void(bool)> callback
 	) {
 	if(!callback){
-		Aborter::safeAbort(TAG, "No callback provided!");
+		SAFE_ABORT("No callback provided!");
 		return nullptr;
 	}
 	std::shared_ptr<MonitorVoltageThresholdHandle> handle = 
@@ -305,7 +305,7 @@ ADC::monitorCurrentAndPower(
 	std::function<void(bool)> callback
 ) {
 	if (!callback){
-		Aborter::safeAbort(TAG, "No callback provided!");
+		SAFE_ABORT("No callback provided!");
 		return nullptr;
 	} 
 
@@ -411,7 +411,7 @@ void ADC::errorCheck(esp_err_t err){
 	if (err == ESP_OK) return;
 	char theMessage[64];
 	esp_err_to_name_r(err, theMessage, sizeof(theMessage));
-	Aborter::safeAbort(TAG, "Fatal ADC error: %s", theMessage);
+	SAFE_ABORT("Fatal ADC error: %s", theMessage);
 }
 void ADC::measureNReadsPerSecond() {
 	adc_digi_output_data_t d; // Stores a single read value

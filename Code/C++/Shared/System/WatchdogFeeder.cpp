@@ -1,5 +1,5 @@
 #include "WatchdogFeeder.hpp"
-#include "Aborter.hpp"
+#include "SafeAbort.hpp"
 #include "esp_task_wdt.h"  // Ensure ESP-IDF is correctly installed and the include path is set
 #include "esp_system.h"    // Include the header for esp_random#include <inttypes.h>
 #include "driver/timer.h"  // Include the header for timer group definitions
@@ -30,7 +30,7 @@ const char* WatchdogFeeder::TAG = "WatchdogFeeder";
 // Define moving objects for Mr. Watchdog's *special* diet
 WatchdogFeeder& WatchdogFeeder::initialize(uint32_t timeout) {
     if(_instance != nullptr) {
-        Aborter::safeAbort(TAG, "WatchdogFeeder already initialized");
+        SAFE_ABORT("WatchdogFeeder already initialized");
         return *_instance;
     }
     esp_reset_reason_t reason = esp_reset_reason();
@@ -53,7 +53,7 @@ WatchdogFeeder& WatchdogFeeder::initialize(uint32_t timeout) {
 }
 WatchdogFeeder& WatchdogFeeder::getInstance() {
     if(_instance == nullptr) {
-        Aborter::safeAbort(TAG, "WatchdogFeeder not initialized. Call initialize() first.");
+        SAFE_ABORT("WatchdogFeeder not initialized. Call initialize() first.");
         return *_instance;
     }
     return *_instance;

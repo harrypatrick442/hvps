@@ -1,5 +1,5 @@
 #include "UARTBase.hpp"
-#include "System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 std::mutex UARTBase::_mutexClaimReleaseNUart;
 std::unordered_set<int> UARTBase::_usedUarts;
 UARTBase::UARTBase(
@@ -31,7 +31,7 @@ const char* UARTBase::getDescription() const{
 bool UARTBase::checkNUARTValid(int nUART){
 	std::unique_lock<std::mutex> lock(_mutexClaimReleaseNUart);
 	if (_usedUarts.contains(nUART)) {
-		Aborter::safeAbort(TAG, "UART%d is already in use", nUART);
+		SAFE_ABORT("UART%d is already in use", nUART);
 		return false;
 	}
 	_usedUarts.insert(nUART);

@@ -3,7 +3,7 @@
 #include "esp_log.h"
 #include "driver/i2c.h"
 #include "../../Logging/Log.hpp"
-#include "../../System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 #define I2C_MASTER_TIMEOUT_MS 1000
 #include <utility>
 const char* I2C::TAG = "I2C";
@@ -36,7 +36,7 @@ I2C::I2C(I2CConfiguration configuration) :
 
     esp_err_t err = i2c_driver_install(_port, conf.mode, I2C_MASTER_RX_BUF_DISABLE, I2C_MASTER_TX_BUF_DISABLE, 0);
     if (err != ESP_OK) {
-        Aborter::safeAbort(TAG, "I2C driver install failed: %s", esp_err_to_name(err));
+        SAFE_ABORT("I2C driver install failed: %s", esp_err_to_name(err));
     }
 }
 
@@ -51,7 +51,7 @@ void I2C::initialize(
 // Get the singleton instance of the I2C class
 I2C& I2C::getInstance() {
     if (_instance == nullptr) {
-        Aborter::safeAbort(TAG, "I2C not initialized. Call initialize() first.");
+        SAFE_ABORT("I2C not initialized. Call initialize() first.");
         // Optionally, you could throw an exception here if exceptions are enabled
     }
     return *_instance;

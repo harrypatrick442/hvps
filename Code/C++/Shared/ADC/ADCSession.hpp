@@ -3,7 +3,7 @@
 #include <functional>
 #include <utility>       // for std::move (used in callbacks)
 #include "IADCSession.hpp"
-#include "../System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 
 class ADCSession : public IADCSession {
 private:
@@ -15,7 +15,7 @@ public:
     // ---------------- Operator & lifecycle ----------------
     IADCSession* operator->() {
         if (!_real) {
-            Aborter::safeAbort(TAG, "Attempt to access ADC after scope expired");
+            SAFE_ABORT("Attempt to access ADC after scope expired");
         }
         return _real;
     }
@@ -102,7 +102,7 @@ private:
 
     void check() const {
         if (!_real) {
-            Aborter::safeAbort(TAG, "Attempt to use ADC after scope expired");
+            SAFE_ABORT("Attempt to use ADC after scope expired");
         }
     }
 };

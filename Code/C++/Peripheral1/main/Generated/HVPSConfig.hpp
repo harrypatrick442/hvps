@@ -1,6 +1,6 @@
 #pragma once
 #include "HVPSConfiguration.hpp"
-#include "System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 #include "Core/Checksums/Crc32.hpp"
 inline constexpr HVPSConfiguration HVPSConfig1{
     .broadcastFrequencyHz = 2,
@@ -21,11 +21,11 @@ inline bool validateHVPSConfig(){
     uint32_t podConfig1 = Crc32::computePod(HVPSConfig1);
     uint32_t podConfig2 = Crc32::computePod(HVPSConfig2);
     if (podConfig1 != podConfig2){
-        Aborter::safeAbort("Configuration", "The CRC32 computed for HVPSConfig2 did not match the CRC32 for HVPSConfig1");
+        SAFE_ABORT("The CRC32 computed for HVPSConfig2 did not match the CRC32 for HVPSConfig1");
         return false;
     }
     if (podConfig1 != 4277806531){
-        Aborter::safeAbort("Configuration", "The CRC32 computed for HVPSConfig1 did not match the expected value");
+        SAFE_ABORT("The CRC32 computed for HVPSConfig1 did not match the expected value");
         return false;
     }
     return true;

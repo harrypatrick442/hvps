@@ -1,6 +1,6 @@
 #pragma once
 #include "Peripheral1Configuration.hpp"
-#include "System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 #include "Core/Checksums/Crc32.hpp"
 inline constexpr Peripheral1Configuration Config1{
     .idleColour = 14724644,
@@ -23,11 +23,11 @@ inline bool validateConfig(){
     uint32_t podConfig1 = Crc32::computePod(Config1);
     uint32_t podConfig2 = Crc32::computePod(Config2);
     if (podConfig1 != podConfig2){
-        Aborter::safeAbort("Configuration", "The CRC32 computed for Config2 did not match the CRC32 for Config1");
+        SAFE_ABORT("The CRC32 computed for Config2 did not match the CRC32 for Config1");
         return false;
     }
     if (podConfig1 != 712775843){
-        Aborter::safeAbort("Configuration", "The CRC32 computed for Config1 did not match the expected value");
+        SAFE_ABORT("The CRC32 computed for Config1 did not match the expected value");
         return false;
     }
     return true;

@@ -4,7 +4,7 @@
 #include "ADC/ADC.hpp"
 #include "Core/ArrayHelper.hpp"
 #include "Logging/Log.hpp"
-#include "System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 #include "Timing/Delay.hpp"
 #include "Timing/TimeHelper.hpp"
 
@@ -24,7 +24,7 @@ float SoftStartHandler::doSoftStart(const HVPSConfiguration& config1, const HVPS
 		while(true){
 			Delay::ms(SAMPLE_INTERVAL_MS);
 			if(config1.vPsOverVadcRatio!=config2.vPsOverVadcRatio){
-				Aborter::safeAbort(TAG, "A value for the potential divider ratio corrupted");
+				SAFE_ABORT("A value for the potential divider ratio corrupted");
 				return;
 			}
 			voltages[index++] = adc.getVoltage()*config1.vPsOverVadcRatio;

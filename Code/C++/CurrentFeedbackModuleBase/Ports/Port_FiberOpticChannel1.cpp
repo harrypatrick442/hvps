@@ -1,7 +1,7 @@
 #include "Port_FiberOpticChannel1.hpp"
 #include "../NonVolatileState.hpp"
 #include "Logging/Log.hpp"
-#include "System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 #include "JSON/JHelper.hpp"
 #include "../IO/Inputs.hpp"
 #include "Messaging/MessageConstants.hpp"

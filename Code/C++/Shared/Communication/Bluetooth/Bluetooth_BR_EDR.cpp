@@ -14,14 +14,14 @@
 #include "esp_spp_api.h"
 #include "../../Logging/Log.hpp"
 #include "../../JSON/CJsonRAII.hpp"
-#include "../../System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 #include <cstring>
 #define MAX_BT_SEND_QUEUE 10
 Bluetooth& Bluetooth::initialize(
     const char* deviceName,
      const char* serverName) {
     if (_instance != nullptr) {
-        Aborter::safeAbort(TAG, "Bluetooth already initialized");
+        SAFE_ABORT("Bluetooth already initialized");
         //^^noreturn^^
     }
     _instance = new Bluetooth(deviceName, serverName);
@@ -35,34 +35,34 @@ Bluetooth& Bluetooth::initialize(
 
     esp_bt_controller_config_t bt_cfg = BT_CONTROLLER_INIT_CONFIG_DEFAULT();
     if ((ret = esp_bt_controller_init(&bt_cfg)) != ESP_OK) {
-        Aborter::safeAbort(TAG, "BT Controller Init Failed: %s", esp_err_to_name(ret));
+        SAFE_ABORT("BT Controller Init Failed: %s", esp_err_to_name(ret));
         //^^noreturn^^
     }
 
     if ((ret = esp_bt_controller_enable(ESP_BT_MODE_CLASSIC_BT)) != ESP_OK) {
-        Aborter::safeAbort(TAG, "BT Controller Enable Failed: %s", esp_err_to_name(ret));
+        SAFE_ABORT("BT Controller Enable Failed: %s", esp_err_to_name(ret));
         //^^noreturn^^
     }
 
     if ((ret = esp_bluedroid_init()) != ESP_OK) {
-        Aborter::safeAbort(TAG, "Bluedroid Init Failed: %s", esp_err_to_name(ret));
+        SAFE_ABORT("Bluedroid Init Failed: %s", esp_err_to_name(ret));
         //^^noreturn^^
     }
     if ((ret = esp_bluedroid_enable()) != ESP_OK) {
-        Aborter::safeAbort(TAG, "Bluedroid Enable Failed: %s", esp_err_to_name(ret));
+        SAFE_ABORT("Bluedroid Enable Failed: %s", esp_err_to_name(ret));
         //^^noreturn^^
     }
 
     // Set device name AFTER Bluedroid is enabled
     if((ret = esp_bt_gap_set_device_name(deviceName))!=ESP_OK){
-        Aborter::safeAbort(TAG, "Set Device Name Failed: %s", esp_err_to_name(ret));
+        SAFE_ABORT("Set Device Name Failed: %s", esp_err_to_name(ret));
         //^^noreturn^^
     }
     Log::Info(TAG, "Set device name to %s", deviceName);
 
     // Register GAP callback for Secure Connections
     if((ret = esp_bt_gap_register_callback(esp_gap_callback_static))!=ESP_OK){
-        Aborter::safeAbort(TAG, "GAP Register Callback Failed: %s", esp_err_to_name(ret));
+        SAFE_ABORT("GAP Register Callback Failed: %s", esp_err_to_name(ret));
         //^^noreturn^^
     }
     Log::Info(TAG, "GAP Callback registered for Secure Connections.");
@@ -71,7 +71,7 @@ Bluetooth& Bluetooth::initialize(
     esp_bt_sp_param_t param_type = ESP_BT_SP_IOCAP_MODE;
     esp_bt_io_cap_t iocap = ESP_BT_IO_CAP_IO; // Enables Numeric Comparison & Passkey
     if((ret = esp_bt_gap_set_security_param(param_type, &iocap, sizeof(uint8_t)))!=ESP_OK){
-        Aborter::safeAbort(TAG, "Set Security Param Failed: %s", esp_err_to_name(ret));
+        SAFE_ABORT("Set Security Param Failed: %s", esp_err_to_name(ret));
         //^^noreturn^^
     }
     Log::Info(TAG, "Secure Connections (SC) enabled. Numeric Comparison & Passkey authentication.");
@@ -87,7 +87,7 @@ Bluetooth& Bluetooth::initialize(
 
     // Register SPP callback
     if ((ret = esp_spp_register_callback(esp_spp_callback_static)) != ESP_OK) {
-        Aborter::safeAbort(TAG, "SPP Register Callback Failed: %s", esp_err_to_name(ret));
+        SAFE_ABORT("SPP Register Callback Failed: %s", esp_err_to_name(ret));
         //^^noreturn^^
     }
 
@@ -98,7 +98,7 @@ Bluetooth& Bluetooth::initialize(
         .tx_buffer_size = 0        // Use default TX buffer size
     };
     if ((ret = esp_spp_enhanced_init(&spp_cfg))!=ESP_OK){
-        Aborter::safeAbort(TAG, "SPP Init Failed: %s", esp_err_to_name(ret));
+        SAFE_ABORT("SPP Init Failed: %s", esp_err_to_name(ret));
         //^^noreturn^^
     }
 
@@ -150,7 +150,7 @@ void Bluetooth::esp_gap_callback(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_para
         case ESP_BT_GAP_CFM_REQ_EVT:  // Numeric Comparison
             Log::Info(TAG, "Confirm pairing with PIN: %d", param->cfm_req.num_val);
             if((ret = esp_bt_gap_ssp_confirm_reply(param->cfm_req.bda, true))!=ESP_OK){
-                Aborter::safeAbort(TAG, "Confirm Reply Failed: %s", esp_err_to_name(ret));
+                SAFE_ABORT("Confirm Reply Failed: %s", esp_err_to_name(ret));
                 return;
             }
             Log::Info(TAG, "Pairing confirmed.");
@@ -163,7 +163,7 @@ void Bluetooth::esp_gap_callback(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_para
         case ESP_BT_GAP_KEY_REQ_EVT:  // Passkey entry requested (only for legacy devices)
             Log::Info(TAG, "Passkey entry requested. Auto-entering passkey.");
             if((ret = esp_bt_gap_pin_reply(param->key_req.bda, true, 6, (uint8_t*)"123456"))!=ESP_OK){
-                Aborter::safeAbort(TAG, "PIN Reply Failed: %s", esp_err_to_name(ret));
+                SAFE_ABORT("PIN Reply Failed: %s", esp_err_to_name(ret));
                 return;
             }
             break;
@@ -196,12 +196,12 @@ void Bluetooth::esp_spp_callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *p
         case ESP_SPP_INIT_EVT:
             Log::Info(TAG, "SPP Initialized, making ESP32 discoverable with server name %s", _instance->_serverName);
             if((ret = esp_bt_gap_set_scan_mode(ESP_BT_CONNECTABLE, ESP_BT_GENERAL_DISCOVERABLE))!=ESP_OK){
-                Aborter::safeAbort(TAG, "Set Scan Mode Failed: %s", esp_err_to_name(ret));
+                SAFE_ABORT("Set Scan Mode Failed: %s", esp_err_to_name(ret));
                 return;
             }
             if((ret = esp_spp_start_srv(ESP_SPP_SEC_AUTHENTICATE, 
 				ESP_SPP_ROLE_SLAVE, 0, _instance->_serverName))!=ESP_OK){
-                Aborter::safeAbort(TAG, "Start SPP Server Failed: %s", esp_err_to_name(ret));
+                SAFE_ABORT("Start SPP Server Failed: %s", esp_err_to_name(ret));
                 return;
             }
             break;

@@ -6,7 +6,7 @@
 #include "Storage/Flash.hpp"
 #include "System/WatchdogFeeder.hpp"
 #include "System/StayTheFuckAwake.hpp"
-#include "System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 #include "CurrentAndPowerThresholdMonitor.hpp"
 #include "Generated/CurrentAndPowerFeedbackModuleConfiguration.hpp"
 #define WATCHDOG_TIMEOUT_MILLISECONDS 10000

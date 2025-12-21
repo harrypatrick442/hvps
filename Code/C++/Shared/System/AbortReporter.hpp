@@ -29,7 +29,7 @@ public:
     static inline void initialize() {
         static bool initialized = false;
         if (initialized) {
-            Aborter::safeAbort(TAG, "CrashReporter already initialized!");
+            SAFE_ABORT("CrashReporter already initialized!");
         }
 
         if (_crashRecord.magic != CRASH_MAGIC) {

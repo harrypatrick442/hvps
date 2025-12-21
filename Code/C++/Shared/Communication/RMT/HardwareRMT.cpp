@@ -1,5 +1,5 @@
 #include "HardwareRMT.hpp"
-#include "System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 #include "Logging/Log.hpp"
 #include <cstdio>
 #include <cstring>
@@ -34,7 +34,7 @@ HardwareRMT::HardwareRMT(
     std::snprintf(_description, sizeof(_description),
         "HardwareRMT");
 	if (periodUs < 6) {
-		Aborter::safeAbort(TAG, "periodUs too small for pulse scheme");
+		SAFE_ABORT("periodUs too small for pulse scheme");
 		return;
 	}
 	_rxSymbolQueue = xQueueCreate(
@@ -42,7 +42,7 @@ HardwareRMT::HardwareRMT(
         sizeof(rmt_symbol_word_t)    // each item size
     );
 	if (!_rxSymbolQueue) {
-		Aborter::safeAbort(TAG, "Failed to create RX symbol queue");
+		SAFE_ABORT("Failed to create RX symbol queue");
 		return;
 	}
 	memset(_rxBuffer, 0, sizeof(_rxBuffer));
@@ -87,8 +87,7 @@ bool HardwareRMT::configureRx() {
 	};
     esp_err_t res = rmt_new_rx_channel(&rx_config, /*(rmt_channel_handle_t*)*/&_rxChannelHandle);
     if (res != ESP_OK) {
-        Aborter::safeAbort(
-            TAG,
+        SAFE_ABORT(
             "Failed to create RX RMT channel (pin=%d, res=%d, err='%s')",
             _rxPin, res, esp_err_to_name(res)
         );
@@ -101,8 +100,7 @@ bool HardwareRMT::configureRx() {
 	res = rmt_rx_register_event_callbacks(_rxChannelHandle, &cbs, this);
     if (res != ESP_OK) {
         rmt_del_channel(_rxChannelHandle);
-        Aborter::safeAbort(
-            TAG,
+        SAFE_ABORT(
             "Failed to register RX event queue (res=%d, err='%s')",
             res, esp_err_to_name(res)
         );
@@ -112,8 +110,7 @@ bool HardwareRMT::configureRx() {
     res = rmt_enable(_rxChannelHandle);
     if (res != ESP_OK) {
         rmt_del_channel(_rxChannelHandle);
-        Aborter::safeAbort(
-            TAG,
+        SAFE_ABORT(
             "Failed to enable RX RMT channel (res=%d, err='%s')",
             res, esp_err_to_name(res)
         );
@@ -123,8 +120,7 @@ bool HardwareRMT::configureRx() {
     if (res != ESP_OK) {
         rmt_disable(_rxChannelHandle);
         rmt_del_channel(_rxChannelHandle);
-        Aborter::safeAbort(
-            TAG,
+        SAFE_ABORT(
             "Failed to start RX receiving (res=%d, err='%s')",
             res, esp_err_to_name(res)
         );
@@ -149,8 +145,7 @@ bool HardwareRMT::configureTx() {
 
     esp_err_t res = rmt_new_tx_channel(&tx_config, &_txChannelHandle);
     if (res != ESP_OK) {
-        Aborter::safeAbort(
-            TAG,
+        SAFE_ABORT(
             "Failed to create TX RMT channel (pin=%d, res=%d, err='%s')",
             _txPin, res, esp_err_to_name(res)
         );
@@ -160,8 +155,7 @@ bool HardwareRMT::configureTx() {
     res = rmt_enable(_txChannelHandle);
     if (res != ESP_OK) {
         rmt_del_channel(_txChannelHandle);
-        Aborter::safeAbort(
-            TAG,
+        SAFE_ABORT(
             "Failed to enable TX RMT channel (res=%d, err='%s')",
             res, esp_err_to_name(res)
         );
@@ -173,7 +167,7 @@ bool HardwareRMT::configureTx() {
 	if (res != ESP_OK) {
 		rmt_disable(_txChannelHandle);
         rmt_del_channel(_txChannelHandle);
-		Aborter::safeAbort(TAG, "Failed to create copy encoder (res=%d, '%s')",
+		SAFE_ABORT("Failed to create copy encoder (res=%d, '%s')",
 						   res, esp_err_to_name(res));
 		return false;
 	}

@@ -25,7 +25,7 @@ When a crash happens:
 ## 🧩 2️⃣  How you turn that into human information
 
 When you build your firmware, the compiler puts **symbol and line number information** into the `.elf` file.
-Those symbols let you translate an address in flash (“0x400d3b18”) into “`Aborter::safeAbort()` line 57”.
+Those symbols let you translate an address in flash (“0x400d3b18”) into “`SAFE_ABORT()` line 57”.
 
 So:
 
@@ -40,7 +40,7 @@ So:
    It prints:
 
    ```
-   Aborter::safeAbort() at /src/Core/Aborter.tpp:57
+   SAFE_ABORT() at /src/Core/Aborter.tpp:57
    ```
 
    which tells you exactly where it crashed.
@@ -84,7 +84,7 @@ Example workflow:
 
    ```
    CrashReporter::onPanic() at src/Core/CrashReporter.cpp:105
-   Aborter::safeAbort() at src/Core/Aborter.tpp:57
+   SAFE_ABORT() at src/Core/Aborter.tpp:57
    VoltageMonitor::update() at src/Modules/VoltageMonitor.cpp:72
    mainLoop() at src/Main.cpp:215
    ```

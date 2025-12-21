@@ -3,7 +3,7 @@
 #include <memory>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
-#include "../System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 #include "../Logging/Log.hpp"
 
 class TaskFactory {
@@ -68,7 +68,7 @@ public:
 
 		if (result != pdPASS) {
 			delete wrapper;
-			Aborter::safeAbort(TAG, "Failed to create non-priority task: %s", name);
+			SAFE_ABORT("Failed to create non-priority task: %s", name);
 			return false;
 		}
 		return true;
@@ -105,7 +105,7 @@ public:
 
 		if (result != pdPASS) {
 			delete wrapper; // cleanup if task creation failed
-			Aborter::safeAbort(TAG, "Failed to create priority task: %s", name);
+			SAFE_ABORT("Failed to create priority task: %s", name);
 			return false;
 		}
 		return true;

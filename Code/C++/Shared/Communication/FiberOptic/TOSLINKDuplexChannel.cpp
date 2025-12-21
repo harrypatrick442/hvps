@@ -1,7 +1,7 @@
 #include "TOSLINKDuplexChannel.hpp"
 #include "../MRT/MRTChannel.hpp"
 #include "../UART/HardwareUART.hpp"
-#include "System/Aborter.hpp"
+#include "System/SafeAbort.hpp"
 #include "../DuplexChannel.hpp"
 #include "../Interfaces/IChannel.hpp"
 #include <memory>
@@ -24,7 +24,7 @@ int TOSLINKDuplexChannel::takeNextNUart(){
 	Log::Info(TAG, "takeNextNUart");
 	int nUart = _nextNUart++;
 	if(nUart>2){
-		Aborter::safeAbort(TAG, "nUart doesnt exist");
+		SAFE_ABORT("nUart doesnt exist");
 	}
 	return nUart;
 }
