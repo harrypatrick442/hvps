@@ -1,6 +1,38 @@
 #include "Aborter.hpp"
 #include "../Storage/Flash.hpp"
 #include "esp_attr.h"
+
+
+[[noreturn]] void Aborter::safeAbortFromMacro(const char* fileName, int lineNumber){
+    char formatted[128];
+    std::snprintf(formatted, sizeof(formatted), "line: %d", lineNumber);
+	_safeAbort(fileName, formatted);
+}
+	
+[[noreturn]] void Aborter::_safeAbort(const char* fileName, char* formatted){
+    Log::Fatal(fileName, formatted);
+	
+    constexpr int BACKTRACE_DEPTH = 16;
+    uint32_t backtrace[BACKTRACE_DEPTH] = {0};
+    size_t backtraceLength = BacktraceHelper::getBacktrace(
+		backtrace, nullptr, BACKTRACE_DEPTH);
+		
+	if(Flash::getIsInitialized()){
+		Flash::setString(TAG, REASON_KEY,
+			formatted);
+		Flash::setArray(TAG, BACKTRACE_KEY,
+			backtrace, backtraceLength);
+	}
+	else{
+		Log::Warn(TAG, "Flash was not initialized when trying to set last abort reason");
+	}
+	
+	Delay::ms(200);
+
+    esp_restart();
+
+    while (true) { }
+}
 LastAbortMessage* Aborter::getLastAbortReason(
 	CleanupBucket& cleanupBucket){
 	if(!Flash::getIsInitialized()){
