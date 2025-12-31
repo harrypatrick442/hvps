@@ -135,8 +135,10 @@ export default class HVPSUI{
 		PropertyBindingFactory.standard(this, model, 'showBluetoothReconnect', this._showBluetoothReconnectChanged);
 	}
 	_stateChanged(value){
+		console.log('_stateChanged');
+		console.log(value);
 		if(!isNullOrUndefined(this._currentState)){
-			this._element.classList.remove(this._getFullClassName(value));
+			this._element.classList.remove(this._getFullClassName(this._currentState));
 		}
 		this._currentState = value;
 		if(isNullOrUndefined(value)){

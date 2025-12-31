@@ -69,7 +69,7 @@ namespace HVPSUI
                 LastAbortMessage>(
                 HVPSAPI.MessageTypes.LastAbort, _WebViewMessagingInterface.Send);
             _DeviceRegistrationMessageHandler.RegisterMethod<
-                LastAbortMessage>(
+                StateChangedMessage>(
                 HVPSAPI.MessageTypes.StateChanged, _WebViewMessagingInterface.Send);
             _DeviceRegistrationMessageHandler.OnMessage += (o, e) => _PingDisconnectDetector.Received();
         }

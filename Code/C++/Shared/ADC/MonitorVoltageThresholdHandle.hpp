@@ -12,10 +12,10 @@ private:
 
     // Thread-safe current voltage (atomic)
     std::atomic<uint16_t> _currentVoltageRaw;
+    // Raw ADC threshold (12-bit). Thread-safe.
+    std::atomic<uint32_t> _rawThreshold;
 
 public:
-    // Raw ADC threshold (12-bit). Thread-safe.
-    std::atomic<uint32_t> rawThreshold;
 
     // True when monitor task should exit
     std::atomic<bool> exit { false };
@@ -37,6 +37,7 @@ public:
 
     void setVoltageRaw(uint16_t voltage);
     float getVoltage();
+	uint16_t getRawThreshold();
 
     void stop();
 };

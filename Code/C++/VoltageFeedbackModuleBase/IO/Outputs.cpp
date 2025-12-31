@@ -22,11 +22,11 @@ void Outputs::toSafeReversible(){
 void Outputs::toSafe(){
 	
 }
-void Outputs::setThresholdReachedFiberOpticOnOff(bool onElseOff){
+void Outputs::setThresholdReached(bool isReached){
 	if(!Outputs::_initialized){
         LOG_ERROR("Not Initialized!");
 		return;
 	}
 	//0 IS USED FOR THRESHOLD REACHED. USING 0 MEANS IN EVENT OF POWER FAILURE DRIVE STOPS.
-    gpio_set_level((gpio_num_t)THRESHOLD_REACHED_FIBER_OPTIC_PIN, onElseOff?1:0); // Set GPIO21 HIGH (on)
+    gpio_set_level((gpio_num_t)THRESHOLD_REACHED_FIBER_OPTIC_PIN, isReached?0:1); // Set GPIO21 HIGH (on)
 }

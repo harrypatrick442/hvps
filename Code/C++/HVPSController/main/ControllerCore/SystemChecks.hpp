@@ -26,6 +26,7 @@ class SystemChecks{
 		static bool _suspended_voltageFeedbackModule_highsSpeedFeedback(
 			const std::string& moduleFriendlyName,
 			std::string& errorMessage,
+			Port_VoltageFeedbackBase& port_VoltageFeedbackBase,
 			std::function<bool()> getThresholdReached
 		);
 		

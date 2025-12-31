@@ -51,19 +51,19 @@ bool Inputs::getOutputVoltageFeedbackThresholdReached(){
 	checkInitialized();
 	return gpio_get_level(
 		(gpio_num_t)PinDefinitions::OUTPUT_VOLTAGE_FEEDBACK_THRESHOLD_REACHED
-		)==0;
+		)==1;
 }
 bool Inputs::getFirstStageVoltageFeedbackThresholdReached(){
 	checkInitialized();
 	return gpio_get_level(
 		(gpio_num_t)PinDefinitions::FIRST_STAGE_VOLTAGE_FEEDBACK_THRESHOLD_REACHED
-		)==0;
+		)==1;
 }
 bool Inputs::getOutputCurrentFeedbackThresholdReached(){
 	checkInitialized();
 	return gpio_get_level(
 		(gpio_num_t)PinDefinitions::OUTPUT_CURRENT_FEEDBACK_THRESHOLD_REACHED
-		)==0;
+		)==1;
 }
 void Inputs::checkInitialized(){
 	if(!Inputs::_initialized){

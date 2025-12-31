@@ -366,6 +366,8 @@ export default class HVPSUIViewModel{
 		return lines;
 	}
 	_handleStateChangedMessage({stateChangedMessage}){
+		console.log('stateChangedMessage');
+		console.log(stateChangedMessage);
 		this._state = stateChangedMessage.state;
 		this.bindingsHandler.changed('state', this._state);
 	}

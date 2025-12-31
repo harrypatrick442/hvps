@@ -73,4 +73,5 @@ private:
 	void sendState();
 	void handleGotGreetingMessageFromVoltageFeedbackModule(GreetingMessage* greetingMessage);
 	void handleHighSpeedCoreError(std::string errorMessage);
+	void handleHighSpeedCoreMessage(std::string message);
 };

@@ -9,11 +9,15 @@
 #include "Macros/GetFileName.hpp"
 const char* HighSpeedCore::getTag() {return GET_FILE_NAME;}
 HighSpeedCore::HighSpeedCore(
+	const HVPSConfiguration& hvpsConfiguration1,
+	const HVPSConfiguration& hvpsConfiguration2,
 	Port_FirstStageVoltageFeedback& portFirstStageVoltageFeedback, 
 	Port_OutputVoltageFeedback& portOutputVoltageFeedback,
 	LiveDataCache& liveDataCache,
 	bool inError
 ):
+_hvpsConfiguration1(hvpsConfiguration1),
+_hvpsConfiguration2(hvpsConfiguration2),
 _portFirstStageVoltageFeedback(portFirstStageVoltageFeedback),
 _portOutputVoltageFeedback(portOutputVoltageFeedback),
 _liveDataCache(liveDataCache),
@@ -30,8 +34,10 @@ _desiredSystemState(SystemState::Idle),
 _shuttingOrShutDown_2(false),
 _inError(inError),
 _systemChecksResult(nullptr),
-_runSystemChecksLatch(){
+_runSystemChecksLatch(),
+_frequencyMeter(){
 	startCoreTask();
+	_frequencyMeter.startPrintToConsoleLoop();
 }
 
 void HighSpeedCore::start(){
@@ -115,20 +121,16 @@ void HighSpeedCore::startCoreTask(){
 }
 void HighSpeedCore::_run(){
 	while(true){
-		LOG_INFO("looping...");
 		Delay::ms(100);
 		if(isShuttingDownOrShutDown()||getActualSystemState()==SystemState::ShutDown){
-			LOG_INFO("Is shut down");
 			doShutDown();
 			continue;
 		}
 		switch(getDesiredSystemState()){
 			case SystemState::Idle:
-				LOG_INFO("Idle");
 				doIdle();
 				continue;
 			case SystemState::Live:
-				LOG_INFO("Live");
 				doLive();
 				Outputs::setMOSFETOnOff(false);
 				//Second set for backup
@@ -138,8 +140,7 @@ void HighSpeedCore::_run(){
 				doShutDown();
 				continue;
 			case SystemState::RunningSystemChecks:
-				LOG_INFO("RunningSystemChecks");
-				doSystemChecks();
+				doRunningSystemChecks();
 				continue;
 			case SystemState::Error:
 				LOG_INFO("Error");
@@ -152,8 +153,12 @@ void HighSpeedCore::_run(){
 		}
 	}
 }
+void HighSpeedCore::doRunningSystemChecks(){
+	setDesiredSystemState(doSystemChecks()->getSuccess()?SystemState::Idle:SystemState::Error);
+}
 std::shared_ptr<SystemChecksResult> HighSpeedCore::doSystemChecks(){
-	LOG_INFO("doSystemChecks");
+	dispatchMessage("Running system checks!");
+	setActualSystemState(SystemState::RunningSystemChecks);
 	std::shared_ptr<SystemChecksResult> result = SystemChecks::run();
 	std::unique_lock<std::mutex> lock(_mutexSystemChecksResult);
 	_systemChecksResult = result;
@@ -161,6 +166,11 @@ std::shared_ptr<SystemChecksResult> HighSpeedCore::doSystemChecks(){
 	if(!result->getSuccess()){
 		setInError(true);//NOTE THIS ACTUALLY CLEARS THE _runSystemChecksLatch too.
 		dispatchError(result->getErrorMessage());//TODO THIS ISNT RIGHT 10/11/2025
+		dispatchMessage("Failed system checks :(");
+	}
+	else{
+		setActualSystemState(SystemState::Idle);
+		dispatchMessage("Passed system checks! :)");
 	}
 	return result;
 }
@@ -179,6 +189,7 @@ void HighSpeedCore::doShutDown(){
 	uint64_t lastTime = 0;
 	SystemState desiredSystemState = getDesiredSystemState();
 	while(true){
+		LOG_INFO("Doing shut down");
 		if(
 			(desiredSystemState!=SystemState::ShutDown)
 			&&
@@ -188,6 +199,8 @@ void HighSpeedCore::doShutDown(){
 		}
 		Outputs::setMOSFETOnOff(false);
 		FloatAndTime outputVoltageAndTime = _liveDataCache.getOutputVoltage();
+		LOG_INFO("Output voltage is: %f", outputVoltageAndTime.f);
+		LOG_INFO("SAFE_OUTPUT_VOLTAGE is: %f", SAFE_OUTPUT_VOLTAGE);
 		if(outputVoltageAndTime.t!=lastTime){
 			if(outputVoltageAndTime.f<=SAFE_OUTPUT_VOLTAGE){
 				setActualSystemState(SystemState::ShutDown);
@@ -222,29 +235,32 @@ void HighSpeedCore::doLive(){
 	if(!systemChecksResult->getSuccess()){
 		return;
 	}
-	uint64_t time, endTime, endTime_2;
+	if(getDesiredSystemState()!=SystemState::Live){
+		return;
+	}
+	dispatchMessage("Going live!");
+	uint64_t timeUs, endTime, endTime_2;
 	setActualSystemState(SystemState::Live);
+	timeUs = TimeHelper::us();
 	while(true){
-		endTime = TimeHelper::us()+ON_TIME_US;
-		endTime_2 = TimeHelper::us()+ON_TIME_US_2;
+		endTime = timeUs+_hvpsConfiguration1.onTimeMicroSeconds;
+		endTime_2 = timeUs+_hvpsConfiguration2.onTimeMicroSeconds;
 		if((!Inputs::getOutputVoltageFeedbackThresholdReached())&&
 		(!Inputs::getFirstStageVoltageFeedbackThresholdReached())){
 				Outputs::setMOSFETOnOff(true);
 		}
 		while(true){
-			time = TimeHelper::us();
-			if(time>=endTime){
+			timeUs = TimeHelper::us();
+			if(timeUs>=endTime){
 				break;
 			}
-			if(time>=endTime_2){
+			if(timeUs>=endTime_2){
 				break;
 			}
 		}
 		Outputs::setMOSFETOnOff(false);
-		
-		
-		endTime = TimeHelper::us()+OFF_TIME_US;
-		endTime_2 = TimeHelper::us()+OFF_TIME_US_2;
+		endTime = timeUs+_hvpsConfiguration1.offTimeMicroSeconds;
+		endTime_2 = timeUs+_hvpsConfiguration2.offTimeMicroSeconds;
 		
 		if(getDesiredSystemState()!=SystemState::Live){
 			return;
@@ -256,12 +272,13 @@ void HighSpeedCore::doLive(){
 			return;
 		}
 		setActualSystemState(SystemState::Live);
+		_frequencyMeter.tick();
 		while(true){
-			time = TimeHelper::us();
-			if(time>=endTime){
+			timeUs = TimeHelper::us();
+			if(timeUs>=endTime){
 				break;
 			}
-			if(time>=endTime_2){
+			if(timeUs>=endTime_2){
 				break;
 			}
 		}
@@ -285,4 +302,7 @@ void HighSpeedCore::dispatchSystemStateChanged(SystemState v){
 }
 void HighSpeedCore::dispatchError(std::string errorMessage){
 	onError.dispatch(errorMessage);
+}
+void HighSpeedCore::dispatchMessage(std::string message){
+	onMessage.dispatch(message);
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using HVPSConstants;
+using ConfigurationClassBuilder;
 namespace HVPSConfigurationGenerator
 {
     class Program
@@ -86,7 +87,7 @@ namespace HVPSConfigurationGenerator
             AlreadyWroteWatcher alreadyWroteWatcher = new AlreadyWroteWatcher();
 #region Write_HVPSConfiguration
 #region To_HVPSController
-            ConfigurationWriter.WriteConfigurationStructFile<HVPSConfiguration>(Path.Combine(
+            CPlusPlusConfigurationWriter.WriteConfigurationStructFile<HVPSConfiguration>(Path.Combine(
                     reposDirectory,
                     "hvps",
                     "Code",
@@ -97,7 +98,7 @@ namespace HVPSConfigurationGenerator
                     "HVPSConfiguration.hpp"
             ), alreadyWroteWatcher);
             {
-                ConfigurationWriter.WriteProjectSpecificConfiguration(
+                CPlusPlusConfigurationWriter.WriteProjectSpecificConfiguration(
                     projectSpecificConfigurationFilePath: Path.Combine(
                         reposDirectory,
                         "hvps",
@@ -116,7 +117,7 @@ namespace HVPSConfigurationGenerator
             }
             #endregion
 #region To_Peripheral1
-            ConfigurationWriter.WriteConfigurationStructFile<HVPSConfiguration>(Path.Combine(
+            CPlusPlusConfigurationWriter.WriteConfigurationStructFile<HVPSConfiguration>(Path.Combine(
                     reposDirectory,
                     "hvps",
                     "Code",
@@ -127,7 +128,7 @@ namespace HVPSConfigurationGenerator
                     "HVPSConfiguration.hpp"
             ), alreadyWroteWatcher);
             {
-                ConfigurationWriter.WriteProjectSpecificConfiguration(
+                CPlusPlusConfigurationWriter.WriteProjectSpecificConfiguration(
                     projectSpecificConfigurationFilePath: Path.Combine(
                         reposDirectory,
                         "hvps",
@@ -149,14 +150,14 @@ namespace HVPSConfigurationGenerator
             #endregion
 #region Write_VoltageFeedbackModuleConfigurationStruct
 #region To_VoltageFeedbackModuleBase
-            ConfigurationWriter.WriteConfigurationStructFile<VoltageFeedbackModuleConfiguration>(
+            CPlusPlusConfigurationWriter.WriteConfigurationStructFile<VoltageFeedbackModuleConfiguration>(
                 Path.Combine(reposDirectory, "hvps", "Code", "C++", "VoltageFeedbackModuleBase",
                     "Generated", "VoltageFeedbackModuleConfiguration.hpp"),
                 alreadyWroteWatcher
             );
             #endregion
 #region To_Peripheral1
-            ConfigurationWriter.WriteConfigurationStructFile<VoltageFeedbackModuleConfiguration>(
+            CPlusPlusConfigurationWriter.WriteConfigurationStructFile<VoltageFeedbackModuleConfiguration>(
                 Path.Combine(reposDirectory, "hvps", "Code", "C++", "Peripheral1", "main",
                     "Generated", "VoltageFeedbackModuleConfiguration.hpp"),
                 alreadyWroteWatcher
@@ -165,7 +166,7 @@ namespace HVPSConfigurationGenerator
 #endregion
 #region Write_FirstStageVoltageFeedbackModuleConfig
             #region To_FirstStageVoltageFeedbackModule
-            ConfigurationWriter.WriteProjectSpecificConfiguration(
+            CPlusPlusConfigurationWriter.WriteProjectSpecificConfiguration(
                     projectSpecificConfigurationFilePath:
                         Path.Combine(reposDirectory, "hvps", "Code", "C++",
                         "FirstStageVoltageFeedbackModule", "main",
@@ -178,7 +179,7 @@ namespace HVPSConfigurationGenerator
                 );
 #endregion
 #region To_Peripheral1
-            ConfigurationWriter.WriteProjectSpecificConfiguration(
+            CPlusPlusConfigurationWriter.WriteProjectSpecificConfiguration(
                     projectSpecificConfigurationFilePath:
                         Path.Combine(reposDirectory, "hvps", "Code", "C++",
                         "Peripheral1", "main",
@@ -193,7 +194,7 @@ namespace HVPSConfigurationGenerator
 #endregion
 #region Write_OutputVoltageFeedbackModuleConfig
 #region To_OutputVoltageFeedbackModule
-                ConfigurationWriter.WriteProjectSpecificConfiguration(
+                CPlusPlusConfigurationWriter.WriteProjectSpecificConfiguration(
                     projectSpecificConfigurationFilePath:
                         Path.Combine(reposDirectory, "hvps", "Code", "C++",
                         "OutputVoltageFeedbackModule", "main",
@@ -206,7 +207,7 @@ namespace HVPSConfigurationGenerator
                 );
                 #endregion
 #region To_Peripherial1
-                ConfigurationWriter.WriteProjectSpecificConfiguration(
+                CPlusPlusConfigurationWriter.WriteProjectSpecificConfiguration(
                     projectSpecificConfigurationFilePath:
                         Path.Combine(reposDirectory, "hvps", "Code", "C++",
                         "Peripheral1", "main",
@@ -284,7 +285,7 @@ namespace HVPSConfigurationGenerator
                 unknownFlashDelayMs = FlashHzToMilliseconds(
                     Constants.UnknownFlashHz),
             };
-            ConfigurationWriter.WriteProjectSpecificConfiguration(
+            CPlusPlusConfigurationWriter.WriteProjectSpecificConfiguration(
                 projectSpecificConfigurationFilePath:
                     Path.Combine(reposDirectory, "hvps", "Code", "C++",
                     "Peripheral1", "main",
@@ -294,7 +295,7 @@ namespace HVPSConfigurationGenerator
                 dependenciesIncludePathPrefix,
                 alreadyWroteWatcher
             );
-            ConfigurationWriter.WriteConfigurationStructFile<Peripheral1Configuration>(
+            CPlusPlusConfigurationWriter.WriteConfigurationStructFile<Peripheral1Configuration>(
                 Path.Combine(reposDirectory, "hvps", "Code", "C++", "Peripheral1",
                     "main",
                     "Generated", "Peripheral1Configuration.hpp"),

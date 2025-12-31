@@ -5,6 +5,8 @@
 #include "../Ports/Port_FirstStageVoltageFeedback.hpp"
 #include "../Ports/Port_ControllingMachine.hpp"
 #include "../Ports/Port_OtherPeripherals.hpp"
+#include "Timing/Delay.hpp"
+#include "Macros/IncludeLineOnEnd.hpp"
 #include "../IO/Inputs.hpp"
 std::shared_ptr<SystemChecksResult> SystemChecks::run(){
 	std::string errorMessage;
@@ -62,6 +64,7 @@ bool SystemChecks::suspended_firstStageVoltageFeedbackAbstractComs_highSpeedFeed
 	return _suspended_voltageFeedbackModule_highsSpeedFeedback(
 		FIRST_STAGE_VOLTAGE_FEEDBACK_MODULE_FRIENDLY_NAME,
 		errorMessage,
+		Port_FirstStageVoltageFeedback::getInstance(),
 		Inputs::getFirstStageVoltageFeedbackThresholdReached
 	);
 }
@@ -71,6 +74,7 @@ bool SystemChecks::suspended_outputVoltageFeedbackAbstractComs_highSpeedFeedback
 	return _suspended_voltageFeedbackModule_highsSpeedFeedback(
 		OUTPUT_VOLTAGE_FEEDBACK_MODULE_FRIENDLY_NAME,
 		errorMessage,
+		Port_OutputVoltageFeedback::getInstance(),
 		Inputs::getOutputVoltageFeedbackThresholdReached
 	);
 }
@@ -92,19 +96,30 @@ bool SystemChecks::_suspended_voltageFeedbackAbstractComs_replies(
 bool SystemChecks::_suspended_voltageFeedbackModule_highsSpeedFeedback( 
 	const std::string& moduleFriendlyName,
 	std::string& errorMessage,
+	Port_VoltageFeedbackBase& port_VoltageFeedbackBase,
 	std::function<bool()> getThresholdReached
 ){
 	
-	if(!Port_OutputVoltageFeedback::getInstance().setForceThresholdReachedFeedback(true)){
-		errorMessage = "Failed to communicate with "+moduleFriendlyName+" during testing high speed feedback (setting forced on)";
+	if(getThresholdReached()){
+		if(!port_VoltageFeedbackBase.setForceThresholdReachedFeedback(false)){
+			errorMessage = INCLUDE_LINE_ON_END("Failed to communicate with "+moduleFriendlyName);
+			return false;
+		}
+		if(getThresholdReached()){
+			errorMessage = INCLUDE_LINE_ON_END("Threshold shouldnt be in reached state for "+moduleFriendlyName);
+			return false;
+		}
+	}
+	if(!port_VoltageFeedbackBase.setForceThresholdReachedFeedback(true)){
+		errorMessage = INCLUDE_LINE_ON_END("Failed to communicate with "+moduleFriendlyName);
 		return false;
 	}
 	if(!getThresholdReached()){
 		errorMessage = "High speed feedback did not indicate threshold reached during testing "+moduleFriendlyName+" high speed feedback";
 		return false;
 	}
-	if(!Port_OutputVoltageFeedback::getInstance().setForceThresholdReachedFeedback(false)){
-		errorMessage = "Failed to communicate with "+moduleFriendlyName+" during testing high speed feedback (setting forced off)";
+	if(!port_VoltageFeedbackBase.setForceThresholdReachedFeedback(false)){
+		errorMessage = INCLUDE_LINE_ON_END("Failed to communicate with "+moduleFriendlyName);
 		return false;
 	}
 	if(getThresholdReached()){

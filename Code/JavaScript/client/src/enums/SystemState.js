@@ -24,7 +24,7 @@ SystemState.getClassName = (value)=>{
 		case SystemState.ShuttingDown:
 			return 'shutting-down';
 		case SystemState.Shutdown:
-			return 'shutdown';
+			return 'shut-down';
 		case SystemState.Error:
 			return 'error';
 		default:

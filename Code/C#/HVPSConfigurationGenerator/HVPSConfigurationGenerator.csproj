@@ -8,6 +8,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\shared-private\Configuration\Configurations.csproj" />
+    <ProjectReference Include="..\..\..\..\shared-public\ConfigurationClassBuilder\ConfigurationClassBuilder.csproj" />
     <ProjectReference Include="..\..\..\..\shared-public\Core\CSharp\Core.csproj" />
     <ProjectReference Include="..\HVPSConstants\HVPSConstants.csproj" />
   </ItemGroup>

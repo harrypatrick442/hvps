@@ -11,6 +11,7 @@
 #include "../Tasks/TaskFactory.hpp"
 #include "../Tasks/TaskFactory.hpp"
 #include "../Core/CleanupBucket.hpp"
+#include "Timing/TimeHelper.hpp"
 
 
 const char* ADC::TAG = "ADC";
@@ -261,7 +262,8 @@ void ADC::_monitorVoltageThreshold(std::shared_ptr<MonitorVoltageThresholdHandle
 		uint32_t len = 0;
 		esp_err_t err;
 		bool set = false;
-		bool isOn = false;
+		bool currentReached = false;
+		uint64_t nextPrintTimeMs = 0;
 		while(!handle->exit.load(std::memory_order_relaxed)){
 			err = adc_continuous_read(
 				_adc_hdl,                              // handle
@@ -277,15 +279,29 @@ void ADC::_monitorVoltageThreshold(std::shared_ptr<MonitorVoltageThresholdHandle
 				continue;
 			}
 			uint16_t value = d.type1.data & 0x0FFF;
-			if(value>handle->rawThreshold){
-				if((!set)||isOn){
-					isOn = false;
+			uint64_t nowMs = TimeHelper::ms();
+			if(nowMs > nextPrintTimeMs){
+				//TODO
+				//REMOVE take out the time stuff here and this printing.
+				nextPrintTimeMs = nowMs+5000;
+				LOG_INFO("value was: %d ", value);
+				LOG_INFO("handle->rawThreshold: %d ", handle->getRawThreshold());				
+				if(value>handle->getRawThreshold()){
+					LOG_INFO("exceeded");
+				}
+				else{
+					LOG_INFO("did not exceed");
+				}
+			}
+			if(value<handle->getRawThreshold()){
+				if((!set)||currentReached){
+					currentReached = false;
 					handle->callback(false);
 				}
 			}
 			else{
-				if((!set)||(!isOn)){
-					isOn = true;
+				if((!set)||(!currentReached)){
+					currentReached = true;
 					handle->callback(true);
 				}
 			}

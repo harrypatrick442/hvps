@@ -7,6 +7,7 @@
 #include "Generated/HVPSConfiguration.hpp"
 #include "Generated/VoltageFeedbackModuleConfiguration.hpp"
 #include "IO/Inputs.hpp"
+#include "Timing/FrequencyMeter.hpp"
 class HVPSCircuitEmulator:public SingletonBase<HVPSCircuitEmulator>{
     friend class SingletonBase<HVPSCircuitEmulator>;
 public:
@@ -18,6 +19,7 @@ private:
 	const VoltageFeedbackModuleConfiguration& _outputVoltageFeedbackModuleConfig;
 	float _a, _b;
 	float _currentVillardEnergyJouls;
+	FrequencyMeter _frequencyMeter;
 public:
 	DISALLOW_COPY_MOVE(HVPSCircuitEmulator);
 protected:

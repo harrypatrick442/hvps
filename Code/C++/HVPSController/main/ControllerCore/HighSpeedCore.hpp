@@ -6,12 +6,15 @@
 #include "SystemChecksResult.hpp"
 #include "../Ports/Port_FirstStageVoltageFeedback.hpp"
 #include "../Ports/Port_OutputVoltageFeedback.hpp"
+#include "../Generated/HVPSConfiguration.hpp"
 #include "LiveDataCache.hpp"
+#include "Timing/FrequencyMeter.hpp"
 class HighSpeedCore final : public SingletonBase<HighSpeedCore>{
 public:
 	static const char* getTag();
     Event<SystemState> onSystemStateChanged;
     Event<std::string> onError;
+    Event<std::string> onMessage;
 	void start();
 	void stop();
 	std::shared_ptr<SystemChecksResult>  runSystemChecksOnly();
@@ -20,19 +23,18 @@ public:
 	SystemState getActualSystemState();
 private:
     friend class SingletonBase<HighSpeedCore>;
-	
-	const uint64_t ON_TIME_US = 62;
-	const uint64_t ON_TIME_US_2 = 62;
-	const uint64_t OFF_TIME_US = 62;
-	const uint64_t OFF_TIME_US_2 = 62;
-	const float SAFE_OUTPUT_VOLTAGE = 30;
+	const float SAFE_OUTPUT_VOLTAGE = 20.0f;
 	
 	HighSpeedCore(
+		const HVPSConfiguration& hvpsConfiguration1,
+		const HVPSConfiguration& hvpsConfiguration2,
 		Port_FirstStageVoltageFeedback& portFirstStageVoltageFeedback, 
 		Port_OutputVoltageFeedback& portOutputVoltageFeedback,
 		LiveDataCache& liveDataCache,
 		bool inError
 	)noexcept;
+	const HVPSConfiguration& _hvpsConfiguration1;
+	const HVPSConfiguration& _hvpsConfiguration2;
 	Port_FirstStageVoltageFeedback& _portFirstStageVoltageFeedback;
 	Port_OutputVoltageFeedback& _portOutputVoltageFeedback;
 	LiveDataCache& _liveDataCache;
@@ -52,12 +54,16 @@ private:
 	std::mutex _mutexSystemChecksResult;
 	std::shared_ptr<SystemChecksResult> _systemChecksResult;
 	Latch _runSystemChecksLatch;
+	FrequencyMeter _frequencyMeter;
+	
 	void startCoreTask();
+	void startFrequencyMeasurement();
 	void _run();
 	std::shared_ptr<SystemChecksResult> doSystemChecks();
 	void doIdle();
 	void doLive();
 	void doShutDown();
+	void doRunningSystemChecks();
 	void doError();
 	SystemState getDesiredSystemState();
 	void setDesiredSystemState(SystemState systemState);
@@ -66,6 +72,8 @@ private:
 	bool getInError();
 	void dispatchSystemStateChanged(SystemState systemState);
 	void dispatchError(std::string errorMessage);
+	void dispatchMessage(std::string message);
+	void loopFrequencyMeasurement();
 };
 
 #endif // HIGH_SPEED_CORE_HPP

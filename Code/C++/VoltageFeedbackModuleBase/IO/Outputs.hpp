@@ -6,5 +6,5 @@ class Outputs{
 		static void initialize();
 		static void toSafe();
 		static void toSafeReversible();
-		static void setThresholdReachedFiberOpticOnOff(bool onElseOff);
+		static void setThresholdReached(bool isReached);
 };

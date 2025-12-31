@@ -29,21 +29,20 @@ public:
     static Derived& initialize(Args&&... args) noexcept {
         static_assert(has_static_getTag<Derived>::value,
             "Derived must implement: static const char* getTag()");
-
         bool ran = false;
         std::call_once(_once, [&]{
             _instance = new Derived(std::forward<Args>(args)...);
             ran = true;
         });
         if (!ran) {
-            SAFE_ABORT("[%s] Already initialized", Derived::getTag());
+            SAFE_ABORT("%s Already initialized", Derived::getTag());
         }
         return *_instance;
     }
 
     static Derived& getInstance() noexcept {
         if (_instance) return *_instance;
-        SAFE_ABORT("[%s] getInstance() before initialize()", Derived::getTag());
+        SAFE_ABORT("%s getInstance() before initialize()", Derived::getTag());
         return *_instance; // unreachable
     }
 
@@ -52,5 +51,5 @@ protected:
 
 private:
     static inline std::once_flag _once;
-    static inline Derived*       _instance = nullptr;
+    static inline Derived* _instance = nullptr;
 };

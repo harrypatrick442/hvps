@@ -39,11 +39,11 @@ class Port_FiberOpticChannel1  final:
 	)noexcept;
 	
     private:
-		
 		void handleSetVoltageThresholdRequest(cJSON* message);
 		void handleGetVoltageRequest(cJSON* message);
 		void handleGreetingRequest(cJSON* message);
 		void handleClearLoggedErrorsMessage();
+		void handleSetForceVoltageThresholdReachedFeedbackRequest(cJSON* message);
 		void greetControllingMachine();
 };
 

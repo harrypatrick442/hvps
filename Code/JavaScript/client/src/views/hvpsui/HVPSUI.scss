@@ -16,14 +16,20 @@
 	&.state-live{
 		border-color:var(--color-state-live);
 	}
-	&.state-standby-live{
-		border-color:var(--color-state-standby-live);
+	&.state-idle{
+		border-color:var(--color-state-idle);
 	}
-	&.state-standby-safe{
-		border-color:var(--color-state-standby-safe);
+	&.state-shutting-down{
+		border-color:var(--color-state-shutting-down);
 	}
-	&.state-shutdown{
-		border-color:var(--color-state-shutdown);
+	&.state-shut-down{
+		border-color:var(--color-state-shut-down);
+	}
+	&.state-running-system-checks{
+		border-color:var(--color-state-running-system-checks);
+	}
+	&.state-error{
+		border-color:var(--color-state-error);
 	}
 	.inner{
 		padding:3px;

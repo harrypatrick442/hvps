@@ -53,6 +53,11 @@ _port_OutputVoltageFeedback(port_OutputVoltageFeedback){
 			this->handleHighSpeedCoreError(errorMessage);
 		}
 	);
+	_eventConnectionHighSpeedCoreOnError = _highSpeedCore.onMessage.addHandler(
+		[this](std::string message){
+			this->handleHighSpeedCoreMessage(message);
+		}
+	);
 	_eventConnectionOnOpened = _channel.addOnOpenedHandler([this](const ChannelEventArgs& e){
 				handleOnOpened();
 	});
@@ -119,7 +124,7 @@ void Port_ControllingMachine::handleIncomingMessage(cJSON* message, bool& dontDe
 }
 void Port_ControllingMachine::handleRunSystemChecksOnlyMessage(cJSON* message){
 	TaskFactory::createNonPriorityTask([this](){
-			std::shared_ptr<SystemChecksResult> systemChecksResult = _highSpeedCore.runSystemChecksOnly();
+			_highSpeedCore.runSystemChecksOnly();
 		}, 
 		"runSystemChecksOnly"
 	);
@@ -219,5 +224,8 @@ void Port_ControllingMachine::sendState(){
 }
 void Port_ControllingMachine::handleHighSpeedCoreError(std::string errorMessage){
 	sendConsoleMessage(errorMessage, true);
+}
+void Port_ControllingMachine::handleHighSpeedCoreMessage(std::string message){
+	sendConsoleMessage(message, false);
 }
 

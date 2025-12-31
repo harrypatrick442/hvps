@@ -1,12 +1,20 @@
 #include "Aborter.hpp"
 #include "../Storage/Flash.hpp"
 #include "../Timing/Delay.hpp"
+#include "Logging/Log.hpp"
 #include "SubsystemIdentifier.hpp"
 #include "esp_attr.h"
 #include "esp_system.h"
+const char* Aborter::REASON_KEY = "reason";
+const char* Aborter::BACKTRACE_KEY = "bt";
 const char* Aborter::TAG = "Aborter";
+[[noreturn]] void Aborter::_safeAbort(const char* fileName, int lineNumber, char* message){
+	char formatted[320];
+	std::snprintf(formatted, sizeof(formatted), "line %d: %s", lineNumber, message);
+	_safeAbort(fileName, formatted);
+}
 [[noreturn]] void Aborter::_safeAbort(const char* fileName, char* formatted){
-    LOG_FATAL(fileName, formatted);
+    Log::Fatal(fileName, formatted);
 	
     constexpr int BACKTRACE_DEPTH = 16;
     uint32_t backtrace[BACKTRACE_DEPTH] = {0};

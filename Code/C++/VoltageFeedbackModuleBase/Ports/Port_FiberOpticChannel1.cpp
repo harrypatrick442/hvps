@@ -8,6 +8,8 @@
 #include "Generated/Messages/GreetingResponse.hpp"
 #include "Generated/Messages/GreetingMessage.hpp"
 #include "Generated/Messages/ClearLoggedErrorsMessage.hpp"
+#include "Generated/Messages/SetForceVoltageThresholdReachedFeedbackRequest.hpp"
+#include "Generated/Messages/SetForceVoltageThresholdReachedFeedbackResponse.hpp"
 #include "Tasks/TaskFactory.hpp"
 #include "System/CrashReporter.hpp"
 #include <cstring>
@@ -82,6 +84,11 @@ void Port_FiberOpticChannel1::handleIncomingMessage(cJSON* message, bool& dontDe
 		handleClearLoggedErrorsMessage();
 		return;
 	}
+	if(strcmp(type, SetForceVoltageThresholdReachedFeedbackRequest::TYPE) == 0){
+		LOG_INFO("Forcing voltage threshold reached!");
+		handleSetForceVoltageThresholdReachedFeedbackRequest(message);
+		return;
+	}
 }
 void Port_FiberOpticChannel1::handleSetVoltageThresholdRequest(cJSON* message){
 	CleanupBucket cleanupBucket;
@@ -116,6 +123,21 @@ void Port_FiberOpticChannel1::handleGreetingRequest(cJSON* message){
 	GreetingResponse response(coreDumpSummaryMessage, lastAbortMessage, ticket);
 	_messageSender->sendMessage(response.toJSON());
 }
+void Port_FiberOpticChannel1::handleClearLoggedErrorsMessage(){
+	CrashReporter::clearRecord();
+	Aborter::clearLastAbortReason();
+	LOG_INFO("Cleared logged errors!");
+}
+void Port_FiberOpticChannel1::handleSetForceVoltageThresholdReachedFeedbackRequest(cJSON* message){
+	LOG_INFO("handling set force voltage threshold reached");
+	CleanupBucket cleanupBucket;
+	SetForceVoltageThresholdReachedFeedbackRequest* request = 
+		SetForceVoltageThresholdReachedFeedbackRequest::fromJSON(message, cleanupBucket);
+	_thesholdMonitor.setForce(request->getForce());
+	SetForceVoltageThresholdReachedFeedbackResponse response(request->getTicket());
+	_messageSender->sendMessage(response.toJSON());
+	LOG_INFO("handled set force voltage threshold reached");
+}
 void Port_FiberOpticChannel1::greetControllingMachine(){
 	CleanupBucket cleanupBucket;
 	CoreDumpSummaryMessage* coreDumpSummaryMessage 
@@ -123,10 +145,5 @@ void Port_FiberOpticChannel1::greetControllingMachine(){
 	LastAbortMessage* lastAbortMessage = Aborter::getLastAbortReason(cleanupBucket);
 	GreetingMessage message(coreDumpSummaryMessage, lastAbortMessage);
 	_messageSender->sendMessage(message.toJSON());
-}
-void Port_FiberOpticChannel1::handleClearLoggedErrorsMessage(){
-	CrashReporter::clearRecord();
-	Aborter::clearLastAbortReason();
-	LOG_INFO("Cleared logged errors!");
 }
 

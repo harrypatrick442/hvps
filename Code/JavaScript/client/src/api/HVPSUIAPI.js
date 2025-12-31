@@ -78,6 +78,7 @@ class HVPSUIAPI{
 				});
 				break;
 			case MessageTypes.stateChanged:
+				console.log(message);
 				HVPSUIAPI.dispatchEvent({
 					type:'stateChangedMessage',
 					stateChangedMessage:StateChangedMessage.fromJSON(message)

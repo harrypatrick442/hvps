@@ -11,11 +11,17 @@ class ThresholdMonitor final:
 private:
 	static inline constexpr const char* FLASH_NAMESPACE = "s";
 	static inline constexpr const char* THRESHOLD_VOLTAGE_KEY = "tv";
+	const VoltageFeedbackModuleConfiguration& _config1;
+	const VoltageFeedbackModuleConfiguration& _config2;
+	std::shared_ptr<MonitorVoltageThresholdHandle> _monitorVoltageThresholdHandle;
+	std::atomic<bool> _forceReached;
+	std::atomic<bool> _actualReached;
 public:
 	static const char* getTag();
 	DISALLOW_COPY_MOVE(ThresholdMonitor);
 	float getVoltage();
 	void setThresholdVoltage(float voltage);
+	void setForce(bool value) noexcept;
 protected:
     explicit ThresholdMonitor(
 		adc_channel_t ch,
@@ -23,10 +29,6 @@ protected:
 		const VoltageFeedbackModuleConfiguration& config2
 	)noexcept;
 private:
-	const VoltageFeedbackModuleConfiguration& _config1;
-	const VoltageFeedbackModuleConfiguration& _config2;
-	std::shared_ptr<MonitorVoltageThresholdHandle> _monitorVoltageThresholdHandle;
-	
 	void onVoltageThresholdReachedChanged(bool reached)noexcept;
 	float toScaledADCThreshold(float vUnscaled)noexcept;
 };

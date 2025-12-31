@@ -6,6 +6,8 @@ import './State.scss';
 export default class State{
 	constructor({propertyName, model}){
 		this._element = E.div('state');
+		this._textElement = E.div('text');
+		this._element.appendChild(this._textElement);
 		this._stateChanged = this._stateChanged.bind(this);
 		this._currentState = SystemState.Unknown;
 		PropertyBindingFactory.standard(this, model, propertyName, this._stateChanged);
@@ -20,6 +22,6 @@ export default class State{
 		this._currentState = systemState;
 		this._element.classList.add(SystemState.getClassName(systemState));
 		const text = SystemState.getDescription(systemState);
-		this._element.textContent = isNullOrUndefined(text)?'':`Device State: ${text}`;
+		this._textElement.textContent = isNullOrUndefined(text)?'':`Device State: ${text}`;
 	}
 }

@@ -57,7 +57,6 @@ extern "C" void app_main(void)
         ::initialize(WATCHDOG_TIMEOUT_MILLISECONDS);
 		
 	Port_FirstStageVoltageFeedback& port_FirstStageVoltageFeedback = Port_FirstStageVoltageFeedback::initialize();
-	Port_FirstStageVoltageFeedback::initialize();
 	Port_OutputVoltageFeedback& port_OutputVoltageFeedback = Port_OutputVoltageFeedback::initialize();
     Bluetooth::initialize(
         "HVPS", 
@@ -70,6 +69,8 @@ extern "C" void app_main(void)
 	);
 	bool inError = Aborter::hasLastAbortReason()||CrashReporter::hasCoreDumpSummary();
 	HighSpeedCore& highSpeedCore = HighSpeedCore::initialize(
+		Config1,
+		Config2,
 		port_FirstStageVoltageFeedback,
 		port_OutputVoltageFeedback,
 		liveDataCache,

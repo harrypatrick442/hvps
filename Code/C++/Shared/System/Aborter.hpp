@@ -11,8 +11,8 @@
 #include "BacktraceHelper.hpp"
 class Aborter {
 private:
-	static inline constexpr const char*  REASON_KEY = "reason";
-	static inline constexpr const char*  BACKTRACE_KEY = "bt";
+	static const char*  REASON_KEY;
+	static const char*  BACKTRACE_KEY;
     static inline std::function<void()> _toSafe = nullptr;
 	static const char* TAG;
 	
@@ -27,14 +27,11 @@ public:
 		int lineNumber,
 		const char* msg,
 		Args&&... args
-	){		
+	)
+	{		
 		char message[256];
 		std::snprintf(message, sizeof(message), msg, std::forward<Args>(args)...);
-
-		char finalMessage[320];
-		std::snprintf(finalMessage, sizeof(finalMessage), "line %d: %s", lineNumber, message);
-
-		_safeAbort(fileName, finalMessage);
+		_safeAbort(fileName, lineNumber, message);
 	}
 	
 	static LastAbortMessage* getLastAbortReason(
@@ -43,6 +40,7 @@ public:
 	static void clearLastAbortReason();
 	
 private:
+	[[noreturn]] static void _safeAbort(const char* fileName, int lineNumber, char* message);
 	[[noreturn]] static void _safeAbort(const char* fileName, char* formatted);
 	
 };
