@@ -11,13 +11,13 @@ class SetForceVoltageThresholdReachedFeedbackRequest
    public:
        static const char* TYPE;
    private:
-        bool _force;
+        std::optional<bool> _force;
         uint64_t _ticket;
    public:
-        bool getForce()const noexcept;
+        std::optional<bool> getForce()const noexcept;
         uint64_t getTicket()const noexcept;
         SetForceVoltageThresholdReachedFeedbackRequest(
-           bool force, 
+           std::optional<bool> force, 
            uint64_t ticket = 0) noexcept;
         ~SetForceVoltageThresholdReachedFeedbackRequest();
         static SetForceVoltageThresholdReachedFeedbackRequest* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;

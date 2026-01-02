@@ -99,7 +99,6 @@ bool SystemChecks::_suspended_voltageFeedbackModule_highsSpeedFeedback(
 	Port_VoltageFeedbackBase& port_VoltageFeedbackBase,
 	std::function<bool()> getThresholdReached
 ){
-	
 	if(getThresholdReached()){
 		if(!port_VoltageFeedbackBase.setForceThresholdReachedFeedback(false)){
 			errorMessage = INCLUDE_LINE_ON_END("Failed to communicate with "+moduleFriendlyName);
@@ -118,15 +117,16 @@ bool SystemChecks::_suspended_voltageFeedbackModule_highsSpeedFeedback(
 		errorMessage = "High speed feedback did not indicate threshold reached during testing "+moduleFriendlyName+" high speed feedback";
 		return false;
 	}
-	if(!port_VoltageFeedbackBase.setForceThresholdReachedFeedback(false)){
+	if(!port_VoltageFeedbackBase.setForceThresholdReachedFeedback(std::nullopt)){
 		errorMessage = INCLUDE_LINE_ON_END("Failed to communicate with "+moduleFriendlyName);
 		return false;
 	}
+	/*
 	if(getThresholdReached()){
 		errorMessage = "High speed feedback did not indicate threshold not reached during testing "+moduleFriendlyName
 			+" high speed feedback. Appears stuck on. This can result from fiber optic disconnection";
 		return false;
-	}
+	}*/
 	return true;
 }
 

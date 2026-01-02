@@ -13,4 +13,5 @@ struct HVPSConfiguration {
     const uint64_t offTimeMicroSeconds;
     const uint64_t onTimeMicroSeconds;
     const uint64_t pingTimeoutMilliseconds;
+    const uint32_t villardCapacitorsBleedTimeConstantSeconds;
 };

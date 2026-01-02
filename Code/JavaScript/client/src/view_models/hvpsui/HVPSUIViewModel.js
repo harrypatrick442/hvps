@@ -40,6 +40,7 @@ export default class HVPSUIViewModel{
 		this._handleLastAbortMessage = this._handleLastAbortMessage.bind(this);
 		this._buildUsefulCoreDumpSummaryLines = this._buildUsefulCoreDumpSummaryLines.bind(this);
 		this._handleStateChangedMessage = this._handleStateChangedMessage.bind(this);
+		this._handleLiveDataMessage = this._handleLiveDataMessage.bind(this);
 		this._notSelectedDevice = {name:'Not Selected', address:''};
 		this._state = SystemState.Unknown;
 		this._devices = [
@@ -66,6 +67,8 @@ export default class HVPSUIViewModel{
 		exposeBinding(this, 'firstStageVoltageMax', ()=>this.firstStageVoltageMax);
 		exposeBinding(this, 'peakPrimaryCurrent', ()=>this.peakPrimaryCurrent);
 		exposeBinding(this, 'peakPrimaryCurrentMax', ()=>this.peakPrimaryCurrentMax);
+		exposeBinding(this, 'frequency', ()=>this.frequency);
+		exposeBinding(this, 'frequencyMax', ()=>this.frequencyMax);
 		exposeBinding(this, 'bluetoothBusy', ()=>this.bluetoothBusy);
 		exposeBinding(this, 'refreshingBluetooth', ()=>this.refreshingBluetooth);
 		exposeBinding(this, 'bluetoothConnected', ()=>this.bluetoothConnected);
@@ -77,6 +80,7 @@ export default class HVPSUIViewModel{
 		disposes.push(HVPSUIAPI.addEventListener('coreDumpSummaryMessage', this._handleCoreDumpSummaryMessage));
 		disposes.push(HVPSUIAPI.addEventListener('lastAbortMessage', this._handleLastAbortMessage));
 		disposes.push(HVPSUIAPI.addEventListener('stateChangedMessage', this._handleStateChangedMessage));
+		disposes.push(HVPSUIAPI.addEventListener('liveDataMessage', this._handleLiveDataMessage));
 		this.refreshBluetoothDevices();
 		
 	}
@@ -176,6 +180,12 @@ export default class HVPSUIViewModel{
 	}
 	get peakPrimaryCurrentMax(){
 		return this._peakPrimaryCurrentMax;
+	}
+	get frequency(){
+		return this._frequency;
+	}
+	get frequencyMax(){
+		return this._frequencyMax;
 	}
 	start(){
 		HVPSUIAPI.start();
@@ -370,5 +380,57 @@ export default class HVPSUIViewModel{
 		console.log(stateChangedMessage);
 		this._state = stateChangedMessage.state;
 		this.bindingsHandler.changed('state', this._state);
+	}
+	_handleLiveDataMessage({liveDataMessage}){
+		const {outputVoltage, outputCurrent, totalOutputEnergy, firstStageVoltage, peakPrimaryCurrent,
+			frequency} = liveDataMessage;
+		if(this._outputVoltage!=outputVoltage){
+			this._outputVoltage = outputVoltage;
+			this.bindingsHandler.changed('outputVoltage', outputVoltage);
+			if(isNullOrUndefined(this._outputVoltageMax)||(outputVoltage>this._outputVoltageMax)){
+				this._outputVoltageMax = outputVoltage;
+				this.bindingsHandler.changed('outputVoltageMax', this._outputVoltageMax);
+			}
+		}
+		if(this._outputCurrent!=outputCurrent){
+			this._outputCurrente = outputCurrent;
+			this.bindingsHandler.changed('outputCurrent', outputCurrent);
+			if(isNullOrUndefined(this._outputCurrentMax)||(outputCurrent>this._outputCurrentMax)){
+				this._outputCurrentMax = outputCurrent;
+				this.bindingsHandler.changed('outputCurrentMax', this._outputCurrentMax);
+			}
+		}
+		if(this._totalOutputEnergy!=totalOutputEnergy){
+			this._totalOutputEnergy = totalOutputEnergy;
+			this.bindingsHandler.changed('totalOutputEnergy', totalOutputEnergy);
+			if(isNullOrUndefined(this._totalOutputEnergyMax)||(totalOutputEnergy>this._totalOutputEnergyMax)){
+				this._totalOutputEnergyMax = totalOutputEnergy;
+				this.bindingsHandler.changed('totalOutputEnergyMax', this._totalOutputEnergyMax);
+			}
+		}
+		if(this._firstStageVoltage!=firstStageVoltage){
+			this._firstStageVoltage = firstStageVoltage;
+			this.bindingsHandler.changed('firstStageVoltage', firstStageVoltage);
+			if(isNullOrUndefined(this._firstStageVoltageMax)||(firstStageVoltage>this._firstStageVoltageMax)){
+				this._firstStageVoltageMax = firstStageVoltage;
+				this.bindingsHandler.changed('firstStageVoltageMax', this._firstStageVoltageMax);
+			}
+		}
+		if(this._peakPrimaryCurrent!=peakPrimaryCurrent){
+			this._peakPrimaryCurrent = peakPrimaryCurrent;
+			this.bindingsHandler.changed('peakPrimaryCurrent', peakPrimaryCurrent);
+			if(isNullOrUndefined(this._peakPrimaryCurrentMax_peakPrimaryCurrentMax_peakPrimaryCurrentMax_peakPrimaryCurrentMax)||(peakPrimaryCurrent>this._peakPrimaryCurrentMax)){
+				this._peakPrimaryCurrentMax = peakPrimaryCurrent;
+				this.bindingsHandler.changed('peakPrimaryCurrentMax', this._peakPrimaryCurrentMax);
+			}
+		}
+		if(this._frequency!=frequency){
+			this._frequency = frequency;
+			this.bindingsHandler.changed('frequency', frequency);
+			if(isNullOrUndefined(this._frequencyMax)||(frequency>this._frequencyMax)){
+				this._frequencyMax = frequency;
+				this.bindingsHandler.changed('frequencyMax', this._frequencyMax);
+			}
+		}
 	}
 }

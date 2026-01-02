@@ -9,11 +9,15 @@ namespace VoltageFeedbackMessages.Messages
     [DataMemberNamesClass(typeof(VoltageMessageDataMemberNames))]
     public class VoltageMessage
     {
-        private float _Voltage;
         [JsonPropertyName(VoltageMessageDataMemberNames.Voltage)]
         [JsonInclude]
         [DataMember(Name = VoltageMessageDataMemberNames.Voltage)]
-        public float Voltage { get { return _Voltage; } protected set { _Voltage = value; } }
+        public float Voltage { get; protected set; }
+
+        [JsonPropertyName(VoltageMessageDataMemberNames.RawVoltage)]
+        [JsonInclude]
+        [DataMember(Name = VoltageMessageDataMemberNames.RawVoltage)]
+        public UInt16 RawVoltage { get; protected set; }
     }
 }
 

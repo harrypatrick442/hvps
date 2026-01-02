@@ -9,6 +9,7 @@ namespace HVPSAPI.DataMemberNames.Messages
         public const string OutputCurrent = "c";
         public const string TotalOutputEnergy = "t";
         public const string FirstStageVoltage = "f";
+        public const string Frequency = "fr";
         public const string PeakPrimaryCurrent = "p";
     }
 }

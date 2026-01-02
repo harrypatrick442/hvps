@@ -2,7 +2,7 @@
 
 namespace HVPSConfigurationGenerator
 {
-    [StructLayout(LayoutKind.Explicit, Size = 64)]
+    [StructLayout(LayoutKind.Explicit, Size = 72)]
     public struct HVPSConfiguration
     {
         // ─────────────────────────────
@@ -42,14 +42,14 @@ namespace HVPSConfigurationGenerator
         public float villardCapacitorCapacitanceFarads;
 
         // ─────────────────────────────
-        // integer / scalar fields
+        // byte + padding (8-byte alignment)
         // ─────────────────────────────
 
         // 32
         [FieldOffset(32)]
         public byte nVillardStages;
 
-        // 33–39 padding for 8-byte alignment
+        // 33–39 (padding)
         [FieldOffset(33)] private byte pad1;
         [FieldOffset(34)] private byte pad2;
         [FieldOffset(35)] private byte pad3;
@@ -73,5 +73,19 @@ namespace HVPSConfigurationGenerator
         // 56–63
         [FieldOffset(56)]
         public ulong pingTimeoutMilliseconds;
+
+        // ─────────────────────────────
+        // uint field (aligned to 4 bytes)
+        // ─────────────────────────────
+
+        // 64–67
+        [FieldOffset(64)]
+        public uint villardCapacitorsBleedTimeConstantSeconds;
+
+        // 68–71 (optional padding for 8-byte alignment of full struct)
+        [FieldOffset(68)] private byte pad8;
+        [FieldOffset(69)] private byte pad9;
+        [FieldOffset(70)] private byte pad10;
+        [FieldOffset(71)] private byte pad11;
     }
 }

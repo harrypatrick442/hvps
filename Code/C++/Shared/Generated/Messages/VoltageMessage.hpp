@@ -11,10 +11,13 @@ class VoltageMessage
    public:
        static const char* TYPE;
    private:
+        uint16_t _rawVoltage;
         float _voltage;
    public:
+        uint16_t getRawVoltage()const noexcept;
         float getVoltage()const noexcept;
         VoltageMessage(
+           uint16_t rawVoltage, 
            float voltage) noexcept;
         ~VoltageMessage();
         static VoltageMessage* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;

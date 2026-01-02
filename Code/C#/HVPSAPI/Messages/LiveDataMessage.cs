@@ -24,6 +24,10 @@ namespace HVPSAPI.Messages
         [JsonInclude]
         [DataMember(Name = LiveDataMessageDataMemberNames.FirstStageVoltage)]
         public float FirstStageVoltage { get; protected set; }
+        [JsonPropertyName(LiveDataMessageDataMemberNames.Frequency)]
+        [JsonInclude]
+        [DataMember(Name = LiveDataMessageDataMemberNames.Frequency)]
+        public UInt32? Frquency { get; protected set; }
         [JsonPropertyName(LiveDataMessageDataMemberNames.PeakPrimaryCurrent)]
         [JsonInclude]
         [DataMember(Name = LiveDataMessageDataMemberNames.PeakPrimaryCurrent)]

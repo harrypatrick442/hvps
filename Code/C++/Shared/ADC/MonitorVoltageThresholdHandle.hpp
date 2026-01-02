@@ -36,7 +36,7 @@ public:
     void setThresholdVoltage(float voltage);
 
     void setVoltageRaw(uint16_t voltage);
-    float getVoltage();
+    float getVoltage(uint16_t& raw);
 	uint16_t getRawThreshold();
 
     void stop();

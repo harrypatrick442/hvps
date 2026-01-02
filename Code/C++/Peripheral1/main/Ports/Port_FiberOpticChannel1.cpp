@@ -51,13 +51,11 @@ void Port_FiberOpticChannel1::handleIncomingMessage(cJSON* message, bool& dontDe
 		return;
 	}
 	if(strcmp(type, MessageConstants::TYPE_TICKETED_VALUE) == 0){
-		LOG_INFO("Got ticketed");
 		_ticketedSender.handleTicketedMessage(message, type);
 		dontDelete = true;
 		return;
 	}
 	if(strcmp(type, IndicateStateRequest::TYPE) == 0){
-		LOG_INFO("Got indicate state request");
 		handleIndicateStateRequest(message);
 		return;
 	}
@@ -82,7 +80,6 @@ void Port_FiberOpticChannel1::handleIndicateStateMessage(cJSON* message){
 void Port_FiberOpticChannel1::sendSendStateToIndicate(){
 	CleanupBucket cleanupBucket;
 	SendStateToIndicateMessage request;
-	LOG_INFO("sent sendStateToIndicate");
 	_messageSender->sendMessage(request.toJSON());
 }
 

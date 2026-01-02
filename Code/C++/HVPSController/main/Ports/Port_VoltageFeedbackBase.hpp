@@ -12,13 +12,14 @@
 #include "Core/Macros.hpp"
 #include "Core/Event.hpp"
 #include "Communication/Enums/MessageIntegrity.hpp"
+#include "Structs/VoltageWithRaw.hpp"
 
 class Port_VoltageFeedbackBase : public IIncomingMessageHandler {
 public:
 
     // Force derived classes to identify themselves
     //virtual const char* getTag() const = 0;
-    Event<float> onGotVoltage;
+    Event<VoltageWithRaw> onGotVoltage;
     Event<GreetingMessage*> onGotGreetingMessage;
 	DISALLOW_COPY_MOVE(Port_VoltageFeedbackBase);
 
@@ -26,7 +27,7 @@ public:
 	bool setVoltageThreshold(float voltage);
     bool getVoltageThreshold(float& voltage);
     bool getVoltage(float& voltage);
-	bool setForceThresholdReachedFeedback(bool force);
+	bool setForceThresholdReachedFeedback(std::optional<bool> force);
 	void handleVoltageMessage(cJSON* message);
 	void sendClearLoggedErrors();
 	GreetingResponse* greet(CleanupBucket& cleanupBucket);

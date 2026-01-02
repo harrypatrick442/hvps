@@ -61,7 +61,7 @@ bool TransientWorker::enqueue(Job job) {
 }
 void TransientWorker::runTask(std::shared_ptr<TransientWorker> selfPtr) {
 	selfPtr->taskLoop();
-	LOG_INFO("Worker exiting after idle timeout");
+	//LOG_INFO("Worker exiting after idle timeout");
 	vTaskDelete(nullptr);
 }
 
@@ -74,7 +74,7 @@ void TransientWorker::taskLoop() {
 			(*job)();
 			uint64_t endTimeUs = TimeHelper::us();
 			if(endTimeUs - startTimeUs > _maxDesiredJobTimeUs){
-				LOG_INFO("Warning, a task caused a delay greater than max allowed job time: %" PRIu64 " us", _maxDesiredJobTimeUs);
+				LOG_WARN("Warning, a task caused a delay greater than max allowed job time: %" PRIu64 " us", _maxDesiredJobTimeUs);
 			}
 			startTimeUs = endTimeUs;
 			continue;

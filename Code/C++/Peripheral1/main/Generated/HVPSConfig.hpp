@@ -14,7 +14,8 @@ inline constexpr HVPSConfiguration HVPSConfig1{
     .nVillardStages = 6,
     .offTimeMicroSeconds = 31,
     .onTimeMicroSeconds = 31,
-    .pingTimeoutMilliseconds = 3000
+    .pingTimeoutMilliseconds = 3000,
+    .villardCapacitorsBleedTimeConstantSeconds = 19
 };
 inline HVPSConfiguration HVPSConfig2 = HVPSConfig1;//This one is in RAM. HVPSConfig1 is in ROM.
 inline bool validateHVPSConfig(){
@@ -24,7 +25,7 @@ inline bool validateHVPSConfig(){
         SAFE_ABORT("The CRC32 computed for HVPSConfig2 did not match the CRC32 for HVPSConfig1");
         return false;
     }
-    if (podConfig1 != 4277806531){
+    if (podConfig1 != 3182914317){
         SAFE_ABORT("The CRC32 computed for HVPSConfig1 did not match the expected value");
         return false;
     }

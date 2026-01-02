@@ -29,7 +29,7 @@ std::mutex ADC::_mutexSetChannel;
 void ADC::initialize()
 {
     if (_initialized) {
-        LOG_INFO("Already initialized"); // (tag, warning format...)
+        LOG_WARN("Already initialized"); // (tag, warning format...)
         return;
     }
     _initialized = true;
@@ -98,36 +98,22 @@ void ADC::setChannel(adc_channel_t ch)
     _currentChannel = ch;
 }
 void ADC::use(adc_channel_t ch, const std::function<void(IADCSession&&)>& fn) {
-	LOG_INFO("ADC::use");
     bool expected = false;
     if (!_inUse.compare_exchange_strong(expected, true)) {
         SAFE_ABORT("ADC::use() called while already in use");
         return;
     }
-	LOG_INFO("ADC::use2");
-
     CleanupBucket cleanup;
     cleanup.addCallback([&]() noexcept {
         _inUse.store(false);
         stop();
     });
-
-	LOG_INFO("ADC::use3");
     _instance->setChannel(ch);  // Set desired channel first
-	LOG_INFO("ADC::use3");
     start();
-	LOG_INFO("ADC::use4");
-
-	LOG_INFO("ADC::use5");
     ADCSession proxy(static_cast<IADCSession*>(_instance));
-
-	LOG_INFO("ADC::use6");
     fn(std::move(proxy));  // pass it to closure
-
-	LOG_INFO("ADC::use7");
     // Invalidate after call
     proxy.invalidate();  // ensures no external code kept it
-	LOG_INFO("ADC::use8");
 }
 
 void ADC::start(){
@@ -284,13 +270,13 @@ void ADC::_monitorVoltageThreshold(std::shared_ptr<MonitorVoltageThresholdHandle
 				//TODO
 				//REMOVE take out the time stuff here and this printing.
 				nextPrintTimeMs = nowMs+5000;
-				LOG_INFO("value was: %d ", value);
-				LOG_INFO("handle->rawThreshold: %d ", handle->getRawThreshold());				
+				//LOG_INFO("value was: %d ", value);
+				//LOG_INFO("handle->rawThreshold: %d ", handle->getRawThreshold());				
 				if(value>handle->getRawThreshold()){
-					LOG_INFO("exceeded");
+					//LOG_INFO("exceeded");
 				}
 				else{
-					LOG_INFO("did not exceed");
+					///LOG_INFO("did not exceed");
 				}
 			}
 			if(value<handle->getRawThreshold()){

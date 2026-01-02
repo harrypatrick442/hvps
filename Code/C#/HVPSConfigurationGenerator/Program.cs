@@ -71,6 +71,12 @@ namespace HVPSConfigurationGenerator
                 pingTimeoutMilliseconds = Constants.PingTimeoutMilliseconds,
                 villardCapacitorCapacitanceFarads = (float)Constants.VillardCapacitorCapacitance,
                 vPsOverVadcRatio = (float)Constants.PowerSupplyVoltageFeedbackPotentialDividerRatio,
+                villardCapacitorsBleedTimeConstantSeconds = 
+                    (uint)Math.Ceiling(
+                        (1d+(Constants.VillardCapacitorTolerancePercent / 100d))
+                        *Constants.VillardCapacitorCapacitance
+                        *(1d + (Constants.VillardCapacitorBleedResistorTolerancePercent / 100d)) 
+                        * Constants.VillardCapacitorBleedResistance)
             };
             VoltageFeedbackModuleConfiguration firstStageVoltageFeedbackModuleConfigStruct = new VoltageFeedbackModuleConfiguration
             {

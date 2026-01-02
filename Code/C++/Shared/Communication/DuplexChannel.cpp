@@ -122,7 +122,7 @@ void DuplexChannel::loop() {
 				lineBuffer[lineLength] = '\0';
 				
 				cJSON* json = cJSON_Parse(lineBuffer);
-				LOG_INFO("Received line: %s", lineBuffer);  // <-- added print here
+				//LOG_INFO("Received line: %s", lineBuffer);  // <-- added print here
 				//LOG_INFO("Line length was: %d", lineLength);
 				/*for (int i = 0; i<lineLength; i++) {
 					LOG_INFO("Char: '%c'  Code: %d\n", lineBuffer[i], (unsigned char)lineBuffer[i]);

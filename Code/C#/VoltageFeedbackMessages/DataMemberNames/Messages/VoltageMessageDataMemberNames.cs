@@ -6,6 +6,7 @@ namespace VoltageFeedbackMessages.DataMemberNames.Requests
     public static class VoltageMessageDataMemberNames
     {
         public const string Voltage = "v";
+        public const string RawVoltage = "r";
     }
 }
 

@@ -7,6 +7,7 @@
 #include "Core/FloatAndTime.hpp"
 #include "SystemChecks.hpp"
 #include "Macros/GetFileName.hpp"
+#include <cmath>
 const char* HighSpeedCore::getTag() {return GET_FILE_NAME;}
 HighSpeedCore::HighSpeedCore(
 	const HVPSConfiguration& hvpsConfiguration1,
@@ -37,9 +38,11 @@ _systemChecksResult(nullptr),
 _runSystemChecksLatch(),
 _frequencyMeter(){
 	startCoreTask();
-	_frequencyMeter.startPrintToConsoleLoop();
+	//_frequencyMeter.startPrintToConsoleLoop();
 }
-
+FrequencyMeter&	 HighSpeedCore::getFrequencyMeter(){
+	return _frequencyMeter;
+}
 void HighSpeedCore::start(){
 	setDesiredSystemState(SystemState::Live);
 }
@@ -165,8 +168,8 @@ std::shared_ptr<SystemChecksResult> HighSpeedCore::doSystemChecks(){
 	_runSystemChecksLatch.unlatch();
 	if(!result->getSuccess()){
 		setInError(true);//NOTE THIS ACTUALLY CLEARS THE _runSystemChecksLatch too.
-		dispatchError(result->getErrorMessage());//TODO THIS ISNT RIGHT 10/11/2025
 		dispatchMessage("Failed system checks :(");
+		dispatchError(result->getErrorMessage());//TODO THIS ISNT RIGHT 10/11/2025
 	}
 	else{
 		setActualSystemState(SystemState::Idle);
@@ -188,8 +191,10 @@ void HighSpeedCore::doShutDown(){
 	setActualSystemState(SystemState::ShuttingDown);
 	uint64_t lastTime = 0;
 	SystemState desiredSystemState = getDesiredSystemState();
+	uint64_t timeRawReachedZero = 0;
+	uint64_t timeAtWhichClassifiedSafeSeconds_1 = 0, timeAtWhichClassifiedSafeSeconds_2 = 0;
 	while(true){
-		LOG_INFO("Doing shut down");
+		Delay::ms(500);
 		if(
 			(desiredSystemState!=SystemState::ShutDown)
 			&&
@@ -198,19 +203,46 @@ void HighSpeedCore::doShutDown(){
 			return;
 		}
 		Outputs::setMOSFETOnOff(false);
-		FloatAndTime outputVoltageAndTime = _liveDataCache.getOutputVoltage();
-		LOG_INFO("Output voltage is: %f", outputVoltageAndTime.f);
-		LOG_INFO("SAFE_OUTPUT_VOLTAGE is: %f", SAFE_OUTPUT_VOLTAGE);
-		if(outputVoltageAndTime.t!=lastTime){
-			if(outputVoltageAndTime.f<=SAFE_OUTPUT_VOLTAGE){
-				setActualSystemState(SystemState::ShutDown);
-			}
-			else{
-				setActualSystemState(SystemState::ShuttingDown);
-			}
-			lastTime = outputVoltageAndTime.t;
+		VoltageWithRawAndTime outputVoltageWithRawAndTime = _liveDataCache.getOutputVoltage();
+		if(outputVoltageWithRawAndTime.timeUs==lastTime){
+			setActualSystemState(SystemState::ShuttingDown);
+			continue;
 		}
-		Delay::ms(500);
+		lastTime = outputVoltageWithRawAndTime.timeUs;
+		if(outputVoltageWithRawAndTime.voltage<=SAFE_OUTPUT_VOLTAGE){
+			setActualSystemState(SystemState::ShutDown);
+			continue;
+		}
+		if(outputVoltageWithRawAndTime.raw>0){
+			setActualSystemState(SystemState::ShuttingDown);
+			continue;
+		}
+		if(timeRawReachedZero==0){
+			timeRawReachedZero = outputVoltageWithRawAndTime.timeUs;
+			/*t=−R*C*ln(V0​/Vdes​​)*/
+			continue;
+		}
+		if(
+			(timeAtWhichClassifiedSafeSeconds_1==0||timeAtWhichClassifiedSafeSeconds_2==0)
+			&&outputVoltageWithRawAndTime.voltage>0
+			){				
+			float additionalTimeRequiredToDischargeSeconds_1;	
+			float additionalTimeRequiredToDischargeSeconds_2;
+			calculateAdditionalShutdownTime(outputVoltageWithRawAndTime.voltage, additionalTimeRequiredToDischargeSeconds_1,
+				additionalTimeRequiredToDischargeSeconds_2);
+			LOG_INFO("additionalTimeRequiredToDischargeSeconds: %f", additionalTimeRequiredToDischargeSeconds_1);
+			timeAtWhichClassifiedSafeSeconds_1 = (2.0f*additionalTimeRequiredToDischargeSeconds_1)+TimeHelper::s();
+			timeAtWhichClassifiedSafeSeconds_2 = (2.0f*additionalTimeRequiredToDischargeSeconds_2)+TimeHelper::s();
+			if(timeAtWhichClassifiedSafeSeconds_1!=timeAtWhichClassifiedSafeSeconds_2){
+				timeAtWhichClassifiedSafeSeconds_1 = 0;
+				timeAtWhichClassifiedSafeSeconds_2 = 0;
+			}
+		}
+		if((timeRawReachedZero>0)
+			&&((timeAtWhichClassifiedSafeSeconds_1>0)&&(timeAtWhichClassifiedSafeSeconds_1<=TimeHelper::s()))
+			&&((timeAtWhichClassifiedSafeSeconds_2>0)&&(timeAtWhichClassifiedSafeSeconds_2<=TimeHelper::s()))){
+			setActualSystemState(SystemState::ShutDown);
+		}
 	}
 }
 void HighSpeedCore::doIdle(){
@@ -238,10 +270,31 @@ void HighSpeedCore::doLive(){
 	if(getDesiredSystemState()!=SystemState::Live){
 		return;
 	}
+	if(!_portFirstStageVoltageFeedback.setForceThresholdReachedFeedback(std::nullopt)){
+		setInError(true);
+		dispatchError("Failed to set voltage threshold not forced on first stage voltage feedback module");
+		return;
+	}
+	if(!_portFirstStageVoltageFeedback.setVoltageThreshold(_hvpsConfiguration1.firstStageVoltageThresholdVolts)){
+		setInError(true);
+		dispatchError("Failed to set voltage threshold on first stage voltage feedback module");
+		return;
+	}
+	if(!_portOutputVoltageFeedback.setForceThresholdReachedFeedback(std::nullopt)){
+		setInError(true);
+		dispatchError("Failed to set voltage threshold not forced on output voltage feedback module");
+		return;
+	}
+	if(!_portOutputVoltageFeedback.setVoltageThreshold(_hvpsConfiguration1.maxOutputVoltageThresholdVolts)){
+		setInError(true);
+		dispatchError("Failed to set voltage threshold on output voltage feedback module");
+		return;
+	}
 	dispatchMessage("Going live!");
 	uint64_t timeUs, endTime, endTime_2;
 	setActualSystemState(SystemState::Live);
 	timeUs = TimeHelper::us();
+	//TODO use cycles instead.
 	while(true){
 		endTime = timeUs+_hvpsConfiguration1.onTimeMicroSeconds;
 		endTime_2 = timeUs+_hvpsConfiguration2.onTimeMicroSeconds;
@@ -305,4 +358,11 @@ void HighSpeedCore::dispatchError(std::string errorMessage){
 }
 void HighSpeedCore::dispatchMessage(std::string message){
 	onMessage.dispatch(message);
+}
+void HighSpeedCore::calculateAdditionalShutdownTime(float voltage, float& timeSeconds, float& time2Seconds){
+	
+	timeSeconds =  - _hvpsConfiguration1.villardCapacitorsBleedTimeConstantSeconds
+					* std::log(voltage / SAFE_OUTPUT_VOLTAGE);
+	time2Seconds =  - _hvpsConfiguration2.villardCapacitorsBleedTimeConstantSeconds
+					* std::log(voltage / SAFE_OUTPUT_VOLTAGE);
 }

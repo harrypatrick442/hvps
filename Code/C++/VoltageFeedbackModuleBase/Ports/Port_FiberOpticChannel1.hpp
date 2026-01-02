@@ -32,6 +32,7 @@ class Port_FiberOpticChannel1  final:
 		DISALLOW_COPY_MOVE(Port_FiberOpticChannel1);
 		
 		bool setVoltageThreshold(float voltage);
+		void sendVoltage(float voltage, uint16_t rawVoltage);
 		
 	protected:
 		explicit Port_FiberOpticChannel1(

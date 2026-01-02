@@ -4,6 +4,7 @@
 class TimeHelper {
 public:
     // Returns the current time in milliseconds since boot
+    static uint64_t s();
     static uint64_t us();
     static uint64_t ms();
 };

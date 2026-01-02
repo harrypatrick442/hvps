@@ -7,6 +7,7 @@ export default class LiveDataMessage
     r["c"]=o.outputCurrent;
     r["t"]=o.totalOutputEnergy;
     r["f"]=o.firstStageVoltage;
+    r["fr"]=o.frequency;
     r["p"]=o.peakPrimaryCurrent;
     return r;
  }
@@ -16,6 +17,7 @@ export default class LiveDataMessage
     r.outputCurrent=o["c"];
     r.totalOutputEnergy=o["t"];
     r.firstStageVoltage=o["f"];
+    r.frequency=o["fr"];
     r.peakPrimaryCurrent=o["p"];
    return r;
  }

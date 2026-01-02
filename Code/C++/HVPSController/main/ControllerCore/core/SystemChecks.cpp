@@ -91,7 +91,7 @@ bool _suspended_voltageFeedbackModule_highsSpeedFeedback(
 		errorMessage = "High speed feedback did not indicate threshold reached during testing "+moduleFriendlyName+" high speed feedback";
 		return false;
 	}
-	if(!Port_OutputVoltageFeedback::getInstance().setForceThresholdReachedFeedback(false)){
+	if(!Port_OutputVoltageFeedback::getInstance().setForceThresholdReachedFeedback(nullptr)){
 		errorMessage = "Failed to communicate with "+moduleFriendlyName+" during testing high speed feedback (setting forced off)";
 		return false;
 	}

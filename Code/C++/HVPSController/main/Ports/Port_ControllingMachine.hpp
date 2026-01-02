@@ -32,7 +32,7 @@ public:
 	void sendLiveData(LiveDataMessage liveDataMessage);
 	//return errorFree
 	uint32_t greetVoltageFeedbackModules();
-
+	bool getIsOpen();
 protected:
     explicit Port_ControllingMachine(
 		IDuplexChannel& channel,
@@ -41,20 +41,27 @@ protected:
 		Port_FirstStageVoltageFeedback& port_FirstStageVoltageFeedback,
 		Port_OutputVoltageFeedback& port_OutputVoltageFeedback)noexcept;
 	virtual ~Port_ControllingMachine();
+private:
+	
+public:
+	Event<> onOpened;
+	Event<> onClosed;
+private:
     IDuplexChannel&  _channel;
 	HighSpeedCore& _highSpeedCore;
     TicketedSender	_ticketedSender;
 	Timer _timerSendPing;
 	Port_FirstStageVoltageFeedback& _port_FirstStageVoltageFeedback;
 	Port_OutputVoltageFeedback& _port_OutputVoltageFeedback;
-	
-private:
+	std::atomic<bool> _isOpen;
 	EventConnection _eventConnectionHighSpeedCoreOnSystemStateChanged;
 	EventConnection _eventConnectionHighSpeedCoreOnError;
+	EventConnection _eventConnectionHighSpeedCoreOnMessage;
 	EventConnection _eventConnectionOnOpened;
 	EventConnection _eventConnectionOnClosed;
 	EventConnection _eventConnectionOnGotGreetingMessageFirstStageVoltageFeedbackModule;
 	EventConnection _eventConnectionOnGotGreetingMessageOutputVoltageFeedbackModule;
+private:
 	void handleRunSystemChecksOnlyMessage(cJSON* message);
 	void handleShutDownMessage(cJSON* message);
 	void handleStartMessage(cJSON* message);
@@ -74,4 +81,6 @@ private:
 	void handleGotGreetingMessageFromVoltageFeedbackModule(GreetingMessage* greetingMessage);
 	void handleHighSpeedCoreError(std::string errorMessage);
 	void handleHighSpeedCoreMessage(std::string message);
+	void dispatchOnOpened();
+	void dispatchOnClosed();
 };

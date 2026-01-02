@@ -86,7 +86,7 @@ extern "C" void app_main(void)
 			port_OutputVoltageFeedback
 	);
 							 
-	LiveDataBroadcaster::initialize(liveDataCache, portControllingMachine);
+	LiveDataBroadcaster::initialize(liveDataCache, portControllingMachine, highSpeedCore.getFrequencyMeter());
 	vTaskDelete(NULL); // Delete the current task*/
 }  
 

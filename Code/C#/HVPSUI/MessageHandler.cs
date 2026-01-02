@@ -57,7 +57,10 @@ namespace HVPSUI
             _DeviceRegistrationMessageHandler.RegisterMethod<
                 ConsoleMessage>(
                     Native.MessageTypes.ConsoleMessage,
-                    _WebViewMessagingInterface.Send
+                    (a)=>
+                    {
+                        _WebViewMessagingInterface.Send(a);
+                    }
                 );
             _DeviceRegistrationMessageHandler.RegisterMethod<
                 ErrorMessage>(
@@ -72,6 +75,12 @@ namespace HVPSUI
                 StateChangedMessage>(
                 HVPSAPI.MessageTypes.StateChanged, _WebViewMessagingInterface.Send);
             _DeviceRegistrationMessageHandler.OnMessage += (o, e) => _PingDisconnectDetector.Received();
+            _DeviceRegistrationMessageHandler.RegisterMethod<
+                LiveDataMessage>(
+                HVPSAPI.MessageTypes.LiveData, (a)=>
+                {
+                    _WebViewMessagingInterface.Send(a);
+                });
         }
         private void HandleMessageFromJavaScript(object sender, TypedMessageEventArgs e) {
             //Logs.Default.Info(e.Message);

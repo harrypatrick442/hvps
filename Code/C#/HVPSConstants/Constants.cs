@@ -13,6 +13,8 @@ namespace HVPSConstants
         public const double VillardCapacitorDeratedMaximumVoltage = 15000;
         public const double VillardCapacitorCapacitance = 1e-9;
         public const double VillardCapacitorTolerancePercent = 10;
+        public const double VillardCapacitorBleedResistance = 5e9*3;
+        public const double VillardCapacitorBleedResistorTolerancePercent = 10;
         public const int NStages = 6;
         public const double VillardDiodeVoltageRating = 35000;
         public const double VillardDiodeCurrentRating = 0.1;

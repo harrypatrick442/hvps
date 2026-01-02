@@ -46,6 +46,7 @@ idf_component_register(
 	"Ticketing/TicketedSender.cpp"
 	"Ticketing/TicketedSenderHandle.cpp"
 	"Ticketing/TicketSource.cpp"
+	"Timing/CPUClockFrequencyHelper.cpp"
 	"Timing/Delay.cpp"
 	"Timing/FrequencyMeter.cpp"
 	"Timing/Timer.cpp"
@@ -82,6 +83,8 @@ idf_component_register(
 	"Generated/Messages/ClearLoggedErrorsMessage.cpp"
 	"Graphics/DisplayBuffer.cpp"
 	"Graphics/PixelHelper.cpp"
+	"Structs/VoltageWithRaw.cpp"
+	"Structs/VoltageWithRawAndTime.cpp"
     PRIV_REQUIRES spi_flash driver bt nvs_flash esp_adc
 	REQUIRES
 		espcoredump

@@ -5,22 +5,23 @@ import NativeAPI from './NativeAPI';
 import {
 	MessageTypes,
 	TicketedMessageType,
-	GetAvailableBluetoothDevicesRequest,
-	GetAvailableBluetoothDevicesResponse,
 	ConnectToBluetoothDeviceRequest,
 	ConnectToBluetoothDeviceResponse,
+	ConsoleMessage,
+	DisconnectedMessage,
+	ErrorMessage,
+	ClearLoggedErrorsMessage,
+	CoreDumpSummaryMessage,
+	GetAvailableBluetoothDevicesRequest,
+	GetAvailableBluetoothDevicesResponse,
+	LastAbortMessage,
+	LiveDataMessage,
+	RunSystemChecksOnlyMessage,
 	StartMessage,
+	StateChangedMessage,
 	StopMessage,
 	ShutDownMessage,
-	RunSystemChecksOnlyMessage,
-	ConsoleMessage,
-	ErrorMessage,
-	DisconnectedMessage,
-	CoreDumpSummaryMessage,
-	LastAbortMessage,
-	TestMessage,
-	ClearLoggedErrorsMessage,
-	StateChangedMessage
+	TestMessage
 } from '../messages';
 class HVPSUIAPI{
 	static shutDown(){
@@ -82,6 +83,13 @@ class HVPSUIAPI{
 				HVPSUIAPI.dispatchEvent({
 					type:'stateChangedMessage',
 					stateChangedMessage:StateChangedMessage.fromJSON(message)
+				});
+				break;
+			case MessageTypes.liveData:
+				console.log('GOT LIVE DATA');
+				HVPSUIAPI.dispatchEvent({
+					type:'liveDataMessage',
+					liveDataMessage:LiveDataMessage.fromJSON(message)
 				});
 				break;
 		}

@@ -72,7 +72,6 @@ bool HardwareUART::configure(){
 	if (_invertRx) inversionMask |= UART_SIGNAL_RXD_INV;
 
 	if (inversionMask != 0) {
-		LOG_INFO("Applying UART line inversion mask: 0x%02X", inversionMask);
 		uart_set_line_inverse(_uartPort, inversionMask);
 	}
 	if(err!=ESP_OK){
@@ -80,7 +79,6 @@ bool HardwareUART::configure(){
 			_uartPort, esp_err_to_name(err), err);
 		return false;
 	}
-	LOG_INFO("UART%d is using baud rate %d", _uartPort, _baudRate);
 	return true;
 }
 size_t HardwareUART::readBytes(char* receiveBuffer, size_t maxlen, uint32_t timeoutMs){
@@ -96,7 +94,6 @@ size_t HardwareUART::readBytes(char* receiveBuffer, size_t maxlen, uint32_t time
 	return static_cast<size_t>(res);
 }
 size_t HardwareUART::writeBytes(const char* jsonWithNewLine, size_t length){
-	LOG_INFO("HardwareUART::writeBytes");
 	int res = uart_write_bytes(
 		/*uart_num*/   _uartPort,   /*uart_port_t*/
 		/*src*/        jsonWithNewLine,          /*const char* or const void* */
@@ -105,7 +102,6 @@ size_t HardwareUART::writeBytes(const char* jsonWithNewLine, size_t length){
 	if(res<0){
 		return 0;
 	}
-	LOG_INFO("HardwareUART::wrote bytes");
 	return static_cast<size_t>(res);
 }
 void HardwareUART::flushTx(){

@@ -21,6 +21,7 @@ public:
 	void shutDown();
 	void setInError(bool value);
 	SystemState getActualSystemState();
+	FrequencyMeter& getFrequencyMeter();
 private:
     friend class SingletonBase<HighSpeedCore>;
 	const float SAFE_OUTPUT_VOLTAGE = 20.0f;
@@ -74,6 +75,7 @@ private:
 	void dispatchError(std::string errorMessage);
 	void dispatchMessage(std::string message);
 	void loopFrequencyMeasurement();
+	void calculateAdditionalShutdownTime(float voltage, float& timeSeconds, float& time2Seconds);
 };
 
 #endif // HIGH_SPEED_CORE_HPP

@@ -2,6 +2,7 @@
 #include "System/SafeAbort.hpp"
 #include "Logging/Log.hpp"
 #include "IO/IOInteruptHelper.hpp"
+#include "Timing/CPUClockFrequencyHelper.hpp"
 #include "Timing/Delay.hpp"
 #include "driver/gptimer.h"
 #include <cstdio>
@@ -296,7 +297,7 @@ uint32_t MRTChannel::nSubPulsesToCCycles(int nSubPulses)
     uint64_t result =
         (static_cast<uint64_t>(_periodUs) *
          static_cast<uint64_t>(nSubPulses) *
-         static_cast<uint64_t>(CONFIG_ESP32_DEFAULT_CPU_FREQ_MHZ)) / N_SUB_PULSES_PER_PULSE;
+         static_cast<uint64_t>(CPUClockFrequencyHelper::getClockFrequencyMHZExact())) / N_SUB_PULSES_PER_PULSE;
 
     if(result > UINT32_MAX)
         return UINT32_MAX;

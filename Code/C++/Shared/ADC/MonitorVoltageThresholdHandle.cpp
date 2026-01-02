@@ -1,5 +1,6 @@
 #include "MonitorVoltageThresholdHandle.hpp"
 #include "ADC.hpp"
+#include "Logging/Log.hpp"
 MonitorVoltageThresholdHandle::MonitorVoltageThresholdHandle(
     adc_channel_t channel,
     float initialThresholdVoltage,
@@ -26,12 +27,14 @@ void MonitorVoltageThresholdHandle::setThresholdVoltage(float voltage) {
 }
 
 void MonitorVoltageThresholdHandle::setVoltageRaw(uint16_t raw) {
+	//LOG_INFO("setVoltageRaw: %d", static_cast<uint32_t>(raw));
     _currentVoltageRaw.store(raw, std::memory_order_relaxed);
 }
 
-float MonitorVoltageThresholdHandle::getVoltage() {
-    uint16_t raw = _currentVoltageRaw.load(std::memory_order_relaxed);
-	return ADC::convertRawToVoltage(raw);
+float MonitorVoltageThresholdHandle::getVoltage(uint16_t& raw) {
+    raw = _currentVoltageRaw.load(std::memory_order_relaxed);
+	float voltage =  ADC::convertRawToVoltage(raw);
+	return voltage;
 }
 uint16_t MonitorVoltageThresholdHandle::getRawThreshold() {
     uint16_t raw = _rawThreshold.load(std::memory_order_relaxed);

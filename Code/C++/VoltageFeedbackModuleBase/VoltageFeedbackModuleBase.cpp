@@ -3,11 +3,11 @@
 #include "System/StayTheFuckAwake.hpp"
 #include "System/SafeAbort.hpp"
 #include "IO/Outputs.hpp"
-#include "IO/Inputs.hpp"
 #include "IO/ADCChannels.hpp"
 #include "Storage/Flash.hpp"
 #include "ADC/ADC.hpp"
 #include "Ports/Port_FiberOpticChannel1.hpp"
+#include "Broadcasting/VoltageBroadcaster.hpp"
 #include "ThresholdMonitor.hpp"
 #include "esp_log.h"
 #define WATCHDOG_TIMEOUT_MILLISECONDS 10000
@@ -20,7 +20,6 @@ void VoltageFeedbackModuleBase::main(const VoltageFeedbackModuleConfiguration& c
 	Outputs::toSafeReversible();
 	validateConfig();
 	ADC::initialize();
-	Inputs::initialize();
 	esp_wifi_stop();
 	esp_wifi_deinit();
     esp_log_set_vprintf(vprintf);
@@ -34,7 +33,8 @@ void VoltageFeedbackModuleBase::main(const VoltageFeedbackModuleConfiguration& c
 			config1,
 			config2
 		);
-	Port_FiberOpticChannel1::initialize(thresholdMonitor);
+	Port_FiberOpticChannel1& port = Port_FiberOpticChannel1::initialize(thresholdMonitor);
+	VoltageBroadcaster::initialize(thresholdMonitor, port);
 /*
 	bool isHigh = true;
 	while(true){

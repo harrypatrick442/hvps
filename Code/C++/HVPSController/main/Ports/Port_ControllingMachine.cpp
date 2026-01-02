@@ -41,7 +41,9 @@ _timerSendPing(
 	/*bool repeat*/ true
 ),
 _port_FirstStageVoltageFeedback(port_FirstStageVoltageFeedback),
-_port_OutputVoltageFeedback(port_OutputVoltageFeedback){
+_port_OutputVoltageFeedback(port_OutputVoltageFeedback),
+_isOpen(false)
+{
     _channel.setIncomingMessageHandler(this);
 	_eventConnectionHighSpeedCoreOnSystemStateChanged = _highSpeedCore.onSystemStateChanged.addHandler(
 		[this](SystemState systemState){
@@ -53,7 +55,7 @@ _port_OutputVoltageFeedback(port_OutputVoltageFeedback){
 			this->handleHighSpeedCoreError(errorMessage);
 		}
 	);
-	_eventConnectionHighSpeedCoreOnError = _highSpeedCore.onMessage.addHandler(
+	_eventConnectionHighSpeedCoreOnMessage = _highSpeedCore.onMessage.addHandler(
 		[this](std::string message){
 			this->handleHighSpeedCoreMessage(message);
 		}
@@ -78,6 +80,9 @@ _port_OutputVoltageFeedback(port_OutputVoltageFeedback){
 Port_ControllingMachine::~Port_ControllingMachine() noexcept
 {
 	
+}
+bool Port_ControllingMachine::getIsOpen(){
+	return _isOpen.load(std::memory_order_relaxed);
 }
 void Port_ControllingMachine::sendConsoleMessage(const std::string& str, bool isError) {
     ConsoleMessage consoleMessage(isError, str.c_str());   // automatic storage, no `new`
@@ -151,9 +156,13 @@ void Port_ControllingMachine::handleOnOpened(){
 	_timerSendPing.start();
 	sendErrors();
 	sendState();
+	_isOpen.store(true, std::memory_order_relaxed);
+	dispatchOnOpened();
 }
 void Port_ControllingMachine::handleOnClosed(){
 	_timerSendPing.stop();
+	_isOpen.store(false, std::memory_order_relaxed);
+	dispatchOnClosed();
 }
 void Port_ControllingMachine::handleClearLoggedErrors(){
 	CrashReporter::clearRecord();
@@ -227,5 +236,11 @@ void Port_ControllingMachine::handleHighSpeedCoreError(std::string errorMessage)
 }
 void Port_ControllingMachine::handleHighSpeedCoreMessage(std::string message){
 	sendConsoleMessage(message, false);
+}
+void Port_ControllingMachine::dispatchOnOpened(){
+		onOpened.dispatch();
+}
+void Port_ControllingMachine::dispatchOnClosed(){ 
+		onClosed.dispatch();
 }
 

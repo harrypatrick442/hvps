@@ -35,7 +35,6 @@ _ch1(nullptr) {
 DAC::~DAC() = default;
 void DAC::setChannel0Voltage(float voltage, float vMax) {
 	uint8_t value = voltageToValue(voltage, vMax);
-	LOG_INFO("value is: %d", value);
 	setChannel0Value(value);
 }
 void DAC::setChannel1Voltage(float voltage, float vMax) {

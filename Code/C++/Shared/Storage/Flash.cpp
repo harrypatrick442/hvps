@@ -13,22 +13,21 @@ bool Flash::getIsInitialized(){
 
 void Flash::initialize() {
     if (_isInitialized) {
-        LOG_INFO("NVS is already initialized");
+        LOG_WARN("NVS is already initialized");
         return;
     }
 
     esp_err_t ret;
-    LOG_INFO("Initializing NVS");
     // Initialize NVS
     ret = nvs_flash_init();
     bool noFreePages = ret == ESP_ERR_NVS_NO_FREE_PAGES;
     bool newVersionFound = ret == ESP_ERR_NVS_NEW_VERSION_FOUND;
     if (noFreePages || newVersionFound) {
         if (noFreePages) {
-            LOG_INFO("Erasing NVS because of no free pages");
+            LOG_WARN("Erasing NVS because of no free pages");
         }
         if (newVersionFound) {
-            LOG_INFO("Erasing NVS because of new version found");
+            LOG_WARN("Erasing NVS because of new version found");
         }
         ESP_ERROR_CHECK(nvs_flash_erase());
         ret = nvs_flash_init();
@@ -36,7 +35,6 @@ void Flash::initialize() {
     ESP_ERROR_CHECK(ret);
 
     _isInitialized = true;
-    LOG_INFO("NVS initialized successfully");
 }
 bool Flash::setFloat(const char* namespaceName, const char* key, float value) {
     if (!_isInitialized) {

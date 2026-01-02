@@ -18,16 +18,6 @@ _ticketedSender(
 	_messageSender = &_fiberOpticChannel_1;
 	_fiberOpticChannel_1.startAsNewNonPriorityTask();
 }
-//TOREMOVE
-bool Port_FiberOpticChannel1::setVoltageThreshold(float voltage){
-	SetVoltageThresholdRequest request(voltage);
-	std::shared_ptr<cJSON> response = _ticketedSender.send(request.toJSON(), TIMEOUT);
-	if(response==nullptr){
-		return false;
-	}
-	JHelper::printJsonKeysAndValues(response.get());
-	return true;
-}
 void Port_FiberOpticChannel1::handleIncomingMessage(cJSON* message, bool& dontDelete, MessageIntegrity messageIntegrity){
 	if(_messageSender==nullptr){
         LOG_ERROR("_messageSender was null. You must set it with setMessageSender");

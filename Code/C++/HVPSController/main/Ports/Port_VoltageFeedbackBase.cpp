@@ -11,7 +11,7 @@
 #include "Generated/Messages/GetVoltageRequest.hpp"
 #include "Generated/Messages/GetVoltageResponse.hpp"
 #include "Generated/Messages/SetForceVoltageThresholdReachedFeedbackRequest.hpp"
-//#include "Generated/Messages/SetForceVoltageThresholdReachedFeedbackResponse.hpp"
+#include "Generated/Messages/SetForceVoltageThresholdReachedFeedbackResponse.hpp"
 #include "Generated/Messages/GreetingRequest.hpp"
 #include "Generated/Messages/GreetingResponse.hpp"
 #include "Generated/Messages/VoltageMessage.hpp"
@@ -37,11 +37,13 @@ Port_VoltageFeedbackBase::~Port_VoltageFeedbackBase() noexcept
 }
 bool Port_VoltageFeedbackBase::setVoltageThreshold(float voltage){
 	SetVoltageThresholdRequest request(voltage);
-	std::shared_ptr<cJSON> response = _ticketedSender.send(request.toJSON(), TIMEOUT);
-	if(response==nullptr){
+	std::shared_ptr<cJSON> responseJSON = _ticketedSender.send(request.toJSON(), TIMEOUT);
+	if(responseJSON==nullptr){
 		return false;
 	}
-	return true;
+	CleanupBucket cleanupBucket;
+	SetVoltageThresholdResponse* response = SetVoltageThresholdResponse::fromJSON(responseJSON.get(), cleanupBucket);
+	return response->getVoltage()==voltage;
 }
 bool Port_VoltageFeedbackBase::getVoltageThreshold(float& voltage) {
     voltage = -1.0f;
@@ -68,13 +70,16 @@ bool Port_VoltageFeedbackBase::getVoltage(float& voltage) {
     voltage = response->getVoltage();
     return true;
 }
-bool Port_VoltageFeedbackBase::setForceThresholdReachedFeedback(bool force){
+bool Port_VoltageFeedbackBase::setForceThresholdReachedFeedback(std::optional<bool> force){
     SetForceVoltageThresholdReachedFeedbackRequest request(force);
     std::shared_ptr<cJSON> jsonResponse = _ticketedSender.send(request.toJSON(), TIMEOUT);
     if (!jsonResponse) {
         return false;
     }
-    return true;
+	CleanupBucket cleanupBucket;
+	SetForceVoltageThresholdReachedFeedbackResponse* response
+	 = SetForceVoltageThresholdReachedFeedbackResponse::fromJSON(jsonResponse.get(), cleanupBucket);
+	return force==response->getForce();
 }
 void Port_VoltageFeedbackBase::handleIncomingMessage(cJSON* message, bool& dontDelete, MessageIntegrity messageIntegrity){
 	if(_messageSender==nullptr){
@@ -104,7 +109,9 @@ void Port_VoltageFeedbackBase::handleVoltageMessage(cJSON* message){
 	CleanupBucket cleanupBucket;
 	VoltageMessage* voltageMessage = VoltageMessage::fromJSON(message, cleanupBucket);
 	float voltage = voltageMessage->getVoltage();
-	onGotVoltage.dispatch(voltage);
+	uint16_t raw = voltageMessage->getRawVoltage();
+	VoltageWithRaw voltageWithRaw(voltage, raw);
+	onGotVoltage.dispatch(voltageWithRaw);
 }
 GreetingResponse* Port_VoltageFeedbackBase::greet(
 	CleanupBucket& cleanupBucket){

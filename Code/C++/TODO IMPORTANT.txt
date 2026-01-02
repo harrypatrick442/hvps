@@ -1,0 +1,2 @@
+Must make sure voltage threshold set is capped. 
+that low level locking mechanism check where used that it seemed to cause problems.

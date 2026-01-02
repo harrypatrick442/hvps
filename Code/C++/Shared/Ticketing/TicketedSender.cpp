@@ -51,10 +51,7 @@ void TicketedSender::removeFromInstances(TicketedSender* ticketedSender){
 }
 std::shared_ptr<cJSON> TicketedSender::send(cJSON* request, uint64_t timeoutMilliseconds, CancellationToken* cancellationToken){	
 	uint64_t ticket = TicketSource::next();
-	LOG_INFO("Ticket sent was %" PRIu64 "", ticket);
 	JHelper::setUInt64(request, MessageConstants::TICKET_KEY, ticket);
-	LOG_INFO("Modified ticketed message to send key value pairs");
-	JHelper::printJsonKeysAndValues(request);
 	TicketedSenderHandle* handle = new TicketedSenderHandle(
 		TimeHelper::ms() + timeoutMilliseconds);
 	std::unique_lock<std::mutex> lock(_mutex);
