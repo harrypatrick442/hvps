@@ -99,28 +99,36 @@ bool SystemChecks::_suspended_voltageFeedbackModule_highsSpeedFeedback(
 	Port_VoltageFeedbackBase& port_VoltageFeedbackBase,
 	std::function<bool()> getThresholdReached
 ){
-	if(getThresholdReached()){
-		if(!port_VoltageFeedbackBase.setForceThresholdReachedFeedback(false)){
-			errorMessage = INCLUDE_LINE_ON_END("Failed to communicate with "+moduleFriendlyName);
-			return false;
-		}
+	bool success = false;
+	while(true){
 		if(getThresholdReached()){
-			errorMessage = INCLUDE_LINE_ON_END("Threshold shouldnt be in reached state for "+moduleFriendlyName);
-			return false;
+			if(!port_VoltageFeedbackBase.setForceThresholdReachedFeedback(false)){
+				errorMessage = INCLUDE_LINE_ON_END("Failed to communicate with "+moduleFriendlyName);
+				break;
+			}
+			if(getThresholdReached()){
+				errorMessage = INCLUDE_LINE_ON_END("Threshold shouldnt be in reached state for "+moduleFriendlyName);
+				break;
+			}
 		}
+		if(!port_VoltageFeedbackBase.setForceThresholdReachedFeedback(true)){
+			errorMessage = INCLUDE_LINE_ON_END("Failed to communicate with "+moduleFriendlyName);
+			break;
+		}
+		if(!getThresholdReached()){
+			errorMessage = "High speed feedback did not indicate threshold reached during testing "+moduleFriendlyName+" high speed feedback";
+			break;
+		}
+		if(!port_VoltageFeedbackBase.setForceThresholdReachedFeedback(std::nullopt)){
+			errorMessage = INCLUDE_LINE_ON_END("Failed to communicate with "+moduleFriendlyName);
+			break;
+		}
+		success = true;
+		break;
 	}
-	if(!port_VoltageFeedbackBase.setForceThresholdReachedFeedback(true)){
-		errorMessage = INCLUDE_LINE_ON_END("Failed to communicate with "+moduleFriendlyName);
-		return false;
-	}
-	if(!getThresholdReached()){
-		errorMessage = "High speed feedback did not indicate threshold reached during testing "+moduleFriendlyName+" high speed feedback";
-		return false;
-	}
-	if(!port_VoltageFeedbackBase.setForceThresholdReachedFeedback(std::nullopt)){
-		errorMessage = INCLUDE_LINE_ON_END("Failed to communicate with "+moduleFriendlyName);
-		return false;
-	}
+	port_VoltageFeedbackBase.setForceThresholdReachedFeedback(std::nullopt);
+	return success;
+	
 	/*
 	if(getThresholdReached()){
 		errorMessage = "High speed feedback did not indicate threshold not reached during testing "+moduleFriendlyName

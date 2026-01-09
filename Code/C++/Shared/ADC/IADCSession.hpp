@@ -19,6 +19,7 @@ public:
     virtual void setChannel(adc_channel_t ch) = 0;
     virtual float getCorrection() = 0;
     virtual float getVoltage() = 0;
+	virtual bool getRawQuickly(uint16_t& value) = 0;
 	virtual void measureNReadsPerSecond() = 0;
 	virtual std::shared_ptr<IMonitorCurrentAndPowerHandle> monitorCurrentAndPower(
 		float senseResistanceOhms, 

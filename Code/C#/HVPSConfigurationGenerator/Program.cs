@@ -76,7 +76,8 @@ namespace HVPSConfigurationGenerator
                         (1d+(Constants.VillardCapacitorTolerancePercent / 100d))
                         *Constants.VillardCapacitorCapacitance
                         *(1d + (Constants.VillardCapacitorBleedResistorTolerancePercent / 100d)) 
-                        * Constants.VillardCapacitorBleedResistance)
+                        * Constants.VillardCapacitorBleedResistance),
+                currentSenseVoltageToCurrentAmps = (float)Constants.CurrentFeedbackSenseVoltageToCurrent
             };
             VoltageFeedbackModuleConfiguration firstStageVoltageFeedbackModuleConfigStruct = new VoltageFeedbackModuleConfiguration
             {

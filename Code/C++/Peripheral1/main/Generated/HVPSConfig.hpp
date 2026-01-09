@@ -4,6 +4,7 @@
 #include "Core/Checksums/Crc32.hpp"
 inline constexpr HVPSConfiguration HVPSConfig1{
     .broadcastFrequencyHz = 2,
+    .currentSenseVoltageToCurrentAmps = 17.543858,
     .firstStageVoltageThresholdVolts = 14255.604,
     .maxAverageOutputPowerWatts = 12.5,
     .maxFlybackEnergyPerCycleJouls = 0.0098,
@@ -25,7 +26,7 @@ inline bool validateHVPSConfig(){
         SAFE_ABORT("The CRC32 computed for HVPSConfig2 did not match the CRC32 for HVPSConfig1");
         return false;
     }
-    if (podConfig1 != 3182914317){
+    if (podConfig1 != 2337882411){
         SAFE_ABORT("The CRC32 computed for HVPSConfig1 did not match the expected value");
         return false;
     }

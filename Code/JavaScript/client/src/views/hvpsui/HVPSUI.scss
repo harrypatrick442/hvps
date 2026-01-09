@@ -85,20 +85,21 @@
 			border:1px solid var(--color-4);
 			color:var(--color-2);
 			margin-right:3px;
+			margin-bottom:3px;
 			&.start-button{
-				background-color:var(--color-11);
+				background-color:var(--color-state-live);
 			}
 			&.stop-button{
-				background-color:var(--color-12);
+				background-color:var(--color-state-idle);
 			}
 			&.shut-down-button{
-				background-color:var(--color-13);
+				background-color:var(--color-state-shutting-down);
 			}
 			&.run-system-checks-only-button{
-				background-color:var(--color-14);
+				background-color:var(--color-state-running-system-checks);
 			}
 			&.clear-logged-errors-on-device-button{
-				background-color:var(--color-12);
+				background-color:var(--color-state-error);
 			}
 			box-sizing:border-box;
 			padding:4px;
@@ -145,17 +146,38 @@
 		display:flex;
 		flex-grow: 1;
 		overflow:hidden;
+		height:100%;
 		.console{
 			margin-top:3px;
 			position:relative;
 		}
-		.clear-console-button{			
+		.clear-console-button,
+		.start-auto-scroll-button,
+		.stop-auto-scroll-button{			
 			position: absolute;
 			height: 20px;
 			width:20px;
-			right: 15px;
 			bottom:2px;
 			z-index:1;
+		}
+		.start-auto-scroll-button,
+		.stop-auto-scroll-button{
+			left: 0px;
+		}
+		.stop-auto-scroll-button{
+			display:none;
+		}
+		.start-auto-scroll-button{
+			display:block;
+		}
+		&.auto-scrolling .start-auto-scroll-button{
+			display:none;
+		}
+		&.auto-scrolling .stop-auto-scroll-button{
+			display:block;
+		}
+		.clear-console-button{
+			right: 15px;
 		}
 	}
 	&.show-bluetooth-reconnect{

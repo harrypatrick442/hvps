@@ -105,10 +105,10 @@ bool TicketedSender::handleTicketedMessage(cJSON* message, char* type){
 		return false;
 	}
 	TicketedSenderHandle* handle = it->second;
-	lock.unlock();
 	if(handle->complete(message)){
 		cJSON_Delete(message);
 	}
+	lock.unlock();
 	return true;
 }
 void TicketedSender::checkTimedOutOnAllInstances()

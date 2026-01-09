@@ -60,6 +60,11 @@ _isOpen(false)
 			this->handleHighSpeedCoreMessage(message);
 		}
 	);
+	_eventConnectionHighSpeedCoreOnWarning = _highSpeedCore.onWarning.addHandler(
+		[this](std::string message){
+			this->handleHighSpeedCoreWarning(message);
+		}
+	);
 	_eventConnectionOnOpened = _channel.addOnOpenedHandler([this](const ChannelEventArgs& e){
 				handleOnOpened();
 	});
@@ -236,6 +241,9 @@ void Port_ControllingMachine::handleHighSpeedCoreError(std::string errorMessage)
 }
 void Port_ControllingMachine::handleHighSpeedCoreMessage(std::string message){
 	sendConsoleMessage(message, false);
+}
+void Port_ControllingMachine::handleHighSpeedCoreWarning(std::string message){
+	sendConsoleMessage(std::string("WARNING: ")+message, true);
 }
 void Port_ControllingMachine::dispatchOnOpened(){
 		onOpened.dispatch();

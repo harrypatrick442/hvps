@@ -31,6 +31,7 @@ namespace HVPSConstants
         public const double OutputVoltageFeedbackPotentialDividerRatio = 3.08e4;
         //public const double OutputResistorMaximumEnergy = ;
         public const double OutputCurrentLimitingResistorMaxPowerDisipation = 15;
+        public const double CurrentFeedbackSenseVoltageToCurrent = 1f/(0.001f * 57f);
         public const int PingTimeoutMilliseconds = 3000;
         public static readonly RGB IdleColour = new RGB("#24aee0");
         public const double IdleFlashHz = 2;

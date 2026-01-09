@@ -2,6 +2,7 @@
 #include <cstdint>
 struct HVPSConfiguration {
     const float broadcastFrequencyHz;
+    const float currentSenseVoltageToCurrentAmps;
     const float firstStageVoltageThresholdVolts;
     const float maxAverageOutputPowerWatts;
     const float maxFlybackEnergyPerCycleJouls;

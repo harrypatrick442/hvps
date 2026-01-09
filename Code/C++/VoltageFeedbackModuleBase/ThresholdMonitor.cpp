@@ -5,6 +5,7 @@
 #include "Tasks/TaskFactory.hpp"
 #include "Storage/Flash.hpp"
 #include "System/SafeAbort.hpp"
+#include "Logging/Log.hpp"
 #include <functional>
 #include "Macros/GetFileName.hpp"
 const char* ThresholdMonitor::getTag() {return GET_FILE_NAME;}
@@ -50,7 +51,8 @@ _actualReached(false)
 	}, "HVPSCircuitEmulator::debug");*/
 }
 float ThresholdMonitor::getVoltage(uint16_t& raw){
-	return fromScaledADCToActual(_monitorVoltageThresholdHandle->getVoltage(raw));
+	float voltage =  fromScaledADCToActual(_monitorVoltageThresholdHandle->getVoltage(raw));
+	return voltage;
 }
 void ThresholdMonitor::setThresholdVoltage(float voltage){
 	float tapThresholdVoltage, tapThresholdVoltageCopy;
@@ -70,11 +72,13 @@ void ThresholdMonitor::setForce(std::optional<bool> forceReached) noexcept{
 		bool actualReached = _actualReached;
 		Outputs::setThresholdReached(actualReached);
 		_lock.unlock();
+		LOG_INFO(actualReached?"set threshold reached to true using actual":"set threshold reached to false using actual");
 		return;
 	}
 	bool value = forceReached.value();
 	Outputs::setThresholdReached(value);//TODO should lock wrap call to set actual pin
 	_lock.unlock();
+	LOG_INFO(value?"set threshold reached to true using force":"set threshold reached to false using force");
 }
 void ThresholdMonitor::onVoltageThresholdReachedChanged(bool actualReached)noexcept{
 	
@@ -86,11 +90,13 @@ void ThresholdMonitor::onVoltageThresholdReachedChanged(bool actualReached)noexc
 		_lock.unlock();
 		//LOG_INFO(" AA not forcing");
 		//LOG_INFO(actualReached?" AA reached":" AA not reached");
+		LOG_INFO(actualReached?"set threshold reached to true using actual in changed":"set threshold reached to false using actual in changed");
 		return;
 	}
 	bool value = forceReached.value();
 	Outputs::setThresholdReached(value);
 	_lock.unlock();
+		LOG_INFO(value?"set threshold reached to true using force in changed":"set threshold reached to false using force in changed");
 	//LOG_INFO(" AA forcing");
 	//LOG_INFO(value?" AA forcing actualReached":" AA forcing not reached");
 }

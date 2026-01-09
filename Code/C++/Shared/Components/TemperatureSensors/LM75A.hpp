@@ -11,7 +11,7 @@ public:
     ~LM75A();
 
     std::string GetName() const;
-    float GetTemperature(bool& successful);
+    esp_err_t GetTemperature(float& temperature);
 
 private:
     IReadWrite& readWrite;

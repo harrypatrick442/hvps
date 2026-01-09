@@ -1,0 +1,33 @@
+
+Last Abort, Subsystem: HVPSController, Reason: line 73: Failed to create non-priority task: TransientWorker
+0x400e656d
+0x400e65e1
+0x400e288d
+0x400e6f0a
+0x400e7123
+0x400e43c9
+0x400e37bc
+0x400e3868
+0x400ede6d
+0x400eeebe
+0x400fffb9
+0x401015c7
+0x40095c59
+Core Dump Summary:
+Crash subsystem: HVPSController, task: TransientWorker PC=0x401188b9
+Backtrace depth=8 corrupted=1
+#0 0x401188b9
+#1 0x40083b2e
+#2 0x40083b39
+#3 0x40083b4b
+#4 0x400864b6
+#5 0x40082bb9
+#6 0x400842b9
+#7 0x400973dd
+Cause of exception: 0x47
+A registers: 0x80083b31, 0x3ffbff00, 0x3ffe3cfc, 0x00000003, 0x00000000, 0x3ffeb440, 0x3ffc09c8, 0x3ffeb530, 0x80083aac, 0x00000000, 0x0000001b, 0x00000000, 0x3ffeb440, 0x3ffeb420, 0x3ffc09c8, 0x00000001
+EPCx registers: 0x4008e613, 0x00000000, 0x400973e0, 0x40082914, 0x401188bc, 0x00000000
+Version: 258
+Task pointer: 0x3ffbc498
+Virtual address of exception: 0x0
+App SHA256: 64633738613736383500

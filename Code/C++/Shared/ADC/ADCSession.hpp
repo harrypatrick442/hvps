@@ -72,6 +72,10 @@ public:
         check();
         return _real->getVoltage();
     }
+	bool getRawQuickly(uint16_t& value) override{
+        check();
+        return _real->getRawQuickly(value);
+    }
 
     void measureNReadsPerSecond() override {
         check();

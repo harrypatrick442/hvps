@@ -11,26 +11,41 @@ class LiveDataMessage
    public:
        static const char* TYPE;
    private:
-        float _firstStageVoltage;
-        std::optional<uint32_t> _frequency;
-        float _outputCurrent;
-        float _outputVoltage;
-        float _peakPrimaryCurrent;
-        float _totalOutputEnergy;
+        uint8_t _firstStageVoltageValueBoundType;
+        float _firstStageVoltageVolts;
+        float _frequencyHz;
+        uint8_t _frequencyHzValueBoundType;
+        float _outputCurrentAmps;
+        uint8_t _outputVoltageValueBoundType;
+        float _outputVoltageVolts;
+        float _peakPrimaryCurrentAmps;
+        float _primaryPowerWatts;
+        float _totalOutputEnergyJouls;
+        float _totalPrimaryEnergyJouls;
    public:
-        float getFirstStageVoltage()const noexcept;
-        std::optional<uint32_t> getFrequency()const noexcept;
-        float getOutputCurrent()const noexcept;
-        float getOutputVoltage()const noexcept;
-        float getPeakPrimaryCurrent()const noexcept;
-        float getTotalOutputEnergy()const noexcept;
+        uint8_t getFirstStageVoltageValueBoundType()const noexcept;
+        float getFirstStageVoltageVolts()const noexcept;
+        float getFrequencyHz()const noexcept;
+        uint8_t getFrequencyHzValueBoundType()const noexcept;
+        float getOutputCurrentAmps()const noexcept;
+        uint8_t getOutputVoltageValueBoundType()const noexcept;
+        float getOutputVoltageVolts()const noexcept;
+        float getPeakPrimaryCurrentAmps()const noexcept;
+        float getPrimaryPowerWatts()const noexcept;
+        float getTotalOutputEnergyJouls()const noexcept;
+        float getTotalPrimaryEnergyJouls()const noexcept;
         LiveDataMessage(
-           float firstStageVoltage, 
-           std::optional<uint32_t> frequency, 
-           float outputCurrent, 
-           float outputVoltage, 
-           float peakPrimaryCurrent, 
-           float totalOutputEnergy) noexcept;
+           uint8_t firstStageVoltageValueBoundType, 
+           float firstStageVoltageVolts, 
+           float frequencyHz, 
+           uint8_t frequencyHzValueBoundType, 
+           float outputCurrentAmps, 
+           uint8_t outputVoltageValueBoundType, 
+           float outputVoltageVolts, 
+           float peakPrimaryCurrentAmps, 
+           float primaryPowerWatts, 
+           float totalOutputEnergyJouls, 
+           float totalPrimaryEnergyJouls) noexcept;
         ~LiveDataMessage();
         static LiveDataMessage* fromJSON(cJSON* j, CleanupBucket& cleanupBucket) noexcept;
         cJSON* toJSON() noexcept;

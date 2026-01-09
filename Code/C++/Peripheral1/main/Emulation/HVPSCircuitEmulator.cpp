@@ -72,6 +72,16 @@ void HVPSCircuitEmulator::loop(){
 		if(newVillardEnergyJouls<0)newVillardEnergyJouls = 0;
 		villardEnergyChanged(newVillardEnergyJouls);
 		_frequencyMeter.tick();
+		/*if(newVillardEnergyJouls>0){
+			LOG_INFO("_cpuClockFrequencyMHZ: %f", _cpuClockFrequencyMHZ);
+			LOG_INFO("nOnCycles: %"PRIu32, nOnCycles);
+			LOG_INFO("onTimeUs: %f", onTimeUs);
+			LOG_INFO("energyIntoFlyback: %f", energyIntoFlyback);
+			LOG_INFO("_hvpsConfig.maxFlybackEnergyPerCycleJouls : %f", _hvpsConfig.maxFlybackEnergyPerCycleJouls );
+			LOG_INFO("_hvpsConfig.onTimeMicroSeconds : %f", _hvpsConfig.onTimeMicroSeconds);
+			LOG_INFO("newVillardEnergyJouls: %f", newVillardEnergyJouls);
+			break;
+		}*/
 	}
 }
 void HVPSCircuitEmulator::printVoltagesLoop(){

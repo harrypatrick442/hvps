@@ -229,7 +229,6 @@ void Bluetooth::esp_spp_callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *p
 			_connectionHandle = 0;
 			dispatchOnClosed();
 			emptyOutgoingQueue();
-            LOG_INFO("Client Disconnected");
             break;
 
         case ESP_SPP_DATA_IND_EVT:
@@ -302,7 +301,6 @@ void Bluetooth::sendMessage(cJSON* message, bool deleteMessageAfter) {
 		free(json_str);
 		return;
 	}
-
 	free(json_str); 
     _outgoingQueue.push(json_with_newline);
     tryFlushSendQueue();  // Attempt to send immediately if idle

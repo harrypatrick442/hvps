@@ -8,6 +8,7 @@ constructor({self, properties}){
 		this.getValue = this.getValue.bind(this);
 		this.setValue = this.setValue.bind(this);
 		this.setProperties = this.setProperties.bind(this);
+		this.getKeys = this.getKeys.bind(this);
 		this._setPropertyValue = this._setPropertyValue.bind(this);
 		this.getChanged = this.getChanged.bind(this);
 		this.add = this.add.bind(this);
@@ -57,6 +58,9 @@ constructor({self, properties}){
 			(value)=>this._setPropertyValue(property, value),
 			true
 		);
+	}
+	getKeys(){
+		return this._mapPropertyNameToState.keys();
 	}
 	_setPropertyValue(property, value){
 		const existingValue = property.value;

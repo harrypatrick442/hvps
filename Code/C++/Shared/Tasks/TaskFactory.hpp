@@ -4,6 +4,7 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 #include "System/SafeAbort.hpp"
+#include "System/MemoryHelper.hpp"
 #include "../Logging/Log.hpp"
 
 class TaskFactory {
@@ -50,8 +51,10 @@ public:
 
 		auto trampoline = [](void* param) {
 			// take ownership of wrapper so it is deleted when task ends
-			std::unique_ptr<Wrapper> w(static_cast<Wrapper*>(param));
-			w->func(w->obj);
+			{
+				std::unique_ptr<Wrapper> w(static_cast<Wrapper*>(param));
+				w->func(w->obj);
+			}
 			vTaskDelete(nullptr);
 		};
 
@@ -87,8 +90,10 @@ public:
 
 		auto trampoline = [](void* param) {
 			// take ownership of wrapper so it's deleted when done
-			std::unique_ptr<Wrapper> w(static_cast<Wrapper*>(param));
-			w->func(w->obj);
+			{
+				std::unique_ptr<Wrapper> w(static_cast<Wrapper*>(param));
+				w->func(w->obj);
+			}
 			vTaskDelete(nullptr);
 		};
 

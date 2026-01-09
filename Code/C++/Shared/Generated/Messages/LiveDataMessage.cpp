@@ -1,57 +1,92 @@
 #include "./LiveDataMessage.hpp"
 const char* LiveDataMessage::TYPE = "ld";
 LiveDataMessage::LiveDataMessage(
-    float firstStageVoltage, 
-    std::optional<uint32_t> frequency, 
-    float outputCurrent, 
-    float outputVoltage, 
-    float peakPrimaryCurrent, 
-    float totalOutputEnergy):
-        _firstStageVoltage(firstStageVoltage),
-        _frequency(frequency),
-        _outputCurrent(outputCurrent),
-        _outputVoltage(outputVoltage),
-        _peakPrimaryCurrent(peakPrimaryCurrent),
-        _totalOutputEnergy(totalOutputEnergy){
+    uint8_t firstStageVoltageValueBoundType, 
+    float firstStageVoltageVolts, 
+    float frequencyHz, 
+    uint8_t frequencyHzValueBoundType, 
+    float outputCurrentAmps, 
+    uint8_t outputVoltageValueBoundType, 
+    float outputVoltageVolts, 
+    float peakPrimaryCurrentAmps, 
+    float primaryPowerWatts, 
+    float totalOutputEnergyJouls, 
+    float totalPrimaryEnergyJouls):
+        _firstStageVoltageValueBoundType(firstStageVoltageValueBoundType),
+        _firstStageVoltageVolts(firstStageVoltageVolts),
+        _frequencyHz(frequencyHz),
+        _frequencyHzValueBoundType(frequencyHzValueBoundType),
+        _outputCurrentAmps(outputCurrentAmps),
+        _outputVoltageValueBoundType(outputVoltageValueBoundType),
+        _outputVoltageVolts(outputVoltageVolts),
+        _peakPrimaryCurrentAmps(peakPrimaryCurrentAmps),
+        _primaryPowerWatts(primaryPowerWatts),
+        _totalOutputEnergyJouls(totalOutputEnergyJouls),
+        _totalPrimaryEnergyJouls(totalPrimaryEnergyJouls){
 }
-float LiveDataMessage::getFirstStageVoltage()const noexcept{
-    return this->_firstStageVoltage;
+uint8_t LiveDataMessage::getFirstStageVoltageValueBoundType()const noexcept{
+    return this->_firstStageVoltageValueBoundType;
 }
-std::optional<uint32_t> LiveDataMessage::getFrequency()const noexcept{
-    return this->_frequency;
+float LiveDataMessage::getFirstStageVoltageVolts()const noexcept{
+    return this->_firstStageVoltageVolts;
 }
-float LiveDataMessage::getOutputCurrent()const noexcept{
-    return this->_outputCurrent;
+float LiveDataMessage::getFrequencyHz()const noexcept{
+    return this->_frequencyHz;
 }
-float LiveDataMessage::getOutputVoltage()const noexcept{
-    return this->_outputVoltage;
+uint8_t LiveDataMessage::getFrequencyHzValueBoundType()const noexcept{
+    return this->_frequencyHzValueBoundType;
 }
-float LiveDataMessage::getPeakPrimaryCurrent()const noexcept{
-    return this->_peakPrimaryCurrent;
+float LiveDataMessage::getOutputCurrentAmps()const noexcept{
+    return this->_outputCurrentAmps;
 }
-float LiveDataMessage::getTotalOutputEnergy()const noexcept{
-    return this->_totalOutputEnergy;
+uint8_t LiveDataMessage::getOutputVoltageValueBoundType()const noexcept{
+    return this->_outputVoltageValueBoundType;
+}
+float LiveDataMessage::getOutputVoltageVolts()const noexcept{
+    return this->_outputVoltageVolts;
+}
+float LiveDataMessage::getPeakPrimaryCurrentAmps()const noexcept{
+    return this->_peakPrimaryCurrentAmps;
+}
+float LiveDataMessage::getPrimaryPowerWatts()const noexcept{
+    return this->_primaryPowerWatts;
+}
+float LiveDataMessage::getTotalOutputEnergyJouls()const noexcept{
+    return this->_totalOutputEnergyJouls;
+}
+float LiveDataMessage::getTotalPrimaryEnergyJouls()const noexcept{
+    return this->_totalPrimaryEnergyJouls;
 }
 cJSON* LiveDataMessage::toJSON(){
     cJSON *j = cJSON_CreateObject();
-    JHelper::addFloat(j, "f", this->_firstStageVoltage);
-    JHelper::addNullableUInt32(j, "fr", this->_frequency);
-    JHelper::addFloat(j, "c", this->_outputCurrent);
-    JHelper::addFloat(j, "v", this->_outputVoltage);
-    JHelper::addFloat(j, "p", this->_peakPrimaryCurrent);
-    JHelper::addFloat(j, "t", this->_totalOutputEnergy);
+    JHelper::addUInt8(j, "f", this->_firstStageVoltageValueBoundType);
+    JHelper::addFloat(j, "e", this->_firstStageVoltageVolts);
+    JHelper::addFloat(j, "g", this->_frequencyHz);
+    JHelper::addUInt8(j, "h", this->_frequencyHzValueBoundType);
+    JHelper::addFloat(j, "c", this->_outputCurrentAmps);
+    JHelper::addUInt8(j, "b", this->_outputVoltageValueBoundType);
+    JHelper::addFloat(j, "a", this->_outputVoltageVolts);
+    JHelper::addFloat(j, "i", this->_peakPrimaryCurrentAmps);
+    JHelper::addFloat(j, "j", this->_primaryPowerWatts);
+    JHelper::addFloat(j, "d", this->_totalOutputEnergyJouls);
+    JHelper::addFloat(j, "k", this->_totalPrimaryEnergyJouls);
     JHelper::addString(j, "tpe", TYPE);
     return j;
 }
 LiveDataMessage* LiveDataMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucket){
     bool s = true;
-    float firstStageVoltage = JHelper::getFloat(j, "f", s);
-    std::optional<uint32_t> frequency = JHelper::getNullableUInt32(j, "fr", s);
-    float outputCurrent = JHelper::getFloat(j, "c", s);
-    float outputVoltage = JHelper::getFloat(j, "v", s);
-    float peakPrimaryCurrent = JHelper::getFloat(j, "p", s);
-    float totalOutputEnergy = JHelper::getFloat(j, "t", s);
-    auto r = new LiveDataMessage(firstStageVoltage, frequency, outputCurrent, outputVoltage, peakPrimaryCurrent, totalOutputEnergy);
+    uint8_t firstStageVoltageValueBoundType = JHelper::getUInt8(j, "f", s);
+    float firstStageVoltageVolts = JHelper::getFloat(j, "e", s);
+    float frequencyHz = JHelper::getFloat(j, "g", s);
+    uint8_t frequencyHzValueBoundType = JHelper::getUInt8(j, "h", s);
+    float outputCurrentAmps = JHelper::getFloat(j, "c", s);
+    uint8_t outputVoltageValueBoundType = JHelper::getUInt8(j, "b", s);
+    float outputVoltageVolts = JHelper::getFloat(j, "a", s);
+    float peakPrimaryCurrentAmps = JHelper::getFloat(j, "i", s);
+    float primaryPowerWatts = JHelper::getFloat(j, "j", s);
+    float totalOutputEnergyJouls = JHelper::getFloat(j, "d", s);
+    float totalPrimaryEnergyJouls = JHelper::getFloat(j, "k", s);
+    auto r = new LiveDataMessage(firstStageVoltageValueBoundType, firstStageVoltageVolts, frequencyHz, frequencyHzValueBoundType, outputCurrentAmps, outputVoltageValueBoundType, outputVoltageVolts, peakPrimaryCurrentAmps, primaryPowerWatts, totalOutputEnergyJouls, totalPrimaryEnergyJouls);
     cleanupBucket.addDelete(r);
     return r;
 }

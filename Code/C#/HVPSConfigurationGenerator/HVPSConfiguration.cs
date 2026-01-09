@@ -6,7 +6,7 @@ namespace HVPSConfigurationGenerator
     public struct HVPSConfiguration
     {
         // ─────────────────────────────
-        // float fields (alphabetical)
+        // float fields (4 bytes each)
         // ─────────────────────────────
 
         // 0–3
@@ -15,51 +15,51 @@ namespace HVPSConfigurationGenerator
 
         // 4–7
         [FieldOffset(4)]
-        public float firstStageVoltageThresholdVolts;
+        public float currentSenseVoltageToCurrentAmps;
 
         // 8–11
         [FieldOffset(8)]
-        public float maxAverageOutputPowerWatts;
+        public float firstStageVoltageThresholdVolts;
 
         // 12–15
         [FieldOffset(12)]
-        public float maxFlybackEnergyPerCycleJouls;
+        public float maxAverageOutputPowerWatts;
 
         // 16–19
         [FieldOffset(16)]
-        public float maxOutputVoltageThresholdVolts;
+        public float maxFlybackEnergyPerCycleJouls;
 
         // 20–23
         [FieldOffset(20)]
-        public float minOutputVoltageThresholdVolts;
+        public float maxOutputVoltageThresholdVolts;
 
         // 24–27
         [FieldOffset(24)]
-        public float vPsOverVadcRatio;
+        public float minOutputVoltageThresholdVolts;
 
         // 28–31
         [FieldOffset(28)]
+        public float vPsOverVadcRatio;
+
+        // 32–35
+        [FieldOffset(32)]
         public float villardCapacitorCapacitanceFarads;
 
         // ─────────────────────────────
-        // byte + padding (8-byte alignment)
+        // byte + padding (align ulongs)
         // ─────────────────────────────
 
-        // 32
-        [FieldOffset(32)]
+        // 36
+        [FieldOffset(36)]
         public byte nVillardStages;
 
-        // 33–39 (padding)
-        [FieldOffset(33)] private byte pad1;
-        [FieldOffset(34)] private byte pad2;
-        [FieldOffset(35)] private byte pad3;
-        [FieldOffset(36)] private byte pad4;
-        [FieldOffset(37)] private byte pad5;
-        [FieldOffset(38)] private byte pad6;
-        [FieldOffset(39)] private byte pad7;
+        // 37–39 padding → next 8-byte boundary
+        [FieldOffset(37)] private byte pad1;
+        [FieldOffset(38)] private byte pad2;
+        [FieldOffset(39)] private byte pad3;
 
         // ─────────────────────────────
-        // ulong fields (alphabetical)
+        // ulong fields (8 bytes each)
         // ─────────────────────────────
 
         // 40–47
@@ -75,17 +75,17 @@ namespace HVPSConfigurationGenerator
         public ulong pingTimeoutMilliseconds;
 
         // ─────────────────────────────
-        // uint field (aligned to 4 bytes)
+        // uint field
         // ─────────────────────────────
 
         // 64–67
         [FieldOffset(64)]
         public uint villardCapacitorsBleedTimeConstantSeconds;
 
-        // 68–71 (optional padding for 8-byte alignment of full struct)
-        [FieldOffset(68)] private byte pad8;
-        [FieldOffset(69)] private byte pad9;
-        [FieldOffset(70)] private byte pad10;
-        [FieldOffset(71)] private byte pad11;
+        // 68–71 final padding
+        [FieldOffset(68)] private byte pad4;
+        [FieldOffset(69)] private byte pad5;
+        [FieldOffset(70)] private byte pad6;
+        [FieldOffset(71)] private byte pad7;
     }
 }

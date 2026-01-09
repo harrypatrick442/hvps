@@ -20,7 +20,6 @@ float SoftStartHandler::doSoftStart(const HVPSConfiguration& config1, const HVPS
 	float result = -1.0f;
 	Inputs::useADCPowerSupplyVoltageFeedbackChannel([&](IADCSession&& adc){
 		float minimumVoltageCanRead = ADC::getMinimumVoltageCanRead();
-		LOG_INFO("Minimum voltage can read was: %f", minimumVoltageCanRead);
 		while(true){
 			Delay::ms(SAMPLE_INTERVAL_MS);
 			if(config1.vPsOverVadcRatio!=config2.vPsOverVadcRatio){

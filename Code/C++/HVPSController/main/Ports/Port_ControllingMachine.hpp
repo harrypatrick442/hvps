@@ -57,6 +57,7 @@ private:
 	EventConnection _eventConnectionHighSpeedCoreOnSystemStateChanged;
 	EventConnection _eventConnectionHighSpeedCoreOnError;
 	EventConnection _eventConnectionHighSpeedCoreOnMessage;
+	EventConnection _eventConnectionHighSpeedCoreOnWarning;
 	EventConnection _eventConnectionOnOpened;
 	EventConnection _eventConnectionOnClosed;
 	EventConnection _eventConnectionOnGotGreetingMessageFirstStageVoltageFeedbackModule;
@@ -81,6 +82,7 @@ private:
 	void handleGotGreetingMessageFromVoltageFeedbackModule(GreetingMessage* greetingMessage);
 	void handleHighSpeedCoreError(std::string errorMessage);
 	void handleHighSpeedCoreMessage(std::string message);
+	void handleHighSpeedCoreWarning(std::string message);
 	void dispatchOnOpened();
 	void dispatchOnClosed();
 };

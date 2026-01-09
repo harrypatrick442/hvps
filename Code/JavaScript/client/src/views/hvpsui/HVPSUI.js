@@ -22,6 +22,7 @@ export default class HVPSUI{
 		this._disposes = disposes;
 		this._stateChanged = this._stateChanged.bind(this);
 		this._showBluetoothReconnectChanged = this._showBluetoothReconnectChanged.bind(this);
+		this._autoScrollingChanged = this._autoScrollingChanged.bind(this);
 		this._getFullClassName = this._getFullClassName.bind(this);
 		this.dispose = this.dispose.bind(this);
 		this._element = document.getElementById('root');
@@ -41,7 +42,8 @@ export default class HVPSUI{
 			model, 
 			eventNameAppendLine:'consoleAppendLine', 
 			eventNameClear:'consoleClear',
-			maxNLines:500
+			maxNLines:500,
+			propertyNameAutoScrolling:'autoScrolling'
 		});
 		const controlButtonsElement = E.div('control-buttons');
 		this._deviceSpecificElement = E.div('device-specific');
@@ -61,48 +63,58 @@ export default class HVPSUI{
 				text:'Output Voltage',
 				units:'V',
 				className:'output-voltage-field', 
-				propertyNameValue:'outputVoltage', 
-				propertyNameMax:'outputVoltageMax', 
+				propertyNameValue:'outputVoltageVolts', 
+				propertyNameMax:'outputVoltageVoltsMax',
+				propertyNameValueBoundType:'outputVoltageValueBoundType',
 				model
-			}),
+			}),/*
 			new ValueAndMaxField({
 				text:'Output Current',
 				units:'A',
 				className:'output-current-field', 
-				propertyNameValue:'outputCurrent', 
-				propertyNameMax:'outputCurrentMax', 
+				propertyNameValue:'outputCurrentAmps', 
+				propertyNameMax:'outputCurrentAmpsMax', 
 				model
 			}),
 			new ValueAndMaxField({
 				text:'Output Power',
 				units:'W',
 				className:'output-power-field', 
-				propertyNameValue:'outputPower', 
-				propertyNameMax:'outputPowerMax',
+				propertyNameValue:'outputPowerWatts', 
+				propertyNameMax:'outputPowerWattsMax',
 				model
 			}),
 			new ValueAndMaxField({
 				text:'Total Output Energy',
 				units:'J',
 				className:'total-output-energy-field', 
-				propertyNameValue:'totalOutputEnergy', 
-				propertyNameMax:'totalOutputEnergyMax',
+				propertyNameValue:'totalOutputEnergyJouls',
 				model
-			}),
+			}),*/
 			new ValueAndMaxField({
 				text:'First Stage Voltage',
 				units:'V',
 				className:'first-stage-voltage-field', 
-				propertyNameValue:'firstStageVoltage', 
-				propertyNameMax:'firstStageVoltageMax',
+				propertyNameValue:'firstStageVoltageVolts', 
+				propertyNameMax:'firstStageVoltageVoltsMax',
+				propertyNameValueBoundType:'firstStageVoltageValueBoundType',
 				model
 			}),
 			new ValueAndMaxField({
 				text:'Peak Primary Current',
 				units:'A',
 				className:'peak-primary-current-field', 
-				propertyNameValue:'peakPrimaryCurrent', 
-				propertyNameMax:'peakPrimaryCurrentMax',
+				propertyNameValue:'peakPrimaryCurrentAmps', 
+				propertyNameMax:'peakPrimaryCurrentAmpsMax',
+				propertyNameValueBoundType:'peakPrimaryCurrentValueBoundType',
+				model
+			}),
+			new ValueAndMaxField({
+				text:'Frequency',
+				units:'Hz',
+				className:'frequency-field', 
+				propertyNameValue:'frequencyHz', 
+				propertyNameMax:'frequencyHzMax',
 				model
 			})
 		];
@@ -110,16 +122,26 @@ export default class HVPSUI{
 			disposes.push(v.dispose);
 			fieldsElement.appendChild(v.element);
 		});
-		const consoleWrapperElement = E.div('console-wrapper');
+		this._consoleWrapperElement = E.div('console-wrapper');
 		const clearConsoleButton = _createImageHoverButton(
 			i('BinRed'), i('BinLidLiftedRed'), 
 			'clear-console-button', 
 			model.clearConsole, disposes);
+		const startAutoScrollButton = _createImageHoverButton(
+			i('StartAutoScrollBlue'), i('StartAutoScrollWhite'), 
+			'start-auto-scroll-button', 
+			model.startAutoScrolling, disposes);
+		const stopAutoScrollButton = _createImageHoverButton(
+			i('StopAutoScrollRed'), i('StopAutoScrollWhite'), 
+			'stop-auto-scroll-button', 
+			model.stopAutoScrolling, disposes);
 			
 		this._deviceSpecificElement.appendChild(fieldsElement);
-		consoleWrapperElement.appendChild(clearConsoleButton);
-		this._innerElement.appendChild(consoleWrapperElement);
-		consoleWrapperElement.appendChild(this._console.element);
+		this._consoleWrapperElement.appendChild(clearConsoleButton);
+		this._consoleWrapperElement.appendChild(startAutoScrollButton);
+		this._consoleWrapperElement.appendChild(stopAutoScrollButton);
+		this._innerElement.appendChild(this._consoleWrapperElement);
+		this._consoleWrapperElement.appendChild(this._console.element);
 		this._disconnectedBlocker = new Blocker({
 			model, 
 			propertyNameBlocking:'bluetoothDisconnected'
@@ -133,6 +155,7 @@ export default class HVPSUI{
 		reconnectDialogElement.appendChild(buttonReconnect);
 		this._deviceSpecificElement.appendChild(reconnectDialogElement);
 		PropertyBindingFactory.standard(this, model, 'showBluetoothReconnect', this._showBluetoothReconnectChanged);
+		PropertyBindingFactory.standard(this, model, 'autoScrolling', this._autoScrollingChanged);
 	}
 	_stateChanged(value){
 		console.log('_stateChanged');
@@ -155,6 +178,13 @@ export default class HVPSUI{
 			return;
 		}
 		this._element.classList.remove('show-bluetooth-reconnect');
+	}
+	_autoScrollingChanged(value){
+		if(value){
+			this._consoleWrapperElement.classList.add('auto-scrolling');
+			return;
+		}
+		this._consoleWrapperElement.classList.remove('auto-scrolling');
 	}
 	dispose(){
 		this._disposes.forEach(d=>d());

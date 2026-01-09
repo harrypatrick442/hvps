@@ -51,5 +51,4 @@ void TimerSimple::timerTask() {
 	}
 	_isRunning.store(false, std::memory_order_release);
     release();
-    vTaskDelete(nullptr);
 }

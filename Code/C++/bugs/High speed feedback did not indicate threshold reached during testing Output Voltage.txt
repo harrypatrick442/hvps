@@ -1,0 +1,4 @@
+Only happens after a live run. Repeated running of system checks doesn't do it.
+restarting the hvps controller module seems to end the error then it starts again after one actual run.
+System checks do not induce it.
+So it seems very much to be an issue on that side. 

@@ -18,8 +18,8 @@ void Inputs::initialize() {
 	}
 	_initialized = true;
 
-    configureInputPin(PinDefinitions::OUTPUT_VOLTAGE_FEEDBACK_THRESHOLD_REACHED);
-    configureInputPin(PinDefinitions::FIRST_STAGE_VOLTAGE_FEEDBACK_THRESHOLD_REACHED);
+    configureInputPin(PinDefinitions::OUTPUT_VOLTAGE_FEEDBACK_THRESHOLD_REACHED, true);
+    configureInputPin(PinDefinitions::FIRST_STAGE_VOLTAGE_FEEDBACK_THRESHOLD_REACHED, true);
     configureInputPin(PinDefinitions::OUTPUT_CURRENT_FEEDBACK_THRESHOLD_REACHED);
 		
 }
@@ -49,9 +49,10 @@ void Inputs::configureInputPin(int pin, std::optional<bool> pullDown) {
 }
 bool Inputs::getOutputVoltageFeedbackThresholdReached(){
 	checkInitialized();
-	return gpio_get_level(
+	bool value =  gpio_get_level(
 		(gpio_num_t)PinDefinitions::OUTPUT_VOLTAGE_FEEDBACK_THRESHOLD_REACHED
 		)==1;
+	return value;
 }
 bool Inputs::getFirstStageVoltageFeedbackThresholdReached(){
 	checkInitialized();

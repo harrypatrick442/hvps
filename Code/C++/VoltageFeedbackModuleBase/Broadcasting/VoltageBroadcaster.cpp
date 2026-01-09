@@ -19,5 +19,4 @@ void VoltageBroadcaster::_run(){
 	uint16_t rawVoltage;
 	float voltage = _voltageSource.getVoltage(rawVoltage);
 	_port.sendVoltage(voltage, rawVoltage);
-	//LOG_INFO("Sending voltage %f", voltage);
 }

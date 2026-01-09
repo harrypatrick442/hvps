@@ -71,6 +71,7 @@ public:
     void setChannel(adc_channel_t ch);
     float   getCorrection();
     float   getVoltage();
+	bool getRawQuickly(uint16_t& value);
 	void measureNReadsPerSecond();
 	static std::shared_ptr<MonitorVoltageThresholdHandle> 
 		monitorVoltageThresholdWithNewPriorityTask(

@@ -1,15 +1,16 @@
 #include "LiveDataBroadcaster.hpp"
 #include "Generated/Messages/LiveDataMessage.hpp"
 #include "Macros/GetFileName.hpp"
+#include "Enums/ValueBoundType.hpp"
 const char* LiveDataBroadcaster::getTag() {return GET_FILE_NAME;}
 LiveDataBroadcaster::LiveDataBroadcaster(
 	LiveDataCache& liveDataCache, 
 	Port_ControllingMachine& portControllingMachine,
-	FrequencyMeter& frequencyMeter
+	HighSpeedCore& highSpeedCore
 ):
 	_liveDataCache(liveDataCache),
 	_portControllingMachine(portControllingMachine),
-	_frequencyMeter(frequencyMeter),
+	_highSpeedCore(highSpeedCore),
 	_timer(500, 
 		[this](){
 			this->_run();
@@ -36,19 +37,22 @@ void LiveDataBroadcaster::stop(){
 	_timer.stop();
 }
 void LiveDataBroadcaster::_run(){
-	uint64_t frequencyHz;
-	std::optional<uint64_t> frequencyOptional;
-	if (_frequencyMeter.calculateAndRestart(frequencyHz)) {
-		frequencyOptional = frequencyHz;
-	}
+	ValueBoundType frequencyHzValueBoundType;
+	uint64_t frequencyHz = _highSpeedCore.getFrequencyHz(frequencyHzValueBoundType);
 	VoltageWithRawAndTime outputVoltage = _liveDataCache.getOutputVoltage();
 	VoltageWithRawAndTime firstStageVoltage = _liveDataCache.getFirstStageVoltage();
+	ValueBoundType peakPrimaryCurrentValueBoundType;
 	LiveDataMessage liveDataMessage(
+		static_cast<uint8_t>(firstStageVoltage.raw == 0? ValueBoundType::MinimumKnown:ValueBoundType::Approximate),
 		firstStageVoltage.voltage,
-		frequencyOptional,
+		frequencyHz,
+		static_cast<uint8_t>(frequencyHzValueBoundType),
 		_liveDataCache.getOutputCurrent().f, 
-		outputVoltage.voltage, 
-		_liveDataCache.getPeakPrimaryCurrent().f, 
-		_liveDataCache.getTotalOutputEnergy().f);
+		static_cast<uint8_t>(outputVoltage.raw == 0? ValueBoundType::MinimumKnown:ValueBoundType::Approximate),
+		outputVoltage.voltage,
+		_highSpeedCore.getPeakPrimaryCurrent(peakPrimaryCurrentValueBoundType),
+		/*primaryPower*/0.0f,
+		_liveDataCache.getTotalOutputEnergy().f,
+		/*totalPrimaryEnergy*/0.0f);
 	_portControllingMachine.sendLiveData(liveDataMessage);
 }

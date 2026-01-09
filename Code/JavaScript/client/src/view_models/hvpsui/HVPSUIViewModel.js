@@ -1,6 +1,7 @@
 import PropertyBindingFactory from '../../mvvm/PropertyBindingFactory';
 import exposeBinding  from '../../mvvm/exposeBinding';
 import exposeMethod  from '../../mvvm/exposeMethod';
+import ExposedBindingsUsingMap  from '../../mvvm/ExposedBindingsUsingMap';
 import UrlParameters from '../../urls/UrlParameters';
 import NativeAPI  from '../../api/NativeAPI';
 import eventEnable  from '../../core/eventEnable';
@@ -13,10 +14,13 @@ import BluetoothFailedReason  from '../../enums/BluetoothFailedReason';
 import HVPSUIDialog from '../../components/hvpsui/HVPSUIDialog';
 import ConsoleMessageType from '../../enums/ConsoleMessageType';
 import SubsystemIdentifier from '../../enums/SubsystemIdentifier';
+import ValueBoundType from '../../enums/ValueBoundType';
 import ErrorViewModel from './ErrorViewModel';
 export default class HVPSUIViewModel{
 	constructor(){
 		eventEnable(this);
+		this._autoScrolling = true;
+		this._firstStageVolrateValueBoundType = ValueBoundType.Exact;
 		const disposes = [];
 		this._disposes = disposes;
 		this.start = this.start.bind(this);
@@ -31,6 +35,9 @@ export default class HVPSUIViewModel{
 		this._handleConsoleMessage = this._handleConsoleMessage.bind(this);
 		this._handleErrorMessage = this._handleErrorMessage.bind(this);
 		this.clearConsole = this.clearConsole.bind(this);
+		this.startAutoScrolling = this.startAutoScrolling.bind(this);
+		this.stopAutoScrolling = this.stopAutoScrolling.bind(this);
+		this._setAutoScrolling = this._setAutoScrolling.bind(this);
 		this._consoleAppendLine = this._consoleAppendLine.bind(this);
 		this.refreshBluetoothDevices = this.refreshBluetoothDevices.bind(this);
 		this.reconnect = this.reconnect.bind(this);
@@ -55,25 +62,42 @@ export default class HVPSUIViewModel{
 		exposeBinding(this, 'devices', ()=>this.devices);
 		exposeBinding(this, 'selectedDevice', ()=>this.selectedDevice, (value)=>this.selectedDevice = value);
 		exposeBinding(this, 'state', ()=>this.state);
-		exposeBinding(this, 'outputVoltage', ()=>this.outputVoltage);
-		exposeBinding(this, 'outputVoltageMax', ()=>this.outputVoltageMax);
-		exposeBinding(this, 'outputCurrent', ()=>this.outputCurrent);
-		exposeBinding(this, 'outputCurrentMax', ()=>this.outputCurrentMax);
-		exposeBinding(this, 'outputPower', ()=>this.outputPower);
-		exposeBinding(this, 'outputPowerMax', ()=>this.outputPowerMax);
-		exposeBinding(this, 'totalOutputEnergy', ()=>this.totalOutputEnergy);
-		exposeBinding(this, 'totalOutputEnergyMax', ()=>this.totalOutputEnergyMax);
-		exposeBinding(this, 'firstStageVoltage', ()=>this.firstStageVoltage);
-		exposeBinding(this, 'firstStageVoltageMax', ()=>this.firstStageVoltageMax);
-		exposeBinding(this, 'peakPrimaryCurrent', ()=>this.peakPrimaryCurrent);
-		exposeBinding(this, 'peakPrimaryCurrentMax', ()=>this.peakPrimaryCurrentMax);
-		exposeBinding(this, 'frequency', ()=>this.frequency);
-		exposeBinding(this, 'frequencyMax', ()=>this.frequencyMax);
 		exposeBinding(this, 'bluetoothBusy', ()=>this.bluetoothBusy);
 		exposeBinding(this, 'refreshingBluetooth', ()=>this.refreshingBluetooth);
 		exposeBinding(this, 'bluetoothConnected', ()=>this.bluetoothConnected);
 		exposeBinding(this, 'bluetoothDisconnected', ()=>this.bluetoothDisconnected);
 		exposeBinding(this, 'showBluetoothReconnect', ()=>this.showBluetoothReconnect);
+		exposeBinding(this, 'autoScrolling', ()=>this._autoScrolling);
+		const deviceParameters = [
+			{name:'firstStageVoltageValueBoundType', value:ValueBoundType.Exact},
+			{name:'firstStageVoltageVolts', hasMax:true},
+			{name:'frequencyHz', hasMax:true},
+			{name:'frequencyValueBoundType', value:ValueBoundType.Exact},
+			{name:'outputCurrentAmps', hasMax:true},
+			{name:'outputPowerWatts', hasMax:true},
+			{name:'outputVoltageValueBoundType', value:ValueBoundType.Exact},
+			{name:'outputVoltageVolts', hasMax:true},
+			{name:'peakPrimaryCurrentAmps', hasMax:true},
+			{name:'peakPrimaryCurrentValueBoundType', value:ValueBoundType.Exact},
+			{name:'primaryPowerWatts', hasMax:true},
+			{name:'totalOutputEnergyJouls'},
+			{name:'totalPrimaryEnergyJouls'},
+		];
+		const maxParameters = deviceParameters.filter(p=>p.hasMax);
+		const toMaxName = (name)=>`${name}Max`;
+		this._deviceParameterBindings = new ExposedBindingsUsingMap({
+			self:this, 
+			properties:deviceParameters.concat(maxParameters.map(p=>{ return {name:toMaxName(p.name)};}))
+		});
+		maxParameters.forEach(m=>{
+			let currentMax = 0;
+			const name = toMaxName(m.name);
+			PropertyBindingFactory.standard(this, this, m.name, (v)=>{
+				if(isNullOrUndefined(v)||(v<=currentMax))return;
+				currentMax = v;
+				this.bindingsHandler.changed(name, currentMax);
+			});
+		});
 		disposes.push(HVPSUIAPI.addEventListener('disconnected', this._handleDisconnected));
 		disposes.push(HVPSUIAPI.addEventListener('consoleMessage', this._handleConsoleMessage));
 		disposes.push(HVPSUIAPI.addEventListener('errorMessage', this._handleErrorMessage));
@@ -124,7 +148,6 @@ export default class HVPSUIViewModel{
 		return this._refreshingBluetooth;
 	}
 	_setRefreshingBluetooth(value){
-		console.log('_setRefreshingBluetooth');
 		if(this._refreshingBluetooth===value)return;
 		this._refreshingBluetooth = value;
 		this.bindingsHandler.changed('refreshingBluetooth', value);
@@ -136,7 +159,6 @@ export default class HVPSUIViewModel{
 		return !this._bluetoothConnected;
 	}
 	_setBluetoothConnected(value){
-		console.log('_setBluetoothConnected '+value);
 		if(value===this._bluetoothConnected)return;
 		this._bluetoothConnected = value;
 		this.bindingsHandler.changed('bluetoothConnected', value);
@@ -144,48 +166,6 @@ export default class HVPSUIViewModel{
 	}
 	get showBluetoothReconnect(){
 		return this._showBluetoothReconnect;
-	}
-	get outputVoltage(){
-		return this._outputVoltage;
-	}
-	get outputVoltageMax(){
-		return this._outputVoltageMax;
-	}
-	get outputCurrent(){
-		return this._outputCurrent;
-	}
-	get outputCurrentMax(){
-		return this._outputCurrentMax;
-	}
-	get outputPower(){
-		return this._outputPower;
-	}
-	get outputPowerMax(){
-		return this._outputPowerMax;
-	}
-	get totalOutputEnergy(){
-		return this._totalOutputEnergy;
-	}
-	get totalOutputEnergyMax(){
-		return this._totalOutputEnergyMax;
-	}
-	get firstStageVoltage(){
-		return this._firstStageVoltage;
-	}
-	get firstStageVoltageMax(){
-		return this._firstStageVoltageMax;
-	}
-	get peakPrimaryCurrent(){
-		return this._peakPrimaryCurrent;
-	}
-	get peakPrimaryCurrentMax(){
-		return this._peakPrimaryCurrentMax;
-	}
-	get frequency(){
-		return this._frequency;
-	}
-	get frequencyMax(){
-		return this._frequencyMax;
 	}
 	start(){
 		HVPSUIAPI.start();
@@ -260,6 +240,9 @@ export default class HVPSUIViewModel{
 	test(){
 		HVPSUIAPI.test();
 	}
+	get autoScrolling(){
+		return this._autoScrolling;
+	}
 	_connectToBluetoothDevice(address){
 		var busyHandle = this._bluetoothBusyHandles.take();
 		try{
@@ -326,6 +309,17 @@ export default class HVPSUIViewModel{
 	clearConsole(){
 		this.dispatchEvent({type:'consoleClear'});
 	}
+	startAutoScrolling(){
+		this._setAutoScrolling(true);
+	}
+	stopAutoScrolling(){
+		this._setAutoScrolling(false);
+	}
+	_setAutoScrolling(value){
+		if(this._autoScrolling===value)return;
+		this._autoScrolling = value;
+		this.bindingsHandler.changed('autoScrolling', value);
+	}
 	_consoleAppendLine(str, consoleMessageType){
 		console.log('_consoleAppendLine');
 		this.dispatchEvent({type:'consoleAppendLine', str, consoleMessageType});
@@ -382,55 +376,13 @@ export default class HVPSUIViewModel{
 		this.bindingsHandler.changed('state', this._state);
 	}
 	_handleLiveDataMessage({liveDataMessage}){
-		const {outputVoltage, outputCurrent, totalOutputEnergy, firstStageVoltage, peakPrimaryCurrent,
-			frequency} = liveDataMessage;
-		if(this._outputVoltage!=outputVoltage){
-			this._outputVoltage = outputVoltage;
-			this.bindingsHandler.changed('outputVoltage', outputVoltage);
-			if(isNullOrUndefined(this._outputVoltageMax)||(outputVoltage>this._outputVoltageMax)){
-				this._outputVoltageMax = outputVoltage;
-				this.bindingsHandler.changed('outputVoltageMax', this._outputVoltageMax);
-			}
-		}
-		if(this._outputCurrent!=outputCurrent){
-			this._outputCurrente = outputCurrent;
-			this.bindingsHandler.changed('outputCurrent', outputCurrent);
-			if(isNullOrUndefined(this._outputCurrentMax)||(outputCurrent>this._outputCurrentMax)){
-				this._outputCurrentMax = outputCurrent;
-				this.bindingsHandler.changed('outputCurrentMax', this._outputCurrentMax);
-			}
-		}
-		if(this._totalOutputEnergy!=totalOutputEnergy){
-			this._totalOutputEnergy = totalOutputEnergy;
-			this.bindingsHandler.changed('totalOutputEnergy', totalOutputEnergy);
-			if(isNullOrUndefined(this._totalOutputEnergyMax)||(totalOutputEnergy>this._totalOutputEnergyMax)){
-				this._totalOutputEnergyMax = totalOutputEnergy;
-				this.bindingsHandler.changed('totalOutputEnergyMax', this._totalOutputEnergyMax);
-			}
-		}
-		if(this._firstStageVoltage!=firstStageVoltage){
-			this._firstStageVoltage = firstStageVoltage;
-			this.bindingsHandler.changed('firstStageVoltage', firstStageVoltage);
-			if(isNullOrUndefined(this._firstStageVoltageMax)||(firstStageVoltage>this._firstStageVoltageMax)){
-				this._firstStageVoltageMax = firstStageVoltage;
-				this.bindingsHandler.changed('firstStageVoltageMax', this._firstStageVoltageMax);
-			}
-		}
-		if(this._peakPrimaryCurrent!=peakPrimaryCurrent){
-			this._peakPrimaryCurrent = peakPrimaryCurrent;
-			this.bindingsHandler.changed('peakPrimaryCurrent', peakPrimaryCurrent);
-			if(isNullOrUndefined(this._peakPrimaryCurrentMax_peakPrimaryCurrentMax_peakPrimaryCurrentMax_peakPrimaryCurrentMax)||(peakPrimaryCurrent>this._peakPrimaryCurrentMax)){
-				this._peakPrimaryCurrentMax = peakPrimaryCurrent;
-				this.bindingsHandler.changed('peakPrimaryCurrentMax', this._peakPrimaryCurrentMax);
-			}
-		}
-		if(this._frequency!=frequency){
-			this._frequency = frequency;
-			this.bindingsHandler.changed('frequency', frequency);
-			if(isNullOrUndefined(this._frequencyMax)||(frequency>this._frequencyMax)){
-				this._frequencyMax = frequency;
-				this.bindingsHandler.changed('frequencyMax', this._frequencyMax);
-			}
+		console.log(liveDataMessage);
+		var keys = this._deviceParameterBindings.getKeys();
+		for(var key of keys){
+			console.log(key);
+			var value = liveDataMessage[key];
+			if(isNullOrUndefined(value))continue;
+			this._deviceParameterBindings.setValue(key, value);
 		}
 	}
 }

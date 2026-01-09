@@ -57,7 +57,10 @@ void ADC::setChannel(adc_channel_t ch)
 
     // Stop the driver if running
     if (_adc_hdl) {
-        errorCheck(adc_continuous_stop(_adc_hdl)); // (adc_continuous_handle_t handle)
+        esp_err_t err = adc_continuous_stop(_adc_hdl); // (adc_continuous_handle_t handle)
+		if((err!=ESP_OK)&&(err!=ESP_ERR_INVALID_STATE)){
+			errorCheck(err);
+		}
     }
 
     // Configure one‑channel pattern
@@ -120,7 +123,11 @@ void ADC::start(){
     errorCheck(adc_continuous_start(_adc_hdl)); // (adc_continuous_handle_t handle)
 }
 void ADC::stop(){
-    errorCheck(adc_continuous_stop(_adc_hdl)); // (adc_continuous_handle_t handle)
+	esp_err_t err = adc_continuous_stop(_adc_hdl);
+	if((err==ESP_OK)||(err==ESP_ERR_INVALID_STATE)){
+		return;
+	}
+    errorCheck(err); // (adc_continuous_handle_t handle)
 }
 // -------------------- RAW sample helpers ---------------------------------
 uint16_t ADC::singleRawLatestSampleSelectedChannel()
@@ -249,7 +256,6 @@ void ADC::_monitorVoltageThreshold(std::shared_ptr<MonitorVoltageThresholdHandle
 		esp_err_t err;
 		bool set = false;
 		bool currentReached = false;
-		uint64_t nextPrintTimeMs = 0;
 		while(!handle->exit.load(std::memory_order_relaxed)){
 			err = adc_continuous_read(
 				_adc_hdl,                              // handle
@@ -265,20 +271,8 @@ void ADC::_monitorVoltageThreshold(std::shared_ptr<MonitorVoltageThresholdHandle
 				continue;
 			}
 			uint16_t value = d.type1.data & 0x0FFF;
-			uint64_t nowMs = TimeHelper::ms();
-			if(nowMs > nextPrintTimeMs){
-				//TODO
-				//REMOVE take out the time stuff here and this printing.
-				nextPrintTimeMs = nowMs+5000;
-				//LOG_INFO("value was: %d ", value);
-				//LOG_INFO("handle->rawThreshold: %d ", handle->getRawThreshold());				
-				if(value>handle->getRawThreshold()){
-					//LOG_INFO("exceeded");
-				}
-				else{
-					///LOG_INFO("did not exceed");
-				}
-			}
+			//LOG_INFO("value was: %d ", value);
+			//LOG_INFO("raw threshold was: %d ", handle->getRawThreshold());
 			if(value<handle->getRawThreshold()){
 				if((!set)||currentReached){
 					currentReached = false;
@@ -387,6 +381,26 @@ void ADC::_monitorCurrentAndPower(
 }
 
 
+
+bool ADC::getRawQuickly(uint16_t& value){
+	adc_digi_output_data_t d;
+	uint32_t len = 0;
+	esp_err_t err = adc_continuous_read(
+		_adc_hdl,                                // handle
+		reinterpret_cast<uint8_t*>(&d),          // buffer
+		4,                             // size
+		&len,                                     // out: bytes read
+		0                            // timeout (wait forever)
+	);
+	if(err!= ESP_OK){
+		return false;
+	}
+	if(len!=4){
+		return false;
+	}
+	value =  d.type1.data & 0x0FFF;
+	return true;
+}
 
 float ADC::getVoltage(){
 	adc_digi_output_data_t d;

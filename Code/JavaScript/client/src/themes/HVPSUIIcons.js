@@ -17,6 +17,10 @@ import ConnectOrange from '../icons/hvpsui/ConnectOrange.png';
 import ConnectPink from '../icons/hvpsui/ConnectPink.png';
 import BinRed from '../icons/hvpsui/BinRed.png';
 import BinLidLiftedRed from '../icons/hvpsui/BinLidLiftedRed.png';
+import StartAutoScrollBlue from '../icons/hvpsui/StartAutoScrollBlue.png';
+import StartAutoScrollWhite from '../icons/hvpsui/StartAutoScrollWhite.png';
+import StopAutoScrollRed from '../icons/hvpsui/StopAutoScrollRed.png';
+import StopAutoScrollWhite from '../icons/hvpsui/StopAutoScrollWhite.png';
 const mappings = [
  ['DownArrow', DownArrow]
 ,['DownArrowHover',DownArrowHover]
@@ -26,7 +30,11 @@ const mappings = [
 ,['ReloadHover',ReloadWhite]
 ,['Connect',ConnectOrange]
 ,['ConnectHover',ConnectPink]
-,['BinRed',BinRed]
-,['BinLidLiftedRed',BinLidLiftedRed]
+,['BinRed', BinRed]
+,['BinLidLiftedRed', BinLidLiftedRed]
+,['StartAutoScrollBlue', StartAutoScrollBlue]
+,['StartAutoScrollWhite', StartAutoScrollWhite]
+,['StopAutoScrollRed', StopAutoScrollRed]
+,['StopAutoScrollWhite', StopAutoScrollWhite]
 ];
 export default mappings;

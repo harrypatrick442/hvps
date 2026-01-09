@@ -31,8 +31,6 @@ FloatAndTime LiveDataCache::getTotalOutputEnergy()const noexcept
  { return _totalOutputEnergy.load(std::memory_order_relaxed); }
 VoltageWithRawAndTime LiveDataCache::getFirstStageVoltage()const noexcept     
 { return _firstStageVoltage.load(std::memory_order_relaxed); }
-FloatAndTime LiveDataCache::getPeakPrimaryCurrent()const noexcept    
-{ return _peakPrimaryCurrent.load(std::memory_order_relaxed); }
 
 // Setters
 void LiveDataCache::setOutputVoltage(VoltageWithRaw voltageWithRaw) noexcept        { 
@@ -58,10 +56,4 @@ void LiveDataCache::setFirstStageVoltage(VoltageWithRaw voltageWithRaw)  noexcep
 		VoltageWithRawAndTime(voltageWithRaw.voltage, voltageWithRaw.raw, TimeHelper::us()), 
 		std::memory_order_relaxed
 	); 
-}
-void LiveDataCache::setPeakPrimaryCurrent(float voltage) noexcept   {
-	_peakPrimaryCurrent.store(
-		FloatAndTime(voltage, TimeHelper::us()),
-		std::memory_order_relaxed
-	);
 }

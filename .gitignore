@@ -123,3 +123,9 @@ Code/C\#/HVPSConstants/obj/Debug/net8.0/HVPSConstants.AssemblyInfo.cs
 /Code/C\#/HVPSConstants/obj
 /Code/C\#/HVPSConstants/obj
 /Code/C\#/HVPSConstants/obj
+Uses.txt
+/Code/C\#/ESP32EmbeddedElfFileGenerator/obj
+/Code/C\#/HVPSConstants/bin
+/Code/C\#/HVPSConstants/obj
+/Code/C++/TemperatureSensorExample/build
+/Code/C++/TemperatureSensorExample/managed_components

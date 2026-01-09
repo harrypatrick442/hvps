@@ -8,30 +8,54 @@ namespace HVPSAPI.Messages
     [DataContract]
     public class LiveDataMessage : TypedMessageBase
     {
-        [JsonPropertyName(LiveDataMessageDataMemberNames.OutputVoltage)]
+        [JsonPropertyName(LiveDataMessageDataMemberNames.OutputVoltageVolts)]
         [JsonInclude]
-        [DataMember(Name = LiveDataMessageDataMemberNames.OutputVoltage)]
-        public float OutputVoltage { get; protected set; }
-        [JsonPropertyName(LiveDataMessageDataMemberNames.OutputCurrent)]
+        [DataMember(Name = LiveDataMessageDataMemberNames.OutputVoltageVolts)]
+        public float OutputVoltageVolts { get; protected set; }
+        [JsonPropertyName(LiveDataMessageDataMemberNames.OutputVoltageValueBoundType)]
         [JsonInclude]
-        [DataMember(Name = LiveDataMessageDataMemberNames.OutputCurrent)]
-        public float OutputCurrent { get; protected set; }
-        [JsonPropertyName(LiveDataMessageDataMemberNames.TotalOutputEnergy)]
+        [DataMember(Name = LiveDataMessageDataMemberNames.OutputVoltageValueBoundType)]
+        public byte OutputVoltageValueBoundType { get; protected set; }
+        [JsonPropertyName(LiveDataMessageDataMemberNames.OutputCurrentAmps)]
+        [JsonInclude]
+        [DataMember(Name = LiveDataMessageDataMemberNames.OutputCurrentAmps)]
+        public float OutputCurrentAmps { get; protected set; }
+        [JsonPropertyName(LiveDataMessageDataMemberNames.TotalOutputEnergyJouls)]
         [JsonInclude]   
-        [DataMember(Name = LiveDataMessageDataMemberNames.TotalOutputEnergy)]
-        public float TotalOutputEnergy { get; protected set; }
-        [JsonPropertyName(LiveDataMessageDataMemberNames.FirstStageVoltage)]
+        [DataMember(Name = LiveDataMessageDataMemberNames.TotalOutputEnergyJouls)]
+        public float TotalOutputEnergyJouls { get; protected set; }
+        [JsonPropertyName(LiveDataMessageDataMemberNames.FirstStageVoltageValueBoundType)]
         [JsonInclude]
-        [DataMember(Name = LiveDataMessageDataMemberNames.FirstStageVoltage)]
-        public float FirstStageVoltage { get; protected set; }
-        [JsonPropertyName(LiveDataMessageDataMemberNames.Frequency)]
+        [DataMember(Name = LiveDataMessageDataMemberNames.FirstStageVoltageValueBoundType)]
+        public byte FirstStageVoltageValueBoundType { get; protected set; }
+        [JsonPropertyName(LiveDataMessageDataMemberNames.FirstStageVoltageVolts)]
         [JsonInclude]
-        [DataMember(Name = LiveDataMessageDataMemberNames.Frequency)]
-        public UInt32? Frquency { get; protected set; }
-        [JsonPropertyName(LiveDataMessageDataMemberNames.PeakPrimaryCurrent)]
+        [DataMember(Name = LiveDataMessageDataMemberNames.FirstStageVoltageVolts)]
+        public float FirstStageVoltageVolts { get; protected set; }
+        [JsonPropertyName(LiveDataMessageDataMemberNames.FrequencyHz)]
         [JsonInclude]
-        [DataMember(Name = LiveDataMessageDataMemberNames.PeakPrimaryCurrent)]
-        public float PeakPrimaryCurrent { get; protected set; }
+        [DataMember(Name = LiveDataMessageDataMemberNames.FrequencyHz)]
+        public float FrquencyHz { get; protected set; }
+        [JsonPropertyName(LiveDataMessageDataMemberNames.FrequencyHzValueBoundType)]
+        [JsonInclude]
+        [DataMember(Name = LiveDataMessageDataMemberNames.FrequencyHzValueBoundType)]
+        public byte FrequencyHzValueBoundType { get; protected set; }
+        [JsonPropertyName(LiveDataMessageDataMemberNames.PeakPrimaryCurrentAmps)]
+        [JsonInclude]
+        [DataMember(Name = LiveDataMessageDataMemberNames.PeakPrimaryCurrentAmps)]
+        public float PeakPrimaryCurrentAmps { get; protected set; }
+        [JsonPropertyName(LiveDataMessageDataMemberNames.PeakPrimaryCurrentValueBoundType)]
+        [JsonInclude]
+        [DataMember(Name = LiveDataMessageDataMemberNames.PeakPrimaryCurrentValueBoundType)]
+        public byte PeakPrimaryCurrentValueBoundType { get; protected set; }
+        [JsonPropertyName(LiveDataMessageDataMemberNames.PrimaryPowerWatts)]
+        [JsonInclude]
+        [DataMember(Name = LiveDataMessageDataMemberNames.PrimaryPowerWatts)]
+        public float PrimaryPowerWatts { get; protected set; }
+        [JsonPropertyName(LiveDataMessageDataMemberNames.TotalPrimaryEnergyJouls)]
+        [JsonInclude]
+        [DataMember(Name = LiveDataMessageDataMemberNames.TotalPrimaryEnergyJouls)]
+        public float TotalPrimaryEnergyJouls { get; protected set; }
         public LiveDataMessage()
             : base()
         {

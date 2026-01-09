@@ -5,3 +5,5 @@ faraday cage for main driver housing.
 schottkey diode for usb psu shared power line inste4ad of switches?
 the issue with theoretical failure mode for soft start circuit which mimics that of tvs
 voltage slightly higher as seen by voltage feedback board relative to emulator but issue probably on emulator side.
+caps to cover holes on fiber optic modules block out ambient light. 
+detect if safe votlage threshold exceeded and abort.

@@ -34,8 +34,10 @@ bool TaskFactory::launchTrampolineTask(
     auto* wrapper = new std::function<void()>(fn);
 
     auto trampoline = [](void* param) {
-        std::unique_ptr<std::function<void()>> fnPtr(static_cast<std::function<void()>*>(param));
-        (*fnPtr)();
+		{
+			std::unique_ptr<std::function<void()>> fnPtr(static_cast<std::function<void()>*>(param));
+			(*fnPtr)();
+		}
 		vTaskDelete(nullptr);
     };
 

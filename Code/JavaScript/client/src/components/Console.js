@@ -1,6 +1,7 @@
 import E from '../ui_core/E';
 import isNullOrUndefined from '../core/isNullOrUndefined';
 import isNullOrUndefinedOrEmptyString from '../core/isNullOrUndefinedOrEmptyString';
+import PropertyBindingFactory from '../mvvm/PropertyBindingFactory';
 import ConsoleMessageType from '../enums/ConsoleMessageType';
 import './Console.scss';
 export default class Console{	
@@ -8,7 +9,8 @@ export default class Console{
 			model, 
 			eventNameAppendLine, 
 			eventNameClear,
-			maxNLines = 500
+			maxNLines = 500,
+			propertyNameAutoScrolling
 		}){
 		this._model = model;
 		console.log(model);
@@ -18,15 +20,20 @@ export default class Console{
 		const disposes = [];
 		this._disposes = disposes;
 		this._lines = [];
+		this.dispose = this.dispose.bind(this);
 		this._handleAppendLine = this._handleAppendLine.bind(this);
 		this._handleClear = this._handleClear.bind(this);
-		this.dispose = this.dispose.bind(this);
+		this._autoScrollingChanged = this._autoScrollingChanged.bind(this);
 		this._element = E.div('console');
 		if(!isNullOrUndefined(eventNameAppendLine)){
 			disposes.push(model.addEventListener(eventNameAppendLine, this._handleAppendLine));
 		}
+		window.appendALine = this._handleAppendLine;
 		if(!isNullOrUndefined(eventNameClear)){
 			disposes.push(model.addEventListener(eventNameClear, this._handleClear));
+		}
+		if(!isNullOrUndefined(propertyNameAutoScrolling)){
+			PropertyBindingFactory.standard(this, model, 'autoScrolling', this._autoScrollingChanged);
 		}
 	}
 	get element(){
@@ -51,10 +58,20 @@ export default class Console{
 		while(this._lines.length>this._maxNLines){
 			this._element.removeChild(this._lines.splice(0, 1)[0]);
 		}
+		if(this._autoScrolling){
+			element.scrollIntoView();
+		}
 	}
 	_handleClear(){
 		this._lines.forEach(l=>this._element.removeChild(l));
 		this._lines = [];
+	}
+	_autoScrollingChanged(value){
+		console.log('_autoScrollingChanged');
+		this._autoScrolling = value;
+		if(value&&(this._lines.length>0)){
+			this._lines[this._lines.length-1].scrollIntoView();
+		}
 	}
 	dispose(){
 		this._disposes.forEach(d=>d());

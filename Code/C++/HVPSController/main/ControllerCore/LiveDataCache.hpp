@@ -27,9 +27,6 @@ public:
     // First Stage Voltage (V)
     VoltageWithRawAndTime getFirstStageVoltage()const noexcept;
 
-    // Peak Primary Current (A)
-    FloatAndTime getPeakPrimaryCurrent()const noexcept;
-
 private:
     // Let the base construct us
     friend class SingletonBase<LiveDataCache>;
@@ -45,14 +42,12 @@ private:
     std::atomic<FloatAndTime> _outputCurrent{FloatAndTime{0.0, 0}};
     std::atomic<FloatAndTime> _totalOutputEnergy{FloatAndTime{0.0, 0}};
     std::atomic<VoltageWithRawAndTime> _firstStageVoltage{VoltageWithRawAndTime{0.0, 0, 0}};
-    std::atomic<FloatAndTime> _peakPrimaryCurrent{FloatAndTime{0.0, 0}};
 	EventConnection _eventConnectionGotOutputVoltage;
 	EventConnection _eventConnectionGotFirstStageVoltage;
 	
     void   setOutputCurrent(float v) noexcept;
     void   setOutputVoltage(VoltageWithRaw v) noexcept;
     void   setFirstStageVoltage(VoltageWithRaw v) noexcept;
-    void   setPeakPrimaryCurrent(float v) noexcept;
     void   setTotalOutputEnergy(float v) noexcept;
 };
 

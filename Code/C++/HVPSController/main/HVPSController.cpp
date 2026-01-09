@@ -7,6 +7,7 @@
 #include "IO/Inputs.hpp"
 #include "IO/Outputs.hpp"
 #include "Storage/Flash.hpp"
+#include "Tasks/TaskFactory.hpp"
 #include "Ports/Port_ControllingMachine.hpp"
 #include "Ports/Port_FirstStageVoltageFeedback.hpp"
 #include "Ports/Port_OutputVoltageFeedback.hpp"
@@ -33,7 +34,7 @@ extern "C" void app_main(void)
 	Outputs::initialize();
 	Outputs::toSafeReversible();
 	IOInteruptHelper::installISRHandlerIfNotAlready();
-	Delay::ms(10000);//REMOVE
+	//Delay::ms(10000);//REMOVE
 	LOG_INFO("Starting HVPSController....");
 	Delay::ms(1000);//REMOVE
     Flash::initialize();
@@ -48,7 +49,22 @@ extern "C" void app_main(void)
 	SoftStartHandler::doSoftStart(Config1, Config2);
 	LOG_INFO("Did soft start");
 	Inputs::initialize();
-	LOG_INFO("Initialized inputs");
+	
+	TaskFactory::createNonPriorityTask([this](){
+			while(true){
+				Delay::ms(200);
+				bool reached = Inputs::getOutputCurrentFeedbackThresholdReached();
+				if(reached){
+					LOG_INFO("R");
+				}
+				else{
+					LOG_INFO("N");
+				}
+			}
+			
+		}, 
+		"debugHelper"
+	);
     // Initialize the I2C bus
 	//I2CConfiguration i2cConfiguration;//Default
     //I2C::initialize(i2cConfiguration);
@@ -86,7 +102,7 @@ extern "C" void app_main(void)
 			port_OutputVoltageFeedback
 	);
 							 
-	LiveDataBroadcaster::initialize(liveDataCache, portControllingMachine, highSpeedCore.getFrequencyMeter());
+	LiveDataBroadcaster::initialize(liveDataCache, portControllingMachine, highSpeedCore);
 	vTaskDelete(NULL); // Delete the current task*/
 }  
 

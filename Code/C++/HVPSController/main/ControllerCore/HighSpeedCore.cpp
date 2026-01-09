@@ -7,6 +7,7 @@
 #include "Core/FloatAndTime.hpp"
 #include "SystemChecks.hpp"
 #include "Macros/GetFileName.hpp"
+#include "ADC/ADC.hpp"
 #include <cmath>
 const char* HighSpeedCore::getTag() {return GET_FILE_NAME;}
 HighSpeedCore::HighSpeedCore(
@@ -30,18 +31,45 @@ THE ENTIRE POINT OF THIS IS TO PUT THE SYSTEM INTO A PERMANENT STATE WHERE IT CA
 REACTIVATED WITHOUT REBOOT!!
 */
 _shuttingOrShutDown(false),
+_shuttingOrShutDown_2(false),
 _actualSystemState(SystemState::Idle),
 _desiredSystemState(SystemState::Idle),
-_shuttingOrShutDown_2(false),
 _inError(inError),
 _systemChecksResult(nullptr),
 _runSystemChecksLatch(),
-_frequencyMeter(){
+_startLiveTimeUs(0),
+_nCyclesCount(0),
+_peakCurrentSenseVoltageRaw(0){
 	startCoreTask();
-	//_frequencyMeter.startPrintToConsoleLoop();
 }
-FrequencyMeter&	 HighSpeedCore::getFrequencyMeter(){
-	return _frequencyMeter;
+float HighSpeedCore::getFrequencyHz(ValueBoundType& valueBoundType){
+	uint64_t nCyclesCount = _nCyclesCount;
+	uint64_t startLiveTimeUs = _startLiveTimeUs;
+	uint64_t nowUs = TimeHelper::us();
+	if(startLiveTimeUs==0){
+		valueBoundType = ValueBoundType::Unknown;
+		return 0;
+	}
+	uint64_t dtUs = nowUs - startLiveTimeUs;
+	if(dtUs==0){
+		valueBoundType = ValueBoundType::Unknown;
+		return 0;
+	}
+	if(nCyclesCount < MIN_CYCLES_FOR_EXACT
+		||dtUs < MIN_DT_US_FOR_EXACT){
+		valueBoundType = ValueBoundType::Approximate;
+	}
+	else{
+		valueBoundType = ValueBoundType::Exact;
+	}
+	return static_cast<float>(nCyclesCount)
+		*(1000000.0f/static_cast<float>(dtUs));
+}
+float HighSpeedCore::getPeakPrimaryCurrent(ValueBoundType& valueBoundType){
+	uint16_t peakCurrentSenseVoltageRaw = _peakCurrentSenseVoltageRaw;
+	valueBoundType = (peakCurrentSenseVoltageRaw==0?ValueBoundType::MinimumKnown:ValueBoundType::Exact);
+	return ADC::convertRawToVoltage(peakCurrentSenseVoltageRaw)*_hvpsConfiguration1.currentSenseVoltageToCurrentAmps
+;
 }
 void HighSpeedCore::start(){
 	setDesiredSystemState(SystemState::Live);
@@ -193,6 +221,8 @@ void HighSpeedCore::doShutDown(){
 	SystemState desiredSystemState = getDesiredSystemState();
 	uint64_t timeRawReachedZero = 0;
 	uint64_t timeAtWhichClassifiedSafeSeconds_1 = 0, timeAtWhichClassifiedSafeSeconds_2 = 0;
+	setActualSystemState(SystemState::ShuttingDown);
+	bool issuedWarning = false;
 	while(true){
 		Delay::ms(500);
 		if(
@@ -205,7 +235,6 @@ void HighSpeedCore::doShutDown(){
 		Outputs::setMOSFETOnOff(false);
 		VoltageWithRawAndTime outputVoltageWithRawAndTime = _liveDataCache.getOutputVoltage();
 		if(outputVoltageWithRawAndTime.timeUs==lastTime){
-			setActualSystemState(SystemState::ShuttingDown);
 			continue;
 		}
 		lastTime = outputVoltageWithRawAndTime.timeUs;
@@ -242,6 +271,10 @@ void HighSpeedCore::doShutDown(){
 			&&((timeAtWhichClassifiedSafeSeconds_1>0)&&(timeAtWhichClassifiedSafeSeconds_1<=TimeHelper::s()))
 			&&((timeAtWhichClassifiedSafeSeconds_2>0)&&(timeAtWhichClassifiedSafeSeconds_2<=TimeHelper::s()))){
 			setActualSystemState(SystemState::ShutDown);
+			if(!issuedWarning){
+				dispatchWarning("The last portion of the shutdown period had to be approximated due to limited accuracy of voltage feedback. You may now HOTSTICK the device fitting the grounding connector");
+				issuedWarning = true;
+			}
 		}
 	}
 }
@@ -294,48 +327,57 @@ void HighSpeedCore::doLive(){
 	uint64_t timeUs, endTime, endTime_2;
 	setActualSystemState(SystemState::Live);
 	timeUs = TimeHelper::us();
-	//TODO use cycles instead.
-	while(true){
-		endTime = timeUs+_hvpsConfiguration1.onTimeMicroSeconds;
-		endTime_2 = timeUs+_hvpsConfiguration2.onTimeMicroSeconds;
-		if((!Inputs::getOutputVoltageFeedbackThresholdReached())&&
-		(!Inputs::getFirstStageVoltageFeedbackThresholdReached())){
-				Outputs::setMOSFETOnOff(true);
-		}
+	//TODO use cycles instead. This appears to be working fine but use best time source can.
+	Inputs::useADCPrimaryCurrentFeedbackChannel([&](IADCSession&& adc){
+		bool isDriving = false;
+		_nCyclesCount = 0;
+		_startLiveTimeUs = timeUs;
+		uint16_t latestCurrentSenseVoltageRaw = 0;
 		while(true){
-			timeUs = TimeHelper::us();
-			if(timeUs>=endTime){
-				break;
+			endTime = timeUs+_hvpsConfiguration1.onTimeMicroSeconds;
+			endTime_2 = timeUs+_hvpsConfiguration2.onTimeMicroSeconds;
+			if((!Inputs::getOutputVoltageFeedbackThresholdReached())&&
+			(!Inputs::getFirstStageVoltageFeedbackThresholdReached())){
+					Outputs::setMOSFETOnOff(true);
 			}
-			if(timeUs>=endTime_2){
-				break;
+			while(true){
+				timeUs = TimeHelper::us();
+				if(timeUs>=endTime){
+					break;
+				}
+				if(timeUs>=endTime_2){
+					break;
+				}
+			}
+			Outputs::setMOSFETOnOff(false);
+			adc.getRawQuickly(latestCurrentSenseVoltageRaw);
+			_peakCurrentSenseVoltageRaw = latestCurrentSenseVoltageRaw;
+			endTime = timeUs+_hvpsConfiguration1.offTimeMicroSeconds;
+			endTime_2 = timeUs+_hvpsConfiguration2.offTimeMicroSeconds;
+			
+			if(getDesiredSystemState()!=SystemState::Live){
+				return;
+			}
+			if(isShuttingDownOrShutDown()){
+				return;
+			}
+			if(getInError()){
+				return;
+			}
+			_nCyclesCount++;
+			setActualSystemState(SystemState::Live);
+			while(true){
+				timeUs = TimeHelper::us();
+				if(timeUs>=endTime){
+					break;
+				}
+				if(timeUs>=endTime_2){
+					break;
+				}
 			}
 		}
-		Outputs::setMOSFETOnOff(false);
-		endTime = timeUs+_hvpsConfiguration1.offTimeMicroSeconds;
-		endTime_2 = timeUs+_hvpsConfiguration2.offTimeMicroSeconds;
-		
-		if(getDesiredSystemState()!=SystemState::Live){
-			return;
-		}
-		if(isShuttingDownOrShutDown()){
-			return;
-		}
-		if(getInError()){
-			return;
-		}
-		setActualSystemState(SystemState::Live);
-		_frequencyMeter.tick();
-		while(true){
-			timeUs = TimeHelper::us();
-			if(timeUs>=endTime){
-				break;
-			}
-			if(timeUs>=endTime_2){
-				break;
-			}
-		}
-	}
+	});
+	_startLiveTimeUs = 0;
 }
 void HighSpeedCore::doError(){
 	setActualSystemState(SystemState::Error);
@@ -359,10 +401,13 @@ void HighSpeedCore::dispatchError(std::string errorMessage){
 void HighSpeedCore::dispatchMessage(std::string message){
 	onMessage.dispatch(message);
 }
+void HighSpeedCore::dispatchWarning(std::string message){
+	onWarning.dispatch(message);
+}
 void HighSpeedCore::calculateAdditionalShutdownTime(float voltage, float& timeSeconds, float& time2Seconds){
 	
-	timeSeconds =  - _hvpsConfiguration1.villardCapacitorsBleedTimeConstantSeconds
+	timeSeconds =   static_cast<float>(_hvpsConfiguration1.villardCapacitorsBleedTimeConstantSeconds)
 					* std::log(voltage / SAFE_OUTPUT_VOLTAGE);
-	time2Seconds =  - _hvpsConfiguration2.villardCapacitorsBleedTimeConstantSeconds
+	time2Seconds =  static_cast<float>(_hvpsConfiguration2.villardCapacitorsBleedTimeConstantSeconds)
 					* std::log(voltage / SAFE_OUTPUT_VOLTAGE);
 }

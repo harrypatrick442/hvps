@@ -5,7 +5,7 @@ const SystemState={
 	Live:2,
 	RunningSystemChecks:3,
 	ShuttingDown:4,
-	Shutdown:5,
+	ShutDown:5,
 	Error:6
 };
 SystemState.getClassName = (value)=>{
@@ -23,7 +23,7 @@ SystemState.getClassName = (value)=>{
 			return 'running-system-checks';
 		case SystemState.ShuttingDown:
 			return 'shutting-down';
-		case SystemState.Shutdown:
+		case SystemState.ShutDown:
 			return 'shut-down';
 		case SystemState.Error:
 			return 'error';

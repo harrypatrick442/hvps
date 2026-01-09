@@ -29,4 +29,5 @@ void Outputs::setThresholdReached(bool isReached){
 	}
 	//0 IS USED FOR THRESHOLD REACHED. USING 0 MEANS IN EVENT OF POWER FAILURE DRIVE STOPS.
     gpio_set_level((gpio_num_t)THRESHOLD_REACHED_FIBER_OPTIC_PIN, isReached?0:1); // Set GPIO21 HIGH (on)
+	LOG_INFO(isReached? "Set threshold reached":"Set threshold not reached");
 }
