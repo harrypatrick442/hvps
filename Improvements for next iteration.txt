@@ -12,3 +12,4 @@ LIKE I MADE A MISTAKE WITH CAPCITOR VALUES ON FIBER OPTIC TRANSMITTERS RECEIVERS
 Consider ADC's for full range more fine feedback on voltage feedback.
 Consider integrating voltage feedback into the board and taking out some fiber optic channels.
 LIVE AND GROUND WRONG WAY ROUND ON I2C HEADER
+The MOSFET gate should be tied to the source, not to ground after the current sense resistor....

@@ -13,13 +13,11 @@ class Aborter {
 private:
 	static const char*  REASON_KEY;
 	static const char*  BACKTRACE_KEY;
-    static inline std::function<void()> _toSafe = nullptr;
 	static const char* TAG;
-	
+    static std::function<void()> _toSafe;
+    static std::terminate_handler _oldTerminateHandler;
 public:
-	static inline void setToSafe(const std::function<void()>& fn) {
-		_toSafe = fn;
-	}
+	static void initialize(const std::function<void()>& toSafe);
 	
     template<typename... Args>
     [[noreturn]] static void safeAbortFromMacro(
@@ -28,7 +26,10 @@ public:
 		const char* msg,
 		Args&&... args
 	)
-	{		
+	{	
+		if (_toSafe) {
+			_toSafe();
+		}	
 		char message[256];
 		std::snprintf(message, sizeof(message), msg, std::forward<Args>(args)...);
 		_safeAbort(fileName, lineNumber, message);
@@ -42,23 +43,10 @@ public:
 private:
 	[[noreturn]] static void _safeAbort(const char* fileName, int lineNumber, char* message);
 	[[noreturn]] static void _safeAbort(const char* fileName, char* formatted);
+    [[noreturn]] static inline void terminateHandler() noexcept;
 	
 };
 
-// Header-safe terminate handler setup
-/*
-namespace AborterDetail {
-    [[noreturn]] inline void terminateHandler() noexcept {
-        // No fmt args needed; keep it minimal to avoid any allocation here
-		
-		// 1) Put hardware in a safe state ASAP
-		if (_toSafe) {
-			_toSafe();
-		}	
-		Aborter::_safeAbort("Aborter.hpp", "abort happened");
-    }
-}
-inline void setupTerminateHandler() {
-    std::set_terminate(AborterDetail::terminateHandler);
-}*/
+
+
 

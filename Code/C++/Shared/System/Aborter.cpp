@@ -8,6 +8,30 @@
 const char* Aborter::REASON_KEY = "reason";
 const char* Aborter::BACKTRACE_KEY = "bt";
 const char* Aborter::TAG = "Aborter";
+std::function<void()> Aborter::_toSafe = nullptr;
+std::terminate_handler Aborter::_oldTerminateHandler = nullptr;
+
+void Aborter::initialize(const std::function<void()>& toSafe) {
+    // Install once; chain the old handler
+    _oldTerminateHandler = std::set_terminate(&Aborter::terminateHandler);
+    _toSafe = toSafe;
+}
+
+[[noreturn]] void Aborter::terminateHandler() noexcept {
+    // 1) Put hardware in a safe state ASAP
+    if (_toSafe) {
+        _toSafe();
+    }
+
+    // 2) Chain to previous handler if it exists
+    if (_oldTerminateHandler) {
+        _oldTerminateHandler(); // must be noreturn
+    }
+
+    // 3) Absolute fallback
+    std::abort();
+}
+
 [[noreturn]] void Aborter::_safeAbort(const char* fileName, int lineNumber, char* message){
 	char formatted[320];
 	std::snprintf(formatted, sizeof(formatted), "line %d: %s", lineNumber, message);

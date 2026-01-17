@@ -37,7 +37,7 @@ static const char *TAG = "HVPS";
 extern "C" void app_main(void)
 {
 	SubsystemIdentifier::set(SubsystemIdentifiers::HVPSController);
-	Aborter::setToSafe(&Outputs::toSafe);
+	Aborter::initialize(&Outputs::toSafe);
 	Outputs::initialize();
 	Outputs::toSafeReversible();
 	IOInteruptHelper::installISRHandlerIfNotAlready();
