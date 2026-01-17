@@ -1,7 +1,7 @@
 #include "Watchdog.hpp"
 Watchdog::Watchdog(const char* name, uint32_t countFrom):
 _countFrom(countFrom),
-_count(count),
+_count(countFrom),
 _name(name){
 
 }
@@ -12,9 +12,9 @@ bool Watchdog::check(){
 	if(_count==0){
 		return false;
 	}
-	_count--;
+	_count-=1;
 	return true;
 }
-const char* Watchdog::getName(){
+const char* Watchdog::getName() const {
 	return _name;
 }

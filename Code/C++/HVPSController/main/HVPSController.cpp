@@ -28,6 +28,7 @@
 #include "Temperature/TemperatureMonitor.hpp"
 #include "Temperature/Temperatures.hpp"
 #include "IO/PinDefinitions.hpp"
+#include "Watchdog/WatchdogCollection.hpp"
 #include <driver/gpio.h>  // gpio_num_t, GPIO_NUM_*
 #define WATCHDOG_TIMEOUT_MILLISECONDS 10000
 
@@ -51,6 +52,7 @@ extern "C" void app_main(void)
     LOG_INFO("Starting HVPSController...");
     StayTheFuckAwake::initialize();
 	validateConfig();
+	WatchdogCollection::initialize();
 	ADC::initialize();
 	SoftStartHandler::doSoftStart(Config1, Config2);
 	LOG_INFO("Did soft start");

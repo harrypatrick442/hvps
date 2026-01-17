@@ -16,19 +16,20 @@ Timer::~Timer() {
 void Timer::setIntervalMs(uint32_t value){
     _intervalMs.store(value, std::memory_order_relaxed);
 }
-void Timer::start() {
+bool Timer::start() {
     const uint32_t interval = _intervalMs.load(std::memory_order_relaxed);
     std::unique_lock<std::mutex> lock(_mutex);
-    if (_current) return;
+    if (_current) return true;
 
     auto* t = new TimerSimple(interval, _callback, _repeat);
     if (!t->start()) {
         // task failed to start; drop our only ref
         t->release();
-        return;
+        return false;
     }
     // success — keep a ref while “current”
     _current = t;
+	return true;
 }
 
 void Timer::stop() {

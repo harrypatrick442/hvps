@@ -11,6 +11,7 @@
 #include <cmath>
 #include "Macros/GetFileName.hpp"
 #include "IO/IOInteruptHelper.hpp"
+#include "driver/timer.h"
 float HVPSCircuitEmulator::CONTINUOUS_OUTPUT_POWER_WATTS = 10.0f;
 uint32_t HVPSCircuitEmulator::INTERVAL_CALCULATE_UPDATE_MS = 100;
 const char* HVPSCircuitEmulator::getTag() {return GET_FILE_NAME;}

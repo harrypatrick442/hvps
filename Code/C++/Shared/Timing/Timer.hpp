@@ -13,7 +13,7 @@ public:
     Timer(uint32_t intervalMs, Callback cb, bool repeat = true);
     ~Timer();
 	void setIntervalMs(uint32_t value);
-    void start()noexcept;
+    bool start()noexcept;
     void stop()noexcept;
     bool isRunning() const noexcept;
 

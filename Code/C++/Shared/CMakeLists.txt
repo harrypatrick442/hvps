@@ -90,6 +90,9 @@ idf_component_register(
 	"Graphics/PixelHelper.cpp"
 	"Structs/VoltageWithRaw.cpp"
 	"Structs/VoltageWithRawAndTime.cpp"
+	"Watchdog/Watchdog.cpp"
+	"Watchdog/WatchdogCollection.cpp"
+	"Watchdog/WatchdogsAndSize.cpp"
     PRIV_REQUIRES spi_flash driver bt nvs_flash esp_adc
 	REQUIRES
 		espcoredump

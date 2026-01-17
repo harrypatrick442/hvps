@@ -7,7 +7,7 @@ class Watchdog;
 
 struct WatchdogsAndSize {
 public:
-    const Watchdog* const* entries;
+    Watchdog* const* const entries;
     const size_t size;
 
     explicit WatchdogsAndSize(
@@ -19,7 +19,7 @@ public:
     WatchdogsAndSize(const WatchdogsAndSize&) = delete;
     WatchdogsAndSize& operator=(const WatchdogsAndSize&) = delete;
 
-    // movable
-    WatchdogsAndSize(WatchdogsAndSize&& other) noexcept;
-    WatchdogsAndSize& operator=(WatchdogsAndSize&& other) noexcept;
+    // non-movable
+    WatchdogsAndSize(WatchdogsAndSize&& other) = delete;
+    WatchdogsAndSize& operator=(WatchdogsAndSize&& other) = delete;
 };
