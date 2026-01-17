@@ -116,6 +116,22 @@ export default class HVPSUI{
 				propertyNameValue:'frequencyHz', 
 				propertyNameMax:'frequencyHzMax',
 				model
+			}),
+			new ValueAndMaxField({
+				text:'MOSFET Temperature',
+				units:'°C',
+				className:'mosfet-temperature-field', 
+				propertyNameValue:'mosfetTemperatureDegreesC', 
+				propertyNameMax:'mosfetTemperatureDegreesCMax',
+				model
+			}),
+			new ValueAndMaxField({
+				text:'Lower Snubber Diode Temperature',
+				units:'°C',
+				className:'lower-snubber-diode-temperature-field', 
+				propertyNameValue:'lowerSnubberDiodeTemperatureDegreesC', 
+				propertyNameMax:'lowerSnubberDiodeTemperatureDegreesCMax',
+				model
 			})
 		];
 		this._fields.forEach(v=>{

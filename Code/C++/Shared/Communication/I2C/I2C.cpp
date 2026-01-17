@@ -15,11 +15,14 @@ I2C::I2C(I2CConfiguration configuration) :
 	auto pullupEn = _configuration.getPullupsEnabled()?GPIO_PULLUP_ENABLE:GPIO_PULLUP_DISABLE;
     i2c_config_t conf;
     conf.mode = I2C_MODE_MASTER;
+	LOG_INFO("sda pin was: %d", static_cast<int>(_configuration.getSDAPin()));
+	LOG_INFO("scl pin was: %d", static_cast<int>(_configuration.getSCLPin()));
     conf.sda_io_num = _configuration.getSDAPin();
     conf.sda_pullup_en = pullupEn;
     conf.scl_io_num = _configuration.getSCLPin();
     conf.scl_pullup_en = pullupEn;
     conf.master.clk_speed = _configuration.getClkSpeedHz();
+	conf.clk_flags = I2C_SCLK_SRC_FLAG_FOR_NOMAL;
 	
     i2c_param_config(_port, &conf);
 	

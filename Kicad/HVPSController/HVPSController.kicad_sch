@@ -15929,7 +15929,7 @@
 				)
 			)
 		)
-		(property "Value" "SCL, SDA, +, GND"
+		(property "Value" "SCL, SDA, GND, +"
 			(at 116.84 269.24 90)
 			(effects
 				(font

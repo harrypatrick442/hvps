@@ -82,6 +82,8 @@ export default class HVPSUIViewModel{
 			{name:'primaryPowerWatts', hasMax:true},
 			{name:'totalOutputEnergyJouls'},
 			{name:'totalPrimaryEnergyJouls'},
+			{name:'mosfetTemperatureDegreesC', hasMax:true},
+			{name:'lowerSnubberDiodeTemperatureDegreesC', hasMax:true},
 		];
 		const maxParameters = deviceParameters.filter(p=>p.hasMax);
 		const toMaxName = (name)=>`${name}Max`;

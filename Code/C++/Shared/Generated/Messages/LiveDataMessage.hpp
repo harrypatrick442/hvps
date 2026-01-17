@@ -15,10 +15,13 @@ class LiveDataMessage
         float _firstStageVoltageVolts;
         float _frequencyHz;
         uint8_t _frequencyHzValueBoundType;
+        float _lowerSnubberDiodeTemperatureDegreesC;
+        float _mosfetTemperatureDegreesC;
         float _outputCurrentAmps;
         uint8_t _outputVoltageValueBoundType;
         float _outputVoltageVolts;
         float _peakPrimaryCurrentAmps;
+        uint8_t _peakPrimaryCurrentValueBoundType;
         float _primaryPowerWatts;
         float _totalOutputEnergyJouls;
         float _totalPrimaryEnergyJouls;
@@ -27,10 +30,13 @@ class LiveDataMessage
         float getFirstStageVoltageVolts()const noexcept;
         float getFrequencyHz()const noexcept;
         uint8_t getFrequencyHzValueBoundType()const noexcept;
+        float getLowerSnubberDiodeTemperatureDegreesC()const noexcept;
+        float getMosfetTemperatureDegreesC()const noexcept;
         float getOutputCurrentAmps()const noexcept;
         uint8_t getOutputVoltageValueBoundType()const noexcept;
         float getOutputVoltageVolts()const noexcept;
         float getPeakPrimaryCurrentAmps()const noexcept;
+        uint8_t getPeakPrimaryCurrentValueBoundType()const noexcept;
         float getPrimaryPowerWatts()const noexcept;
         float getTotalOutputEnergyJouls()const noexcept;
         float getTotalPrimaryEnergyJouls()const noexcept;
@@ -39,10 +45,13 @@ class LiveDataMessage
            float firstStageVoltageVolts, 
            float frequencyHz, 
            uint8_t frequencyHzValueBoundType, 
+           float lowerSnubberDiodeTemperatureDegreesC, 
+           float mosfetTemperatureDegreesC, 
            float outputCurrentAmps, 
            uint8_t outputVoltageValueBoundType, 
            float outputVoltageVolts, 
            float peakPrimaryCurrentAmps, 
+           uint8_t peakPrimaryCurrentValueBoundType, 
            float primaryPowerWatts, 
            float totalOutputEnergyJouls, 
            float totalPrimaryEnergyJouls) noexcept;

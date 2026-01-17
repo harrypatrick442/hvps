@@ -45,6 +45,8 @@ idf_component_register(
 	"System/SubsystemIdentifier.cpp"
 	"Tasks/TaskFactory.cpp"
 	"Tasks/TransientWorker.cpp"
+	"Temperature/TemperatureSensorAndLimit.cpp"
+	"Temperature/TemperatureMonitor.cpp"
 	"Ticketing/TicketedSender.cpp"
 	"Ticketing/TicketedSender.cpp"
 	"Ticketing/TicketedSenderHandle.cpp"

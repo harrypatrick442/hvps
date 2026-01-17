@@ -1,1 +1,2 @@
 when the issue occurs: 
+wrong capacitor value on some fiber optic transmitter receivers had actually damaged the one being used for output voltage feedback.

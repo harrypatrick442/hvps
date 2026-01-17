@@ -9,6 +9,7 @@ idf_component_register(
 		"IO/OutputVoltageFeedbackFiberOpticDuplexChannel.cpp"
 		"IO/OtherPeripheralsFiberOpticDuplexChannel.cpp"
 		"IO/PinDefinitions.cpp"
+		"Peripherals/Addresses.cpp"
 		"Ports/Port_ControllingMachine.cpp"
 		"Ports/Port_FirstStageVoltageFeedback.cpp"
 		"Ports/Port_OutputVoltageFeedback.cpp"
@@ -22,6 +23,9 @@ idf_component_register(
 		"IO/SoftStartHandler.cpp"
 		"IO/OutputVoltageFeedbackFiberOpticDuplexChannel.cpp"
 		"IO/FirstStageVoltageFeedbackFiberOpticDuplexChannel.cpp"
+		"Temperature/LowerSnubberDiodeTemperatureSensor.cpp"
+		"Temperature/MOSFETTemperatureSensor.cpp"
+		"Temperature/Temperatures.cpp"
 	PRIV_REQUIRES spi_flash driver bt nvs_flash esp_adc
 	INCLUDE_DIRS ""
 	REQUIRES

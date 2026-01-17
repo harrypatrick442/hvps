@@ -35,44 +35,48 @@ namespace HVPSConfigurationGenerator
 
         // 24–27
         [FieldOffset(24)]
-        public float minOutputVoltageThresholdVolts;
+        public float maxTemperatureLowerSnubberDiodeDegreesC;
 
         // 28–31
         [FieldOffset(28)]
-        public float vPsOverVadcRatio;
+        public float maxTemperatureMosfetDegreesC;
 
         // 32–35
         [FieldOffset(32)]
+        public float minOutputVoltageThresholdVolts;
+
+        // 36–39
+        [FieldOffset(36)]
+        public float vPsOverVadcRatio;
+
+        // 40–43
+        [FieldOffset(40)]
         public float villardCapacitorCapacitanceFarads;
 
         // ─────────────────────────────
         // byte + padding (align ulongs)
         // ─────────────────────────────
 
-        // 36
-        [FieldOffset(36)]
+        // 44
+        [FieldOffset(44)]
         public byte nVillardStages;
 
-        // 37–39 padding → next 8-byte boundary
-        [FieldOffset(37)] private byte pad1;
-        [FieldOffset(38)] private byte pad2;
-        [FieldOffset(39)] private byte pad3;
+        // 45–47 padding → next 8-byte boundary
+        [FieldOffset(45)] private byte pad1;
+        [FieldOffset(46)] private byte pad2;
+        [FieldOffset(47)] private byte pad3;
 
         // ─────────────────────────────
         // ulong fields (8 bytes each)
         // ─────────────────────────────
 
-        // 40–47
-        [FieldOffset(40)]
-        public ulong offTimeMicroSeconds;
-
         // 48–55
         [FieldOffset(48)]
-        public ulong onTimeMicroSeconds;
+        public ulong offTimeMicroSeconds;
 
         // 56–63
         [FieldOffset(56)]
-        public ulong pingTimeoutMilliseconds;
+        public ulong onTimeMicroSeconds;
 
         // ─────────────────────────────
         // uint field
@@ -80,12 +84,10 @@ namespace HVPSConfigurationGenerator
 
         // 64–67
         [FieldOffset(64)]
-        public uint villardCapacitorsBleedTimeConstantSeconds;
+        public uint pingTimeoutMilliseconds;
 
-        // 68–71 final padding
-        [FieldOffset(68)] private byte pad4;
-        [FieldOffset(69)] private byte pad5;
-        [FieldOffset(70)] private byte pad6;
-        [FieldOffset(71)] private byte pad7;
+        // 68–71
+        [FieldOffset(68)]
+        public uint villardCapacitorsBleedTimeConstantSeconds;
     }
 }

@@ -31,6 +31,19 @@ class DuplexChannel : public IDuplexChannel, public ChannelEvents{
 		virtual ~DuplexChannel();
 	private: 
 		void loop();
+		
+		/**
+		 * @brief Removes any leading noise before the start of a JSON object.
+		 *
+		 * Scans the buffer for the first '{' character. If found, shifts the buffer
+		 * in-place so that the JSON object begins at index 0 and updates lineLength
+		 * accordingly.
+		 *
+		 * @param lineBuffer Pointer to the character buffer containing incoming data.
+		 * @param lineLength [in,out] Length of valid data in the buffer.
+		 * @return true if a JSON start character was found; false otherwise.
+		 */
+		bool takeAnyNoiseOffStart(char* lineBuffer, size_t& lineLength);
 		MessageIntegrity inspectCRC32AndReturnJSONLength(char* lineBuffer, size_t& lineLength);
 		void findLengthToEndOfJSONObject(char* lineBuffer, size_t& lineLength);
 };

@@ -7,3 +7,8 @@ the issue with theoretical failure mode for soft start circuit which mimics that
 voltage slightly higher as seen by voltage feedback board relative to emulator but issue probably on emulator side.
 caps to cover holes on fiber optic modules block out ambient light. 
 detect if safe votlage threshold exceeded and abort.
+PUT COMPONENT VALUES ON THE CIRCUIT BOARD FOR RESISTORS AND CAPACITORS. THIS IS HAND ASSEMBLY AND IT SAVES MISTAKES
+LIKE I MADE A MISTAKE WITH CAPCITOR VALUES ON FIBER OPTIC TRANSMITTERS RECEIVERS.
+Consider ADC's for full range more fine feedback on voltage feedback.
+Consider integrating voltage feedback into the board and taking out some fiber optic channels.
+LIVE AND GROUND WRONG WAY ROUND ON I2C HEADER

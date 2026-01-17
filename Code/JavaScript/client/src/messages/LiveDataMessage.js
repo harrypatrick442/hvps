@@ -12,8 +12,11 @@ export default class LiveDataMessage
     r["g"]=o.frequencyHz;
     r["h"]=o.frequencyHzValueBoundType;
     r["i"]=o.peakPrimaryCurrentAmps;
+    r["l"]=o.peakPrimaryCurrentValueBoundType;
     r["j"]=o.primaryPowerWatts;
     r["k"]=o.totalPrimaryEnergyJouls;
+    r["m"]=o.mosfetTemperatureDegreesC;
+    r["n"]=o.lowerSnubberDiodeTemperatureDegreesC;
     return r;
  }
  static fromJSON(o){
@@ -27,8 +30,11 @@ export default class LiveDataMessage
     r.frequencyHz=o["g"];
     r.frequencyHzValueBoundType=o["h"];
     r.peakPrimaryCurrentAmps=o["i"];
+    r.peakPrimaryCurrentValueBoundType=o["l"];
     r.primaryPowerWatts=o["j"];
     r.totalPrimaryEnergyJouls=o["k"];
+    r.mosfetTemperatureDegreesC=o["m"];
+    r.lowerSnubberDiodeTemperatureDegreesC=o["n"];
    return r;
  }
 }

@@ -31,3 +31,30 @@ Version: 258
 Task pointer: 0x3ffbc498
 Virtual address of exception: 0x0
 App SHA256: 64633738613736383500
+
+
+
+
+
+
+
+
+
+
+
+Last Abort, Subsystem: HVPSController, Reason: line 73: Failed to create non-priority task: TransientWorker
+0x400e656d
+0x400e65e1
+0x400e288d
+0x400e6f0a
+0x400e7123
+0x400e37ea
+0x400e3868
+0x400ede6d
+0x400ef192
+0x400fffb9
+0x401015c7
+0x40095c59
+
+
+

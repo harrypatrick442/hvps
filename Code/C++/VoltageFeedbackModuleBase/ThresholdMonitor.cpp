@@ -24,7 +24,6 @@ _actualReached(false)
 	Flash::getFloat(FLASH_NAMESPACE, THRESHOLD_VOLTAGE_KEY, initialUnscaledVoltageThreshold);
 	float tapThresholdVoltage, tapThresholdVoltageCopy;
 	toScaledADCThreshold(initialUnscaledVoltageThreshold, tapThresholdVoltage, tapThresholdVoltageCopy);
-	//Inputs::selectADCVoltageDividerInputAsChannel();
 	_monitorVoltageThresholdHandle = 
 		ADC::monitorVoltageThresholdWithNewPriorityTask(
 			ch,
@@ -35,20 +34,6 @@ _actualReached(false)
 		SAFE_ABORT(SET_TAP_VOLTAGE_THRESHOLD_ERROR_MESSAGE);
 		return;
 	}
-	//LOG_INFO("Set tap threshold voltage to %f", tapThresholdVoltage);
-	
-	/*TaskFactory::createNonPriorityTask([this](){
-		while(true){
-			Delay::ms(1000);
-			if(_forceReached){
-				LOG_INFO("forcing");
-			}
-			else{
-				LOG_INFO("not forcing");
-			}
-			LOG_INFO(_actualReached?"reached":"not reached");
-		}
-	}, "HVPSCircuitEmulator::debug");*/
 }
 float ThresholdMonitor::getVoltage(uint16_t& raw){
 	float voltage =  fromScaledADCToActual(_monitorVoltageThresholdHandle->getVoltage(raw));
@@ -72,13 +57,11 @@ void ThresholdMonitor::setForce(std::optional<bool> forceReached) noexcept{
 		bool actualReached = _actualReached;
 		Outputs::setThresholdReached(actualReached);
 		_lock.unlock();
-		LOG_INFO(actualReached?"set threshold reached to true using actual":"set threshold reached to false using actual");
 		return;
 	}
 	bool value = forceReached.value();
-	Outputs::setThresholdReached(value);//TODO should lock wrap call to set actual pin
+	Outputs::setThresholdReached(value);
 	_lock.unlock();
-	LOG_INFO(value?"set threshold reached to true using force":"set threshold reached to false using force");
 }
 void ThresholdMonitor::onVoltageThresholdReachedChanged(bool actualReached)noexcept{
 	
@@ -88,17 +71,11 @@ void ThresholdMonitor::onVoltageThresholdReachedChanged(bool actualReached)noexc
 	if(!forceReached.has_value()){
 		Outputs::setThresholdReached(actualReached);
 		_lock.unlock();
-		//LOG_INFO(" AA not forcing");
-		//LOG_INFO(actualReached?" AA reached":" AA not reached");
-		LOG_INFO(actualReached?"set threshold reached to true using actual in changed":"set threshold reached to false using actual in changed");
 		return;
 	}
 	bool value = forceReached.value();
 	Outputs::setThresholdReached(value);
 	_lock.unlock();
-		LOG_INFO(value?"set threshold reached to true using force in changed":"set threshold reached to false using force in changed");
-	//LOG_INFO(" AA forcing");
-	//LOG_INFO(value?" AA forcing actualReached":" AA forcing not reached");
 }
 void ThresholdMonitor::toScaledADCThreshold(float vUnscaled, float& a, float& b)noexcept{
 	a =  vUnscaled/_config1.vHvOverVadcRatio;

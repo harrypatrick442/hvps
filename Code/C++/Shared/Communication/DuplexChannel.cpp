@@ -119,8 +119,10 @@ void DuplexChannel::loop() {
 				if(lineLength<1){
 					continue;
 				}
+				if(!takeAnyNoiseOffStart(lineBuffer, lineLength)){
+					continue;
+				}
 				lineBuffer[lineLength] = '\0';
-				
 				cJSON* json = cJSON_Parse(lineBuffer);
 				//LOG_INFO("Received line: %s", lineBuffer);  // <-- added print here
 				//LOG_INFO("Line length was: %d", lineLength);
@@ -156,6 +158,41 @@ void DuplexChannel::loop() {
 			LOG_ERROR("%s: Line too long — discarding", _channel->getDescription());
 			lineLength = 0;
 			disgardingTillNewLine = true;
+		}
+	}
+}
+bool DuplexChannel::takeAnyNoiseOffStart(char* lineBuffer, size_t& lineLength){
+	if(lineLength<1){
+		//The buffer is empty so did not find json.
+		return false;
+	}
+	if(lineBuffer[0]=='{'){
+		//Found the start of json right at the beginning of the line
+		return true;
+	}
+	size_t index = 0;
+	while(true){
+		if(index>=lineLength){
+			//Did not find any start of json and reached end so return
+			return false;
+		}
+		char c = lineBuffer[index];
+		if(c=='{'){
+			break;
+		}
+		index++;
+	}
+	if(index<1){
+		//Found the start of json right at the beginning of the line
+		return true;
+	}
+	size_t toIndex = 0;
+	size_t newLineLength = lineLength - index;
+	while(true){
+		lineBuffer[toIndex++]=lineBuffer[index++];
+		if(index>=lineLength){
+			lineLength = newLineLength;
+			return true;
 		}
 	}
 }

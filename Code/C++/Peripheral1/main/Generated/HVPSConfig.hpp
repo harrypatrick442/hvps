@@ -9,6 +9,8 @@ inline constexpr HVPSConfiguration HVPSConfig1{
     .maxAverageOutputPowerWatts = 12.5,
     .maxFlybackEnergyPerCycleJouls = 0.0098,
     .maxOutputVoltageThresholdVolts = 80000,
+    .maxTemperatureLowerSnubberDiodeDegreesC = 50,
+    .maxTemperatureMosfetDegreesC = 50,
     .minOutputVoltageThresholdVolts = 60000,
     .vPsOverVadcRatio = 33,
     .villardCapacitorCapacitanceFarads = 1E-09,
@@ -26,7 +28,7 @@ inline bool validateHVPSConfig(){
         SAFE_ABORT("The CRC32 computed for HVPSConfig2 did not match the CRC32 for HVPSConfig1");
         return false;
     }
-    if (podConfig1 != 2337882411){
+    if (podConfig1 != 1684788341){
         SAFE_ABORT("The CRC32 computed for HVPSConfig1 did not match the expected value");
         return false;
     }

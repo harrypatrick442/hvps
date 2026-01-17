@@ -19,5 +19,7 @@ class PinDefinitions{
 		static const int SNUBBER_VOLTAGE_FEEDBACK;
 		static const int REFERENCE_VOLTAGE;
 		static const int SOFT_START_RESISTOR_BYPASS;
+		static const int I2C_SDA_PIN;
+		static const int I2C_SCL_PIN;
 };
 #endif

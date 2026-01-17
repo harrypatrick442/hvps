@@ -1,8 +1,6 @@
 #include "ADC/ADC.hpp"
 #include "Broadcasting/LiveDataBroadcaster.hpp"
 #include "Communication/Bluetooth/Bluetooth_BR_EDR.hpp"
-#include "Communication/I2C/I2C.hpp"
-#include "Communication/I2C/I2CConfiguration.hpp"
 #include "IO/SoftStartHandler.hpp"
 #include "IO/Inputs.hpp"
 #include "IO/Outputs.hpp"
@@ -22,7 +20,15 @@
 #include "System/SubsystemIdentifier.hpp"
 #include "IO/IOInteruptHelper.hpp"
 #include "System/SafeAbort.hpp"
-
+#include "Communication/I2C/I2C.hpp"
+#include "Communication/I2C/I2CConfiguration.hpp"
+#include "Temperature/LowerSnubberDiodeTemperatureSensor.hpp"
+#include "Temperature/MOSFETTemperatureSensor.hpp"
+#include "Temperature/TemperatureSensorAndLimit.hpp"
+#include "Temperature/TemperatureMonitor.hpp"
+#include "Temperature/Temperatures.hpp"
+#include "IO/PinDefinitions.hpp"
+#include <driver/gpio.h>  // gpio_num_t, GPIO_NUM_*
 #define WATCHDOG_TIMEOUT_MILLISECONDS 10000
 
 static const char *TAG = "HVPS";
@@ -49,26 +55,15 @@ extern "C" void app_main(void)
 	SoftStartHandler::doSoftStart(Config1, Config2);
 	LOG_INFO("Did soft start");
 	Inputs::initialize();
-	
-	TaskFactory::createNonPriorityTask([this](){
-			while(true){
-				Delay::ms(200);
-				bool reached = Inputs::getOutputCurrentFeedbackThresholdReached();
-				if(reached){
-					LOG_INFO("R");
-				}
-				else{
-					LOG_INFO("N");
-				}
-			}
-			
-		}, 
-		"debugHelper"
-	);
     // Initialize the I2C bus
-	//I2CConfiguration i2cConfiguration;//Default
-    //I2C::initialize(i2cConfiguration);
-    //I2C& i2c = I2C::getInstance();
+	I2CConfigurationOptions options;
+	options.sclPin = static_cast<gpio_num_t>(PinDefinitions::I2C_SCL_PIN);
+	options.sdaPin = static_cast<gpio_num_t>(PinDefinitions::I2C_SDA_PIN);
+	I2CConfiguration i2cConfiguration(options);//Default
+    I2C::initialize(i2cConfiguration);
+    I2C& i2c = I2C::getInstance();
+	MOSFETTemperatureSensor& mosfetTemperatureSensor = MOSFETTemperatureSensor::initialize(i2c);
+	LowerSnubberDiodeTemperatureSensor& lowerSnubberDiodeTemperatureSensor = LowerSnubberDiodeTemperatureSensor::initialize(i2c);
     WatchdogFeeder
         ::initialize(WATCHDOG_TIMEOUT_MILLISECONDS);
 		
@@ -101,8 +96,22 @@ extern "C" void app_main(void)
 			port_FirstStageVoltageFeedback,
 			port_OutputVoltageFeedback
 	);
-							 
-	LiveDataBroadcaster::initialize(liveDataCache, portControllingMachine, highSpeedCore);
+	TemperatureSensorAndLimit mosfetTemperatureSensorAndLimit(mosfetTemperatureSensor, Config1.maxTemperatureMosfetDegreesC);
+	TemperatureSensorAndLimit lowerSnubberDiodeTemperatureSensorAndLimit(lowerSnubberDiodeTemperatureSensor, Config1.maxTemperatureLowerSnubberDiodeDegreesC);
+	TemperatureMonitor& temperatureMonitor = TemperatureMonitor::initializeWithParams(
+	{
+		mosfetTemperatureSensorAndLimit,
+		lowerSnubberDiodeTemperatureSensorAndLimit
+	});
+	
+	LiveDataBroadcaster::initialize(
+		liveDataCache, 
+		portControllingMachine,
+		highSpeedCore,
+		temperatureMonitor,
+		mosfetTemperatureSensor,
+		lowerSnubberDiodeTemperatureSensor
+	);
 	vTaskDelete(NULL); // Delete the current task*/
 }  
 

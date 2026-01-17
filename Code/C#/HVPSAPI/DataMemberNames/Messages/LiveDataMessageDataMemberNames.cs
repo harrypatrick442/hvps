@@ -17,5 +17,7 @@ namespace HVPSAPI.DataMemberNames.Messages
         public const string PeakPrimaryCurrentValueBoundType = "l";
         public const string PrimaryPowerWatts = "j";
         public const string TotalPrimaryEnergyJouls = "k";
+        public const string MosfetTemperatureDegreesC = "m";
+        public const string LowerSnubberDiodeTemperatureDegreesC = "n";
     }
 }
