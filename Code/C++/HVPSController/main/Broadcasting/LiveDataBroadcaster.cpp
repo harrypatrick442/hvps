@@ -49,30 +49,13 @@ void LiveDataBroadcaster::_run(){
 	VoltageWithRawAndTime outputVoltage = _liveDataCache.getOutputVoltage();
 	VoltageWithRawAndTime firstStageVoltage = _liveDataCache.getFirstStageVoltage();
 	ValueBoundType peakPrimaryCurrentValueBoundType;
-	float lowerSnubberDiodeTemperatureDegreesC;
-	float mosfetTemperatureDegreesC;
-	esp_err_t err = _mosfetTemperatureSensor.getTemperature(mosfetTemperatureDegreesC);
-	if (err != ESP_OK) {
-		LOG_ERROR(
-			"MOSFET temperature read failed: %s",
-			esp_err_to_name(err)
-		);
-	}
-
-	err = _lowerSnubberDiodeTemperatureSensor.getTemperature(lowerSnubberDiodeTemperatureDegreesC);
-	if (err != ESP_OK) {
-		LOG_ERROR(
-			"Lower snubber diode temperature read failed: %s)",
-			esp_err_to_name(err)
-		);
-	}
 	LiveDataMessage liveDataMessage(
 		static_cast<uint8_t>(firstStageVoltage.raw == 0? ValueBoundType::MinimumKnown:ValueBoundType::Approximate),
 		firstStageVoltage.voltage,
 		frequencyHz,
 		static_cast<uint8_t>(frequencyHzValueBoundType),
-		lowerSnubberDiodeTemperatureDegreesC,
-		mosfetTemperatureDegreesC,
+		_temperatureMonitor.getTemperature(_lowerSnubberDiodeTemperatureSensor),
+		_temperatureMonitor.getTemperature(_mosfetTemperatureSensor),
 		_liveDataCache.getOutputCurrent().f, 
 		static_cast<uint8_t>(outputVoltage.raw == 0? ValueBoundType::MinimumKnown:ValueBoundType::Approximate),
 		outputVoltage.voltage,

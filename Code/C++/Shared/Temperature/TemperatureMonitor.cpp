@@ -14,11 +14,12 @@ TemperatureMonitor::TemperatureMonitor(
 	std::vector<TemperatureSensorAndLimit> teperatureSensorAndLimit_s)
 	: _temperatureSensorAndLimit_s(teperatureSensorAndLimit_s.begin(), teperatureSensorAndLimit_s.end()),
 	_timer(
-	/*uint32_t intervalMs*/2000,
-	/*Callback callback*/[this](){
-		monitor();
-	},
-	/*bool repeat*/ true),
+		UPDATE_INTERVAL_MS,
+		[this](){
+			monitor();
+		},
+		true
+	),
 	_latestTemperatures(nullptr)
 {
 	size_t latestTemperaturesSize = _temperatureSensorAndLimit_s.size();
@@ -26,6 +27,7 @@ TemperatureMonitor::TemperatureMonitor(
 	for(size_t i=0; i<latestTemperaturesSize; i++){
 		_latestTemperatures[i]=-1;
 	}
+	_timer.start();
 }
 float TemperatureMonitor::getTemperature(const ITemperatureSensor& temperatureSensor)
 {
