@@ -24,7 +24,8 @@
 #include "Macros/GetFileName.hpp"
 const char* Port_ControllingMachine::getTag() {return GET_FILE_NAME;}
 Port_ControllingMachine::Port_ControllingMachine(
-	IDuplexChannel& channel, HighSpeedCore& highSpeedCore,
+	IDuplexChannel& channel, 
+	HighSpeedCore& highSpeedCore,
 	uint32_t pingTimeoutMilliseconds,
 	Port_FirstStageVoltageFeedback& port_FirstStageVoltageFeedback,
 	Port_OutputVoltageFeedback& port_OutputVoltageFeedback)
@@ -40,9 +41,15 @@ _timerSendPing(
 	/*Callback callback*/[this](){sendPing();},
 	/*bool repeat*/ true
 ),
+_timerCheckReceivedPing(
+pingTimeoutMilliseconds,
+	[this](){checkReceivedPing();},
+	true
+),
 _port_FirstStageVoltageFeedback(port_FirstStageVoltageFeedback),
 _port_OutputVoltageFeedback(port_OutputVoltageFeedback),
-_isOpen(false)
+_isOpen(false),
+_receivedPing(false)
 {
     _channel.setIncomingMessageHandler(this);
 	_eventConnectionHighSpeedCoreOnSystemStateChanged = _highSpeedCore.onSystemStateChanged.addHandler(
@@ -102,6 +109,7 @@ void Port_ControllingMachine::handleIncomingMessage(cJSON* message, bool& dontDe
 	if (!success) {
 		return;
 	}
+	_receivedPing.store(true, std::memory_order_relaxed);
 	if(strcmp(type, MessageConstants::TYPE_TICKETED_VALUE) == 0){
 		_ticketedSender.handleTicketedMessage(message, type);
 		dontDelete = true;
@@ -159,6 +167,8 @@ void Port_ControllingMachine::sendPing(){
 }
 void Port_ControllingMachine::handleOnOpened(){
 	_timerSendPing.start();
+	_receivedPing.store(true, std::memory_order_relaxed);
+	_timerCheckReceivedPing.start();
 	sendErrors();
 	sendState();
 	_isOpen.store(true, std::memory_order_relaxed);
@@ -166,6 +176,7 @@ void Port_ControllingMachine::handleOnOpened(){
 }
 void Port_ControllingMachine::handleOnClosed(){
 	_timerSendPing.stop();
+	_timerCheckReceivedPing.stop();
 	_isOpen.store(false, std::memory_order_relaxed);
 	dispatchOnClosed();
 }
@@ -250,5 +261,16 @@ void Port_ControllingMachine::dispatchOnOpened(){
 }
 void Port_ControllingMachine::dispatchOnClosed(){ 
 		onClosed.dispatch();
+}
+void Port_ControllingMachine::checkReceivedPing(){ 
+	bool received = _receivedPing.exchange(false, std::memory_order_relaxed);
+	if(!received){
+		handleMayHaveLostComs();
+	}
+}
+void Port_ControllingMachine::handleMayHaveLostComs(){ 
+	//TAKE NO CHANCES, SHUT DOWN IF LIVE.
+	_highSpeedCore.stop();
+	LOG_WARN("MAY HAVE LOST CONNECTION TO CONTROLLING MACHINE");
 }
 

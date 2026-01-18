@@ -7,6 +7,7 @@
 #include "../Ports/Port_FirstStageVoltageFeedback.hpp"
 #include "../Ports/Port_OutputVoltageFeedback.hpp"
 #include "LiveDataCache.hpp"
+#include <optional>
 class HighSpeedCore final : public SingletonBase<HighSpeedCore>{
 public:
 	static const char* getTag();
@@ -18,18 +19,17 @@ public:
 	void shutDown();
 private:
     friend class SingletonBase<HighSpeedCore>;
-	
-	const uint64_t ON_TIME_US = 62;
-	const uint64_t ON_TIME_US_2 = 62;
-	const uint64_t OFF_TIME_US = 62;
-	const uint64_t OFF_TIME_US_2 = 62;
 	const float SAFE_OUTPUT_VOLTAGE = 30;
 	
 	HighSpeedCore(
+		HVPSConfiguration& config1,
+		HVPSConfiguration& config2,
 		Port_FirstStageVoltageFeedback& portFirstStageVoltageFeedback, 
 		Port_OutputVoltageFeedback& portOutputVoltageFeedback,
 		LiveDataCache& liveDataCache
 	)noexcept;
+	HVPSConfiguration& _config1;
+	HVPSConfiguration& _config2;
 	Port_FirstStageVoltageFeedback& _portFirstStageVoltageFeedback;
 	Port_OutputVoltageFeedback& _portOutputVoltageFeedback;
 	LiveDataCache& _liveDataCache;
@@ -42,6 +42,9 @@ private:
 	std::mutex _mutexSystemChecksResult;
 	std::shared_ptr<SystemChecksResult> _systemChecksResult;
 	Latch _runSystemChecksLatch;
+	volatile bool _watchdogFed;
+	volatile bool _watchdogFail;
+	
 	void startCoreTask();
 	static void _run_taskTrampoline(void* arg);
 	void _run();
@@ -56,6 +59,10 @@ private:
 	bool isShuttingDownOrShutDown();
 	void dispatchSystemStateChanged(SystemState systemState);
 	void dispatchError(std::string errorMessage);
+	std::optional<InterruptTimer> initializeLiveWatchdog();
+	inline void IRAM_ATTR HighSpeedCore::feedWatchdog();
+	inline void IRAM_ATTR HighSpeedCore::checkWatchdog();
+	bool IRAM_ATTR HighSpeedCore::liveWatchdogTimerTrampoline(void *arg);
 };
 
 #endif // HIGH_SPEED_CORE_HPP

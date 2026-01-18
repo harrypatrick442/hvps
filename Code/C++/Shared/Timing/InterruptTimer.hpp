@@ -17,6 +17,7 @@ public:
     esp_err_t configure(ISRHandler handler, void* context);
     esp_err_t start();
     esp_err_t stop();
+	uint32_t getPeriod();
     esp_err_t updatePeriod(uint32_t newPeriodUs);
 	esp_err_t release();
 

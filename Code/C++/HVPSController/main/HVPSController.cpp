@@ -26,7 +26,6 @@
 #include "Temperature/MOSFETTemperatureSensor.hpp"
 #include "Temperature/TemperatureSensorAndLimit.hpp"
 #include "Temperature/TemperatureMonitor.hpp"
-#include "Temperature/Temperatures.hpp"
 #include "IO/PinDefinitions.hpp"
 #include "Watchdog/WatchdogCollection.hpp"
 #include <driver/gpio.h>  // gpio_num_t, GPIO_NUM_*
@@ -42,20 +41,17 @@ extern "C" void app_main(void)
 	Outputs::toSafeReversible();
 	IOInteruptHelper::installISRHandlerIfNotAlready();
 	//Delay::ms(10000);//REMOVE
-	LOG_INFO("Starting HVPSController....");
-	Delay::ms(1000);//REMOVE
+	Delay::ms(1000);
     Flash::initialize();
 	esp_wifi_stop();
 	esp_wifi_deinit();
     esp_log_set_vprintf(vprintf);
     esp_log_level_set("*", ESP_LOG_VERBOSE);
-    LOG_INFO("Starting HVPSController...");
     StayTheFuckAwake::initialize();
 	validateConfig();
 	WatchdogCollection::initialize();
 	ADC::initialize();
 	SoftStartHandler::doSoftStart(Config1, Config2);
-	LOG_INFO("Did soft start");
 	Inputs::initialize();
     // Initialize the I2C bus
 	I2CConfigurationOptions options;

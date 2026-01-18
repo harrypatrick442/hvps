@@ -51,9 +51,11 @@ private:
 	HighSpeedCore& _highSpeedCore;
     TicketedSender	_ticketedSender;
 	Timer _timerSendPing;
+	Timer _timerCheckReceivedPing;
 	Port_FirstStageVoltageFeedback& _port_FirstStageVoltageFeedback;
 	Port_OutputVoltageFeedback& _port_OutputVoltageFeedback;
 	std::atomic<bool> _isOpen;
+	std::atomic<bool> _receivedPing;
 	EventConnection _eventConnectionHighSpeedCoreOnSystemStateChanged;
 	EventConnection _eventConnectionHighSpeedCoreOnError;
 	EventConnection _eventConnectionHighSpeedCoreOnMessage;
@@ -85,4 +87,6 @@ private:
 	void handleHighSpeedCoreWarning(std::string message);
 	void dispatchOnOpened();
 	void dispatchOnClosed();
+	void checkReceivedPing();
+	void handleMayHaveLostComs();
 };

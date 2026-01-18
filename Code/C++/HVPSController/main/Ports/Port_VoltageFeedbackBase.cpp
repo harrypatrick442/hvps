@@ -3,7 +3,6 @@
 #include "System/SafeAbort.hpp"
 #include "JSON/JHelper.hpp"
 #include "Messaging/MessageConstants.hpp"
-#include "Tasks/TaskFactory.hpp"
 #include "Generated/Messages/SetVoltageThresholdRequest.hpp"
 #include "Generated/Messages/SetVoltageThresholdResponse.hpp"
 #include "Generated/Messages/GetVoltageThresholdRequest.hpp"

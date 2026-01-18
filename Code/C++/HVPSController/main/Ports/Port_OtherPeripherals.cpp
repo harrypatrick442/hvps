@@ -32,6 +32,9 @@ _ticketedSender(
 			this->sendIndicateStateMessage();
 		}
 	);
+	sendIndicateStateMessage();
+	sendIndicateStateMessage();
+	/*
 	TaskFactory::createNonPriorityTask(
 		[&](){
 			sendIndicateStateMessage();
@@ -39,7 +42,7 @@ _ticketedSender(
 			sendIndicateStateMessage();
 		}, 
 		"sendIndicateStateMessage"
-	);
+	);*/
 }
 Port_OtherPeripherals::~Port_OtherPeripherals() noexcept
 {

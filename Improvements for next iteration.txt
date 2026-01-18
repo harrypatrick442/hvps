@@ -13,3 +13,68 @@ Consider ADC's for full range more fine feedback on voltage feedback.
 Consider integrating voltage feedback into the board and taking out some fiber optic channels.
 LIVE AND GROUND WRONG WAY ROUND ON I2C HEADER
 The MOSFET gate should be tied to the source, not to ground after the current sense resistor....
+be nice to have periodic check of supply voltage like the soft start does. However this conflicts with the use of the adc for the high speed core?
+
+
+🟥 Layer 1 — HARD gate-time limiter (sub-µs to µs)
+
+Mandatory
+
+This is the layer that protects you from:
+
+CPU lockups
+
+ISR storms
+
+Missed compares
+
+Watchdog delays
+
+Options (pick one or combine):
+✅ A) Hardware PWM peripheral with max pulse width
+
+Use:
+
+MCPWM / LEDC / RMT
+
+With:
+
+Fixed period
+
+Hardware compare
+
+Auto-force-low at period end
+
+Never bit-bang a MOSFET at this power level.
+
+If the CPU dies:
+
+PWM still ends the pulse
+
+Gate goes low
+
+Current stops rising
+
+This alone already saves you.
+
+✅ B) One-shot monostable on the gate (the nuclear insurance)
+
+A classic trick from real power electronics:
+
+Gate signal → retriggerable monostable (or non-retriggerable)
+
+Max ON time = e.g. 40 µs
+
+If gate stays high longer → monostable times out → gate forced LOW
+
+This:
+
+Is independent of firmware
+
+Is independent of the ESP32
+
+Works even if the MCU is physically gone
+
+This is exactly how old HV and SMPS controllers stayed alive.
+
+
