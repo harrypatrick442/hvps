@@ -39,7 +39,9 @@ _systemChecksResult(nullptr),
 _runSystemChecksLatch(),
 _startLiveTimeUs(0),
 _nCyclesCount(0),
-_peakCurrentSenseVoltageRaw(0){
+_peakCurrentSenseVoltageRaw(0),
+_watchdogFed(true),
+_watchdogFail(false){
 	startCoreTask();
 }
 float HighSpeedCore::getFrequencyHz(ValueBoundType& valueBoundType){
@@ -126,7 +128,9 @@ void HighSpeedCore::setDesiredSystemState(SystemState systemState){
 void HighSpeedCore::setActualSystemState(SystemState systemState) {
 	SystemState old = _actualSystemState.exchange(systemState, std::memory_order_relaxed);
 	if(old != systemState){
+		LOG_INFO("Set bbb");
         dispatchSystemStateChanged(systemState);
+		LOG_INFO("Set ccc");
 	}
 }
 bool HighSpeedCore::isShuttingDownOrShutDown(){
@@ -325,6 +329,15 @@ void HighSpeedCore::doLive(){
 	}
 	dispatchMessage("Going live!");
 	uint64_t timeUs, endTime, endTime_2;
+	feedWatchdog();
+    std::shared_ptr<InterruptTimer> liveWatchdog
+		= initializeLiveWatchdog();
+    if (liveWatchdog==nullptr) {
+        return;
+    }
+	if(!testLiveWatchdog(liveWatchdog)){
+		return;
+	}
 	setActualSystemState(SystemState::Live);
 	timeUs = TimeHelper::us();
 	//TODO use cycles instead. This appears to be working fine but use best time source can.
@@ -336,6 +349,7 @@ void HighSpeedCore::doLive(){
 		while(true){
 			endTime = timeUs+_hvpsConfiguration1.onTimeMicroSeconds;
 			endTime_2 = timeUs+_hvpsConfiguration2.onTimeMicroSeconds;
+			feedWatchdog();
 			if((!Inputs::getOutputVoltageFeedbackThresholdReached())&&
 			(!Inputs::getFirstStageVoltageFeedbackThresholdReached())){
 					Outputs::setMOSFETOnOff(true);
@@ -350,23 +364,25 @@ void HighSpeedCore::doLive(){
 				}
 			}
 			Outputs::setMOSFETOnOff(false);
+			feedWatchdog();
 			adc.getRawQuickly(latestCurrentSenseVoltageRaw);
 			_peakCurrentSenseVoltageRaw = latestCurrentSenseVoltageRaw;
 			endTime = timeUs+_hvpsConfiguration1.offTimeMicroSeconds;
 			endTime_2 = timeUs+_hvpsConfiguration2.offTimeMicroSeconds;
 			
 			if(getDesiredSystemState()!=SystemState::Live){
-				return;
+				break;
 			}
 			if(isShuttingDownOrShutDown()){
-				return;
+				break;
 			}
 			if(getInError()){
-				return;
+				break;
 			}
 			_nCyclesCount++;
 			setActualSystemState(SystemState::Live);
 			while(true){
+				feedWatchdog();
 				timeUs = TimeHelper::us();
 				if(timeUs>=endTime){
 					break;
@@ -376,7 +392,10 @@ void HighSpeedCore::doLive(){
 				}
 			}
 		}
+		feedWatchdog();
 	});
+	Outputs::setMOSFETOnOff(false);
+	feedWatchdog();
 	_startLiveTimeUs = 0;
 }
 void HighSpeedCore::doError(){
@@ -410,4 +429,70 @@ void HighSpeedCore::calculateAdditionalShutdownTime(float voltage, float& timeSe
 					* std::log(voltage / SAFE_OUTPUT_VOLTAGE);
 	time2Seconds =  static_cast<float>(_hvpsConfiguration2.villardCapacitorsBleedTimeConstantSeconds)
 					* std::log(voltage / SAFE_OUTPUT_VOLTAGE);
+}
+std::shared_ptr<InterruptTimer> HighSpeedCore::initializeLiveWatchdog()
+{
+    const uint32_t periodUs_1 = _hvpsConfiguration1.onTimeMicroSeconds * 2;
+    const uint32_t periodUs_2 = _hvpsConfiguration2.onTimeMicroSeconds * 2;
+
+    if (periodUs_1 != periodUs_2) {
+        SAFE_ABORT("Memory corruption");
+    }
+
+    std::shared_ptr<InterruptTimer> timer
+	= std::make_shared<InterruptTimer>(
+        TIMER_GROUP_0,
+        TIMER_0,
+        periodUs_1,
+        ESP_INTR_FLAG_LEVEL3,
+        true
+    );
+
+    if (periodUs_1 != periodUs_2) {
+        SAFE_ABORT("Stack corruption during watchdog init");
+    }
+
+    esp_err_t err = timer->configure(&HighSpeedCore::liveWatchdogTimerTrampoline, this);
+    if (err != ESP_OK) {
+        SAFE_ABORT("Failed to initialize timer interrupt");
+        return nullptr;
+    }
+	timer->start();
+    return timer; // move-constructed into optional
+}
+
+inline void IRAM_ATTR HighSpeedCore::feedWatchdog()
+{
+	_watchdogFed = true;
+}
+inline void IRAM_ATTR HighSpeedCore::checkWatchdog()
+{
+	if(_watchdogFed){
+		_watchdogFed = false;
+		return;
+	}
+	Outputs::setMOSFETOffNoLock();
+	_watchdogFail = true;
+}
+
+bool IRAM_ATTR HighSpeedCore::liveWatchdogTimerTrampoline(void *arg)
+{
+    static_cast<HighSpeedCore*>(arg)->checkWatchdog();
+    return false;  // no context switch needed
+}
+bool HighSpeedCore::testLiveWatchdog(std::shared_ptr<InterruptTimer> liveWatchdog){
+	_watchdogFail = false;
+	liveWatchdog->getPeriodUs();
+	while(_watchdogFed){
+		LOG_INFO("Waiting for watchdog to begin starving");
+	}
+	uint64_t endTime = TimeHelper::us()+(liveWatchdog->getPeriodUs()+10);
+	while (TimeHelper::us() < endTime) {}
+	if(!_watchdogFail){
+		SAFE_ABORT("Watchdog test failed");
+		return false;
+	}
+	feedWatchdog();
+	_watchdogFail = false;
+	return true;
 }

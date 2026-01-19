@@ -40,7 +40,6 @@ idf_component_register(
 	"System/Aborter.cpp"
 	"System/BacktraceHelper.cpp"
 	"System/MemoryHelper.cpp"
-	"System/WatchdogFeeder.cpp"
 	"System/StayTheFuckAwake.cpp"
 	"System/SubsystemIdentifier.cpp"
 	"Tasks/TaskFactory.cpp"

@@ -10,6 +10,8 @@
 #include "LiveDataCache.hpp"
 #include "Timing/FrequencyMeter.hpp"
 #include "Enums/ValueBoundType.hpp"
+#include "Timing/InterruptTimer.hpp"
+#include <optional>
 class HighSpeedCore final : public SingletonBase<HighSpeedCore>{
 private:
 	inline static constexpr uint32_t MIN_CYCLES_FOR_EXACT = 2000;
@@ -45,6 +47,8 @@ private:
 	volatile uint64_t _startLiveTimeUs;
 	volatile uint64_t _nCyclesCount;
 	volatile uint16_t _peakCurrentSenseVoltageRaw;
+	volatile bool _watchdogFed;
+	volatile bool _watchdogFail;
 	
 public:
     Event<SystemState> onSystemStateChanged;
@@ -95,6 +99,11 @@ private:
 	void dispatchWarning(std::string message);
 	void loopFrequencyMeasurement();
 	void calculateAdditionalShutdownTime(float voltage, float& timeSeconds, float& time2Seconds);
+	std::shared_ptr<InterruptTimer> initializeLiveWatchdog();
+	inline void IRAM_ATTR feedWatchdog();
+	inline void IRAM_ATTR checkWatchdog();
+	static bool IRAM_ATTR liveWatchdogTimerTrampoline(void *arg);
+	bool testLiveWatchdog(std::shared_ptr<InterruptTimer> liveWatchdog);
 };
 
 #endif // HIGH_SPEED_CORE_HPP

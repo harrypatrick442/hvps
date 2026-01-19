@@ -11,17 +11,15 @@
 
 class StayTheFuckAwake {
 public:
-    static void initialize();
-    static void disableAllSleep();
     static void keepRunningForever();
-
-private:
     static void disableSleepSources();
     static void disablePowerManagement();
     static void disableTicklessIdle();
     static void disableWiFiPowerSave();
     static void disableBluetoothPowerSave();
     static void disableWatchdog();
+
+private:
 };
 
 #endif // STAY_THE_FUCK_AWAKE_HPP

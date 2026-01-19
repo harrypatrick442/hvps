@@ -5,7 +5,6 @@ idf_component_register(
 	"IO/FiberOpticDuplexChannel_1.cpp"
 	"IO/Inputs.cpp"
 	"IO/Outputs.cpp"
-	"IO/PinDefinitions.cpp"
 	"Graphics/LEDStrip.cpp"
 	"Peripheral1.cpp"
     "Ports/Port_FiberOpticChannel1.cpp"

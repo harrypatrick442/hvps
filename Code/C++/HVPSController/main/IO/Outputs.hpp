@@ -1,6 +1,6 @@
-#ifndef OUTPUTS_HPP
-#define OUTPUTS_HPP
+#pragma once
 #include <cstdint>
+#include "esp_attr.h"
 class Outputs{
 	
 	private:
@@ -8,13 +8,13 @@ class Outputs{
 		static bool s_initialized;
 		static bool s_safe;
 		static void configureOutputPin(int pin, bool onElseOff = false);
-		static void _setMOSFETOnOff(bool onElseOff);
+		static void IRAM_ATTR _setMOSFETOnOff(bool onElseOff);
 		static void _setSoftStartResistorBypassOnOff(bool onElseOff);
 	public: 
 		static void initialize();
 		static void toSafe();
 		static void toSafeReversible();
-		static void setMOSFETOnOff(bool onElseOff);
+		static void IRAM_ATTR setMOSFETOnOff(bool onElseOff);
+		static void IRAM_ATTR setMOSFETOffNoLock();
 		static void setSoftStartResistorBypassOnOff(bool onElseOff);
 };
-#endif

@@ -5,11 +5,15 @@
 #include "driver/gpio.h"
 #include "Logging/Log.hpp"
 #include "PinDefinitions.hpp"
-
+#include "soc/gpio_struct.h"
 const char* Outputs::TAG = "Outputs";
 static portMUX_TYPE s_outputsMux = portMUX_INITIALIZER_UNLOCKED;
 bool Outputs::s_initialized = false;
 bool Outputs::s_safe = false;
+static_assert(PinDefinitions::MOSFET_DRIVE >= 0 && PinDefinitions::MOSFET_DRIVE <= 39,
+              "MOSFET_DRIVE must be a valid ESP32 GPIO number (0–39)");
+static_assert(PinDefinitions::MOSFET_DRIVE < 32,
+              "MOSFET_DRIVE >= 32: must use GPIO.out1_w1ts/w1tc instead of GPIO.out_*");
 void Outputs::initialize(){
 	
     //portENTER_CRITICAL(&s_outputsMux);
@@ -53,12 +57,20 @@ void Outputs::toSafeReversible(){
 	_setSoftStartResistorBypassOnOff(false);
     portEXIT_CRITICAL(&s_outputsMux);
 }
-void Outputs::setMOSFETOnOff(bool onElseOff){
+void IRAM_ATTR Outputs::setMOSFETOnOff(bool onElseOff){
     portENTER_CRITICAL(&s_outputsMux);
     if (!s_safe && s_initialized) {
 		_setMOSFETOnOff(onElseOff);
     }
     portEXIT_CRITICAL(&s_outputsMux);
+}
+void IRAM_ATTR Outputs::setMOSFETOffNoLock(){
+	GPIO.out_w1tc = (1 << PinDefinitions::MOSFET_DRIVE); // OFF
+}
+void IRAM_ATTR Outputs::_setMOSFETOnOff(bool onElseOff){
+	GPIO.out_w1tc = (1 << PinDefinitions::MOSFET_DRIVE); // OFF first (safe default)
+	if (onElseOff)
+		GPIO.out_w1ts = (1 << PinDefinitions::MOSFET_DRIVE);
 }
 void Outputs::setSoftStartResistorBypassOnOff(bool onElseOff){
     portENTER_CRITICAL(&s_outputsMux);
@@ -66,9 +78,6 @@ void Outputs::setSoftStartResistorBypassOnOff(bool onElseOff){
 		_setSoftStartResistorBypassOnOff(onElseOff);
     }
     portEXIT_CRITICAL(&s_outputsMux);
-}
-void Outputs::_setMOSFETOnOff(bool onElseOff){
-	gpio_set_level((gpio_num_t)PinDefinitions::MOSFET_DRIVE, onElseOff?1:0);
 }
 void Outputs::_setSoftStartResistorBypassOnOff(bool onElseOff){
 	gpio_set_level((gpio_num_t)PinDefinitions::SOFT_START_RESISTOR_BYPASS, onElseOff?1:0);

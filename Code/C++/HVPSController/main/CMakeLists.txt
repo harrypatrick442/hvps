@@ -8,7 +8,6 @@ idf_component_register(
 		"IO/Outputs.cpp"
 		"IO/OutputVoltageFeedbackFiberOpticDuplexChannel.cpp"
 		"IO/OtherPeripheralsFiberOpticDuplexChannel.cpp"
-		"IO/PinDefinitions.cpp"
 		"Peripherals/Addresses.cpp"
 		"Ports/Port_ControllingMachine.cpp"
 		"Ports/Port_FirstStageVoltageFeedback.cpp"

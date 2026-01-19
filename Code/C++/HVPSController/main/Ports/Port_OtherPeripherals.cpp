@@ -74,11 +74,17 @@ void Port_OtherPeripherals::handleSendStateToIndicateMessage(){
 	sendIndicateStateMessage();
 }
 void Port_OtherPeripherals::sendIndicateStateMessage(){
+	LOG_INFO("send a");
 	SystemState systemState = _highSpeedCore.getActualSystemState();
+	LOG_INFO("send b");
 	IndicateStateMessage indicateStateMessage((int32_t)systemState);
+	LOG_INFO("send c");
 	cJSON* jsonMessage = indicateStateMessage.toJSON();
+	LOG_INFO("send bd");
 	setTarget(jsonMessage, SubsystemIdentifiers::Peripheral1);
+	LOG_INFO("send e");
 	_messageSender->sendMessage(jsonMessage);
+	LOG_INFO("send f");
 }
 bool Port_OtherPeripherals::sendIndicateStateRequest(){
 	SystemState systemState = _highSpeedCore.getActualSystemState();

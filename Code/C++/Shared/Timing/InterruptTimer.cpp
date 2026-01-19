@@ -155,7 +155,7 @@ esp_err_t InterruptTimer::start() {
 esp_err_t InterruptTimer::stop() {
     return timer_pause(_group, _idx);
 }
-uint32_t InterruptTimer::getPeriod(){
+uint32_t InterruptTimer::getPeriodUs(){
 	return _periodUs;
 }
 esp_err_t InterruptTimer::updatePeriod(uint32_t newPeriodUs) {

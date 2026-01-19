@@ -10,7 +10,6 @@
 #include "Ports/Port_FirstStageVoltageFeedback.hpp"
 #include "Ports/Port_OutputVoltageFeedback.hpp"
 #include "Ports/Port_OtherPeripherals.hpp"
-#include "System/WatchdogFeeder.hpp"
 #include "System/StayTheFuckAwake.hpp"
 #include "Generated/HVPSConfiguration.hpp"
 #include "Generated/HVPSConfig.hpp"
@@ -40,14 +39,18 @@ extern "C" void app_main(void)
 	Outputs::initialize();
 	Outputs::toSafeReversible();
 	IOInteruptHelper::installISRHandlerIfNotAlready();
-	//Delay::ms(10000);//REMOVE
 	Delay::ms(1000);
     Flash::initialize();
 	esp_wifi_stop();
 	esp_wifi_deinit();
     esp_log_set_vprintf(vprintf);
     esp_log_level_set("*", ESP_LOG_VERBOSE);
-    StayTheFuckAwake::initialize();
+	
+    StayTheFuckAwake::disableSleepSources();
+    StayTheFuckAwake::disablePowerManagement();
+    StayTheFuckAwake::disableWiFiPowerSave();
+    StayTheFuckAwake::disableWatchdog();
+	
 	validateConfig();
 	WatchdogCollection::initialize();
 	ADC::initialize();
@@ -62,8 +65,6 @@ extern "C" void app_main(void)
     I2C& i2c = I2C::getInstance();
 	MOSFETTemperatureSensor& mosfetTemperatureSensor = MOSFETTemperatureSensor::initialize(i2c);
 	LowerSnubberDiodeTemperatureSensor& lowerSnubberDiodeTemperatureSensor = LowerSnubberDiodeTemperatureSensor::initialize(i2c);
-    WatchdogFeeder
-        ::initialize(WATCHDOG_TIMEOUT_MILLISECONDS);
 		
 	Port_FirstStageVoltageFeedback& port_FirstStageVoltageFeedback = Port_FirstStageVoltageFeedback::initialize();
 	Port_OutputVoltageFeedback& port_OutputVoltageFeedback = Port_OutputVoltageFeedback::initialize();
