@@ -1,5 +1,4 @@
 #include "VoltageFeedbackModuleBase.hpp"
-#include "System/WatchdogFeeder.hpp"
 #include "System/StayTheFuckAwake.hpp"
 #include "System/SafeAbort.hpp"
 #include "IO/Outputs.hpp"
@@ -10,12 +9,11 @@
 #include "Broadcasting/VoltageBroadcaster.hpp"
 #include "ThresholdMonitor.hpp"
 #include "esp_log.h"
-#define WATCHDOG_TIMEOUT_MILLISECONDS 10000
 
 void VoltageFeedbackModuleBase::main(const VoltageFeedbackModuleConfiguration& config1,
  const VoltageFeedbackModuleConfiguration& config2, std::function<void()> validateConfig)
 {
-	Aborter::setToSafe(&Outputs::toSafe);
+	Aborter::initialize(&Outputs::toSafe);
 	Outputs::initialize();
 	Outputs::toSafeReversible();
 	validateConfig();
@@ -24,8 +22,10 @@ void VoltageFeedbackModuleBase::main(const VoltageFeedbackModuleConfiguration& c
 	esp_wifi_deinit();
     esp_log_set_vprintf(vprintf);
     esp_log_level_set("*", ESP_LOG_VERBOSE);
-    StayTheFuckAwake::initialize();
-    WatchdogFeeder::initialize(WATCHDOG_TIMEOUT_MILLISECONDS);
+    StayTheFuckAwake::disableSleepSources();
+    StayTheFuckAwake::disablePowerManagement();
+    StayTheFuckAwake::disableWiFiPowerSave();
+    StayTheFuckAwake::disableWatchdog();
 	Flash::initialize();
 	ThresholdMonitor& thresholdMonitor 
 		= ThresholdMonitor::initialize(

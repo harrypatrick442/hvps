@@ -157,12 +157,9 @@ void Port_ControllingMachine::handleStartMessage(cJSON* message){
 void Port_ControllingMachine::handleStopMessage(cJSON* message){
 	_highSpeedCore.stop();
 }
-void Port_ControllingMachine::handleStateChanged(SystemState systemState){		
-	LOG_INFO("Handling a");
+void Port_ControllingMachine::handleStateChanged(SystemState systemState){
 	StateChangedMessage stateChangedMessage((int32_t)systemState);
-	LOG_INFO("Handling b");
 	_channel.sendMessage(stateChangedMessage.toJSON());
-	LOG_INFO("Handling c");
 }
 void Port_ControllingMachine::sendPing(){	
 	PingMessage pingMessage;
@@ -178,6 +175,7 @@ void Port_ControllingMachine::handleOnOpened(){
 	dispatchOnOpened();
 }
 void Port_ControllingMachine::handleOnClosed(){
+	_highSpeedCore.stop();
 	_timerSendPing.stop();
 	_timerCheckReceivedPing.stop();
 	_isOpen.store(false, std::memory_order_relaxed);

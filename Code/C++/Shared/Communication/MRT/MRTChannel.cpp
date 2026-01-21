@@ -33,7 +33,7 @@ MRTChannel::MRTChannel(
 	_currentByte(0),
 	_nextNBit(0),
 	_writeTimerPeriodUs(periodUs/N_SUB_PULSES_PER_PULSE),
-	_writeTimer(TIMER_GROUP_0, TIMER_0, _writeTimerPeriodUs, ESP_INTR_FLAG_LEVEL3, true),
+	_writeTimer(_writeTimerPeriodUs, ESP_INTR_FLAG_LEVEL3, true),
 	_rxSymbolQueue(nullptr),
 	_symbolsBeingWritten(nullptr),
 	_symbolsBeingWrittenLength(0),

@@ -31,7 +31,8 @@ HVPSCircuitEmulator::HVPSCircuitEmulator(
 	_frequencyMeter(),
 	_cpuClockFrequencyMHZ(CPUClockFrequencyHelper::getClockFrequencyMHZApproximate()),
 	_outputVoltageVolts(0),
-	_firstStageVoltageVolts(0)
+	_firstStageVoltageVolts(0),
+	_debug()
 {
 	esp_err_t err =  IOInteruptHelper::setupPinEdgeInterupt(
 		PinDefinitions::DRIVE_SIGNAL,
@@ -46,9 +47,9 @@ HVPSCircuitEmulator::HVPSCircuitEmulator(
 	TaskFactory::createPriorityTask([this](){
 		loop();
 	}, "HVPSCircuitEmulator::loop");
-	/*TaskFactory::createNonPriorityTask([this](){
-		printVoltagesLoop();
-	}, "HVPSCircuitEmulator::printVoltagesLoop");*/
+	TaskFactory::createNonPriorityTask([this](){
+		printDebugLoop();
+	}, "HVPSCircuitEmulator::printVoltagesLoop");
 	float totalVillardCapacitanceFarads = _hvpsConfig.nVillardStages * 2.0f * _hvpsConfig.villardCapacitorCapacitanceFarads;
 	_a = 2.0f/totalVillardCapacitanceFarads;
 	//_frequencyMeter.startPrintToConsoleLoop();
@@ -71,26 +72,28 @@ void HVPSCircuitEmulator::loop(){
 		float energyOut = _b * timeSinceLastLoopUs;
 		float newVillardEnergyJouls = _currentVillardEnergyJouls + energyIntoFlyback - energyOut;
 		if(newVillardEnergyJouls<0)newVillardEnergyJouls = 0;
+		if(newVillardEnergyJouls>1000)newVillardEnergyJouls = 1000;
+		_debug.nOnCycles = nOnCycles;
+		_debug.energyOut = energyOut;
+		_debug.energyIntoFlyback = energyIntoFlyback;
+		_debug.onTimeUs = onTimeUs;
+		_debug.newVillardEnergyJouls = newVillardEnergyJouls;
 		villardEnergyChanged(newVillardEnergyJouls);
 		_frequencyMeter.tick();
-		/*if(newVillardEnergyJouls>0){
-			LOG_INFO("_cpuClockFrequencyMHZ: %f", _cpuClockFrequencyMHZ);
-			LOG_INFO("nOnCycles: %"PRIu32, nOnCycles);
-			LOG_INFO("onTimeUs: %f", onTimeUs);
-			LOG_INFO("energyIntoFlyback: %f", energyIntoFlyback);
-			LOG_INFO("_hvpsConfig.maxFlybackEnergyPerCycleJouls : %f", _hvpsConfig.maxFlybackEnergyPerCycleJouls );
-			LOG_INFO("_hvpsConfig.onTimeMicroSeconds : %f", _hvpsConfig.onTimeMicroSeconds);
-			LOG_INFO("newVillardEnergyJouls: %f", newVillardEnergyJouls);
-			break;
-		}*/
 	}
 }
-void HVPSCircuitEmulator::printVoltagesLoop(){
-		uint32_t oldNCycles = esp_cpu_get_cycle_count();
-	while(true){
+void HVPSCircuitEmulator::printDebugLoop(){
+	while(true){;
+		LOG_INFO("Energy out: %f", _debug.energyOut);
+		LOG_INFO("energyIntoFlyback: %f", _debug.energyIntoFlyback);
+		LOG_INFO("_currentVillardEnergyJouls: %f", _currentVillardEnergyJouls);
+		LOG_INFO("_cpuClockFrequencyMHZ: %f", _cpuClockFrequencyMHZ);
+		LOG_INFO("nOnCycles: %"PRIu32, _debug.nOnCycles);
+		LOG_INFO("onTimeUs: %f", _debug.onTimeUs);
+		LOG_INFO("newVillardEnergyJouls: %f", _debug.newVillardEnergyJouls);
 		LOG_INFO("Ouput voltage %f", _outputVoltageVolts);
 		LOG_INFO("First stage voltage %f", _firstStageVoltageVolts);
-		Delay::ms(100);
+		Delay::ms(1000);
 	}
 }
 void HVPSCircuitEmulator::villardEnergyChanged(

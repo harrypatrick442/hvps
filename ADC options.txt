@@ -1,0 +1,1 @@
+MAX114  4 channels 1Ms/s 5v supply. 

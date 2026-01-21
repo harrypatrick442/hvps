@@ -9,6 +9,14 @@
 #include "IO/Inputs.hpp"
 #include "Timing/Timer.hpp"
 #include "Timing/FrequencyMeter.hpp"
+struct HVPSCircuitEmulatorDebug{
+public:	
+	volatile uint32_t nOnCycles;
+	volatile float energyOut;
+	volatile float energyIntoFlyback;
+	volatile float onTimeUs;
+	volatile float newVillardEnergyJouls;
+};
 class HVPSCircuitEmulator:public SingletonBase<HVPSCircuitEmulator>{
     friend class SingletonBase<HVPSCircuitEmulator>;
 public:
@@ -29,6 +37,7 @@ private:
 	float _cpuClockFrequencyMHZ;
 	float _outputVoltageVolts;
 	float _firstStageVoltageVolts;
+	HVPSCircuitEmulatorDebug _debug;
 public:
 	DISALLOW_COPY_MOVE(HVPSCircuitEmulator);
 protected:
@@ -40,7 +49,7 @@ protected:
 	~HVPSCircuitEmulator();
 private:
 	void loop();
-	void printVoltagesLoop();
+	void printDebugLoop();
 	void villardEnergyChanged(float currentVillardEnergyJouls);
 	void IRAM_ATTR handleDriveSignalChanged();
 	static void IRAM_ATTR driveSignalISRTrampoline(void* arg);

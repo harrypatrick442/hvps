@@ -128,9 +128,7 @@ void HighSpeedCore::setDesiredSystemState(SystemState systemState){
 void HighSpeedCore::setActualSystemState(SystemState systemState) {
 	SystemState old = _actualSystemState.exchange(systemState, std::memory_order_relaxed);
 	if(old != systemState){
-		LOG_INFO("Set bbb");
         dispatchSystemStateChanged(systemState);
-		LOG_INFO("Set ccc");
 	}
 }
 bool HighSpeedCore::isShuttingDownOrShutDown(){
@@ -171,7 +169,6 @@ void HighSpeedCore::_run(){
 				//Second set for backup
 				continue;
 			case SystemState::ShutDown:
-				LOG_INFO("ShutDown");
 				doShutDown();
 				continue;
 			case SystemState::RunningSystemChecks:
@@ -327,7 +324,6 @@ void HighSpeedCore::doLive(){
 		dispatchError("Failed to set voltage threshold on output voltage feedback module");
 		return;
 	}
-	dispatchMessage("Going live!");
 	uint64_t timeUs, endTime, endTime_2;
 	feedWatchdog();
     std::shared_ptr<InterruptTimer> liveWatchdog
@@ -338,6 +334,7 @@ void HighSpeedCore::doLive(){
 	if(!testLiveWatchdog(liveWatchdog)){
 		return;
 	}
+	dispatchMessage("Going live!");
 	setActualSystemState(SystemState::Live);
 	timeUs = TimeHelper::us();
 	//TODO use cycles instead. This appears to be working fine but use best time source can.
@@ -352,7 +349,7 @@ void HighSpeedCore::doLive(){
 			feedWatchdog();
 			if((!Inputs::getOutputVoltageFeedbackThresholdReached())&&
 			(!Inputs::getFirstStageVoltageFeedbackThresholdReached())){
-					Outputs::setMOSFETOnOff(true);
+				Outputs::setMOSFETOnOff(true);
 			}
 			while(true){
 				timeUs = TimeHelper::us();
@@ -380,7 +377,6 @@ void HighSpeedCore::doLive(){
 				break;
 			}
 			_nCyclesCount++;
-			setActualSystemState(SystemState::Live);
 			while(true){
 				feedWatchdog();
 				timeUs = TimeHelper::us();
@@ -441,8 +437,6 @@ std::shared_ptr<InterruptTimer> HighSpeedCore::initializeLiveWatchdog()
 
     std::shared_ptr<InterruptTimer> timer
 	= std::make_shared<InterruptTimer>(
-        TIMER_GROUP_0,
-        TIMER_0,
         periodUs_1,
         ESP_INTR_FLAG_LEVEL3,
         true
@@ -484,7 +478,7 @@ bool HighSpeedCore::testLiveWatchdog(std::shared_ptr<InterruptTimer> liveWatchdo
 	_watchdogFail = false;
 	liveWatchdog->getPeriodUs();
 	while(_watchdogFed){
-		LOG_INFO("Waiting for watchdog to begin starving");
+		//LOG_INFO("Waiting for watchdog to begin starving");
 	}
 	uint64_t endTime = TimeHelper::us()+(liveWatchdog->getPeriodUs()+10);
 	while (TimeHelper::us() < endTime) {}

@@ -2,13 +2,26 @@
 #include "InterruptTimer.hpp"
 #include "esp_log.h"
 #include "System/SafeAbort.hpp"
+#include "Macros/GetFileName.hpp"
 #include "Logging/Log.hpp"
 #include "driver/timer.h"
+#include "Timing/HardwareTimerPool/HardwareTimerPool.hpp"
 
+InterruptTimer::InterruptTimer( 
+uint32_t periodUs, int intrLevel, bool abortOnConfigureFailed)
+    : 
+	_hardwareTimerLease(HardwareTimerPool::acquire(GET_FILE_NAME)),
+	_group(_hardwareTimerLease->getGroup()), _idx(_hardwareTimerLease->getIndex()),
+	_periodUs(periodUs), _intrLevel(intrLevel), 
+	_abortOnConfigureFailed(abortOnConfigureFailed),
+	_handler(nullptr), _context(nullptr), _configured(false)
+{
+	
+}
 InterruptTimer::InterruptTimer(timer_group_t group, timer_idx_t idx, 
 uint32_t periodUs, int intrLevel, bool abortOnConfigureFailed)
-    : _group(group), _idx(idx), _periodUs(periodUs), _intrLevel(intrLevel), 
-	_abortOnConfigureFailed(abortOnConfigureFailed), _handle(nullptr), 
+    : _hardwareTimerLease(nullptr), _group(group), _idx(idx), _periodUs(periodUs), _intrLevel(intrLevel), 
+	_abortOnConfigureFailed(abortOnConfigureFailed), 
 	_handler(nullptr), _context(nullptr), _configured(false)
 {
 	
@@ -127,13 +140,14 @@ esp_err_t InterruptTimer::_release() {
 	err = timer_disable_intr(_group, _idx);
 	if (errToReturn == ESP_OK) errToReturn = err;
 
+/* not required
 	// (3) Free the ISR
 	if (_handle) {
 		err = esp_intr_free(_handle);
 		if (errToReturn == ESP_OK) errToReturn = err;
 		_handle = nullptr;
 	}
-
+*/
 	// (4) Deinit timer instance
 	err = timer_deinit(_group, _idx);
 	if (errToReturn == ESP_OK) errToReturn = err;

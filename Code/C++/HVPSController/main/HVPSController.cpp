@@ -27,8 +27,7 @@
 #include "Temperature/TemperatureMonitor.hpp"
 #include "IO/PinDefinitions.hpp"
 #include "Watchdog/WatchdogCollection.hpp"
-#include <driver/gpio.h>  // gpio_num_t, GPIO_NUM_*
-#define WATCHDOG_TIMEOUT_MILLISECONDS 10000
+#include <driver/gpio.h>
 
 static const char *TAG = "HVPS";
 

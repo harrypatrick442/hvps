@@ -1,5 +1,4 @@
 #include "Peripheral1.hpp"
-#include "System/WatchdogFeeder.hpp"
 #include "System/StayTheFuckAwake.hpp"
 #include "System/SafeAbort.hpp"
 #include "IO/Outputs.hpp"
@@ -18,11 +17,10 @@
 #include "SystemStateIndicator.hpp"
 #include "IO/IOInteruptHelper.hpp"
 #include "Emulation/HVPSCircuitEmulator.hpp"
-#define WATCHDOG_TIMEOUT_MILLISECONDS 10000
 
 extern "C" void app_main(void)
 {
-	Aborter::setToSafe(&Outputs::toSafe);
+	Aborter::initialize(&Outputs::toSafe);
 	Outputs::initialize();
 	Outputs::toSafeReversible();
 	Inputs::initialize();
@@ -36,8 +34,10 @@ extern "C" void app_main(void)
 	esp_wifi_deinit();
     esp_log_set_vprintf(vprintf);
     esp_log_level_set("*", ESP_LOG_VERBOSE);
-    StayTheFuckAwake::initialize();
-    WatchdogFeeder::initialize(WATCHDOG_TIMEOUT_MILLISECONDS);
+    StayTheFuckAwake::disableSleepSources();
+    StayTheFuckAwake::disablePowerManagement();
+    StayTheFuckAwake::disableWiFiPowerSave();
+    StayTheFuckAwake::disableWatchdog();
 	HVPSLEDDisplay& hVPSLEDDisplay 
 		= HVPSLEDDisplay::initialize(Config1);
 	SystemStateIndicator& systemStateIndicator 
