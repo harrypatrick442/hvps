@@ -10,11 +10,17 @@ detect if safe votlage threshold exceeded and abort.
 PUT COMPONENT VALUES ON THE CIRCUIT BOARD FOR RESISTORS AND CAPACITORS. THIS IS HAND ASSEMBLY AND IT SAVES MISTAKES
 LIKE I MADE A MISTAKE WITH CAPCITOR VALUES ON FIBER OPTIC TRANSMITTERS RECEIVERS.
 Consider ADC's for full range more fine feedback on voltage feedback.
-Consider integrating voltage feedback into the board and taking out some fiber optic channels.
+Consider integrating voltage feedback into the board and keep fiber optics as an option but reroute high speed feedback to fpga directly and have outgoing threshold reached lines with transmitters too.
+Drop one low speed abstract RX TX fiber optic channel. Wont be needed. In its place have two or three transmitters for high speed feedback out of fpga.
 LIVE AND GROUND WRONG WAY ROUND ON I2C HEADER
-The MOSFET gate should be tied to the source, not to ground after the current sense resistor....
-be nice to have periodic check of supply voltage like the soft start does. However this conflicts with the use of the adc for the high speed core?
-
+The MOSFET gate should be tied to the source by the discharge 1k resistor, not to ground after the current sense resistor....
+be nice to have periodic check of supply voltage like the soft start does. However this conflicts with the use of the adc for the high speed core at the moment. But now high speed operations are moving to the fpga its not an issue.
+Move peripherals to the board. No external board. This has not been developed yet anyway but its going to be integrated into it now the programmable leds and stuff are prototyped and work. 
+Consider pulse width modulated fan control. You can integrate this into the fpga and a few bits of the control buffer system from the esp32 can be used for this too. Its like a set of shift registers values are bussed into, they then get bussed to a second register which is shifted out to validate the values back on the esp32. They then get pushed forward to a live set of shift registers if the esp validation is correct.
+Another system of registers captures live data such as output voltage periodically and any calculated values and can be pushed to another set of registers and shifted out. 
+Probably need six pins in total and that's not a problem because of the number of pins I free up on the esp32.
+I knew I needed to get used to the fpga anyway. Im going to need one for future projects such as a fast rotating magnetic field generator in an attempt to manipulate a vortex.
+Fiber optic transmitters for one bit threshold reached from fpga not just receivers rerouted to fpga.
 
 🟥 Layer 1 — HARD gate-time limiter (sub-µs to µs)
 
