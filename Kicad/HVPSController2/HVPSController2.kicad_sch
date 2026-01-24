@@ -9661,6 +9661,126 @@
 				)
 			)
 		)
+		(symbol "power:+15V"
+			(power)
+			(pin_numbers hide)
+			(pin_names
+				(offset 0) hide)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "#PWR"
+				(at 0 -3.81 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Value" "+15V"
+				(at 0 3.556 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Power symbol creates a global label with name \"+15V\""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "global power"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "+15V_0_1"
+				(polyline
+					(pts
+						(xy -0.762 1.27) (xy 0 2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 0) (xy 0 2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 2.54) (xy 0.762 1.27)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "+15V_1_1"
+				(pin power_in line
+					(at 0 0 90)
+					(length 0)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
 		(symbol "power:+36V"
 			(power)
 			(pin_numbers hide)
@@ -16526,6 +16646,16 @@
 	)
 	(wire
 		(pts
+			(xy 280.67 306.07) (xy 280.67 307.34)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fbff0799-0b91-47d2-9c18-0b235583b647")
+	)
+	(wire
+		(pts
 			(xy 215.9 43.18) (xy 222.25 43.18)
 		)
 		(stroke
@@ -16976,7 +17106,7 @@
 		)
 		(uuid "d527d01d-1e47-4db9-82b5-eefc8f150602")
 	)
-	(text "10V Regulator"
+	(text "Gate Driver 9-~20v regulator"
 		(exclude_from_sim no)
 		(at 486.918 332.232 0)
 		(effects
@@ -18695,6 +18825,75 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:C")
+		(at 162.56 299.72 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "1178b7be-a77e-4177-a914-b958f400f4c9")
+		(property "Reference" "C68"
+			(at 159.004 301.752 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "0.1uF"
+			(at 156.718 302.26 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_THT:C_Disc_D7.0mm_W2.5mm_P5.00mm"
+			(at 163.5252 303.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 162.56 299.72 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 162.56 299.72 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "8b0a8ea0-e916-40c3-888a-a5ddf822abe7")
+		)
+		(pin "2"
+			(uuid "c82a7445-9101-4ef6-b8f9-66bbc585b4e8")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "C68")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Custom:RS_PRO_Optical_Receiver_jack")
 		(at 186.69 38.1 180)
 		(unit 1)
@@ -19336,72 +19535,6 @@
 			(project "HVPSController"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "#PWR080")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+10V")
-		(at 182.88 306.07 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "1a99ecee-26bb-4864-b0d5-c51e939da47f")
-		(property "Reference" "#PWR0129"
-			(at 182.88 309.88 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+10V"
-			(at 182.88 300.99 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 182.88 306.07 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 182.88 306.07 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+10V\""
-			(at 182.88 306.07 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "256b91f1-edf0-4ae6-8ce4-57358f48796f")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "#PWR0129")
 					(unit 1)
 				)
 			)
@@ -21620,6 +21753,72 @@
 		)
 	)
 	(symbol
+		(lib_id "power:+15V")
+		(at 182.88 306.07 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "3d369650-896a-49f8-ad36-0802dc128222")
+		(property "Reference" "#PWR0129"
+			(at 182.88 309.88 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+15V"
+			(at 182.88 300.99 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 182.88 306.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 182.88 306.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+15V\""
+			(at 182.88 306.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "91ce62c5-5b85-4705-8286-1fe6e79e6cf7")
+		)
+		(instances
+			(project ""
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "#PWR0129")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:C_Polarized")
 		(at 468.63 43.18 0)
 		(unit 1)
@@ -22513,7 +22712,7 @@
 		(dnp no)
 		(uuid "4f54a34d-a593-404e-805d-94bee77468b1")
 		(property "Reference" "C64"
-			(at 187.198 320.548 90)
+			(at 189.738 322.072 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -22521,8 +22720,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "~"
-			(at 182.118 326.898 90)
+		(property "Value" "1uF FG26X7R2A105KNT06"
+			(at 210.82 324.612 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23207,6 +23406,73 @@
 		)
 	)
 	(symbol
+		(lib_id "power:Earth")
+		(at 162.56 303.53 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "56ec7506-1567-4246-b6f0-4222c942a055")
+		(property "Reference" "#PWR0133"
+			(at 162.56 309.88 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "Earth"
+			(at 162.56 308.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Footprint" ""
+			(at 162.56 303.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 162.56 303.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"Earth\""
+			(at 162.56 303.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "93a2d6d7-4132-4d7e-9260-87836a7987ef")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "#PWR0133")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R")
 		(at 535.94 88.9 0)
 		(unit 1)
@@ -23283,7 +23549,7 @@
 		(dnp no)
 		(uuid "57885fde-b138-47ee-ae32-153309c2dc81")
 		(property "Reference" "R14"
-			(at 194.31 349.758 0)
+			(at 197.866 350.774 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23291,8 +23557,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "R_pulldown 1000"
-			(at 186.944 352.044 0)
+		(property "Value" "1000"
+			(at 197.358 352.806 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23564,7 +23830,7 @@
 				)
 			)
 		)
-		(property "Value" "R_drive 5"
+		(property "Value" "6"
 			(at 200.66 344.17 90)
 			(effects
 				(font
@@ -23624,7 +23890,7 @@
 		(dnp no)
 		(uuid "5a61f5db-92f9-4da5-ac4e-f486c3d2c81f")
 		(property "Reference" "C65"
-			(at 184.15 339.852 90)
+			(at 188.976 333.756 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23632,8 +23898,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "~"
-			(at 182.118 339.598 90)
+		(property "Value" "1uF"
+			(at 186.944 333.502 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -24366,6 +24632,73 @@
 		)
 	)
 	(symbol
+		(lib_id "power:+15V")
+		(at 185.42 330.2 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "62c2ac73-91c1-4e5f-b17f-abc5eed864c6")
+		(property "Reference" "#PWR0130"
+			(at 181.61 330.2 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+15V"
+			(at 189.23 330.1999 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 185.42 330.2 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 185.42 330.2 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+15V\""
+			(at 185.42 330.2 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "41fe31e7-cee4-4b2e-a6bc-c62a6e8a32ef")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "#PWR0130")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:+36V")
 		(at 487.68 297.18 0)
 		(unit 1)
@@ -24560,6 +24893,72 @@
 			(project "HVPSController2"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "#PWR092")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+15V")
+		(at 565.15 308.61 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "64828c04-13fb-4e64-a761-65a6211b6481")
+		(property "Reference" "#PWR0113"
+			(at 565.15 312.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+15V"
+			(at 565.15 303.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 565.15 308.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 565.15 308.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+15V\""
+			(at 565.15 308.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "bdc866b3-faba-42a4-ad31-355f1ec89ee6")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "#PWR0113")
 					(unit 1)
 				)
 			)
@@ -25782,7 +26181,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "1N4149"
+		(property "Value" "MUR420 R0"
 			(at 185.42 312.4199 90)
 			(effects
 				(font
@@ -27026,7 +27425,7 @@
 		(dnp no)
 		(uuid "80585621-9267-422a-a7ca-86fb01460b7d")
 		(property "Reference" "C66"
-			(at 276.86 320.802 90)
+			(at 277.622 322.326 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -27034,8 +27433,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "~"
-			(at 279.908 326.898 90)
+		(property "Value" "FG26X7R2A105KNT06"
+			(at 277.368 324.104 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -27146,72 +27545,6 @@
 			(project "LedStatusIndicators"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "#PWR07")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+10V")
-		(at 280.67 306.07 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "80766313-afea-4b32-9b9b-f9d5a4ebe262")
-		(property "Reference" "#PWR0132"
-			(at 280.67 309.88 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+10V"
-			(at 280.67 300.99 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 280.67 306.07 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 280.67 306.07 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+10V\""
-			(at 280.67 306.07 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "9e040fa7-94d1-497d-98b4-38c77cfb0687")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "#PWR0132")
 					(unit 1)
 				)
 			)
@@ -27629,6 +27962,75 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:C")
+		(at 175.26 299.72 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "83a9dac4-98d4-4b78-883c-250dcc33dbfd")
+		(property "Reference" "C69"
+			(at 169.164 301.879 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "10uF"
+			(at 171.704 301.879 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Custom:C320C105K5R5TA"
+			(at 176.2252 303.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 175.26 299.72 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 175.26 299.72 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "ad810486-4e50-4da4-9a63-28fec000103d")
+		)
+		(pin "2"
+			(uuid "803bceda-f094-4446-bb72-b541d149ab36")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "C69")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:Earth")
 		(at 151.13 328.93 0)
 		(unit 1)
@@ -27887,6 +28289,139 @@
 			(project "HVPSController"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "#PWR025")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:Earth")
+		(at 175.26 303.53 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "86ba9b9d-d72c-4b06-a262-08af5afd956d")
+		(property "Reference" "#PWR0134"
+			(at 175.26 309.88 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "Earth"
+			(at 175.26 308.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Footprint" ""
+			(at 175.26 303.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 175.26 303.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"Earth\""
+			(at 175.26 303.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "14b7cd65-2aac-478e-ae17-3fd655384dbb")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "#PWR0134")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+15V")
+		(at 175.26 295.91 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "8757b554-beaa-44b5-b501-7ef2da23aaeb")
+		(property "Reference" "#PWR0135"
+			(at 175.26 299.72 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+15V"
+			(at 175.26 290.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 175.26 295.91 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 175.26 295.91 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+15V\""
+			(at 175.26 295.91 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "c6324152-b4e3-453d-bb37-d946f184f8ce")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "#PWR0135")
 					(unit 1)
 				)
 			)
@@ -28831,7 +29366,7 @@
 		(dnp no)
 		(uuid "91958db4-5d20-4976-bbd3-1e9dc79d8551")
 		(property "Reference" "C67"
-			(at 284.988 333.248 90)
+			(at 275.082 333.502 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -28839,8 +29374,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "~"
-			(at 279.908 339.598 90)
+		(property "Value" "1uF"
+			(at 277.114 333.502 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -29021,72 +29556,6 @@
 			(project "HVPSController2"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "#PWR0121")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+10V")
-		(at 565.15 308.61 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "9657c044-62c2-4a23-9168-181f1effb6ed")
-		(property "Reference" "#PWR0113"
-			(at 565.15 312.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+10V"
-			(at 565.15 303.53 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 565.15 308.61 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 565.15 308.61 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+10V\""
-			(at 565.15 308.61 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "6bfa5fa3-9e92-4b64-a092-7bc859737440")
-		)
-		(instances
-			(project ""
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "#PWR0113")
 					(unit 1)
 				)
 			)
@@ -31426,6 +31895,72 @@
 		)
 	)
 	(symbol
+		(lib_id "power:+15V")
+		(at 162.56 295.91 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "b2f34cdd-164e-4436-a970-ebeb16d48458")
+		(property "Reference" "#PWR0136"
+			(at 162.56 299.72 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+15V"
+			(at 162.56 290.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 162.56 295.91 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 162.56 295.91 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+15V\""
+			(at 162.56 295.91 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "cf27f54c-68b5-44f7-8caf-a14ffeeffc4d")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "#PWR0136")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Custom:LM2596HV")
 		(at 516.89 289.56 0)
 		(unit 1)
@@ -31522,8 +32057,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "R_pulldown 1000"
-			(at 195.834 319.278 0)
+		(property "Value" "1000"
+			(at 198.12 319.532 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -32714,7 +33249,7 @@
 		(dnp no)
 		(uuid "cc754969-127f-49b4-9de2-9ac3cb2bd269")
 		(property "Reference" "R22"
-			(at 269.24 314.198 0)
+			(at 264.922 314.96 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -32722,8 +33257,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "R_pulldown 1000"
-			(at 276.606 316.484 0)
+		(property "Value" "1000"
+			(at 265.684 317.246 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -32915,7 +33450,7 @@
 		(dnp no)
 		(uuid "d2ba7b04-4165-44dd-b721-07c07d4f4c70")
 		(property "Reference" "R3"
-			(at 269.24 349.758 0)
+			(at 264.414 350.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -32923,8 +33458,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "R_pulldown 1000"
-			(at 276.606 352.044 0)
+		(property "Value" "1000"
+			(at 265.43 352.552 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -33634,7 +34169,7 @@
 				)
 			)
 		)
-		(property "Value" "R_drive 5"
+		(property "Value" "6"
 			(at 262.89 308.61 90)
 			(effects
 				(font
@@ -33853,7 +34388,7 @@
 				)
 			)
 		)
-		(property "Value" "R_drive 5"
+		(property "Value" "6"
 			(at 200.66 308.61 90)
 			(effects
 				(font
@@ -34381,6 +34916,139 @@
 		)
 	)
 	(symbol
+		(lib_id "power:+15V")
+		(at 280.67 306.07 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "db18506a-8737-4c38-bf49-334ac47a1958")
+		(property "Reference" "#PWR0132"
+			(at 280.67 309.88 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+15V"
+			(at 280.67 300.99 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 280.67 306.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 280.67 306.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+15V\""
+			(at 280.67 306.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "78b12cd5-5843-4b51-b197-88c31fe9ae2c")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "#PWR0132")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+15V")
+		(at 279.4 331.47 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "db84fc7d-e240-4f18-b326-c282ccb0e474")
+		(property "Reference" "#PWR0131"
+			(at 283.21 331.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+15V"
+			(at 275.59 331.4699 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 279.4 331.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 279.4 331.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+15V\""
+			(at 279.4 331.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "46f0a73f-f383-4226-a4ad-f3f0e9200899")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "#PWR0131")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Diode:1N5822")
 		(at 513.08 247.65 270)
 		(unit 1)
@@ -34513,73 +35181,6 @@
 			(project "HVPSController2"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "C53")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+10V")
-		(at 185.42 330.2 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "dc984225-122c-478d-a8d2-08a398a57875")
-		(property "Reference" "#PWR0130"
-			(at 181.61 330.2 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+10V"
-			(at 189.23 330.1999 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" ""
-			(at 185.42 330.2 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 185.42 330.2 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+10V\""
-			(at 185.42 330.2 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "51e94aa3-f8d4-42d2-bb5e-0b335897bf71")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "#PWR0130")
 					(unit 1)
 				)
 			)
@@ -35574,7 +36175,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "1N4149"
+		(property "Value" "MUR420 R0"
 			(at 270.764 312.928 90)
 			(effects
 				(font
@@ -35839,73 +36440,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:+10V")
-		(at 279.4 331.47 90)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "ed69389b-b4b1-420d-8deb-b0a388d088c2")
-		(property "Reference" "#PWR0131"
-			(at 283.21 331.47 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+10V"
-			(at 275.59 331.4699 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" ""
-			(at 279.4 331.47 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 279.4 331.47 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+10V\""
-			(at 279.4 331.47 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "ad9416f0-1ba5-44be-95ab-9dbd1583b50b")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "#PWR0131")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:R_Small")
 		(at 262.89 346.71 270)
 		(mirror x)
@@ -35923,7 +36457,7 @@
 				)
 			)
 		)
-		(property "Value" "R_drive 5"
+		(property "Value" "6"
 			(at 262.89 344.17 90)
 			(effects
 				(font
@@ -36824,7 +37358,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "20K"
+		(property "Value" "30K"
 			(at 533.146 300.482 0)
 			(effects
 				(font
