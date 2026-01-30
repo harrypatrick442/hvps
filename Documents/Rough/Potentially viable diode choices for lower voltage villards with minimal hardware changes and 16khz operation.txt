@@ -1,0 +1,7 @@
+
+CL08-08 and other variants. 8-10kv rating and 0.35-0.45 amps. Total beast. Decent reverse recovery time
+ 
+UF5402 - UF5408 100v - 1kv rated 3A. Good reverse recovery time for 16khz operation. 20 for ￡1.81 on AliExpress.
+For 800v per stage, 400v secondary these are good. That gives ns/np 8.8 which gives a peak primary current with same primary of 22/8.8 = 2.5 amps. Almost exactly within the 3A rating with a 1.2 factor. About 1w per diode power loss with this configuration. 
+
+BYC8-600P is suitable for lower voltage testing. ns/np could be 4.4 and easily wound. 5 amps peak. <2.5 watts per diode. 10 for 3.17 on AliExpress.

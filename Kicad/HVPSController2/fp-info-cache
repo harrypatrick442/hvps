@@ -1,4 +1,4 @@
-24689605631800184
+24701829293868432
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -55251,6 +55251,13 @@ C320C105K5R5TA
 2
 2
 Custom
+CableTieHole
+
+
+0
+1
+1
+Custom
 ContactViaM2
 
 
@@ -55262,8 +55269,8 @@ ContactViaM3
 
 
 0
-0
-0
+1
+1
 Custom
 EKYB101ELL102MM40S
 
@@ -55307,6 +55314,20 @@ IXFP60N25X3
 3
 3
 Custom
+JST XHP-4
+
+
+0
+4
+4
+Custom
+M2Hole
+
+
+0
+1
+1
+Custom
 M3Hole
 
 
@@ -55322,6 +55343,13 @@ M4Hole
 1
 Custom
 MBR40250G
+
+
+0
+2
+2
+Custom
+Mfr. NoFG28X7R1E105KRT00
 
 
 0
@@ -55376,6 +55404,27 @@ SLW-1678105-6A-N-D
 0
 6
 6
+Custom
+TransformerWirePad
+
+
+0
+2
+1
+Custom
+UHD1H101MPD1TD
+
+
+0
+2
+2
+Custom
+UPW1E102MHD
+
+
+0
+2
+2
 Custom
 USB connection
 
