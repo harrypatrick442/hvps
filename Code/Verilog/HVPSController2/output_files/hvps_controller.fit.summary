@@ -1,10 +1,16 @@
-I/O Assignment Analysis Status : Successful - Mon Feb  2 03:26:02 2026
+Fitter Status : Successful - Mon Feb  2 15:32:09 2026
 Quartus Prime Version : 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
 Revision Name : hvps_controller
 Top-level Entity Name : hvps_controller
 Family : Cyclone IV E
 Device : EP4CE10E22C8
 Timing Models : Final
-Total pins : 49 / 92 ( 53 % )
+Total logic elements : 2,162 / 10,320 ( 21 % )
+    Total combinational functions : 2,162 / 10,320 ( 21 % )
+    Dedicated logic registers : 1,617 / 10,320 ( 16 % )
+Total registers : 1666
+Total pins : 50 / 92 ( 54 % )
 Total virtual pins : 0
+Total memory bits : 0 / 423,936 ( 0 % )
+Embedded Multiplier 9-bit elements : 0 / 46 ( 0 % )
 Total PLLs : 0 / 2 ( 0 % )

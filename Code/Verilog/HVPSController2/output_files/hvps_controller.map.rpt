@@ -1,5 +1,5 @@
 Analysis & Synthesis report for hvps_controller
-Mon Feb  2 03:23:32 2026
+Mon Feb  2 15:32:03 2026
 Quartus Prime Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
 
 
@@ -43,16 +43,16 @@ on the Quartus Prime software download page.
 +--------------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                         ;
 +------------------------------------+-------------------------------------------------+
-; Analysis & Synthesis Status        ; Successful - Mon Feb  2 03:23:32 2026           ;
+; Analysis & Synthesis Status        ; Successful - Mon Feb  2 15:32:02 2026           ;
 ; Quartus Prime Version              ; 25.1std.0 Build 1129 10/21/2025 SC Lite Edition ;
 ; Revision Name                      ; hvps_controller                                 ;
 ; Top-level Entity Name              ; hvps_controller                                 ;
 ; Family                             ; Cyclone IV E                                    ;
-; Total logic elements               ; 0                                               ;
-;     Total combinational functions  ; 0                                               ;
-;     Dedicated logic registers      ; 0                                               ;
-; Total registers                    ; 0                                               ;
-; Total pins                         ; 49                                              ;
+; Total logic elements               ; 2,162                                           ;
+;     Total combinational functions  ; 2,162                                           ;
+;     Dedicated logic registers      ; 1,617                                           ;
+; Total registers                    ; 1617                                            ;
+; Total pins                         ; 50                                              ;
 ; Total virtual pins                 ; 0                                               ;
 ; Total memory bits                  ; 0                                               ;
 ; Embedded Multiplier 9-bit elements ; 0                                               ;
@@ -154,11 +154,18 @@ on the Quartus Prime software download page.
 ; Number detected on machine ; 16          ;
 ; Maximum allowed            ; 8           ;
 ;                            ;             ;
-; Average used               ; 1.00        ;
-; Maximum used               ; 1           ;
+; Average used               ; 1.01        ;
+; Maximum used               ; 8           ;
 ;                            ;             ;
 ; Usage by Processor         ; % Time Used ;
 ;     Processor 1            ; 100.0%      ;
+;     Processor 2            ;   0.1%      ;
+;     Processor 3            ;   0.1%      ;
+;     Processor 4            ;   0.1%      ;
+;     Processor 5            ;   0.1%      ;
+;     Processor 6            ;   0.1%      ;
+;     Processor 7            ;   0.1%      ;
+;     Processor 8            ;   0.1%      ;
 +----------------------------+-------------+
 
 
@@ -171,35 +178,36 @@ on the Quartus Prime software download page.
 +----------------------------------+-----------------+------------------------+--------------------------------------------------------------+---------+
 
 
-+------------------------------------------------------------------+
-; Analysis & Synthesis Resource Usage Summary                      ;
-+---------------------------------------------+--------------------+
-; Resource                                    ; Usage              ;
-+---------------------------------------------+--------------------+
-;                                             ;                    ;
-; Total combinational functions               ; 0                  ;
-; Logic element usage by number of LUT inputs ;                    ;
-;     -- 4 input functions                    ; 0                  ;
-;     -- 3 input functions                    ; 0                  ;
-;     -- <=2 input functions                  ; 0                  ;
-;                                             ;                    ;
-; Logic elements by mode                      ;                    ;
-;     -- normal mode                          ; 0                  ;
-;     -- arithmetic mode                      ; 0                  ;
-;                                             ;                    ;
-; Total registers                             ; 0                  ;
-;     -- Dedicated logic registers            ; 0                  ;
-;     -- I/O registers                        ; 0                  ;
-;                                             ;                    ;
-; I/O pins                                    ; 49                 ;
-;                                             ;                    ;
-; Embedded Multiplier 9-bit elements          ; 0                  ;
-;                                             ;                    ;
-; Maximum fan-out node                        ; U12_INV_EOC~output ;
-; Maximum fan-out                             ; 1                  ;
-; Total fan-out                               ; 49                 ;
-; Average fan-out                             ; 0.50               ;
-+---------------------------------------------+--------------------+
++---------------------------------------------------------+
+; Analysis & Synthesis Resource Usage Summary             ;
++---------------------------------------------+-----------+
+; Resource                                    ; Usage     ;
++---------------------------------------------+-----------+
+; Estimated Total logic elements              ; 2,162     ;
+;                                             ;           ;
+; Total combinational functions               ; 2162      ;
+; Logic element usage by number of LUT inputs ;           ;
+;     -- 4 input functions                    ; 482       ;
+;     -- 3 input functions                    ; 54        ;
+;     -- <=2 input functions                  ; 1626      ;
+;                                             ;           ;
+; Logic elements by mode                      ;           ;
+;     -- normal mode                          ; 643       ;
+;     -- arithmetic mode                      ; 1519      ;
+;                                             ;           ;
+; Total registers                             ; 1617      ;
+;     -- Dedicated logic registers            ; 1617      ;
+;     -- I/O registers                        ; 0         ;
+;                                             ;           ;
+; I/O pins                                    ; 50        ;
+;                                             ;           ;
+; Embedded Multiplier 9-bit elements          ; 0         ;
+;                                             ;           ;
+; Maximum fan-out node                        ; clk~input ;
+; Maximum fan-out                             ; 1617      ;
+; Total fan-out                               ; 10194     ;
+; Average fan-out                             ; 2.63      ;
++---------------------------------------------+-----------+
 
 
 +--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -207,7 +215,7 @@ on the Quartus Prime software download page.
 +----------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+---------------------+-----------------+--------------+
 ; Compilation Hierarchy Node ; Combinational ALUTs ; Dedicated Logic Registers ; Memory Bits ; DSP Elements ; DSP 9x9 ; DSP 18x18 ; Pins ; Virtual Pins ; Full Hierarchy Name ; Entity Name     ; Library Name ;
 +----------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+---------------------+-----------------+--------------+
-; |hvps_controller           ; 0 (0)               ; 0 (0)                     ; 0           ; 0            ; 0       ; 0         ; 49   ; 0            ; |hvps_controller    ; hvps_controller ; work         ;
+; |hvps_controller           ; 2162 (2162)         ; 1617 (1617)               ; 0           ; 0            ; 0       ; 0         ; 50   ; 0            ; |hvps_controller    ; hvps_controller ; work         ;
 +----------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+---------------------+-----------------+--------------+
 Note: For table entries with two numbers listed, the numbers in parentheses indicate the number of resources of the given type used by the specific entity alone. The numbers listed outside of parentheses indicate the total resources of the given type used by the specific entity and all of its sub-entities in the hierarchy.
 
@@ -217,8 +225,8 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +----------------------------------------------+-------+
 ; Statistic                                    ; Value ;
 +----------------------------------------------+-------+
-; Total registers                              ; 0     ;
-; Number of registers using Synchronous Clear  ; 0     ;
+; Total registers                              ; 1617  ;
+; Number of registers using Synchronous Clear  ; 1568  ;
 ; Number of registers using Synchronous Load   ; 0     ;
 ; Number of registers using Asynchronous Clear ; 0     ;
 ; Number of registers using Asynchronous Load  ; 0     ;
@@ -232,13 +240,21 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +-----------------------+-----------------------------+
 ; Type                  ; Count                       ;
 +-----------------------+-----------------------------+
-; boundary_port         ; 49                          ;
-; cycloneiii_lcell_comb ; 1                           ;
-;     normal            ; 1                           ;
-;         0 data inputs ; 1                           ;
+; boundary_port         ; 50                          ;
+; cycloneiii_ff         ; 1617                        ;
+;     SCLR              ; 1568                        ;
+;     plain             ; 49                          ;
+; cycloneiii_lcell_comb ; 2162                        ;
+;     arith             ; 1519                        ;
+;         2 data inputs ; 1519                        ;
+;     normal            ; 643                         ;
+;         1 data inputs ; 49                          ;
+;         2 data inputs ; 58                          ;
+;         3 data inputs ; 54                          ;
+;         4 data inputs ; 482                         ;
 ;                       ;                             ;
-; Max LUT depth         ; 0.00                        ;
-; Average LUT depth     ; 0.00                        ;
+; Max LUT depth         ; 7.00                        ;
+; Average LUT depth     ; 3.62                        ;
 +-----------------------+-----------------------------+
 
 
@@ -247,7 +263,7 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +----------------+--------------+
 ; Partition Name ; Elapsed Time ;
 +----------------+--------------+
-; Top            ; 00:00:00     ;
+; Top            ; 00:00:02     ;
 +----------------+--------------+
 
 
@@ -257,121 +273,25 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Synthesis
     Info: Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
-    Info: Processing started: Mon Feb  2 03:23:26 2026
+    Info: Processing started: Mon Feb  2 15:31:55 2026
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off HVPSController2 -c hvps_controller
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
 Info (20030): Parallel compilation is enabled and will use 8 of the 8 processors detected
 Info (12021): Found 1 design units, including 1 entities, in source file hvps_controller.v
     Info (12023): Found entity 1: hvps_controller File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 1
 Info (12127): Elaborating entity "hvps_controller" for the top level hierarchy
-Warning (10034): Output port "U12_INV_EOC" at hvps_controller.v(2) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 2
-Warning (10034): Output port "U12_INV_RD" at hvps_controller.v(3) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 3
-Warning (10034): Output port "U12_INV_CS" at hvps_controller.v(4) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 4
-Warning (10034): Output port "U12_INV_CONVST" at hvps_controller.v(5) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 5
-Warning (10034): Output port "U12_DB0" at hvps_controller.v(6) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 6
-Warning (10034): Output port "U12_DB1" at hvps_controller.v(7) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 7
-Warning (10034): Output port "U12_DB2" at hvps_controller.v(8) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 8
-Warning (10034): Output port "U12_DB3" at hvps_controller.v(9) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 9
-Warning (10034): Output port "U12_DB4" at hvps_controller.v(10) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 10
-Warning (10034): Output port "U12_DB5" at hvps_controller.v(11) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 11
-Warning (10034): Output port "U12_DB6" at hvps_controller.v(12) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 12
-Warning (10034): Output port "U12_DB7" at hvps_controller.v(13) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 13
-Warning (10034): Output port "U5_INV_EOC" at hvps_controller.v(14) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 14
-Warning (10034): Output port "U5_INV_RD" at hvps_controller.v(15) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 15
-Warning (10034): Output port "U5_INV_CS" at hvps_controller.v(16) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 16
-Warning (10034): Output port "U5_INV_CONVST" at hvps_controller.v(17) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 17
-Warning (10034): Output port "U5_DB0" at hvps_controller.v(18) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 18
-Warning (10034): Output port "U5_DB1" at hvps_controller.v(19) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 19
-Warning (10034): Output port "U5_DB2" at hvps_controller.v(20) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 20
-Warning (10034): Output port "U5_DB3" at hvps_controller.v(21) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 21
-Warning (10034): Output port "U5_DB4" at hvps_controller.v(22) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 22
-Warning (10034): Output port "U5_DB5" at hvps_controller.v(23) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 23
-Warning (10034): Output port "U5_DB6" at hvps_controller.v(24) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 24
-Warning (10034): Output port "U5_DB7" at hvps_controller.v(25) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 25
-Warning (10034): Output port "U20_INV_EOC" at hvps_controller.v(26) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 26
-Warning (10034): Output port "U20_INV_RD" at hvps_controller.v(27) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 27
-Warning (10034): Output port "U20_INV_CS" at hvps_controller.v(28) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 28
-Warning (10034): Output port "U20_INV_CONVST" at hvps_controller.v(29) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 29
-Warning (10034): Output port "INV_PD" at hvps_controller.v(30) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 30
-Warning (10034): Output port "U20_DB0" at hvps_controller.v(31) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 31
-Warning (10034): Output port "U20_DB1" at hvps_controller.v(32) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 32
-Warning (10034): Output port "U20_DB2" at hvps_controller.v(33) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 33
-Warning (10034): Output port "U20_DB3" at hvps_controller.v(34) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 34
-Warning (10034): Output port "U20_DB4" at hvps_controller.v(35) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 35
-Warning (10034): Output port "U20_DB5" at hvps_controller.v(36) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 36
-Warning (10034): Output port "U20_DB6" at hvps_controller.v(37) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 37
-Warning (10034): Output port "U20_DB7" at hvps_controller.v(38) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 38
-Warning (10034): Output port "OR4" at hvps_controller.v(39) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 39
-Warning (10034): Output port "OR5" at hvps_controller.v(40) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 40
-Warning (10034): Output port "OR6" at hvps_controller.v(41) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 41
-Warning (10034): Output port "OT4" at hvps_controller.v(42) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 42
-Warning (10034): Output port "OT5" at hvps_controller.v(43) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 43
-Warning (10034): Output port "ESP_IN_SHIFT" at hvps_controller.v(44) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 44
-Warning (10034): Output port "ESP_IN_VALUE" at hvps_controller.v(45) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 45
-Warning (10034): Output port "ESP_STATE_TO_OUTPUT" at hvps_controller.v(46) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 46
-Warning (10034): Output port "ESP_OUT_SHIFT" at hvps_controller.v(47) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 47
-Warning (10034): Output port "ESP_OUT_VALUE" at hvps_controller.v(48) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 48
-Warning (10034): Output port "ESP_GO_LIVE" at hvps_controller.v(49) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 49
-Warning (10034): Output port "ESP_EMERGENCY_SHUTDOWN" at hvps_controller.v(51) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 51
-Warning (13024): Output pins are stuck at VCC or GND
-    Warning (13410): Pin "U12_INV_EOC" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 2
-    Warning (13410): Pin "U12_INV_RD" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 3
-    Warning (13410): Pin "U12_INV_CS" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 4
-    Warning (13410): Pin "U12_INV_CONVST" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 5
-    Warning (13410): Pin "U12_DB0" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 6
-    Warning (13410): Pin "U12_DB1" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 7
-    Warning (13410): Pin "U12_DB2" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 8
-    Warning (13410): Pin "U12_DB3" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 9
-    Warning (13410): Pin "U12_DB4" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 10
-    Warning (13410): Pin "U12_DB5" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 11
-    Warning (13410): Pin "U12_DB6" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 12
-    Warning (13410): Pin "U12_DB7" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 13
-    Warning (13410): Pin "U5_INV_EOC" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 14
-    Warning (13410): Pin "U5_INV_RD" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 15
-    Warning (13410): Pin "U5_INV_CS" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 16
-    Warning (13410): Pin "U5_INV_CONVST" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 17
-    Warning (13410): Pin "U5_DB0" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 18
-    Warning (13410): Pin "U5_DB1" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 19
-    Warning (13410): Pin "U5_DB2" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 20
-    Warning (13410): Pin "U5_DB3" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 21
-    Warning (13410): Pin "U5_DB4" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 22
-    Warning (13410): Pin "U5_DB5" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 23
-    Warning (13410): Pin "U5_DB6" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 24
-    Warning (13410): Pin "U5_DB7" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 25
-    Warning (13410): Pin "U20_INV_EOC" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 26
-    Warning (13410): Pin "U20_INV_RD" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 27
-    Warning (13410): Pin "U20_INV_CS" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 28
-    Warning (13410): Pin "U20_INV_CONVST" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 29
-    Warning (13410): Pin "INV_PD" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 30
-    Warning (13410): Pin "U20_DB0" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 31
-    Warning (13410): Pin "U20_DB1" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 32
-    Warning (13410): Pin "U20_DB2" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 33
-    Warning (13410): Pin "U20_DB3" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 34
-    Warning (13410): Pin "U20_DB4" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 35
-    Warning (13410): Pin "U20_DB5" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 36
-    Warning (13410): Pin "U20_DB6" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 37
-    Warning (13410): Pin "U20_DB7" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 38
-    Warning (13410): Pin "OR4" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 39
-    Warning (13410): Pin "OR5" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 40
-    Warning (13410): Pin "OR6" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 41
-    Warning (13410): Pin "OT4" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 42
-    Warning (13410): Pin "OT5" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 43
-    Warning (13410): Pin "ESP_IN_SHIFT" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 44
-    Warning (13410): Pin "ESP_IN_VALUE" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 45
-    Warning (13410): Pin "ESP_STATE_TO_OUTPUT" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 46
-    Warning (13410): Pin "ESP_OUT_SHIFT" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 47
-    Warning (13410): Pin "ESP_OUT_VALUE" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 48
-    Warning (13410): Pin "ESP_GO_LIVE" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 49
-    Warning (13410): Pin "ESP_EMERGENCY_SHUTDOWN" is stuck at GND File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 51
+Warning (10216): Verilog HDL warning at hvps_controller.v(58): expression attempts to divide or modulo by zero. Treated expression value as Don't Care (X) during synthesis. File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 58
+Info (286030): Timing-Driven Synthesis is running
 Info (16010): Generating hard_block partition "hard_block:auto_generated_inst"
     Info (16011): Adding 0 node(s), including 0 DDIO, 0 PLL, 0 transceiver and 0 LCELL
-Info (21057): Implemented 49 device resources after synthesis - the final resource count might be different
-    Info (21058): Implemented 0 input pins
+Info (21057): Implemented 2212 device resources after synthesis - the final resource count might be different
+    Info (21058): Implemented 1 input pins
     Info (21059): Implemented 49 output pins
-Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 100 warnings
-    Info: Peak virtual memory: 4759 megabytes
-    Info: Processing ended: Mon Feb  2 03:23:32 2026
-    Info: Elapsed time: 00:00:06
-    Info: Total CPU time (on all processors): 00:00:17
+    Info (21061): Implemented 2162 logic cells
+Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 2 warnings
+    Info: Peak virtual memory: 4861 megabytes
+    Info: Processing ended: Mon Feb  2 15:32:03 2026
+    Info: Elapsed time: 00:00:08
+    Info: Total CPU time (on all processors): 00:00:19
 
 
