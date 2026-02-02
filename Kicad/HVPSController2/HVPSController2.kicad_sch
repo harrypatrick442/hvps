@@ -11969,6 +11969,16 @@
 	)
 	(wire
 		(pts
+			(xy 530.86 196.85) (xy 533.4 196.85)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "10e5c662-48ac-40bd-b1d3-6bbb2516c05a")
+	)
+	(wire
+		(pts
 			(xy 234.95 212.09) (xy 250.19 212.09)
 		)
 		(stroke
@@ -14599,6 +14609,16 @@
 	)
 	(wire
 		(pts
+			(xy 529.59 328.93) (xy 532.13 328.93)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "56eade41-e16c-4ecf-98dd-9df4ddba5ed7")
+	)
+	(wire
+		(pts
 			(xy 250.19 344.17) (xy 250.19 350.52)
 		)
 		(stroke
@@ -17066,6 +17086,16 @@
 			(type default)
 		)
 		(uuid "9c3e8bf2-cf20-4304-87fe-be1bd32f366c")
+	)
+	(wire
+		(pts
+			(xy 530.86 262.89) (xy 533.4 262.89)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9c433c5a-8f0f-4964-9a11-100feae44239")
 	)
 	(wire
 		(pts
@@ -22696,7 +22726,7 @@
 				)
 			)
 		)
-		(property "Value" "Heatsink 5"
+		(property "Value" "Heatsink"
 			(at 158.115 374.65 0)
 			(effects
 				(font
@@ -25191,6 +25221,70 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:Conn_01x01_Pin")
+		(at 524.51 328.93 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "25997c81-ea2a-410b-b11a-6ac20c1fdfd5")
+		(property "Reference" "H5"
+			(at 525.145 323.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Heatsink"
+			(at 525.145 326.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Custom:647-25ABEP"
+			(at 524.51 328.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 524.51 328.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated"
+			(at 524.51 328.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "6ba77d55-9c5d-4b5e-8e21-740b262418d4")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "H5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:Earth")
 		(at 516.89 231.14 0)
 		(unit 1)
@@ -26063,7 +26157,7 @@
 				)
 			)
 		)
-		(property "Value" "Heatsink 5"
+		(property "Value" "Heatsink"
 			(at 170.815 374.65 0)
 			(effects
 				(font
@@ -29928,7 +30022,7 @@
 				)
 			)
 		)
-		(property "Value" "6"
+		(property "Value" "6.2"
 			(at 163.83 347.98 90)
 			(effects
 				(font
@@ -35086,6 +35180,72 @@
 	)
 	(symbol
 		(lib_id "power:Earth")
+		(at 532.13 328.93 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "86817a0e-9093-4399-b809-72f559fcfaf0")
+		(property "Reference" "#PWR047"
+			(at 532.13 335.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "Earth"
+			(at 532.13 334.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 532.13 328.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 532.13 328.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"Earth\""
+			(at 532.13 328.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "d48ed077-4f7c-4752-8d4d-479568536e6f")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "#PWR047")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:Earth")
 		(at 171.45 52.07 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -35984,6 +36144,70 @@
 			(project "HVPSController"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "#PWR027")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:Conn_01x01_Pin")
+		(at 525.78 262.89 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "8c4b36d8-fe94-4945-b3bb-60012d3d22c7")
+		(property "Reference" "H6"
+			(at 526.415 257.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Heatsink"
+			(at 526.415 260.35 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Custom:647-25ABEP"
+			(at 525.78 262.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 525.78 262.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated"
+			(at 525.78 262.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "838ef016-f604-4745-aa69-cc85023360fe")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "H6")
 					(unit 1)
 				)
 			)
@@ -38235,6 +38459,72 @@
 			(project "HVPSController2"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "R14")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:Earth")
+		(at 533.4 196.85 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "a6c7b08d-4644-4fa7-9838-4cff62cdf1ee")
+		(property "Reference" "#PWR053"
+			(at 533.4 203.2 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "Earth"
+			(at 533.4 201.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 533.4 196.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 533.4 196.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"Earth\""
+			(at 533.4 196.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "b748466d-f362-41a5-aa90-186c256963d7")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "#PWR053")
 					(unit 1)
 				)
 			)
@@ -41737,6 +42027,70 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:Conn_01x01_Pin")
+		(at 525.78 196.85 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "cff24435-433c-4a79-8ebd-946c329286b3")
+		(property "Reference" "H7"
+			(at 526.415 191.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Heatsink"
+			(at 526.415 194.31 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Custom:647-25ABEP"
+			(at 525.78 196.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 525.78 196.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated"
+			(at 525.78 196.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "908ef977-df9c-4cfc-baee-758024310804")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "H7")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:C")
 		(at 443.23 198.12 0)
 		(unit 1)
@@ -42959,7 +43313,7 @@
 				)
 			)
 		)
-		(property "Value" "6"
+		(property "Value" "6.2"
 			(at 226.06 312.42 90)
 			(effects
 				(font
@@ -43096,7 +43450,7 @@
 				)
 			)
 		)
-		(property "Value" "6"
+		(property "Value" "6.2"
 			(at 163.83 312.42 90)
 			(effects
 				(font
@@ -44104,7 +44458,7 @@
 				)
 			)
 		)
-		(property "Value" "Heatsink 5"
+		(property "Value" "Heatsink"
 			(at 183.515 374.65 0)
 			(effects
 				(font
@@ -45506,6 +45860,72 @@
 		)
 	)
 	(symbol
+		(lib_id "power:Earth")
+		(at 533.4 262.89 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "ede56a89-3232-4af1-a1f6-e98677c15d5b")
+		(property "Reference" "#PWR052"
+			(at 533.4 269.24 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "Earth"
+			(at 533.4 267.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 533.4 262.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 533.4 262.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"Earth\""
+			(at 533.4 262.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "4e76a0d2-9377-4a42-883b-a0f0d167dab8")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "#PWR052")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R_Small")
 		(at 226.06 350.52 270)
 		(mirror x)
@@ -45523,7 +45943,7 @@
 				)
 			)
 		)
-		(property "Value" "6"
+		(property "Value" "6.2"
 			(at 226.06 347.98 90)
 			(effects
 				(font
@@ -46090,7 +46510,7 @@
 				)
 			)
 		)
-		(property "Value" "Heatsink 5"
+		(property "Value" "Heatsink"
 			(at 196.215 374.65 0)
 			(effects
 				(font
