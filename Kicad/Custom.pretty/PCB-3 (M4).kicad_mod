@@ -1,0 +1,154 @@
+(footprint "PCB-3 (M4)"
+	(version 20240108)
+	(generator "pcbnew")
+	(generator_version "8.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 2.75 2.75 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "b9909e41-d014-4036-8734-adc3405e0f0f")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+		)
+	)
+	(property "Value" "PCB-3 (M4)"
+		(at 2.5 4.25 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(uuid "f2d3bd69-decb-4d2a-9168-dd5da963b5e5")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Footprint" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "92de3496-2e07-4dcd-b17e-4111a1399643")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "e190cb71-1f0f-4537-bd53-40f3b6a20b98")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "b19a86b4-48c0-4bd7-8feb-239056645f35")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr through_hole)
+	(fp_line
+		(start -2.75 -1.25)
+		(end -2.75 11.25)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "bb701742-3292-48ef-8963-a8f04f4a8093")
+	)
+	(fp_line
+		(start 1.25 -1.25)
+		(end 3.75 -1.25)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "ced90dec-9f38-4de9-94bb-b009b1eb61ce")
+	)
+	(fp_line
+		(start 1.25 11.25)
+		(end 3.75 11.25)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "ebe5cac4-1b78-4aaf-9788-da09445dc425")
+	)
+	(fp_line
+		(start 7.75 11.25)
+		(end 7.75 -1.25)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "7700d3ad-aac5-40b9-8c28-72c1a253627c")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 2.5 6 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(uuid "d9ac93e2-88ad-4e02-a8b7-d6a30675e8b9")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" thru_hole circle
+		(at 0 0)
+		(size 3 3)
+		(drill oval 2.1 1.4)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "7a311c3d-9fbc-4ad2-ad96-38b08d3cc700")
+	)
+	(pad "1" thru_hole circle
+		(at 0 10)
+		(size 3 3)
+		(drill oval 2.1 1.4)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "1894f934-c423-4356-9b4f-6829dd53391e")
+	)
+	(pad "1" thru_hole circle
+		(at 5 0)
+		(size 3 3)
+		(drill oval 2.1 1.4)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "ddc1a9f1-77c6-496e-9b69-d2faa8f43357")
+	)
+	(pad "1" thru_hole circle
+		(at 5 10)
+		(size 3 3)
+		(drill oval 2.1 1.4)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "b0078111-78ab-43ed-ab4b-2f437d34206a")
+	)
+)

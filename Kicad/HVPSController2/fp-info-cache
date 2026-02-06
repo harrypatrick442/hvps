@@ -1,4 +1,4 @@
-24701829293868432
+24719529969595016
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -55209,6 +55209,13 @@ Custom
 2
 1
 Custom
+5026 Inductor
+
+
+0
+2
+2
+Custom
 581202B02500G
 
 
@@ -55251,6 +55258,13 @@ C320C105K5R5TA
 2
 2
 Custom
+CST2020-200L
+
+
+0
+5
+5
+Custom
 CableTieHole
 
 
@@ -55272,12 +55286,26 @@ ContactViaM3
 1
 1
 Custom
+ECA-1JM102
+
+
+0
+2
+2
+Custom
 EKYB101ELL102MM40S
 
 
 0
 2
 2
+Custom
+EP4CE6E22C8N_FPGA_Development_Board_
+
+
+0
+96
+96
 Custom
 ESP32_WROOM-32_Dev_Board
 
@@ -55292,6 +55320,13 @@ FH-320-NV
 0
 2
 2
+Custom
+Generic Bulk Aluminium Heatsink Small
+
+
+0
+0
+0
 Custom
 HVR82MY5010
 
@@ -55356,6 +55391,20 @@ Mfr. NoFG28X7R1E105KRT00
 2
 2
 Custom
+PCB-1 (M4)
+
+
+0
+4
+1
+Custom
+PCB-3 (M4)
+
+
+0
+4
+1
+Custom
 PCS2512FR0010ET
 
 
@@ -55398,12 +55447,26 @@ SER2918H-223KL
 3
 3
 Custom
+SL2TTED10R0F
+
+
+0
+0
+0
+Custom
 SLW-1678105-6A-N-D
 
 
 0
 6
 6
+Custom
+SRD-5VDC-SL-C
+
+
+0
+5
+5
 Custom
 TransformerWirePad
 
@@ -55420,6 +55483,13 @@ UHD1H101MPD1TD
 2
 Custom
 UPW1E102MHD
+
+
+0
+2
+2
+Custom
+UPW1E471MPD6TA
 
 
 0
