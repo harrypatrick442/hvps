@@ -1,4 +1,4 @@
-24719529969595016
+24721300315992497
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -55349,6 +55349,13 @@ IXFP60N25X3
 3
 3
 Custom
+IXFP60N25X3_2
+
+
+0
+0
+0
+Custom
 JST XHP-4
 
 
@@ -55451,8 +55458,8 @@ SL2TTED10R0F
 
 
 0
-0
-0
+2
+2
 Custom
 SLW-1678105-6A-N-D
 
