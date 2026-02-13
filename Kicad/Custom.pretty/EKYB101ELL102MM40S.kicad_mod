@@ -106,7 +106,7 @@
 	(pad "1" thru_hole rect
 		(at -3.75 0)
 		(size 2.2 2.2)
-		(drill 0.762)
+		(drill 1)
 		(layers "*.Cu" "*.Mask")
 		(remove_unused_layers no)
 		(uuid "23fd8593-196c-437d-885c-5df2a58626e1")

@@ -9444,126 +9444,6 @@
 				)
 			)
 		)
-		(symbol "power:+12V"
-			(power)
-			(pin_numbers hide)
-			(pin_names
-				(offset 0) hide)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "#PWR"
-				(at 0 -3.81 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Value" "+12V"
-				(at 0 3.556 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "Power symbol creates a global label with name \"+12V\""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "global power"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "+12V_0_1"
-				(polyline
-					(pts
-						(xy -0.762 1.27) (xy 0 2.54)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0 0) (xy 0 2.54)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0 2.54) (xy 0.762 1.27)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "+12V_1_1"
-				(pin power_in line
-					(at 0 0 90)
-					(length 0)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-		)
 		(symbol "power:+15V"
 			(power)
 			(pin_numbers hide)
@@ -10544,12 +10424,6 @@
 		(uuid "7abadc10-a7aa-4785-b09d-ba98e171430e")
 	)
 	(junction
-		(at 448.31 185.42)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "7b3e610e-972a-462d-be91-47c296b29eee")
-	)
-	(junction
 		(at 279.4 49.53)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -10770,6 +10644,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "c8ac6b92-d56d-411d-b9c0-fbce8483f9f4")
+	)
+	(junction
+		(at 401.32 355.6)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "c8c689ca-1930-4643-b608-ce83b060ce7d")
 	)
 	(junction
 		(at 54.61 50.8)
@@ -18429,16 +18309,6 @@
 	)
 	(wire
 		(pts
-			(xy 447.04 262.89) (xy 454.66 262.89)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e602bc5e-d3c6-4e3c-9913-0b2893e02b1c")
-	)
-	(wire
-		(pts
 			(xy 222.25 59.69) (xy 222.25 50.8)
 		)
 		(stroke
@@ -19679,6 +19549,166 @@
 		)
 		(uuid "ff48a046-5e7e-42a4-ba04-218b15924792")
 	)
+	(label "3v3_2"
+		(at 341.63 59.69 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "01101042-ba90-4d32-97b9-a4e94c74cb8a")
+	)
+	(label "3v3_2"
+		(at 87.63 118.11 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "0466c164-7cdf-4cb6-888a-87faf6178cac")
+	)
+	(label "3v3_2"
+		(at 279.4 52.07 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "17c7dad4-4d71-4477-9ee5-2f5c3d79eba9")
+	)
+	(label "15V_2"
+		(at 497.84 345.44 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "4e73d0db-300c-4472-a36d-e79de36be7a2")
+	)
+	(label "3v3_2"
+		(at 115.57 120.65 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "50da19b0-9738-4215-8707-18f3e992cb7b")
+	)
+	(label "3v3_2"
+		(at 265.43 335.28 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "62364071-d6ea-4bfd-8099-5bd71216706f")
+	)
+	(label "3v3_2"
+		(at 123.19 148.59 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "633f7745-09f1-4626-830b-b0ce0e1366b4")
+	)
+	(label "3v3_2"
+		(at 228.6 53.34 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "6cd647e9-6b5e-45c8-af39-b4146fe46d75")
+	)
+	(label "3v3_2"
+		(at 254 57.15 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "72df3438-56a2-423f-996f-33d3d450b8dd")
+	)
+	(label "3v3_2"
+		(at 419.1 157.48 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "77630cff-3bed-467e-9407-067724d75502")
+	)
+	(label "3v3_2"
+		(at 318.77 59.69 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "80783d5e-0ca9-4f05-b5e5-dc6e49b9bb07")
+	)
+	(label "3v3_2"
+		(at 100.33 118.11 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "88fbe4e0-6437-47d2-8ee8-6e235470afe5")
+	)
+	(label "15V_2"
+		(at 401.32 313.69 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "8b27f9b2-a1fe-4854-b416-94a3c74bfeb1")
+	)
+	(label "3v3_2"
+		(at 542.29 175.26 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "9c2ac08a-9e29-4340-8f9f-8c917364283e")
+	)
+	(label "3v3_2"
+		(at 448.31 185.42 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "cb288589-d579-4e9b-9ee5-de5811ad0d84")
+	)
+	(label "15V_2"
+		(at 400.05 347.98 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "f7e861ba-d365-47bd-9af9-56f63ea9f56f")
+	)
 	(symbol
 		(lib_id "power:Earth")
 		(at 353.06 186.69 0)
@@ -20027,72 +20057,6 @@
 			(project ""
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "S2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 542.29 175.26 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "0261971f-915d-49ac-a884-117af9b89170")
-		(property "Reference" "#PWR074"
-			(at 542.29 179.07 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 542.29 170.18 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 542.29 175.26 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 542.29 175.26 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 542.29 175.26 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "cbccf10e-c13d-41ee-96f3-6ec369b106fa")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "#PWR074")
 					(unit 1)
 				)
 			)
@@ -22656,73 +22620,6 @@
 			(project ""
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "R25")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 100.33 118.11 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "1f428d08-77b0-48ca-9596-ad73a37cd3ce")
-		(property "Reference" "#PWR050"
-			(at 100.33 121.92 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 100.3299 114.3 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" ""
-			(at 100.33 118.11 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 100.33 118.11 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 100.33 118.11 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "d49f813b-3b57-4466-a660-30c1b1a564f2")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "#PWR050")
 					(unit 1)
 				)
 			)
@@ -26335,72 +26232,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:+3V3")
-		(at 228.6 53.34 180)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "4942c0d8-3dff-4b22-a9aa-a09cda2fe3ca")
-		(property "Reference" "#PWR014"
-			(at 228.6 49.53 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 228.6 58.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 228.6 53.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 228.6 53.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 228.6 53.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "7a249804-0c2e-45fc-ae6a-795d6fac8a12")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "#PWR014")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:Earth")
 		(at 270.51 180.34 0)
 		(unit 1)
@@ -27838,72 +27669,6 @@
 			(project ""
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "R30")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+12V")
-		(at 497.84 345.44 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "5a17287a-03d8-4a95-9b66-cf20f99210fd")
-		(property "Reference" "#PWR0179"
-			(at 497.84 349.25 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+14V"
-			(at 497.84 340.36 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 497.84 345.44 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 497.84 345.44 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+12V\""
-			(at 497.84 345.44 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "36713f46-d462-4988-bc61-0387d9a7fc0f")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "#PWR0179")
 					(unit 1)
 				)
 			)
@@ -29467,72 +29232,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:+3V3")
-		(at 279.4 52.07 180)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "6b7fe31b-f580-4dcd-b10e-87e0555fe75c")
-		(property "Reference" "#PWR012"
-			(at 279.4 48.26 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 279.4 57.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 279.4 52.07 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 279.4 52.07 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 279.4 52.07 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "3dfc85b0-19ff-4baa-a22c-c3c450ea4efe")
-		)
-		(instances
-			(project "HVPSController"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "#PWR012")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Custom:AD7822")
 		(at 394.97 179.07 0)
 		(unit 1)
@@ -29729,72 +29428,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:+12V")
-		(at 401.32 313.69 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "6e838b51-4cdd-455a-91cb-ff2131e6c00a")
-		(property "Reference" "#PWR0146"
-			(at 401.32 317.5 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+14V"
-			(at 401.32 308.61 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 401.32 313.69 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 401.32 313.69 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+12V\""
-			(at 401.32 313.69 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "d26171e1-c358-4d05-a783-c0945ab9d255")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "#PWR0146")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:Earth")
 		(at 535.94 104.14 0)
 		(unit 1)
@@ -29854,72 +29487,6 @@
 			(project "HVPSController"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "#PWR041")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 123.19 148.59 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "6f006106-e8c0-4e7f-b35f-9b745f6a3fa2")
-		(property "Reference" "#PWR066"
-			(at 123.19 152.4 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 123.19 143.51 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 123.19 148.59 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 123.19 148.59 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 123.19 148.59 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "68aa2975-444c-4eb7-babe-f3c8d30876e3")
-		)
-		(instances
-			(project "HVPSController"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "#PWR066")
 					(unit 1)
 				)
 			)
@@ -30118,137 +29685,6 @@
 			(project "HVPSController2"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "#PWR056")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 115.57 120.65 180)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "705c1376-fa98-4732-b0ad-721976d09f65")
-		(property "Reference" "#PWR054"
-			(at 115.57 116.84 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 115.57 125.73 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 115.57 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 115.57 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 115.57 120.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "7d016402-753a-466f-8f83-7b1e2bb2ae96")
-		)
-		(instances
-			(project "HVPSController"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "#PWR054")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 419.1 157.48 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "71fadfbe-f9d9-4f5a-96a9-637911042df5")
-		(property "Reference" "#PWR093"
-			(at 419.1 161.29 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 418.592 153.416 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 419.1 157.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 419.1 157.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 419.1 157.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "e4e30cad-ad47-4ab6-adcb-93ede3247119")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "#PWR093")
 					(unit 1)
 				)
 			)
@@ -31096,72 +30532,6 @@
 			(project "LedStatusIndicators"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "#PWR064")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:Earth")
-		(at 454.66 262.89 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "79cb5152-9f10-4ca3-aae7-978f8cb68b35")
-		(property "Reference" "#PWR0183"
-			(at 454.66 269.24 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "Earth"
-			(at 454.66 267.97 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 454.66 262.89 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 454.66 262.89 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"Earth\""
-			(at 454.66 262.89 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "da1ed5ca-2eac-40e1-9deb-99ce072f83d9")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "#PWR0183")
 					(unit 1)
 				)
 			)
@@ -32136,73 +31506,6 @@
 			(project "HVPSController2"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "L2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+12V")
-		(at 400.05 347.98 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "857409ec-c384-40eb-8886-537d62d3acaa")
-		(property "Reference" "#PWR068"
-			(at 403.86 347.98 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+14V"
-			(at 396.24 347.9799 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" ""
-			(at 400.05 347.98 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 400.05 347.98 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+12V\""
-			(at 400.05 347.98 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "23b9d7c6-3d02-4e7f-bf8b-86128465c3dc")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "#PWR068")
 					(unit 1)
 				)
 			)
@@ -35332,73 +34635,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:+3V3")
-		(at 265.43 335.28 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "a88b5a7d-9afd-4661-84c6-3089075419cc")
-		(property "Reference" "#PWR0151"
-			(at 265.43 339.09 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 265.4299 331.47 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" ""
-			(at 265.43 335.28 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 265.43 335.28 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 265.43 335.28 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "527f024d-3651-4388-8088-0e81295489ac")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "#PWR0151")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Custom:AWHSH124D00G")
 		(at 524.51 100.33 180)
 		(unit 1)
@@ -36507,72 +35743,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:+3V3")
-		(at 341.63 59.69 180)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "b1008da7-d89e-4b6e-bcd7-f41d09e77cc8")
-		(property "Reference" "#PWR035"
-			(at 341.63 55.88 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 341.63 64.77 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 341.63 59.69 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 341.63 59.69 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 341.63 59.69 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "e4ccac8a-bee4-4229-acbf-aaa7eaca6f55")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "#PWR035")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:Earth")
 		(at 273.05 59.69 0)
 		(unit 1)
@@ -36639,6 +35809,73 @@
 		)
 	)
 	(symbol
+		(lib_id "power:Earth")
+		(at 401.32 355.6 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "b35fc709-fcef-4b1d-b483-5ef9613de6f3")
+		(property "Reference" "#PWR077"
+			(at 401.32 361.95 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "Earth"
+			(at 401.32 360.68 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Footprint" ""
+			(at 401.32 355.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 401.32 355.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"Earth\""
+			(at 401.32 355.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "6a6e418f-602a-4dc0-b788-06e3b27f9f52")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "#PWR077")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R_Small")
 		(at 325.12 332.74 0)
 		(unit 1)
@@ -36665,7 +35902,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P5.08mm_Vertical"
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal"
 			(at 325.12 332.74 0)
 			(effects
 				(font
@@ -37117,71 +36354,6 @@
 			(project "HVPSController2"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "#PWR0150")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:Conn_01x01_Pin")
-		(at 441.96 262.89 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "c20ae24b-b12f-4e1a-bde5-f9ff9fc57e41")
-		(property "Reference" "J24"
-			(at 442.595 257.81 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "Standoff Hole"
-			(at 442.595 260.35 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Custom:ContactViaM3"
-			(at 441.96 262.89 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 441.96 262.89 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Generic connector, single row, 01x01, script generated"
-			(at 441.96 262.89 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "f9760702-ae61-4341-87d6-af4e23041674")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "J24")
 					(unit 1)
 				)
 			)
@@ -38100,72 +37272,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:+3V3")
-		(at 254 57.15 180)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "d0f329af-97bd-469e-a884-e0080400c10a")
-		(property "Reference" "#PWR023"
-			(at 254 53.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 254 62.23 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 254 57.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 254 57.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 254 57.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "5973ba7c-098c-49e4-ac6b-fb788e227ffc")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "#PWR023")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:Earth")
 		(at 48.26 238.76 0)
 		(unit 1)
@@ -38515,72 +37621,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:+3V3")
-		(at 448.31 185.42 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "d37e746c-679e-4557-bf76-601fae44c858")
-		(property "Reference" "#PWR0111"
-			(at 448.31 189.23 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 448.31 180.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 448.31 185.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 448.31 185.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 448.31 185.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "b37555f2-5db6-433a-ba41-1db59c09a59d")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "#PWR0111")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Diode:1N4149")
 		(at 345.44 176.53 0)
 		(mirror y)
@@ -38662,73 +37702,6 @@
 			(project "HVPSController2"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "D8")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 87.63 118.11 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "d38e4f8b-1edc-49a2-8418-e2a0aef4373f")
-		(property "Reference" "#PWR049"
-			(at 87.63 121.92 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 87.6299 114.3 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" ""
-			(at 87.63 118.11 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 87.63 118.11 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 87.63 118.11 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "e8e984f3-bb5f-450a-905d-6bbcdef022ad")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "#PWR049")
 					(unit 1)
 				)
 			)
@@ -39222,72 +38195,6 @@
 			(project "HVPSController2"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "#PWR053")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 318.77 59.69 180)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "d7a8595b-e509-44aa-a8a6-ab463a9e9258")
-		(property "Reference" "#PWR034"
-			(at 318.77 55.88 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 318.77 64.77 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 318.77 59.69 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 318.77 59.69 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 318.77 59.69 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "e383f768-c17f-47ef-88ea-c59d8822b04d")
-		)
-		(instances
-			(project "HVPSController"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "#PWR034")
 					(unit 1)
 				)
 			)
