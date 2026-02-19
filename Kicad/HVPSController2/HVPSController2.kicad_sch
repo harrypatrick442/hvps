@@ -10058,6 +10058,12 @@
 		)
 	)
 	(junction
+		(at 358.14 355.6)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "021b894a-0ba7-4d5b-b2cb-b09175352003")
+	)
+	(junction
 		(at 370.84 373.38)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -10212,6 +10218,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "32788036-a06b-4698-9e49-f4e156dd7175")
+	)
+	(junction
+		(at 29.21 367.03)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "32c1e2ab-4d73-47d9-9202-848939724d6c")
 	)
 	(junction
 		(at 370.84 322.58)
@@ -10458,12 +10470,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "8b729dd7-ab6a-46e4-8caa-70582b413f6d")
-	)
-	(junction
-		(at 358.14 355.6)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "8eb50003-5184-4695-8203-6cf1664f342d")
 	)
 	(junction
 		(at 217.17 254)
@@ -11129,6 +11135,16 @@
 	)
 	(wire
 		(pts
+			(xy 345.44 322.58) (xy 345.44 328.93)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "090823d4-2443-4267-9970-611f8f83b5f7")
+	)
+	(wire
+		(pts
 			(xy 82.55 168.91) (xy 186.69 168.91)
 		)
 		(stroke
@@ -11409,6 +11425,16 @@
 	)
 	(wire
 		(pts
+			(xy 345.44 364.49) (xy 345.44 373.38)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "12cd3c43-0f29-4bba-9f29-563f11a4f8a4")
+	)
+	(wire
+		(pts
 			(xy 406.4 337.82) (xy 406.4 335.28)
 		)
 		(stroke
@@ -11529,6 +11555,16 @@
 	)
 	(wire
 		(pts
+			(xy 358.14 331.47) (xy 358.14 337.82)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "16c29517-70ee-47d2-9b8b-8f339427635d")
+	)
+	(wire
+		(pts
 			(xy 125.73 143.51) (xy 125.73 148.59)
 		)
 		(stroke
@@ -11556,6 +11592,16 @@
 			(type default)
 		)
 		(uuid "18c01263-bcbc-48d4-8a21-052089ad9502")
+	)
+	(wire
+		(pts
+			(xy 25.4 379.73) (xy 26.67 379.73)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "19106c9e-10d1-49be-8eba-9669dcdb92a3")
 	)
 	(wire
 		(pts
@@ -12336,6 +12382,16 @@
 			(type default)
 		)
 		(uuid "32af2406-bf81-409b-a30a-cf97c0a4b2e3")
+	)
+	(wire
+		(pts
+			(xy 358.14 364.49) (xy 358.14 373.38)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "32e551fb-5144-433e-b1d3-e6cdf48cf13f")
 	)
 	(wire
 		(pts
@@ -14039,6 +14095,16 @@
 	)
 	(wire
 		(pts
+			(xy 345.44 331.47) (xy 345.44 337.82)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "65ad668a-8d7a-41b1-9355-8cb0c43acf73")
+	)
+	(wire
+		(pts
 			(xy 27.94 193.04) (xy 27.94 185.42)
 		)
 		(stroke
@@ -14056,6 +14122,16 @@
 			(type default)
 		)
 		(uuid "65c7a645-b333-47ce-a4f2-b3f4f738dcd9")
+	)
+	(wire
+		(pts
+			(xy 358.14 322.58) (xy 358.14 328.93)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6648c653-e415-4527-a356-5f980604cb80")
 	)
 	(wire
 		(pts
@@ -14519,16 +14595,6 @@
 	)
 	(wire
 		(pts
-			(xy 358.14 370.84) (xy 358.14 373.38)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "736cc283-8302-4afc-b9dc-491ea4e33db0")
-	)
-	(wire
-		(pts
 			(xy 283.21 73.66) (xy 283.21 107.95)
 		)
 		(stroke
@@ -14829,6 +14895,16 @@
 	)
 	(wire
 		(pts
+			(xy 29.21 367.03) (xy 52.07 367.03)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7e71b9d6-e785-485d-806b-89cdffc138b0")
+	)
+	(wire
+		(pts
 			(xy 280.67 76.2) (xy 247.65 76.2)
 		)
 		(stroke
@@ -14976,6 +15052,16 @@
 			(type default)
 		)
 		(uuid "842cab84-af57-47aa-98d7-4c77be977c10")
+	)
+	(wire
+		(pts
+			(xy 358.14 355.6) (xy 358.14 361.95)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "842edfca-cbb1-4d5f-b1df-c3ee7fb7e7cb")
 	)
 	(wire
 		(pts
@@ -15259,7 +15345,7 @@
 	)
 	(wire
 		(pts
-			(xy 29.21 377.19) (xy 29.21 383.54)
+			(xy 30.48 377.19) (xy 30.48 383.54)
 		)
 		(stroke
 			(width 0)
@@ -16196,16 +16282,6 @@
 			(type default)
 		)
 		(uuid "ab445140-77d2-4122-ac23-aebef52a195c")
-	)
-	(wire
-		(pts
-			(xy 345.44 370.84) (xy 345.44 373.38)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ab68783d-7073-42dc-ae23-f7020de11203")
 	)
 	(wire
 		(pts
@@ -17669,7 +17745,7 @@
 	)
 	(wire
 		(pts
-			(xy 25.4 367.03) (xy 52.07 367.03)
+			(xy 25.4 367.03) (xy 29.21 367.03)
 		)
 		(stroke
 			(width 0)
@@ -17959,6 +18035,16 @@
 	)
 	(wire
 		(pts
+			(xy 25.4 377.19) (xy 29.21 377.19)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "dda964f1-5ae8-4351-83ad-3c9d4ca619ec")
+	)
+	(wire
+		(pts
 			(xy 299.72 346.71) (xy 303.53 346.71)
 		)
 		(stroke
@@ -18229,6 +18315,16 @@
 	)
 	(wire
 		(pts
+			(xy 345.44 355.6) (xy 345.44 361.95)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e37654ed-6883-40aa-b107-fc6395c96135")
+	)
+	(wire
+		(pts
 			(xy 247.65 44.45) (xy 243.84 44.45)
 		)
 		(stroke
@@ -18379,7 +18475,7 @@
 	)
 	(wire
 		(pts
-			(xy 40.64 377.19) (xy 29.21 377.19)
+			(xy 40.64 377.19) (xy 30.48 377.19)
 		)
 		(stroke
 			(width 0)
@@ -18926,6 +19022,16 @@
 			(type default)
 		)
 		(uuid "fa3db42f-7574-4135-bc69-5b8ea2ba643d")
+	)
+	(wire
+		(pts
+			(xy 29.21 377.19) (xy 29.21 367.03)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fa747c44-0cb4-4d03-ac75-83aa9979091a")
 	)
 	(wire
 		(pts
@@ -20008,7 +20114,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Custom:SLW-1678105-6A-N-D"
+		(property "Footprint" "Custom:MSS-04A"
 			(at 50.038 184.15 0)
 			(effects
 				(font
@@ -20798,6 +20904,73 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:Conn_01x02_Pin")
+		(at 20.32 377.19 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "0bc80a49-7623-4ff2-a69b-324b2c585339")
+		(property "Reference" "J24"
+			(at 23.622 371.856 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Conn_01x02_Pin"
+			(at 23.368 374.396 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical"
+			(at 20.32 377.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 20.32 377.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x02, script generated"
+			(at 20.32 377.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "589481df-9c63-4898-b076-155009694227")
+		)
+		(pin "1"
+			(uuid "7f023e90-2965-4590-a6cf-537c64262f7f")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "J24")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R_Small")
 		(at 444.5 115.57 0)
 		(unit 1)
@@ -21406,6 +21579,73 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:Conn_01x02_Pin")
+		(at 363.22 331.47 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "129e5290-6ea0-4781-bfe6-6f49ce01a760")
+		(property "Reference" "J5"
+			(at 359.918 336.804 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Snubber"
+			(at 360.172 334.264 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Custom:Snubber_Connection_1"
+			(at 363.22 331.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 363.22 331.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x02, script generated"
+			(at 363.22 331.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "261ed441-d733-43dc-b2a6-cfe4f08b48dd")
+		)
+		(pin "1"
+			(uuid "bfaf151a-b4fd-407e-97cf-495454a0869c")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "J5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:C")
 		(at 424.18 201.93 0)
 		(unit 1)
@@ -21535,76 +21775,6 @@
 			(project "HVPSController2"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "J18")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 345.44 367.03 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "13bd8ae0-a6f1-4a52-b090-3beee8fb8723")
-		(property "Reference" "R32"
-			(at 347.98 365.7599 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "R"
-			(at 347.98 368.2999 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" ""
-			(at 343.662 367.03 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 345.44 367.03 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 345.44 367.03 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "36eedbb6-9888-40a4-8a87-ffb511aa4955")
-		)
-		(pin "2"
-			(uuid "41c261a1-a151-4c96-952d-a70101b2ef21")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "R32")
 					(unit 1)
 				)
 			)
@@ -22550,76 +22720,6 @@
 			(project "HVPSController2"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "#PWR075")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 345.44 334.01 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "1f3d2d46-2d0e-4ca7-8443-d2757a28ff8c")
-		(property "Reference" "R25"
-			(at 347.98 332.7399 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "R"
-			(at 347.98 335.2799 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" ""
-			(at 343.662 334.01 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 345.44 334.01 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 345.44 334.01 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "f40af3f3-c7f3-458e-a6b3-e158ca8c450d")
-		)
-		(pin "2"
-			(uuid "0363ff95-c19e-405d-befa-3c5314bec11d")
-		)
-		(instances
-			(project ""
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "R25")
 					(unit 1)
 				)
 			)
@@ -24435,76 +24535,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:C")
-		(at 358.14 326.39 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "32c5e35f-2a75-4876-b690-92661009b4dd")
-		(property "Reference" "C61"
-			(at 361.95 325.1199 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "C"
-			(at 361.95 327.6599 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" ""
-			(at 359.1052 330.2 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 358.14 326.39 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Unpolarized capacitor"
-			(at 358.14 326.39 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "360c12f4-b9c4-4e1f-bb53-dc5ba83abd81")
-		)
-		(pin "1"
-			(uuid "4a8becc8-6d81-462c-b1c0-84f9f37484c9")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "C61")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:+5V")
 		(at 497.84 232.41 0)
 		(unit 1)
@@ -24984,6 +25014,73 @@
 			(project "HVPSController2"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "#PWR018")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:Conn_01x02_Pin")
+		(at 363.22 364.49 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "3b055ed2-52ab-4453-9a47-c98f4aa9f461")
+		(property "Reference" "J7"
+			(at 359.918 369.824 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Snubber"
+			(at 360.172 367.284 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Custom:Snubber_Connection_1"
+			(at 363.22 364.49 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 363.22 364.49 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x02, script generated"
+			(at 363.22 364.49 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "8579c2d2-6ba7-4323-a17a-8801159174f9")
+		)
+		(pin "1"
+			(uuid "a3d4f646-ca31-4b27-97dc-9507e7790f8b")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "J7")
 					(unit 1)
 				)
 			)
@@ -26569,6 +26666,73 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:Conn_01x02_Pin")
+		(at 350.52 364.49 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "51001c63-50d1-47d3-9d1b-e9049d93d926")
+		(property "Reference" "J6"
+			(at 347.218 369.824 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Snubber"
+			(at 347.472 367.284 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Custom:Snubber_Connection_1"
+			(at 350.52 364.49 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 350.52 364.49 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x02, script generated"
+			(at 350.52 364.49 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "a731b735-8473-4a72-86c3-23f5b8619232")
+		)
+		(pin "1"
+			(uuid "531228c4-4653-4eee-9547-8acff589ab6f")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "J6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:Earth")
 		(at 370.84 373.38 0)
 		(mirror y)
@@ -27744,76 +27908,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R")
-		(at 358.14 367.03 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "5b640074-2aa2-43c6-bb6f-5ac67f378012")
-		(property "Reference" "R33"
-			(at 360.68 365.7599 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "R"
-			(at 360.68 368.2999 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" ""
-			(at 356.362 367.03 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 358.14 367.03 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 358.14 367.03 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "ad06d6c8-e0e8-414d-a906-363a85ba8a9b")
-		)
-		(pin "2"
-			(uuid "b6db1bfb-0596-4467-a1c6-7d6de9acbc8d")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "R33")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:C_Polarized")
 		(at 514.35 43.18 0)
 		(unit 1)
@@ -28481,76 +28575,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:C")
-		(at 345.44 359.41 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "6355c008-c3df-4fd5-9436-c751f1daf353")
-		(property "Reference" "C75"
-			(at 349.25 358.1399 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "C"
-			(at 349.25 360.6799 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" ""
-			(at 346.4052 363.22 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 345.44 359.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Unpolarized capacitor"
-			(at 345.44 359.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "e4d44aad-b18a-482e-afbd-24a287e237f0")
-		)
-		(pin "1"
-			(uuid "16c3e9ac-c131-43ad-b20d-c544e932ff5e")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "C75")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:Earth")
 		(at 542.29 180.34 0)
 		(unit 1)
@@ -28684,7 +28708,7 @@
 	)
 	(symbol
 		(lib_id "Device:R_Small")
-		(at 29.21 386.08 0)
+		(at 30.48 386.08 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -28692,7 +28716,7 @@
 		(dnp no)
 		(uuid "642c6cf6-6ed4-41bb-8b3e-21c84e247a43")
 		(property "Reference" "R29"
-			(at 30.734 384.81 0)
+			(at 32.004 384.81 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -28701,7 +28725,7 @@
 			)
 		)
 		(property "Value" "10K"
-			(at 30.734 387.35 0)
+			(at 32.004 387.35 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -28710,7 +28734,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal"
-			(at 29.21 386.08 0)
+			(at 30.48 386.08 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -28719,7 +28743,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 29.21 386.08 0)
+			(at 30.48 386.08 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -28728,7 +28752,7 @@
 			)
 		)
 		(property "Description" "Resistor, small symbol"
-			(at 29.21 386.08 0)
+			(at 30.48 386.08 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -29685,6 +29709,73 @@
 			(project "HVPSController2"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "#PWR056")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:Conn_01x02_Pin")
+		(at 350.52 331.47 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "7145e345-2ae1-4b38-bd40-645954551d9b")
+		(property "Reference" "J3"
+			(at 347.218 336.804 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Snubber"
+			(at 347.472 334.264 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Custom:Snubber_Connection_1"
+			(at 350.52 331.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 350.52 331.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x02, script generated"
+			(at 350.52 331.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "a8a94d70-acec-4904-87cd-6decb98bebf6")
+		)
+		(pin "1"
+			(uuid "5ecb1a0a-2dde-419c-a821-d83463899690")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "J3")
 					(unit 1)
 				)
 			)
@@ -35259,7 +35350,7 @@
 	)
 	(symbol
 		(lib_id "power:Earth")
-		(at 29.21 388.62 0)
+		(at 30.48 388.62 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -35268,7 +35359,7 @@
 		(fields_autoplaced yes)
 		(uuid "aeecdd24-b87d-4b89-b576-4be5559cb6e9")
 		(property "Reference" "#PWR0166"
-			(at 29.21 394.97 0)
+			(at 30.48 394.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -35277,7 +35368,7 @@
 			)
 		)
 		(property "Value" "Earth"
-			(at 29.21 393.7 0)
+			(at 30.48 393.7 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -35285,7 +35376,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 29.21 388.62 0)
+			(at 30.48 388.62 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -35294,7 +35385,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 29.21 388.62 0)
+			(at 30.48 388.62 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -35303,7 +35394,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"Earth\""
-			(at 29.21 388.62 0)
+			(at 30.48 388.62 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -36795,76 +36886,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:C")
-		(at 345.44 326.39 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "c7373a52-c337-44e0-b206-89f436e42d4d")
-		(property "Reference" "C60"
-			(at 349.25 325.1199 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "C"
-			(at 349.25 327.6599 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" ""
-			(at 346.4052 330.2 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 345.44 326.39 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Unpolarized capacitor"
-			(at 345.44 326.39 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "b7f721b4-4308-4ac3-b01d-7c2db91ecd11")
-		)
-		(pin "1"
-			(uuid "c27a8d23-e275-4bc4-9bc5-56b4de5fffbb")
-		)
-		(instances
-			(project ""
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "C60")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:C_Polarized")
 		(at 491.49 43.18 0)
 		(unit 1)
@@ -37403,6 +37424,71 @@
 			(project "HVPSController2"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "R35")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:Earth")
+		(at 26.67 379.73 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "d2ec0e68-965f-477d-921c-06cc9499a904")
+		(property "Reference" "#PWR012"
+			(at 26.67 386.08 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "Earth"
+			(at 27.94 384.81 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 26.67 379.73 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 26.67 379.73 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"Earth\""
+			(at 26.67 379.73 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "596b9b9a-8945-4829-9794-a8e7fc82da33")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "#PWR012")
 					(unit 1)
 				)
 			)
@@ -37993,76 +38079,6 @@
 			(project "HVPSController2"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "R22")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C")
-		(at 358.14 359.41 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "d6780ea2-8992-4b95-b967-75dbca42254c")
-		(property "Reference" "C76"
-			(at 361.95 358.1399 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "C"
-			(at 361.95 360.6799 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" ""
-			(at 359.1052 363.22 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 358.14 359.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Unpolarized capacitor"
-			(at 358.14 359.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "26db91ca-2e4e-461c-84f6-3bddf7af1cf4")
-		)
-		(pin "1"
-			(uuid "25fc7426-6ee3-4077-9fca-ca26887378cd")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "C76")
 					(unit 1)
 				)
 			)
@@ -42268,76 +42284,6 @@
 			(project "HVPSController"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "#PWR043")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 358.14 334.01 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "ff4ef696-97d9-46c0-bc44-1f86df67d6eb")
-		(property "Reference" "R26"
-			(at 360.68 332.7399 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "R"
-			(at 360.68 335.2799 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" ""
-			(at 356.362 334.01 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 358.14 334.01 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 358.14 334.01 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "41b3b2c4-49be-447c-96aa-c230b9588392")
-		)
-		(pin "2"
-			(uuid "ae6c9264-280c-4417-9696-6ef0f125fffe")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "R26")
 					(unit 1)
 				)
 			)

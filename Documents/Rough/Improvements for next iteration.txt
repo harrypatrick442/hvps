@@ -1,3 +1,4 @@
+CHECK PIN 110 ON FPGA ALLOWED
 Capacitor pin hole sizes for electrolytics bank on controller driver board.
 Switch for power switching from usb to connected supply for votlage feedback modules
 extra connection for third power retulator on main driver board or better just integrate regulators onto the board.

@@ -19,28 +19,34 @@ namespace ESPFPGAInterface.Mock
         public void CopyTo(Buffer buffer, int toStartIndex) {
             for (int i = 0; i < Length; i++)
             {
-                buffer._Values[i] = _Values[i+ toStartIndex];
+                buffer._Values[i + toStartIndex] = _Values[i];
             }
         }
-        public void ShiftLeft(bool newValue)
+        public bool ShiftLeft(bool newValue)
         {
-            int index = 0;
-            while (index < _Values.Length-1)
+            bool ret = _Values[_Values.Length - 1];
+            int index = _Values.Length - 2;
+            while (index >=0)
             {
-                bool value =  _Values[index++];
-                _Values[index] = value;
+                bool value =  _Values[index];
+                _Values[index+1] = value;
+                index--;
             }
             _Values[0] = newValue;
+            return ret;
         }
-        public void ShiftRight(bool newValue)
+        public bool ShiftRight(bool newValue)
         {
-            int index = _Values.Length - 1;
-            while (index > 0)
+            int index = 1;
+            bool ret = _Values[0];
+            while (index <_Values.Length)
             {
-                bool value = _Values[index--];
-                _Values[index] = value;
+                bool value = _Values[index];
+                _Values[index-1] = value;
+                index++;
             }
             _Values[_Values.Length - 1] = newValue;
+            return ret;
         }
     }
 }

@@ -1,4 +1,4 @@
-24723070864115202
+24728412910826577
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -55391,12 +55391,26 @@ M4Hole
 1
 1
 Custom
+MAX31856 CJMCU Thermocouple Module
+
+
+0
+8
+8
+Custom
 MBR40250G
 
 
 0
 2
 2
+Custom
+MSS-04A
+
+
+0
+6
+6
 Custom
 Mfr. NoFG28X7R1E105KRT00
 
@@ -55481,6 +55495,13 @@ SRD-5VDC-SL-C
 0
 5
 5
+Custom
+SS-22F15
+
+
+0
+6
+6
 Custom
 TransformerWirePad
 

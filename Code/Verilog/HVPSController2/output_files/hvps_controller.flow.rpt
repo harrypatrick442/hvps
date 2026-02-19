@@ -1,5 +1,5 @@
 Flow report for hvps_controller
-Mon Feb  2 15:32:15 2026
+Sat Feb 14 13:56:42 2026
 Quartus Prime Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
 
 
@@ -41,22 +41,22 @@ on the Quartus Prime software download page.
 +--------------------------------------------------------------------------------------+
 ; Flow Summary                                                                         ;
 +------------------------------------+-------------------------------------------------+
-; Flow Status                        ; Successful - Mon Feb  2 15:32:15 2026           ;
+; Flow Status                        ; Flow Failed - Sat Feb 14 13:56:42 2026          ;
 ; Quartus Prime Version              ; 25.1std.0 Build 1129 10/21/2025 SC Lite Edition ;
 ; Revision Name                      ; hvps_controller                                 ;
 ; Top-level Entity Name              ; hvps_controller                                 ;
 ; Family                             ; Cyclone IV E                                    ;
 ; Device                             ; EP4CE10E22C8                                    ;
 ; Timing Models                      ; Final                                           ;
-; Total logic elements               ; 2,162 / 10,320 ( 21 % )                         ;
-;     Total combinational functions  ; 2,162 / 10,320 ( 21 % )                         ;
-;     Dedicated logic registers      ; 1,617 / 10,320 ( 16 % )                         ;
-; Total registers                    ; 1666                                            ;
-; Total pins                         ; 50 / 92 ( 54 % )                                ;
-; Total virtual pins                 ; 0                                               ;
-; Total memory bits                  ; 0 / 423,936 ( 0 % )                             ;
-; Embedded Multiplier 9-bit elements ; 0 / 46 ( 0 % )                                  ;
-; Total PLLs                         ; 0 / 2 ( 0 % )                                   ;
+; Total logic elements               ; N/A until Partition Merge                       ;
+;     Total combinational functions  ; N/A until Partition Merge                       ;
+;     Dedicated logic registers      ; N/A until Partition Merge                       ;
+; Total registers                    ; N/A until Partition Merge                       ;
+; Total pins                         ; N/A until Partition Merge                       ;
+; Total virtual pins                 ; N/A until Partition Merge                       ;
+; Total memory bits                  ; N/A until Partition Merge                       ;
+; Embedded Multiplier 9-bit elements ; N/A until Partition Merge                       ;
+; Total PLLs                         ; N/A until Partition Merge                       ;
 +------------------------------------+-------------------------------------------------+
 
 
@@ -65,7 +65,7 @@ on the Quartus Prime software download page.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 02/02/2026 15:31:55 ;
+; Start date & time ; 02/14/2026 13:56:37 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; hvps_controller     ;
 +-------------------+---------------------+
@@ -76,7 +76,7 @@ on the Quartus Prime software download page.
 +-------------------------------------+----------------------------------------+---------------+-------------+-----------------------------------+
 ; Assignment Name                     ; Value                                  ; Default Value ; Entity Name ; Section Id                        ;
 +-------------------------------------+----------------------------------------+---------------+-------------+-----------------------------------+
-; COMPILER_SIGNATURE_ID               ; 176416323944787.177004631519112        ; --            ; --          ; --                                ;
+; COMPILER_SIGNATURE_ID               ; 137074423513427.177107739749404        ; --            ; --          ; --                                ;
 ; EDA_GENERATE_FUNCTIONAL_NETLIST     ; Off                                    ; --            ; --          ; eda_board_design_timing           ;
 ; EDA_GENERATE_FUNCTIONAL_NETLIST     ; Off                                    ; --            ; --          ; eda_board_design_boundary_scan    ;
 ; EDA_GENERATE_FUNCTIONAL_NETLIST     ; Off                                    ; --            ; --          ; eda_board_design_signal_integrity ;
@@ -101,12 +101,8 @@ on the Quartus Prime software download page.
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name          ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Synthesis ; 00:00:07     ; 1.0                     ; 4861 MB             ; 00:00:18                           ;
-; Fitter               ; 00:00:06     ; 1.2                     ; 5867 MB             ; 00:00:07                           ;
-; Assembler            ; 00:00:01     ; 1.0                     ; 4734 MB             ; 00:00:01                           ;
-; Timing Analyzer      ; 00:00:01     ; 1.2                     ; 4866 MB             ; 00:00:02                           ;
-; EDA Netlist Writer   ; 00:00:01     ; 1.0                     ; 4674 MB             ; 00:00:01                           ;
-; Total                ; 00:00:16     ; --                      ; --                  ; 00:00:29                           ;
+; Analysis & Synthesis ; 00:00:05     ; 1.0                     ; 4730 MB             ; 00:00:16                           ;
+; Total                ; 00:00:05     ; --                      ; --                  ; 00:00:16                           ;
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 
@@ -116,10 +112,6 @@ on the Quartus Prime software download page.
 ; Module Name          ; Machine Hostname ; OS Name    ; OS Version ; Processor type ;
 +----------------------+------------------+------------+------------+----------------+
 ; Analysis & Synthesis ; PC               ; Windows 10 ; 10.0       ; x86_64         ;
-; Fitter               ; PC               ; Windows 10 ; 10.0       ; x86_64         ;
-; Assembler            ; PC               ; Windows 10 ; 10.0       ; x86_64         ;
-; Timing Analyzer      ; PC               ; Windows 10 ; 10.0       ; x86_64         ;
-; EDA Netlist Writer   ; PC               ; Windows 10 ; 10.0       ; x86_64         ;
 +----------------------+------------------+------------+------------+----------------+
 
 
@@ -127,10 +119,6 @@ on the Quartus Prime software download page.
 ; Flow Log ;
 ------------
 quartus_map --read_settings_files=on --write_settings_files=off HVPSController2 -c hvps_controller
-quartus_fit --read_settings_files=off --write_settings_files=off HVPSController2 -c hvps_controller
-quartus_asm --read_settings_files=off --write_settings_files=off HVPSController2 -c hvps_controller
-quartus_sta HVPSController2 -c hvps_controller
-quartus_eda --read_settings_files=off --write_settings_files=off HVPSController2 -c hvps_controller
 
 
 

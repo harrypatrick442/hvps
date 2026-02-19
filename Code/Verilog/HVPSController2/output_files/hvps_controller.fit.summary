@@ -1,12 +1,12 @@
-Fitter Status : Successful - Mon Feb  2 15:32:09 2026
+Fitter Status : Failed - Sat Feb 14 13:45:30 2026
 Quartus Prime Version : 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
 Revision Name : hvps_controller
 Top-level Entity Name : hvps_controller
 Family : Cyclone IV E
 Device : EP4CE10E22C8
 Timing Models : Final
-Total logic elements : 2,162 / 10,320 ( 21 % )
-    Total combinational functions : 2,162 / 10,320 ( 21 % )
+Total logic elements : 2,163 / 10,320 ( 21 % )
+    Total combinational functions : 2,163 / 10,320 ( 21 % )
     Dedicated logic registers : 1,617 / 10,320 ( 16 % )
 Total registers : 1666
 Total pins : 50 / 92 ( 54 % )

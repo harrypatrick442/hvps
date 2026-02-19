@@ -165,14 +165,12 @@ namespace ESPFPGAInterface.Mock
             Sleep();
         }
         private bool ValidateStagedInputs() {
-            int fullOutputsIndex = _OutputsLength;
             int inputsIndex = 0; 
             while (inputsIndex < _InputsLength)
             {
-                if (_InputBuffer[inputsIndex] != _FullOutputBuffer[fullOutputsIndex]) {
+                if (_InputBuffer[inputsIndex] != _FullOutputBuffer[inputsIndex]) {
                     return false;
                 }
-                fullOutputsIndex++;
                 inputsIndex++;
             }
             return true;
@@ -198,15 +196,24 @@ namespace ESPFPGAInterface.Mock
             Sleep();
             _FPGABus.SetToOutput(false);
             Sleep();
+            int length;
+            if (includingStaging) {
+                length = _FullOutputBuffer.Length;
+            }
+            else
+            {
+                length = _OutputsLength;
+            }
             int i = 0;
-            int length = includingStaging ? _FullOutputBuffer.Length : _OutputsLength;
-            while (i < length)
+            int intoIndex = _FullOutputBuffer.Length - 1;
+            while (i <length)
             {
                 _FPGABus.SetOutShift(true);
                 Sleep();
-                _FullOutputBuffer[i++] = _FPGABus.GetOutValue();
+                _FullOutputBuffer[intoIndex--] = _FPGABus.GetOutValue();
                 _FPGABus.SetOutShift(false);
                 Sleep();
+                i++;
             }
         }
         private void Sleep() {
@@ -231,29 +238,36 @@ namespace ESPFPGAInterface.Mock
                     if (!_InputsChanged)
                     {
                         ReadOutputs(includingStaging: false);
-                        return;
+                        DoLoopSleep(ref startTime);
+                        continue;
                     }
                     ShiftValuesIn();
                     ReadOutputs(includingStaging: true);
                     if (ValidateStagedInputs())
                     {
                         SetStagedInputsLive();
+                        _InputsChanged = false;
                     }
                 }
-                long now = TimeHelper.MillisecondsNow;
-                long elapsed = now - startTime;
-                startTime = now;
-
-                if (elapsed > int.MaxValue) {
-                    continue;
-                }
-                int toSleep = MINIMUM_UPDATE_PERIOD - (int)elapsed;
-                if (toSleep<=0)
-                {
-                    continue;
-                }
-                Thread.Sleep(toSleep);
+                DoLoopSleep(ref startTime);
             }
+        }
+        private void DoLoopSleep(ref long startTime) {
+
+            long now = TimeHelper.MillisecondsNow;
+            long elapsed = now - startTime;
+            startTime = now;
+
+            if (elapsed > int.MaxValue)
+            {
+                return;
+            }
+            int toSleep = MINIMUM_UPDATE_PERIOD - (int)elapsed;
+            if (toSleep <= 0)
+            {
+                return;
+            }
+            Thread.Sleep(toSleep);
         }
     }
 }

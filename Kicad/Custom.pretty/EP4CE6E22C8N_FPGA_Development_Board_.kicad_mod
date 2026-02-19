@@ -541,10 +541,10 @@
 		(remove_unused_layers no)
 		(uuid "1a675d29-82a9-42e5-aea4-3c6abea95389")
 	)
-	(pad "50" thru_hole circle
+	(pad "50" thru_hole oval
 		(at -29.21 -25)
 		(size 2 2)
-		(drill 0.762)
+		(drill 0.8)
 		(layers "*.Cu" "*.Mask")
 		(remove_unused_layers no)
 		(uuid "484a9135-4e6a-41b3-8395-9df21f8d7f4e")

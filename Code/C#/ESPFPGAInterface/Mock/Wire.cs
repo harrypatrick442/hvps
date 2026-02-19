@@ -8,8 +8,16 @@
         public Wire() {
             _Value = false;
         }
-        public void Set(bool value) { 
-            
+        public void Set(bool value) {
+            _Value = value;
+            if (value)
+            {
+                PosEdge?.Invoke(this, new EventArgs());
+            }
+            else 
+            {
+                NegEdge?.Invoke(this, new EventArgs());
+            }
         }
         public bool Get() { 
             return _Value;

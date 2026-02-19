@@ -13,7 +13,7 @@ module hvps_controller(
 
     output reg OR4, OR5, OR6, OT4, OT5,
 
-    output reg ESP_IN_SHIFT, ESP_IN_VALUE, ESP_STATE_TO_OUTPUT,
+    output reg ESP_IN_SHIFT, ESP_IN_VALUE, ESP_TO_OUTPUT,
     output reg ESP_OUT_SHIFT, ESP_OUT_VALUE, ESP_GO_LIVE, ESP_EMERGENCY_SHUTDOWN
 );
 
