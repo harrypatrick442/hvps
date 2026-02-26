@@ -1,0 +1,23 @@
+%TF.GenerationSoftware,KiCad,Pcbnew,8.0.8*%
+%TF.CreationDate,2026-02-26T04:51:24+00:00*%
+%TF.ProjectId,HVPSController2,48565053-436f-46e7-9472-6f6c6c657232,rev?*%
+%TF.SameCoordinates,Original*%
+%TF.FileFunction,Profile,NP*%
+%FSLAX46Y46*%
+G04 Gerber Fmt 4.6, Leading zero omitted, Abs format (unit mm)*
+G04 Created by KiCad (PCBNEW 8.0.8) date 2026-02-26 04:51:24*
+%MOMM*%
+%LPD*%
+G01*
+G04 APERTURE LIST*
+%TA.AperFunction,Profile*%
+%ADD10C,0.200000*%
+%TD*%
+G04 APERTURE END LIST*
+D10*
+X45500000Y-65800000D02*
+X359600000Y-65800000D01*
+X359600000Y-249790000D01*
+X45500000Y-249790000D01*
+X45500000Y-65800000D01*
+M02*

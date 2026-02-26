@@ -1,0 +1,8 @@
+OT1 D23
+OR1 VNa1i?
+OT1 D19
+OR2 D25
+OT3 D18
+OR3 D5
+Input Voltage VP_a1i
+FAN D32

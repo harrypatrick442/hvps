@@ -10082,6 +10082,12 @@
 		(uuid "0412fd49-4282-41f8-9c03-0d3bb639b457")
 	)
 	(junction
+		(at 106.68 129.54)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "0445dc5a-c050-40b1-867d-c4c4251a027f")
+	)
+	(junction
 		(at 480.06 39.37)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -10092,12 +10098,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "06feb058-8a0e-4d40-8318-6bdb6677a926")
-	)
-	(junction
-		(at 379.73 327.66)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "089c172e-78fe-46de-a959-48f2e88f64b8")
 	)
 	(junction
 		(at 271.78 337.82)
@@ -10118,10 +10118,28 @@
 		(uuid "0f715b15-522a-4c10-85c7-f1e535cbc9ed")
 	)
 	(junction
+		(at 497.84 232.41)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "1199f0ff-6fbe-484d-97b6-816cfaf22973")
+	)
+	(junction
+		(at 109.22 320.04)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "120f55a8-ec4d-4309-b7d4-cc8cd3a46ccc")
+	)
+	(junction
 		(at 118.11 50.8)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "1251c4c1-e15d-48b8-8855-e7283aa8f391")
+	)
+	(junction
+		(at 542.29 180.34)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "1408d0c4-9413-4a86-a94e-44e75b21c279")
 	)
 	(junction
 		(at 403.86 104.14)
@@ -10176,6 +10194,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "22cf1412-96d5-4086-9502-1a263abfd56b")
+	)
+	(junction
+		(at 497.84 237.49)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "23b36bd4-f7e5-4481-8d57-06a29c60571c")
 	)
 	(junction
 		(at 213.36 114.3)
@@ -10268,6 +10292,12 @@
 		(uuid "3ff1af25-75c3-498c-9440-92758edffe2d")
 	)
 	(junction
+		(at 497.84 350.52)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "48df272c-0122-4565-ad21-8a57029c59c7")
+	)
+	(junction
 		(at 40.64 374.65)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -10278,12 +10308,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "4a835691-ad0e-4bb0-9195-99cfdd30beea")
-	)
-	(junction
-		(at 106.68 128.27)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "4a87eed9-c22e-4ba7-80f8-96b51132a79d")
 	)
 	(junction
 		(at 502.92 60.96)
@@ -10368,6 +10392,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "6292d5f5-6343-441b-a275-089ca0379284")
+	)
+	(junction
+		(at 497.84 180.34)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "6424aa7b-bda4-4e27-9f87-14fb2aeb98ff")
 	)
 	(junction
 		(at 228.6 49.53)
@@ -10472,6 +10502,12 @@
 		(uuid "8b729dd7-ab6a-46e4-8caa-70582b413f6d")
 	)
 	(junction
+		(at 497.84 293.37)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "8d1efd0d-be00-43c3-a603-756c3312a835")
+	)
+	(junction
 		(at 217.17 254)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -10514,6 +10550,12 @@
 		(uuid "972a75e6-2e45-45ee-9fc0-ed4951584bd5")
 	)
 	(junction
+		(at 379.73 327.66)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "98cef477-ba88-471d-8121-33f0a853f523")
+	)
+	(junction
 		(at 334.01 342.9)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -10538,10 +10580,22 @@
 		(uuid "9fd8595d-5c8f-449a-9ab8-453638a3c460")
 	)
 	(junction
+		(at 497.84 175.26)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "a181cfff-964b-4eca-a83c-3efda3821202")
+	)
+	(junction
 		(at 514.35 60.96)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "a304f8e0-0af6-4d22-be3b-21354133dbca")
+	)
+	(junction
+		(at 497.84 288.29)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "ac84e86e-3ea8-4f86-9397-8fead02d9a32")
 	)
 	(junction
 		(at 341.63 52.07)
@@ -10556,6 +10610,12 @@
 		(uuid "ae49afb5-c138-4721-890a-be66c38a63c6")
 	)
 	(junction
+		(at 360.68 176.53)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "b0823c3c-4a61-4e4e-82a1-6531fadc0098")
+	)
+	(junction
 		(at 535.94 96.52)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -10566,6 +10626,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "b2bd231b-e8e3-4a7c-92ab-48e6af56c5b5")
+	)
+	(junction
+		(at 497.84 234.95)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "b3e20e32-7f16-4851-97d9-869179138442")
 	)
 	(junction
 		(at 182.88 50.8)
@@ -10596,6 +10662,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "bd386ead-226e-4b7a-8215-bcdf83c5bc75")
+	)
+	(junction
+		(at 107.95 128.27)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "bef5e8b4-86c3-4d4d-9a3c-58a897f4bac2")
 	)
 	(junction
 		(at 334.01 355.6)
@@ -10668,12 +10740,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "cacacb5e-d835-4623-8322-95f78bb1c9cd")
-	)
-	(junction
-		(at 107.95 129.54)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "cca66242-332a-4e15-8b32-2973bf2522d7")
 	)
 	(junction
 		(at 265.43 337.82)
@@ -10782,6 +10848,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "f46ac6fb-67eb-47b7-81bd-2330f73c2322")
+	)
+	(junction
+		(at 497.84 290.83)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "f5184353-96d2-4662-94ce-e29ada1f1e59")
 	)
 	(junction
 		(at 87.63 128.27)
@@ -11135,6 +11207,16 @@
 	)
 	(wire
 		(pts
+			(xy 500.38 290.83) (xy 497.84 290.83)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "08b034ed-29f1-4539-9a43-1e142bb19498")
+	)
+	(wire
+		(pts
 			(xy 345.44 322.58) (xy 345.44 328.93)
 		)
 		(stroke
@@ -11312,16 +11394,6 @@
 			(type default)
 		)
 		(uuid "0fd6c5b6-33e8-4972-8c3b-1568d8a2e734")
-	)
-	(wire
-		(pts
-			(xy 107.95 129.54) (xy 125.73 129.54)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0ff8b1be-6a92-454c-a259-57c540e81e78")
 	)
 	(wire
 		(pts
@@ -11955,16 +12027,6 @@
 	)
 	(wire
 		(pts
-			(xy 236.22 243.84) (xy 229.87 243.84)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "23840878-41c8-4fc5-a5c7-132dd22d12c4")
-	)
-	(wire
-		(pts
 			(xy 110.49 44.45) (xy 118.11 44.45)
 		)
 		(stroke
@@ -12235,16 +12297,6 @@
 	)
 	(wire
 		(pts
-			(xy 87.63 128.27) (xy 106.68 128.27)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "2ddec531-c8f4-46e8-b290-08047eea5fd3")
-	)
-	(wire
-		(pts
 			(xy 407.67 337.82) (xy 406.4 337.82)
 		)
 		(stroke
@@ -12335,6 +12387,16 @@
 	)
 	(wire
 		(pts
+			(xy 497.84 290.83) (xy 497.84 288.29)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3135601f-24cc-4336-94b6-edcc2a4cc6fd")
+	)
+	(wire
+		(pts
 			(xy 228.6 144.78) (xy 237.49 144.78)
 		)
 		(stroke
@@ -12395,6 +12457,16 @@
 	)
 	(wire
 		(pts
+			(xy 106.68 129.54) (xy 125.73 129.54)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3342a9f8-81d8-42af-863b-03249ab4c5bf")
+	)
+	(wire
+		(pts
 			(xy 276.86 349.25) (xy 279.4 349.25)
 		)
 		(stroke
@@ -12422,6 +12494,16 @@
 			(type default)
 		)
 		(uuid "3380fc32-446c-4067-a85c-eaf9a83f7e05")
+	)
+	(wire
+		(pts
+			(xy 106.68 146.05) (xy 106.68 129.54)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "33873968-5f90-4a2e-84bd-fa72fb6f5083")
 	)
 	(wire
 		(pts
@@ -12605,16 +12687,6 @@
 	)
 	(wire
 		(pts
-			(xy 106.68 128.27) (xy 106.68 146.05)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "377e22c1-c169-4443-ab60-78a0cfc91be9")
-	)
-	(wire
-		(pts
 			(xy 232.41 198.12) (xy 232.41 232.41)
 		)
 		(stroke
@@ -12695,6 +12767,16 @@
 	)
 	(wire
 		(pts
+			(xy 542.29 175.26) (xy 542.29 177.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3a620339-c39e-4b77-b599-2fab5847408a")
+	)
+	(wire
+		(pts
 			(xy 95.25 44.45) (xy 95.25 48.26)
 		)
 		(stroke
@@ -12752,16 +12834,6 @@
 			(type default)
 		)
 		(uuid "3b850790-776e-4899-b206-ca97edc7a0af")
-	)
-	(wire
-		(pts
-			(xy 107.95 129.54) (xy 107.95 148.59)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "3b936210-ebe5-49a7-9b63-754e26d44d2b")
 	)
 	(wire
 		(pts
@@ -12902,16 +12974,6 @@
 			(type default)
 		)
 		(uuid "3fda3258-dceb-443e-91eb-bd4fd88593d7")
-	)
-	(wire
-		(pts
-			(xy 381 193.04) (xy 383.54 193.04)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "404536bf-7a93-43fc-b31a-0198583304aa")
 	)
 	(wire
 		(pts
@@ -13605,6 +13667,16 @@
 	)
 	(wire
 		(pts
+			(xy 379.73 327.66) (xy 381 327.66)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "55875bb9-7508-437a-aa9a-d759352c3843")
+	)
+	(wire
+		(pts
 			(xy 407.67 173.99) (xy 391.16 173.99)
 		)
 		(stroke
@@ -13745,6 +13817,16 @@
 	)
 	(wire
 		(pts
+			(xy 497.84 175.26) (xy 497.84 177.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "59e7c2cd-ef26-43f7-bdb6-ab11a1e64fbd")
+	)
+	(wire
+		(pts
 			(xy 487.68 255.27) (xy 487.68 257.81)
 		)
 		(stroke
@@ -13752,6 +13834,16 @@
 			(type default)
 		)
 		(uuid "59ff4c35-ec7f-45ea-8e66-b77d22db6e0d")
+	)
+	(wire
+		(pts
+			(xy 107.95 128.27) (xy 123.19 128.27)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5a19f239-e833-477f-a940-e0074b271920")
 	)
 	(wire
 		(pts
@@ -13785,7 +13877,7 @@
 	)
 	(wire
 		(pts
-			(xy 353.06 176.53) (xy 361.95 176.53)
+			(xy 353.06 176.53) (xy 360.68 176.53)
 		)
 		(stroke
 			(width 0)
@@ -14025,7 +14117,7 @@
 	)
 	(wire
 		(pts
-			(xy 477.52 232.41) (xy 477.52 210.82)
+			(xy 477.52 210.82) (xy 477.52 232.41)
 		)
 		(stroke
 			(width 0)
@@ -14052,6 +14144,16 @@
 			(type default)
 		)
 		(uuid "63acf934-1a47-462a-8653-8a4f7d155f11")
+	)
+	(wire
+		(pts
+			(xy 497.84 232.41) (xy 497.84 234.95)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "642658cd-3c05-498f-8d18-5fa075732fec")
 	)
 	(wire
 		(pts
@@ -14122,6 +14224,16 @@
 			(type default)
 		)
 		(uuid "65c7a645-b333-47ce-a4f2-b3f4f738dcd9")
+	)
+	(wire
+		(pts
+			(xy 109.22 320.04) (xy 109.22 323.85)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6602b8ae-05a6-4013-8b8f-1b382ff4fba0")
 	)
 	(wire
 		(pts
@@ -14385,7 +14497,7 @@
 	)
 	(wire
 		(pts
-			(xy 381 327.66) (xy 379.73 327.66)
+			(xy 378.46 327.66) (xy 379.73 327.66)
 		)
 		(stroke
 			(width 0)
@@ -14432,6 +14544,16 @@
 			(type default)
 		)
 		(uuid "6f212033-0150-4d22-9520-afd0cce6af0c")
+	)
+	(wire
+		(pts
+			(xy 364.49 163.83) (xy 361.95 163.83)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6f3fab65-3a8b-463f-9eb5-77886140e827")
 	)
 	(wire
 		(pts
@@ -14945,7 +15067,7 @@
 	)
 	(wire
 		(pts
-			(xy 106.68 128.27) (xy 123.19 128.27)
+			(xy 87.63 128.27) (xy 107.95 128.27)
 		)
 		(stroke
 			(width 0)
@@ -14962,6 +15084,16 @@
 			(type default)
 		)
 		(uuid "803a1922-8e36-4192-b25e-b9ac45ad6fb6")
+	)
+	(wire
+		(pts
+			(xy 105.41 320.04) (xy 109.22 320.04)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8070003b-50be-403a-a196-dbb058d1a91d")
 	)
 	(wire
 		(pts
@@ -15625,16 +15757,6 @@
 	)
 	(wire
 		(pts
-			(xy 134.62 320.04) (xy 137.16 320.04)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "97c80212-ca11-415e-9a69-78876c3f90b3")
-	)
-	(wire
-		(pts
 			(xy 514.35 39.37) (xy 525.78 39.37)
 		)
 		(stroke
@@ -15942,6 +16064,16 @@
 			(type default)
 		)
 		(uuid "a205f4f4-1c05-4748-96b5-20f39af9d1d2")
+	)
+	(wire
+		(pts
+			(xy 107.95 128.27) (xy 107.95 148.59)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a213e2b2-22da-4638-a4ee-24a1da1233c4")
 	)
 	(wire
 		(pts
@@ -16355,7 +16487,17 @@
 	)
 	(wire
 		(pts
-			(xy 477.52 288.29) (xy 477.52 265.43)
+			(xy 361.95 163.83) (xy 361.95 167.64)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ad8f0617-ddb6-47f6-9f78-daf9176526d9")
+	)
+	(wire
+		(pts
+			(xy 477.52 265.43) (xy 477.52 288.29)
 		)
 		(stroke
 			(width 0)
@@ -16395,7 +16537,7 @@
 	)
 	(wire
 		(pts
-			(xy 102.87 129.54) (xy 107.95 129.54)
+			(xy 102.87 129.54) (xy 106.68 129.54)
 		)
 		(stroke
 			(width 0)
@@ -16452,6 +16594,16 @@
 			(type default)
 		)
 		(uuid "af960a64-3593-42a7-b239-53132e873c91")
+	)
+	(wire
+		(pts
+			(xy 360.68 176.53) (xy 361.95 176.53)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "afbd82b3-2955-477f-b2d0-5fca1d29dcf5")
 	)
 	(wire
 		(pts
@@ -16552,6 +16704,26 @@
 			(type default)
 		)
 		(uuid "b201e25a-1d51-4e0b-844c-f993d972771f")
+	)
+	(wire
+		(pts
+			(xy 521.97 153.67) (xy 521.97 175.26)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b2f2d105-9819-4525-9ae2-eaa3199a8c0c")
+	)
+	(wire
+		(pts
+			(xy 379.73 335.28) (xy 379.73 337.82)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b38a5574-36a3-4d79-8f1b-b60f57944b68")
 	)
 	(wire
 		(pts
@@ -17145,7 +17317,7 @@
 	)
 	(wire
 		(pts
-			(xy 109.22 312.42) (xy 109.22 323.85)
+			(xy 109.22 312.42) (xy 109.22 320.04)
 		)
 		(stroke
 			(width 0)
@@ -17192,6 +17364,16 @@
 			(type default)
 		)
 		(uuid "c2ed995d-8ec2-4d69-b2f9-bea023e99d9e")
+	)
+	(wire
+		(pts
+			(xy 500.38 234.95) (xy 497.84 234.95)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c2f0073a-d19e-429b-954b-aef5a948ccde")
 	)
 	(wire
 		(pts
@@ -17245,7 +17427,7 @@
 	)
 	(wire
 		(pts
-			(xy 477.52 345.44) (xy 477.52 322.58)
+			(xy 477.52 322.58) (xy 477.52 345.44)
 		)
 		(stroke
 			(width 0)
@@ -17312,6 +17494,16 @@
 			(type default)
 		)
 		(uuid "c65ae42d-e216-47ee-aca7-f507b407f081")
+	)
+	(wire
+		(pts
+			(xy 477.52 153.67) (xy 477.52 175.26)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c6665f8a-d554-4496-9f53-179fb882734e")
 	)
 	(wire
 		(pts
@@ -17532,6 +17724,16 @@
 			(type default)
 		)
 		(uuid "cce6219e-a459-4b90-8c4f-68b8065710b1")
+	)
+	(wire
+		(pts
+			(xy 379.73 327.66) (xy 379.73 330.2)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cd39c279-5262-4f40-82f2-7477fda4f453")
 	)
 	(wire
 		(pts
@@ -17895,6 +18097,16 @@
 	)
 	(wire
 		(pts
+			(xy 203.2 247.65) (xy 207.01 247.65)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d75af3bc-ceb3-40eb-a02d-d03b0393a9d3")
+	)
+	(wire
+		(pts
 			(xy 379.73 373.38) (xy 370.84 373.38)
 		)
 		(stroke
@@ -17965,16 +18177,6 @@
 	)
 	(wire
 		(pts
-			(xy 477.52 175.26) (xy 477.52 153.67)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "db0c474e-fc02-484a-a2cc-1f38b790a59b")
-	)
-	(wire
-		(pts
 			(xy 196.85 173.99) (xy 196.85 157.48)
 		)
 		(stroke
@@ -18022,16 +18224,6 @@
 			(type default)
 		)
 		(uuid "dc791b78-0f4e-494a-9f9d-33688e230dc4")
-	)
-	(wire
-		(pts
-			(xy 379.73 327.66) (xy 378.46 327.66)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "dd1ebcfd-49c7-4399-a75c-51cb46d68c89")
 	)
 	(wire
 		(pts
@@ -18485,16 +18677,6 @@
 	)
 	(wire
 		(pts
-			(xy 379.73 330.2) (xy 379.73 327.66)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ea7f9e62-7415-47c3-8b03-215e472b6f18")
-	)
-	(wire
-		(pts
 			(xy 215.9 44.45) (xy 215.9 73.66)
 		)
 		(stroke
@@ -18612,16 +18794,6 @@
 			(type default)
 		)
 		(uuid "ef9ba8a4-afd0-4140-b1f6-d66652ce43d5")
-	)
-	(wire
-		(pts
-			(xy 379.73 337.82) (xy 379.73 335.28)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "efa11808-6752-447f-b7ec-6b6f810f072a")
 	)
 	(wire
 		(pts
@@ -18822,6 +18994,16 @@
 			(type default)
 		)
 		(uuid "f5463892-46d2-4ec4-a658-39491ef258b6")
+	)
+	(wire
+		(pts
+			(xy 497.84 347.98) (xy 497.84 345.44)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f55616d4-7f94-4fbc-b53f-b6a17a7ab7ef")
 	)
 	(wire
 		(pts
@@ -19172,16 +19354,6 @@
 			(type default)
 		)
 		(uuid "fe324a68-7e46-4192-adac-7c1bcd562548")
-	)
-	(wire
-		(pts
-			(xy 521.97 175.26) (xy 521.97 153.67)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "fe92d0f9-cb0e-48a0-9361-89a2649b527e")
 	)
 	(wire
 		(pts
@@ -19685,6 +19857,16 @@
 		)
 		(uuid "17c7dad4-4d71-4477-9ee5-2f5c3d79eba9")
 	)
+	(label "3v3_2"
+		(at 383.54 193.04 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "255700b1-be6c-4213-819c-5d08c0771e27")
+	)
 	(label "15V_2"
 		(at 497.84 345.44 0)
 		(effects
@@ -20169,6 +20351,74 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:Conn_01x02_Pin")
+		(at 547.37 177.8 0)
+		(mirror y)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "02b9ac53-ce5f-4b15-ab8f-c43fba3177a6")
+		(property "Reference" "J33"
+			(at 544.068 172.466 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Conn_01x02_Pin"
+			(at 544.322 175.006 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
+			(at 547.37 177.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 547.37 177.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x02, script generated"
+			(at 547.37 177.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "d6622502-5ee0-403e-b1a7-7cd9b7fd6563")
+		)
+		(pin "1"
+			(uuid "11597262-dea9-4ea1-9161-1c55d8b0e47a")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "J33")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Custom:C317C300J5G5TA")
 		(at 222.25 48.26 0)
 		(unit 1)
@@ -20435,71 +20685,6 @@
 			(project "HVPSController2"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "OR2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:Earth")
-		(at 229.87 243.84 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "05b5d098-07fc-4459-ae05-81de867dc399")
-		(property "Reference" "#PWR0170"
-			(at 229.87 250.19 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "Earth"
-			(at 225.552 245.11 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 229.87 243.84 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 229.87 243.84 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"Earth\""
-			(at 229.87 243.84 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "786f7116-729b-4273-b8f6-0d61b906f74a")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "#PWR0170")
 					(unit 1)
 				)
 			)
@@ -21170,6 +21355,72 @@
 			(project "HVPSController"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "#PWR021")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:Conn_01x01_Pin")
+		(at 554.99 113.03 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "0e1ecef6-c403-4608-b9fb-1ed28e9a4e54")
+		(property "Reference" "J29"
+			(at 554.736 111.252 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "~"
+			(at 553.72 112.395 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical"
+			(at 554.99 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 554.99 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated"
+			(at 554.99 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "6804b274-9e04-4843-a089-51d110632ccc")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "J29")
 					(unit 1)
 				)
 			)
@@ -21869,6 +22120,72 @@
 		)
 	)
 	(symbol
+		(lib_id "power:Earth")
+		(at 361.95 167.64 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "16de3158-e3b1-48eb-9452-26478687197c")
+		(property "Reference" "#PWR034"
+			(at 361.95 173.99 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "Earth"
+			(at 361.95 172.72 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 361.95 167.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 361.95 167.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"Earth\""
+			(at 361.95 167.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "99698116-691f-48af-9503-d1f496996108")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "#PWR034")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R")
 		(at 403.86 107.95 0)
 		(unit 1)
@@ -21933,6 +22250,71 @@
 			(project "HVPSController"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "R6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:Earth")
+		(at 203.2 250.19 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "170d442b-78f8-4a5a-8661-b9476e2aebfa")
+		(property "Reference" "#PWR066"
+			(at 203.2 256.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "Earth"
+			(at 208.026 251.968 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 203.2 250.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 203.2 250.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"Earth\""
+			(at 203.2 250.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "a5939f22-2a78-4a9b-8440-33d63534da8a")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "#PWR066")
 					(unit 1)
 				)
 			)
@@ -24066,6 +24448,72 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:Conn_01x01_Pin")
+		(at 565.15 113.03 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "2e291d8f-0463-4c8a-84c8-a6bd1e095311")
+		(property "Reference" "J31"
+			(at 565.15 111.252 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "~"
+			(at 563.88 112.395 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical"
+			(at 565.15 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 565.15 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated"
+			(at 565.15 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "2194110b-c917-4ded-b0c3-a97f2f521f09")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "J31")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:Earth")
 		(at 454.66 270.51 0)
 		(unit 1)
@@ -24535,6 +24983,72 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:Conn_01x01_Pin")
+		(at 360.68 181.61 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "342cd8b3-b47e-40a3-ae80-ba82a7f2b660")
+		(property "Reference" "J27"
+			(at 366.268 182.88 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "~"
+			(at 361.95 182.245 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical"
+			(at 360.68 181.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 360.68 181.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated"
+			(at 360.68 181.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "ee94d3d5-975d-44f6-a685-b0119a5576cd")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "J27")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:+5V")
 		(at 497.84 232.41 0)
 		(unit 1)
@@ -24889,6 +25403,72 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:Conn_01x01_Pin")
+		(at 560.07 113.03 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "3a0d1db3-33b3-4c83-a5f1-54ee7b22edb5")
+		(property "Reference" "J30"
+			(at 559.816 111.506 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "~"
+			(at 558.8 112.395 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical"
+			(at 560.07 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 560.07 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated"
+			(at 560.07 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "757022b4-1295-473d-99a1-a0d86e9c6892")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "J30")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:+3V3")
 		(at 270.51 213.36 0)
 		(unit 1)
@@ -25087,70 +25667,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:Conn_01x01_Pin")
-		(at 201.93 247.65 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "3b181d33-c0f2-44aa-8b4d-a52a8b0ed6a2")
-		(property "Reference" "J16"
-			(at 202.565 242.57 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "Tap debug pin"
-			(at 202.565 245.11 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical"
-			(at 201.93 247.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 201.93 247.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Generic connector, single row, 01x01, script generated"
-			(at 201.93 247.65 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "bdf4ede5-e26b-44c4-820a-b8ed251ea1f8")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "J16")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:Earth")
 		(at 308.61 44.45 0)
 		(unit 1)
@@ -25211,6 +25727,70 @@
 			(project "HVPSController"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "#PWR05")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:Conn_01x01_Pin")
+		(at 364.49 168.91 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "3cea07cb-7dbe-4361-a826-6845c8f43d53")
+		(property "Reference" "J28"
+			(at 355.346 170.18 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "~"
+			(at 361.95 168.275 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical"
+			(at 364.49 168.91 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 364.49 168.91 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated"
+			(at 364.49 168.91 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "1b3e149a-8db0-4930-80d2-c09c38191d23")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "J28")
 					(unit 1)
 				)
 			)
@@ -26193,71 +26773,6 @@
 			(project "HVPSController"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "J11")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:Earth")
-		(at 381 193.04 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "48451c77-f107-4459-92d9-1a6ee87e7a00")
-		(property "Reference" "#PWR0192"
-			(at 381 199.39 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "Earth"
-			(at 376.682 194.31 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 381 193.04 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 381 193.04 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"Earth\""
-			(at 381 193.04 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "fadca40a-814a-4113-a68c-99f9592c6228")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "#PWR0192")
 					(unit 1)
 				)
 			)
@@ -27459,7 +27974,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal"
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P5.08mm_Vertical"
 			(at 325.12 368.3 0)
 			(effects
 				(font
@@ -27833,6 +28348,71 @@
 			(project ""
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "R30")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+3V3")
+		(at 236.22 243.84 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "5a3ec94e-b007-4d02-8eb3-95b1538a7d1f")
+		(property "Reference" "#PWR014"
+			(at 236.22 247.65 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+3V3"
+			(at 235.712 239.776 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 236.22 243.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 236.22 243.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+3V3\""
+			(at 236.22 243.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "b5e463f4-639d-4117-8586-1cc820dce7c3")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "#PWR014")
 					(unit 1)
 				)
 			)
@@ -29378,6 +29958,74 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:Conn_01x02_Pin")
+		(at 502.92 290.83 0)
+		(mirror y)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "6d461123-8fb6-423e-b312-bb905561bd20")
+		(property "Reference" "J35"
+			(at 499.618 285.496 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Conn_01x02_Pin"
+			(at 499.872 288.036 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
+			(at 502.92 290.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 502.92 290.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x02, script generated"
+			(at 502.92 290.83 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "c72e25aa-fe9a-450c-b414-2be84458b210")
+		)
+		(pin "1"
+			(uuid "d3bef4a5-8dab-48b2-99e7-cb62119b0158")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "J35")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Custom:HW-677_LM2596HVS_DC-DC")
 		(at 487.68 347.98 0)
 		(unit 1)
@@ -30214,6 +30862,74 @@
 			(project ""
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "J12")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:Conn_01x02_Pin")
+		(at 502.92 177.8 0)
+		(mirror y)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "73508e16-c4f9-47eb-adda-a53f3d607d8c")
+		(property "Reference" "J32"
+			(at 499.618 172.466 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Conn_01x02_Pin"
+			(at 499.872 175.006 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
+			(at 502.92 177.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 502.92 177.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x02, script generated"
+			(at 502.92 177.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "72698540-1505-4e57-bafd-cb6e22b4d5a3")
+		)
+		(pin "1"
+			(uuid "4dfb2963-15d8-46af-a302-f6a34099838a")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "J32")
 					(unit 1)
 				)
 			)
@@ -31329,6 +32045,73 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:Conn_01x02_Pin")
+		(at 100.33 320.04 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "8162287c-5ca2-4285-bc5d-7bd20565657c")
+		(property "Reference" "J10"
+			(at 103.632 314.706 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Conn_01x02_Pin"
+			(at 103.378 317.246 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
+			(at 100.33 320.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 100.33 320.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x02, script generated"
+			(at 100.33 320.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "7e0784ce-bed4-48e7-bcfb-6092bff533cf")
+		)
+		(pin "1"
+			(uuid "c097e3e1-2d49-41fd-a196-4db315c5010b")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "J10")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Custom:IXFP60N25X3")
 		(at 372.11 363.22 0)
 		(mirror y)
@@ -31396,6 +32179,72 @@
 			(project "HVPSController2"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "U27")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:Earth")
+		(at 565.15 118.11 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "83b083bc-c457-4ad1-a337-57de8eeddc4e")
+		(property "Reference" "#PWR050"
+			(at 565.15 124.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "Earth"
+			(at 565.15 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 565.15 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 565.15 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"Earth\""
+			(at 565.15 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "ca1ad835-b80e-4197-8f95-6e3f2fea38c8")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "#PWR050")
 					(unit 1)
 				)
 			)
@@ -33465,6 +34314,74 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:Conn_01x02_Pin")
+		(at 502.92 234.95 0)
+		(mirror y)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "99a69695-3f7c-4945-a906-f9e49fdb6d0c")
+		(property "Reference" "J34"
+			(at 499.618 229.616 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Conn_01x02_Pin"
+			(at 499.872 232.156 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
+			(at 502.92 234.95 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 502.92 234.95 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x02, script generated"
+			(at 502.92 234.95 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "a930cf48-b7e2-4efb-bc59-b11ff8935718")
+		)
+		(pin "1"
+			(uuid "5b1bdebc-af3c-442a-8ebd-8f4e37a8bee1")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "J34")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:L")
 		(at 455.93 85.09 270)
 		(unit 1)
@@ -33599,70 +34516,6 @@
 			(project "HVPSController"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "OR6")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector:Conn_01x01_Pin")
-		(at 104.14 323.85 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "9c60dc91-ac69-4773-b615-b19c4e7e8ce4")
-		(property "Reference" "J10"
-			(at 104.775 318.77 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "Tap debug pin"
-			(at 104.775 321.31 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical"
-			(at 104.14 323.85 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 104.14 323.85 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Generic connector, single row, 01x01, script generated"
-			(at 104.14 323.85 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "3da37cf9-5208-4445-b322-b370554f6a9f")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "J10")
 					(unit 1)
 				)
 			)
@@ -35834,6 +36687,74 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:Conn_01x02_Pin")
+		(at 502.92 347.98 0)
+		(mirror y)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "b13a3338-491f-4515-b487-e009d3da32b7")
+		(property "Reference" "J36"
+			(at 499.618 342.646 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Conn_01x02_Pin"
+			(at 499.872 345.186 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
+			(at 502.92 347.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 502.92 347.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x02, script generated"
+			(at 502.92 347.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "edd4c0e1-3831-4a49-a35b-986da0fff498")
+		)
+		(pin "1"
+			(uuid "66336a57-6672-4cfe-9e0a-0850e809f84e")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "J36")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:Earth")
 		(at 273.05 59.69 0)
 		(unit 1)
@@ -37089,9 +38010,75 @@
 		)
 	)
 	(symbol
+		(lib_id "power:Earth")
+		(at 554.99 118.11 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "cac9eecd-55e4-4cb8-9908-86c22ca8ebe2")
+		(property "Reference" "#PWR035"
+			(at 554.99 124.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "Earth"
+			(at 554.99 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 554.99 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 554.99 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"Earth\""
+			(at 554.99 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "bb89b1f2-a290-4d10-88a7-70fa9c9ece7e")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "#PWR035")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R_Small")
 		(at 379.73 332.74 0)
-		(mirror y)
+		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -37099,7 +38086,7 @@
 		(dnp no)
 		(uuid "cc754969-127f-49b4-9de2-9ac3cb2bd269")
 		(property "Reference" "R24"
-			(at 385.572 331.47 0)
+			(at 373.888 334.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -37108,7 +38095,7 @@
 			)
 		)
 		(property "Value" "1000"
-			(at 386.334 333.756 0)
+			(at 373.126 331.724 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -37153,6 +38140,72 @@
 			(project "HVPSController2"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "R24")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:Earth")
+		(at 560.07 118.11 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "cc778cb6-64d9-4d74-9719-05578431f8ab")
+		(property "Reference" "#PWR049"
+			(at 560.07 124.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "Earth"
+			(at 560.07 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 560.07 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 560.07 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"Earth\""
+			(at 560.07 118.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "7b6ebfdb-8a18-4203-b7b9-c14e06e6926d")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "#PWR049")
 					(unit 1)
 				)
 			)
@@ -37218,6 +38271,136 @@
 			(project "HVPSController2"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "#PWR0107")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:Earth")
+		(at 105.41 322.58 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "cf28c5d8-863d-4c04-8287-08ca80ac34cb")
+		(property "Reference" "#PWR054"
+			(at 105.41 328.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "Earth"
+			(at 110.236 324.358 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 105.41 322.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 105.41 322.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"Earth\""
+			(at 105.41 322.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "ae37d46a-fd09-4bbf-b1fc-cdf499b44815")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "#PWR054")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+3V3")
+		(at 137.16 320.04 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "d011a946-82cc-42a7-8cad-dff88d8b67c1")
+		(property "Reference" "#PWR023"
+			(at 137.16 323.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+3V3"
+			(at 136.652 315.976 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 137.16 320.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 137.16 320.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+3V3\""
+			(at 137.16 320.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "3b41de13-2308-4cc4-871e-a5a73c41ebbe")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "#PWR023")
 					(unit 1)
 				)
 			)
@@ -39301,6 +40484,73 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:Conn_01x02_Pin")
+		(at 198.12 247.65 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "e459a47e-f639-46a4-bab2-ae670fc60e9c")
+		(property "Reference" "J16"
+			(at 201.422 242.316 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Conn_01x02_Pin"
+			(at 201.168 244.856 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
+			(at 198.12 247.65 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 198.12 247.65 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x02, script generated"
+			(at 198.12 247.65 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "872686b6-a825-41c3-bda3-32dbea61ee10")
+		)
+		(pin "1"
+			(uuid "ee95c576-dd75-429e-847c-9d58054e44ac")
+		)
+		(instances
+			(project "HVPSController2"
+				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
+					(reference "J16")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:C_Polarized")
 		(at 514.35 57.15 0)
 		(mirror x)
@@ -40154,71 +41404,6 @@
 			(project "HVPSController2"
 				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
 					(reference "J14")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:Earth")
-		(at 134.62 320.04 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "ebbb310e-9cb1-47a0-baf9-5510c7c87c3f")
-		(property "Reference" "#PWR0161"
-			(at 134.62 326.39 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "Earth"
-			(at 130.302 321.31 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 134.62 320.04 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 134.62 320.04 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"Earth\""
-			(at 134.62 320.04 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "38302244-c224-4282-9548-b38cb9ee5a41")
-		)
-		(instances
-			(project "HVPSController2"
-				(path "/f62b61ba-88a4-4a6a-9b0e-fdf61e79088e"
-					(reference "#PWR0161")
 					(unit 1)
 				)
 			)
