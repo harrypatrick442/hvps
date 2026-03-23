@@ -7,10 +7,11 @@ namespace FPGAInterfaceGenerator
     {
         public static void GenerateCPlusPlusInterface(
             FPGAInterfaceSetup setup,
-            string hppFilePath,
-            string cppFilePath)
+            string outputDirectory)
         {
             string className = setup.Name;
+            string hppFilePath = Path.Combine(outputDirectory, $"{className}.hpp");
+            string cppFilePath = Path.Combine(outputDirectory, $"{className}.cpp");
             StringBuilder sbHpp = new StringBuilder();
             StringBuilder sbCpp = new StringBuilder();
             StringBuilder sbOutputsHpp = new StringBuilder();
@@ -20,9 +21,13 @@ namespace FPGAInterfaceGenerator
 
             sbHpp.AppendLine("#pragma once");
             sbHpp.AppendLine("#include \"FPGA/FPGAInterface.hpp\"");
+            sbHpp.AppendLine("#include \"FPGA/IFPGABus.hpp\"");
             sbHpp.Append("class ");
             sbHpp.Append(className);
             sbHpp.AppendLine(" {");
+            sbHpp.AppendLine("private:");
+            sbHpp.Append("    FPGAInterface _fpgaInterface;");
+            sbHpp.AppendLine();
             sbCpp.Append("#include \"");
             sbCpp.Append(className);
             sbCpp.AppendLine(".hpp\"");
@@ -59,14 +64,13 @@ namespace FPGAInterfaceGenerator
             int outputsLength)
         {
             sbHpp.AppendLine("public:");
-            sbHpp.Append("      ");
+            sbHpp.Append("    ");
             sbHpp.Append(className);
             sbHpp.AppendLine("(IFPGABus& fpgaBus);");
-            sbCpp.Append("      ");
             sbCpp.Append(className);
             sbCpp.Append("::");
             sbCpp.Append(className);
-            sbCpp.Append("():");
+            sbCpp.Append("(IFPGABus& fpgaBus):");
             sbCpp.Append("_fpgaInterface(");
             sbCpp.Append(inputsLength);
             sbCpp.Append(",");
@@ -85,16 +89,18 @@ namespace FPGAInterfaceGenerator
             return (output) =>
             {
                 string returnTypeName = GetTypeName(output.VariableType);
+
+                sbHpp.Append("    ");
                 sbHpp.Append(returnTypeName);
                 sbCpp.Append(returnTypeName);
                 sbCpp.Append(" ");
                 sbCpp.Append(className);
-                string methodName = StringHelper.UpperCamelCase(output.Name);
+                string methodName = $"get{StringHelper.UpperCamelCase(output.Name)}";
                 sbCpp.Append("::");
                 sbCpp.Append(methodName);
                 sbHpp.Append(" ");
                 sbHpp.Append(methodName);
-                sbHpp.Append("();");
+                sbHpp.AppendLine("();");
                 sbCpp.AppendLine("(){");
                 sbCpp.Append("     return _fpgaInterface.");
                 sbCpp.Append(GetGetMethodName(output.VariableType));
@@ -117,7 +123,7 @@ namespace FPGAInterfaceGenerator
             return (input) =>
             {
                 sbCpp.Append("void ");
-                sbHpp.Append("void ");
+                sbHpp.Append("    void ");
                 sbCpp.Append(className);
                 sbCpp.Append("::");
                 string methodName = $"set{StringHelper.UpperCamelCase(input.Name)}";

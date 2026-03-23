@@ -15,6 +15,11 @@ namespace HVPS_FPGAInterfaceGenerator
                 reposDirectory = Directory.GetParent(reposDirectory)!.FullName;
             }
             string hvpsDirectory = Path.Combine(reposDirectory, "hvps");
+            string cppGeneratedDirecotry = Path.Combine(
+                hvpsDirectory, "Code", "C++", "HVPSController2",
+                "main", "Generated");
+            string verilogDirectory =  Path.Combine(
+                hvpsDirectory, "Code", "Verilog", "HVPSController2");
             FPGAInterfaceSetup fpgaInterfaceSetup = new FPGAInterfaceSetup(
                 "HVPS_FPGAInterface",
                 new Input("Drive", VariableType.Bit),
@@ -25,6 +30,12 @@ namespace HVPS_FPGAInterfaceGenerator
                 new Output("ActualOutputVoltage", VariableType.Byte),
                 new Output("ActualPrimaryCurrent", VariableType.Byte)
             );
+            FPGAInterfaceGenerator.FPGAInterfaceGenerator
+                .Generate(
+                    fpgaInterfaceSetup,
+                    cppGeneratedDirecotry,
+                    verilogDirectory
+                    );
         }
     }
 }
