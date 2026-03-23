@@ -23,7 +23,6 @@ class LiveDataBroadcaster final
 		HighSpeedCore& _highSpeedCore;
 		TemperatureMonitor& _temperatureMonitor;
 		ITemperatureSensor& _mosfetTemperatureSensor;
-		ITemperatureSensor& _lowerSnubberDiodeTemperatureSensor;
 		Timer _timer;
 		EventConnection _eventConnectionPortOnOpen;
 		EventConnection _eventConnectionPortOnClose;
@@ -32,8 +31,8 @@ class LiveDataBroadcaster final
 			Port_ControllingMachine& port_ControllingMachine,
 			HighSpeedCore& highSpeedCore, 
 			TemperatureMonitor& temperatureMonitor,
-			ITemperatureSensor& mosfetTemperatureSensor, 
-			ITemperatureSensor& lowerSnubberDiodeTemperatureSensor) noexcept;
+			ITemperatureSensor& mosfetTemperatureSensor
+		) noexcept;
 		void _run();
 	
 };

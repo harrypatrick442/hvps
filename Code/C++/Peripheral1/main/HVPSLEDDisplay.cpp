@@ -1,4 +1,3 @@
-#pragma once
 #include "HVPSLEDDisplay.hpp"
 #include "IO/PinDefinitions.hpp"
 #include "Macros/GetFileName.hpp"

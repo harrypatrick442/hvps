@@ -21,7 +21,6 @@
 #include "System/SafeAbort.hpp"
 #include "Communication/I2C/I2C.hpp"
 #include "Communication/I2C/I2CConfiguration.hpp"
-#include "Temperature/LowerSnubberDiodeTemperatureSensor.hpp"
 #include "Temperature/MOSFETTemperatureSensor.hpp"
 #include "Temperature/TemperatureSensorAndLimit.hpp"
 #include "Temperature/TemperatureMonitor.hpp"
@@ -63,10 +62,7 @@ extern "C" void app_main(void)
     I2C::initialize(i2cConfiguration);
     I2C& i2c = I2C::getInstance();
 	MOSFETTemperatureSensor& mosfetTemperatureSensor = MOSFETTemperatureSensor::initialize(i2c);
-	LowerSnubberDiodeTemperatureSensor& lowerSnubberDiodeTemperatureSensor = LowerSnubberDiodeTemperatureSensor::initialize(i2c);
 		
-	Port_FirstStageVoltageFeedback& port_FirstStageVoltageFeedback = Port_FirstStageVoltageFeedback::initialize();
-	Port_OutputVoltageFeedback& port_OutputVoltageFeedback = Port_OutputVoltageFeedback::initialize();
     Bluetooth::initialize(
         "HVPS", 
         "HVPSControllerServer"
@@ -90,16 +86,14 @@ extern "C" void app_main(void)
 		= Port_ControllingMachine::initialize(
 			bluetooth, 
 			highSpeedCore,
-			Config1.pingTimeoutMilliseconds,
-			port_FirstStageVoltageFeedback,
-			port_OutputVoltageFeedback
+			Config1.sendPingIntervalMilliseconds,
+			Config1.pingTimeoutMilliseconds
 	);
-	TemperatureSensorAndLimit mosfetTemperatureSensorAndLimit(mosfetTemperatureSensor, Config1.maxTemperatureMosfetDegreesC);
-	TemperatureSensorAndLimit lowerSnubberDiodeTemperatureSensorAndLimit(lowerSnubberDiodeTemperatureSensor, Config1.maxTemperatureLowerSnubberDiodeDegreesC);
+	TemperatureSensorAndLimit mosfetTemperatureSensorAndLimit(
+		mosfetTemperatureSensor, Config1.maxTemperatureMosfetDegreesC);
 	TemperatureMonitor& temperatureMonitor = TemperatureMonitor::initializeWithParams(
 	{
-		mosfetTemperatureSensorAndLimit,
-		lowerSnubberDiodeTemperatureSensorAndLimit
+		mosfetTemperatureSensorAndLimit
 	});
 	
 	LiveDataBroadcaster::initialize(
@@ -107,8 +101,7 @@ extern "C" void app_main(void)
 		portControllingMachine,
 		highSpeedCore,
 		temperatureMonitor,
-		mosfetTemperatureSensor,
-		lowerSnubberDiodeTemperatureSensor
+		mosfetTemperatureSensor
 	);
 	vTaskDelete(NULL); // Delete the current task*/
 }  

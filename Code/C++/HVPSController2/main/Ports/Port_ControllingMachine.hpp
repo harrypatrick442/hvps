@@ -4,14 +4,11 @@
 #include "Communication/Interfaces/IDuplexChannel.hpp"
 #include "Ticketing/TicketedSender.hpp"
 #include "Generated/Messages/LiveDataMessage.hpp"
-#include "Generated/Messages/GreetingMessage.hpp"
 #include "Timing/Timer.hpp"
 #include "Core/SingletonBase.hpp"
 #include "Core/Macros.hpp"
 #include "Enums/SystemState.hpp"
 #include "../ControllerCore/HighSpeedCore.hpp"
-#include "Port_FirstStageVoltageFeedback.hpp"
-#include "Port_OutputVoltageFeedback.hpp"
 #include "Communication/Enums/MessageIntegrity.hpp"
 #include "cJSON/cJSON.h"
 #include <string>
@@ -30,16 +27,14 @@ public:
 	
 	void sendConsoleMessage(const std::string& str, bool isError = true);
 	void sendLiveData(LiveDataMessage liveDataMessage);
-	//return errorFree
-	uint32_t greetVoltageFeedbackModules();
+	
 	bool getIsOpen();
 protected:
     explicit Port_ControllingMachine(
 		IDuplexChannel& channel,
 		HighSpeedCore& highSpeedCore,
-		uint32_t pingTimeoutMilliseconds,
-		Port_FirstStageVoltageFeedback& port_FirstStageVoltageFeedback,
-		Port_OutputVoltageFeedback& port_OutputVoltageFeedback)noexcept;
+		uint32_t sendPingIntervalMilliseconds,
+		uint32_t pingTimeoutMilliseconds)noexcept;
 	virtual ~Port_ControllingMachine();
 private:
 	
@@ -52,8 +47,6 @@ private:
     TicketedSender	_ticketedSender;
 	Timer _timerSendPing;
 	Timer _timerCheckReceivedPing;
-	Port_FirstStageVoltageFeedback& _port_FirstStageVoltageFeedback;
-	Port_OutputVoltageFeedback& _port_OutputVoltageFeedback;
 	std::atomic<bool> _isOpen;
 	std::atomic<bool> _receivedPing;
 	EventConnection _eventConnectionHighSpeedCoreOnSystemStateChanged;
@@ -62,8 +55,6 @@ private:
 	EventConnection _eventConnectionHighSpeedCoreOnWarning;
 	EventConnection _eventConnectionOnOpened;
 	EventConnection _eventConnectionOnClosed;
-	EventConnection _eventConnectionOnGotGreetingMessageFirstStageVoltageFeedbackModule;
-	EventConnection _eventConnectionOnGotGreetingMessageOutputVoltageFeedbackModule;
 private:
 	void handleRunSystemChecksOnlyMessage(cJSON* message);
 	void handleShutDownMessage(cJSON* message);
@@ -81,7 +72,6 @@ private:
 		LastAbortMessage* lastAbortMessage
 	);
 	void sendState();
-	void handleGotGreetingMessageFromVoltageFeedbackModule(GreetingMessage* greetingMessage);
 	void handleHighSpeedCoreError(std::string errorMessage);
 	void handleHighSpeedCoreMessage(std::string message);
 	void handleHighSpeedCoreWarning(std::string message);

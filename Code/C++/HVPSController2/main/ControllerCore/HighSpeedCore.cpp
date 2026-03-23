@@ -13,16 +13,10 @@ const char* HighSpeedCore::getTag() {return GET_FILE_NAME;}
 HighSpeedCore::HighSpeedCore(
 	const HVPSConfiguration& hvpsConfiguration1,
 	const HVPSConfiguration& hvpsConfiguration2,
-	Port_FirstStageVoltageFeedback& portFirstStageVoltageFeedback, 
-	Port_OutputVoltageFeedback& portOutputVoltageFeedback,
-	LiveDataCache& liveDataCache,
 	bool inError
 ):
 _hvpsConfiguration1(hvpsConfiguration1),
 _hvpsConfiguration2(hvpsConfiguration2),
-_portFirstStageVoltageFeedback(portFirstStageVoltageFeedback),
-_portOutputVoltageFeedback(portOutputVoltageFeedback),
-_liveDataCache(liveDataCache),
 
 /*
 DO NOT EVER SET _shuttingOrShutDown or _shuttingOrShutDown_2 BACK TO FALSE. EVER!!!!
@@ -165,8 +159,8 @@ void HighSpeedCore::_run(){
 				continue;
 			case SystemState::Live:
 				doLive();
-				Outputs::setMOSFETOnOff(false);
-				//Second set for backup
+				_fpga.setDrive(false);
+				_fpga.setDrive2(false);
 				continue;
 			case SystemState::ShutDown:
 				doShutDown();
@@ -233,7 +227,8 @@ void HighSpeedCore::doShutDown(){
 		{
 			return;
 		}
-		Outputs::setMOSFETOnOff(false);
+		_fpga.setDrive(false);
+		_fpga.setDrive2(false);
 		VoltageWithRawAndTime outputVoltageWithRawAndTime = _liveDataCache.getOutputVoltage();
 		if(outputVoltageWithRawAndTime.timeUs==lastTime){
 			continue;
@@ -286,7 +281,8 @@ void HighSpeedCore::doIdle(){
 		if(desiredSystemState!=SystemState::Idle){
 			return;
 		}
-		Outputs::setMOSFETOnOff(false);
+		_fpga.setDrive(False);
+		_fpga.setDrive2(False);
 		Delay::ms(100);
 	}
 }
@@ -304,28 +300,6 @@ void HighSpeedCore::doLive(){
 	if(getDesiredSystemState()!=SystemState::Live){
 		return;
 	}
-	if(!_portFirstStageVoltageFeedback.setForceThresholdReachedFeedback(std::nullopt)){
-		setInError(true);
-		dispatchError("Failed to set voltage threshold not forced on first stage voltage feedback module");
-		return;
-	}
-	if(!_portFirstStageVoltageFeedback.setVoltageThreshold(_hvpsConfiguration1.firstStageVoltageThresholdVolts)){
-		setInError(true);
-		dispatchError("Failed to set voltage threshold on first stage voltage feedback module");
-		return;
-	}
-	if(!_portOutputVoltageFeedback.setForceThresholdReachedFeedback(std::nullopt)){
-		setInError(true);
-		dispatchError("Failed to set voltage threshold not forced on output voltage feedback module");
-		return;
-	}
-	if(!_portOutputVoltageFeedback.setVoltageThreshold(_hvpsConfiguration1.maxOutputVoltageThresholdVolts)){
-		setInError(true);
-		dispatchError("Failed to set voltage threshold on output voltage feedback module");
-		return;
-	}
-	uint64_t timeUs, endTime, endTime_2;
-	feedWatchdog();
     std::shared_ptr<InterruptTimer> liveWatchdog
 		= initializeLiveWatchdog();
     if (liveWatchdog==nullptr) {
@@ -336,68 +310,29 @@ void HighSpeedCore::doLive(){
 	}
 	dispatchMessage("Going live!");
 	setActualSystemState(SystemState::Live);
-	timeUs = TimeHelper::us();
-	//TODO use cycles instead. This appears to be working fine but use best time source can.
-	Inputs::useADCPrimaryCurrentFeedbackChannel([&](IADCSession&& adc){
-		bool isDriving = false;
-		_nCyclesCount = 0;
-		_startLiveTimeUs = timeUs;
-		uint16_t latestCurrentSenseVoltageRaw = 0;
-		while(true){
-			endTime = timeUs+_hvpsConfiguration1.onTimeMicroSeconds;
-			endTime_2 = timeUs+_hvpsConfiguration2.onTimeMicroSeconds;
-			feedWatchdog();
-			if((!Inputs::getOutputVoltageFeedbackThresholdReached())&&
-			(!Inputs::getFirstStageVoltageFeedbackThresholdReached())){
-				Outputs::setMOSFETOnOff(true);
-			}
-			while(true){
-				timeUs = TimeHelper::us();
-				if(timeUs>=endTime){
-					break;
-				}
-				if(timeUs>=endTime_2){
-					break;
-				}
-			}
-			Outputs::setMOSFETOnOff(false);
-			feedWatchdog();
-			adc.getRawQuickly(latestCurrentSenseVoltageRaw);
-			_peakCurrentSenseVoltageRaw = latestCurrentSenseVoltageRaw;
-			endTime = timeUs+_hvpsConfiguration1.offTimeMicroSeconds;
-			endTime_2 = timeUs+_hvpsConfiguration2.offTimeMicroSeconds;
-			
-			if(getDesiredSystemState()!=SystemState::Live){
-				break;
-			}
-			if(isShuttingDownOrShutDown()){
-				break;
-			}
-			if(getInError()){
-				break;
-			}
-			_nCyclesCount++;
-			while(true){
-				feedWatchdog();
-				timeUs = TimeHelper::us();
-				if(timeUs>=endTime){
-					break;
-				}
-				if(timeUs>=endTime_2){
-					break;
-				}
-			}
-		}
+	while(true){
 		feedWatchdog();
-	});
-	Outputs::setMOSFETOnOff(false);
+		if(getDesiredSystemState()!=SystemState::Live){
+			break;
+		}
+		if(isShuttingDownOrShutDown()){
+			break;
+		}
+		if(getInError()){
+			break;
+		}
+		_fpga.setDrive(true);
+		_fpga.setDrive2(true);
+	}
 	feedWatchdog();
-	_startLiveTimeUs = 0;
+	_fpga.setDrive(false);
+	_fpga.setDrive2(false);
 }
 void HighSpeedCore::doError(){
 	setActualSystemState(SystemState::Error);
 	while(true){
-		Outputs::setMOSFETOnOff(false);
+		_fpga.setDrive(false);
+		_fpga.setDrive2(false);
 		Delay::ms(100);
 		if(getActualSystemState()!=SystemState::Error){
 			break;
@@ -465,6 +400,7 @@ inline void IRAM_ATTR HighSpeedCore::checkWatchdog()
 		_watchdogFed = false;
 		return;
 	}
+	
 	Outputs::setMOSFETOffNoLock();
 	_watchdogFail = true;
 }

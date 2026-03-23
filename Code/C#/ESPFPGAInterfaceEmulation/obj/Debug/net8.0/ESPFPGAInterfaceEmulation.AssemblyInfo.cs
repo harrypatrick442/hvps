@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ESPFPGAInterfaceEmulation")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2b5fcddd9f47181464fc16db6f28392add3f2edf")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
 [assembly: System.Reflection.AssemblyProductAttribute("ESPFPGAInterfaceEmulation")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ESPFPGAInterfaceEmulation")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

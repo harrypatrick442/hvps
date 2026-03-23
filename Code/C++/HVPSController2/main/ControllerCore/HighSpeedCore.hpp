@@ -7,7 +7,6 @@
 #include "../Ports/Port_FirstStageVoltageFeedback.hpp"
 #include "../Ports/Port_OutputVoltageFeedback.hpp"
 #include "../Generated/HVPSConfiguration.hpp"
-#include "LiveDataCache.hpp"
 #include "Timing/FrequencyMeter.hpp"
 #include "Enums/ValueBoundType.hpp"
 #include "Timing/InterruptTimer.hpp"
@@ -25,9 +24,6 @@ private:
 	
 	const HVPSConfiguration& _hvpsConfiguration1;
 	const HVPSConfiguration& _hvpsConfiguration2;
-	Port_FirstStageVoltageFeedback& _portFirstStageVoltageFeedback;
-	Port_OutputVoltageFeedback& _portOutputVoltageFeedback;
-	LiveDataCache& _liveDataCache;
 	
 	/*
 	DO NOT EVER SET _shuttingOrShutDown or _shuttingOrShutDown_2 BACK TO FALSE. EVER!!!!
@@ -75,7 +71,6 @@ private:
 		const HVPSConfiguration& hvpsConfiguration2,
 		Port_FirstStageVoltageFeedback& portFirstStageVoltageFeedback, 
 		Port_OutputVoltageFeedback& portOutputVoltageFeedback,
-		LiveDataCache& liveDataCache,
 		bool inError
 	)noexcept;
 	

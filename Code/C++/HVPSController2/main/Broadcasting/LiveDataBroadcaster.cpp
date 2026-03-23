@@ -9,15 +9,13 @@ LiveDataBroadcaster::LiveDataBroadcaster(
 	Port_ControllingMachine& portControllingMachine,
 	HighSpeedCore& highSpeedCore,
 	TemperatureMonitor& temperatureMonitor,
-	ITemperatureSensor& mosfetTemperatureSensor,
-	ITemperatureSensor& lowerSnubberDiodeTemperatureSensor
+	ITemperatureSensor& mosfetTemperatureSensor
 ):
 	_liveDataCache(liveDataCache),
 	_portControllingMachine(portControllingMachine),
 	_highSpeedCore(highSpeedCore),
 	_temperatureMonitor(temperatureMonitor),
 	_mosfetTemperatureSensor(mosfetTemperatureSensor),
-	_lowerSnubberDiodeTemperatureSensor(lowerSnubberDiodeTemperatureSensor),
 	_timer(500, 
 		[this](){
 			this->_run();

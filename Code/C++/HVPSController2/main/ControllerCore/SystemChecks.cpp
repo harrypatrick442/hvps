@@ -14,50 +14,17 @@ std::shared_ptr<SystemChecksResult> SystemChecks::run(){
 	return std::make_shared<SystemChecksResult>(success, errorMessage);
 }
 bool SystemChecks::run(std::string& errorMessage){
-	if(Port_OtherPeripherals::getInstance().sendIndicateStateRequest()){
-		errorMessage= "Failed to speak to peripherals";
-		return false;
-	}
-	uint32_t subsystemIdentifierWithError = 
-		Port_ControllingMachine::getInstance().greetVoltageFeedbackModules();
-	if(subsystemIdentifierWithError!=0){
-		errorMessage = "Error state detected for subsystem "
-		+std::to_string(subsystemIdentifierWithError);
-		return false;
-	}
-	if(!suspended_firstStageVoltageFeedbackAbstractComs_replies(errorMessage)){
-		return false;
-	}
-	if(!suspended_outputVoltageFeedbackAbstractComs_replies(errorMessage)){
-		return false;
-	}
+	/*
 	if(!suspended_firstStageVoltageFeedbackAbstractComs_highSpeedFeedback(errorMessage)){
 		return false;
 	}
 	if(!suspended_outputVoltageFeedbackAbstractComs_highSpeedFeedback(errorMessage)){
 		return false;
 	}
+	*/
 	return true;
 }
-
-bool SystemChecks::suspended_firstStageVoltageFeedbackAbstractComs_replies(
-	std::string& errorMessage
-){
-	return _suspended_voltageFeedbackAbstractComs_replies(
-		FIRST_STAGE_VOLTAGE_FEEDBACK_MODULE_FRIENDLY_NAME,
-		errorMessage,
-		Port_FirstStageVoltageFeedback::getInstance()
-	);
-}
-bool SystemChecks::suspended_outputVoltageFeedbackAbstractComs_replies(
-	std::string& errorMessage
-){
-	return _suspended_voltageFeedbackAbstractComs_replies(
-		OUTPUT_VOLTAGE_FEEDBACK_MODULE_FRIENDLY_NAME,
-		errorMessage,
-		Port_OutputVoltageFeedback::getInstance()
-	);
-}
+/*
 bool SystemChecks::suspended_firstStageVoltageFeedbackAbstractComs_highSpeedFeedback(
 	std::string& errorMessage
 ){
@@ -128,7 +95,7 @@ bool SystemChecks::_suspended_voltageFeedbackModule_highsSpeedFeedback(
 	port.setForceThresholdReachedFeedback(std::nullopt);
 	return success;
 }
-
+*/
 /*
 bool SystemChecks::suspended_firstStageVoltageFeedback_setVoltageThreshold(){
 	

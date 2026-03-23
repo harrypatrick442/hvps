@@ -64,9 +64,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigurationClassBuilder",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ESP32EmbeddedElfFileGenerator", "ESP32EmbeddedElfFileGenerator\ESP32EmbeddedElfFileGenerator.csproj", "{3B7F4023-F14E-41EF-A74A-9687D6D252C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESPFPGAInterface", "ESPFPGAInterface\ESPFPGAInterface.csproj", "{D5D67C37-8D34-4010-8AD3-516095E5D71E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ESPFPGAInterface", "ESPFPGAInterface\ESPFPGAInterface.csproj", "{D5D67C37-8D34-4010-8AD3-516095E5D71E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESPFPGAInterfaceEmulation", "ESPFPGAInterfaceEmulation\ESPFPGAInterfaceEmulation.csproj", "{44C61E0A-A9AD-455A-A697-31C05B475F7D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ESPFPGAInterfaceEmulation", "ESPFPGAInterfaceEmulation\ESPFPGAInterfaceEmulation.csproj", "{44C61E0A-A9AD-455A-A697-31C05B475F7D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HVPS_FPGAInterfaceGenerator", "HVPS_FPGAInterfaceGenerator\HVPS_FPGAInterfaceGenerator.csproj", "{C1D7E52D-91C5-4FDD-A281-4222C0AB1228}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FPGAInterfaceGenerator", "FPGAInterfaceGenerator\FPGAInterfaceGenerator.csproj", "{51731C32-20E5-4917-9744-111B0FB4EEE6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -206,6 +210,14 @@ Global
 		{44C61E0A-A9AD-455A-A697-31C05B475F7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44C61E0A-A9AD-455A-A697-31C05B475F7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44C61E0A-A9AD-455A-A697-31C05B475F7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1D7E52D-91C5-4FDD-A281-4222C0AB1228}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1D7E52D-91C5-4FDD-A281-4222C0AB1228}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1D7E52D-91C5-4FDD-A281-4222C0AB1228}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1D7E52D-91C5-4FDD-A281-4222C0AB1228}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51731C32-20E5-4917-9744-111B0FB4EEE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51731C32-20E5-4917-9744-111B0FB4EEE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51731C32-20E5-4917-9744-111B0FB4EEE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51731C32-20E5-4917-9744-111B0FB4EEE6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

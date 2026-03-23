@@ -1,13 +1,12 @@
-CHECK PIN 110 ON FPGA ALLOWED
-Capacitor pin hole sizes for electrolytics bank on controller driver board.
-Switch for power switching from usb to connected supply for votlage feedback modules
-extra connection for third power retulator on main driver board or better just integrate regulators onto the board.
+[/]CHECK PIN 110 ON FPGA ALLOWED
+[/]Cap`acitor pin hole sizes for electrolytics bank on controller driver board.
+[/]extra connection for third power retulator on main driver board or better just integrate regulators onto the board.
 faraday cage for main driver housing.
-schottkey diode for usb psu shared power line inste4ad of switches?
-the issue with theoretical failure mode for soft start circuit which mimics that of tvs
+[/]schottkey diode for usb psu shared power line inste4ad of switches?
+[/ no practical situation wher ei routinely disconnect, i kinda have anyway no issues not even fuse blow] the issue with theoretical failure mode for soft start circuit which mimics that of tvs
 voltage slightly higher as seen by voltage feedback board relative to emulator but issue probably on emulator side.
 caps to cover holes on fiber optic modules block out ambient light. 
-detect if safe votlage threshold exceeded and abort.
+[/can be solved by esp now being freed up to do continuous checks because of fpga/]detect if safe votlage threshold exceeded and abort.
 PUT COMPONENT VALUES ON THE CIRCUIT BOARD FOR RESISTORS AND CAPACITORS. THIS IS HAND ASSEMBLY AND IT SAVES MISTAKES
 LIKE I MADE A MISTAKE WITH CAPCITOR VALUES ON FIBER OPTIC TRANSMITTERS RECEIVERS.
 Consider ADC's for full range more fine feedback on voltage feedback.
