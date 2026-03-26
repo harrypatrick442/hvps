@@ -2,14 +2,15 @@
 #define HIGH_SPEED_CORE_HPP
 #include "Enums/SystemState.hpp"
 #include "Core/Event.hpp"
+#include "Core/Latch.hpp"
 #include "Core/SingletonBase.hpp"
 #include "SystemChecksResult.hpp"
-#include "../Ports/Port_FirstStageVoltageFeedback.hpp"
-#include "../Ports/Port_OutputVoltageFeedback.hpp"
 #include "../Generated/HVPSConfiguration.hpp"
 #include "Timing/FrequencyMeter.hpp"
 #include "Enums/ValueBoundType.hpp"
 #include "Timing/InterruptTimer.hpp"
+#include "Generated/HVPS_FPGAInterface.hpp"
+#include "FPGA/IFPGABus.hpp"
 #include <optional>
 class HighSpeedCore final : public SingletonBase<HighSpeedCore>{
 private:
@@ -24,6 +25,7 @@ private:
 	
 	const HVPSConfiguration& _hvpsConfiguration1;
 	const HVPSConfiguration& _hvpsConfiguration2;
+	HVPS_FPGAInterface _fpgaInterface;
 	
 	/*
 	DO NOT EVER SET _shuttingOrShutDown or _shuttingOrShutDown_2 BACK TO FALSE. EVER!!!!
@@ -43,8 +45,6 @@ private:
 	volatile uint64_t _startLiveTimeUs;
 	volatile uint64_t _nCyclesCount;
 	volatile uint16_t _peakCurrentSenseVoltageRaw;
-	volatile bool _watchdogFed;
-	volatile bool _watchdogFail;
 	
 public:
     Event<SystemState> onSystemStateChanged;
@@ -61,7 +61,9 @@ public:
 	void setInError(bool value);
 	SystemState getActualSystemState();
 	float getFrequencyHz(ValueBoundType& valueBoundType);
-	float getPeakPrimaryCurrent(ValueBoundType& valueBoundType);
+	float getActualPeakPrimaryCurrent();
+	float getActualOutputVoltage();
+	float getActualFirstStageVoltage();
 private:
     friend class SingletonBase<HighSpeedCore>;
 	const float SAFE_OUTPUT_VOLTAGE = 20.0f;
@@ -69,8 +71,7 @@ private:
 	HighSpeedCore(
 		const HVPSConfiguration& hvpsConfiguration1,
 		const HVPSConfiguration& hvpsConfiguration2,
-		Port_FirstStageVoltageFeedback& portFirstStageVoltageFeedback, 
-		Port_OutputVoltageFeedback& portOutputVoltageFeedback,
+		IFPGABus& fpgaBus,
 		bool inError
 	)noexcept;
 	
@@ -94,11 +95,6 @@ private:
 	void dispatchWarning(std::string message);
 	void loopFrequencyMeasurement();
 	void calculateAdditionalShutdownTime(float voltage, float& timeSeconds, float& time2Seconds);
-	std::shared_ptr<InterruptTimer> initializeLiveWatchdog();
-	inline void IRAM_ATTR feedWatchdog();
-	inline void IRAM_ATTR checkWatchdog();
-	static bool IRAM_ATTR liveWatchdogTimerTrampoline(void *arg);
-	bool testLiveWatchdog(std::shared_ptr<InterruptTimer> liveWatchdog);
 };
 
 #endif // HIGH_SPEED_CORE_HPP

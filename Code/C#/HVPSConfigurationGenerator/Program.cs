@@ -66,9 +66,8 @@ namespace HVPSConfigurationGenerator
                 maxOutputVoltageThresholdVolts = (float)maxOutputVoltageThreshold,
                 minOutputVoltageThresholdVolts = (float)Constants.MinimumDesiredOutputVoltage,
                 nVillardStages = Constants.NStages,
-                onTimeMicroSeconds = onTimeMicroSeconds,
-                offTimeMicroSeconds = offTimeMicroSeconds,
                 pingTimeoutMilliseconds = Constants.PingTimeoutMilliseconds,
+                sendPingIntervalMilliseconds = Constants.SendPingIntervalMilliseconds,
                 villardCapacitorCapacitanceFarads = (float)Constants.VillardCapacitorCapacitance,
                 vPsOverVadcRatio = (float)Constants.PowerSupplyVoltageFeedbackPotentialDividerRatio,
                 villardCapacitorsBleedTimeConstantSeconds = 
@@ -77,199 +76,22 @@ namespace HVPSConfigurationGenerator
                         *Constants.VillardCapacitorCapacitance
                         *(1d + (Constants.VillardCapacitorBleedResistorTolerancePercent / 100d)) 
                         * Constants.VillardCapacitorBleedResistance),
-                currentSenseVoltageToCurrentAmps = (float)Constants.CurrentFeedbackSenseVoltageToCurrent,
-               maxTemperatureLowerSnubberDiodeDegreesC = Constants.MaxTemperatureLowerSnubberDiode,
-               maxTemperatureMosfetDegreesC = Constants.MaxTemperatureMosfet
-            };
-            VoltageFeedbackModuleConfiguration firstStageVoltageFeedbackModuleConfigStruct = new VoltageFeedbackModuleConfiguration
-            {
-                broadcastFrequencyHz = Constants.BroadcastFrequency,
-                defaultThreshold = (float)firstStageVoltageThreshold,
-                vHvOverVadcRatio = (float)Constants.FirstStageVoltageFeedbackPotentialDividerRatio
-            };
-            VoltageFeedbackModuleConfiguration outputVoltageFeedbackModuleConfigStruct = new VoltageFeedbackModuleConfiguration
-            {
-                broadcastFrequencyHz = Constants.BroadcastFrequency,
-                defaultThreshold = (float)maxOutputVoltageThreshold,
-                vHvOverVadcRatio = (float)Constants.OutputVoltageFeedbackPotentialDividerRatio
-            };
-            AlreadyWroteWatcher alreadyWroteWatcher = new AlreadyWroteWatcher();
-#region Write_HVPSConfiguration
-#region To_HVPSController
-            CPlusPlusConfigurationWriter.WriteConfigurationStructFile<HVPSConfiguration>(Path.Combine(
-                    reposDirectory,
-                    "hvps",
-                    "Code",
-                    "C++",
-                    "HVPSController",
-                    "main",
-                    "Generated",
-                    "HVPSConfiguration.hpp"
-            ), alreadyWroteWatcher);
-            {
-                CPlusPlusConfigurationWriter.WriteProjectSpecificConfiguration(
-                    projectSpecificConfigurationFilePath: Path.Combine(
-                        reposDirectory,
-                        "hvps",
-                        "Code",
-                        "C++",
-                        "HVPSController",
-                        "main",
-                        "Generated",
-                        "HVPSConfig.hpp"
-                ),
-                    configurationStruct,
-                    structHppFileRelativePath: "HVPSConfiguration.hpp",
-                    dependenciesIncludePathPrefix,
-                    alreadyWroteWatcher
-                );
-            }
-            #endregion
-#region To_Peripheral1
-            CPlusPlusConfigurationWriter.WriteConfigurationStructFile<HVPSConfiguration>(Path.Combine(
-                    reposDirectory,
-                    "hvps",
-                    "Code",
-                    "C++",
-                    "Peripheral1",
-                    "main",
-                    "Generated",
-                    "HVPSConfiguration.hpp"
-            ), alreadyWroteWatcher);
-            {
-                CPlusPlusConfigurationWriter.WriteProjectSpecificConfiguration(
-                    projectSpecificConfigurationFilePath: Path.Combine(
-                        reposDirectory,
-                        "hvps",
-                        "Code",
-                        "C++",
-                        "Peripheral1",
-                        "main",
-                        "Generated",
-                        "HVPSConfig.hpp"
-                ),
-                    configurationStruct,
-                    structHppFileRelativePath: "HVPSConfiguration.hpp",
-                    dependenciesIncludePathPrefix,
-                    alreadyWroteWatcher,
-                    instancePrefix:"HVPSConfig"
-                );
-            }
-            #endregion
-            #endregion
-#region Write_VoltageFeedbackModuleConfigurationStruct
-#region To_VoltageFeedbackModuleBase
-            CPlusPlusConfigurationWriter.WriteConfigurationStructFile<VoltageFeedbackModuleConfiguration>(
-                Path.Combine(reposDirectory, "hvps", "Code", "C++", "VoltageFeedbackModuleBase",
-                    "Generated", "VoltageFeedbackModuleConfiguration.hpp"),
-                alreadyWroteWatcher
-            );
-            #endregion
-#region To_Peripheral1
-            CPlusPlusConfigurationWriter.WriteConfigurationStructFile<VoltageFeedbackModuleConfiguration>(
-                Path.Combine(reposDirectory, "hvps", "Code", "C++", "Peripheral1", "main",
-                    "Generated", "VoltageFeedbackModuleConfiguration.hpp"),
-                alreadyWroteWatcher
-            );
-            #endregion
-#endregion
-#region Write_FirstStageVoltageFeedbackModuleConfig
-            #region To_FirstStageVoltageFeedbackModule
-            CPlusPlusConfigurationWriter.WriteProjectSpecificConfiguration(
-                    projectSpecificConfigurationFilePath:
-                        Path.Combine(reposDirectory, "hvps", "Code", "C++",
-                        "FirstStageVoltageFeedbackModule", "main",
-                        "Generated", "FirstStageVoltageFeedbackModuleConfig.hpp"),
-                    firstStageVoltageFeedbackModuleConfigStruct,
-                    structHppFileRelativePath: "Generated/VoltageFeedbackModuleConfiguration.hpp",
-                    dependenciesIncludePathPrefix,
-                    alreadyWroteWatcher
+                primaryCurrentFromRaw = 
+                    (float)(
+                        (Constants.ADCRawToUnscaledVoltage/
+                                Constants.PrimaryCurrentFeedbackBurdenResistorResistanceOhms
+                        )
+                        * Constants.PrimaryCurrentFeedbackCurrentTransformerRatioSecondaryToPrimary
+                    ),
+                firstStageVoltageFromRaw=
+                    (float)(Constants.FirstStageVoltageFeedbackPotentialDividerRatio
+                    * Constants.ADCRawToUnscaledVoltage),
+                outputVoltageFromRaw = 
+                    (float)(Constants.OutputVoltageFeedbackPotentialDividerRatio
+                    * Constants.ADCRawToUnscaledVoltage),
+               maxTemperatureMosfetDegreesC = Constants.MaxTemperatureMosfet,
 
-                );
-#endregion
-#region To_Peripheral1
-            CPlusPlusConfigurationWriter.WriteProjectSpecificConfiguration(
-                    projectSpecificConfigurationFilePath:
-                        Path.Combine(reposDirectory, "hvps", "Code", "C++",
-                        "Peripheral1", "main",
-                        "Generated", "FirstStageVoltageFeedbackModuleConfig.hpp"),
-                    firstStageVoltageFeedbackModuleConfigStruct,
-                    structHppFileRelativePath: "Generated/VoltageFeedbackModuleConfiguration.hpp",
-                    dependenciesIncludePathPrefix,
-                    alreadyWroteWatcher,
-                    instancePrefix:"FirstStageVoltageFeedbackModuleConfig"
-                );
-#endregion
-#endregion
-#region Write_OutputVoltageFeedbackModuleConfig
-#region To_OutputVoltageFeedbackModule
-                CPlusPlusConfigurationWriter.WriteProjectSpecificConfiguration(
-                    projectSpecificConfigurationFilePath:
-                        Path.Combine(reposDirectory, "hvps", "Code", "C++",
-                        "OutputVoltageFeedbackModule", "main",
-                        "Generated", "OutputVoltageFeedbackModuleConfig.hpp"),
-                    outputVoltageFeedbackModuleConfigStruct,
-                    structHppFileRelativePath: "Generated/VoltageFeedbackModuleConfiguration.hpp",
-                    dependenciesIncludePathPrefix,
-                    alreadyWroteWatcher
 
-                );
-                #endregion
-#region To_Peripherial1
-                CPlusPlusConfigurationWriter.WriteProjectSpecificConfiguration(
-                    projectSpecificConfigurationFilePath:
-                        Path.Combine(reposDirectory, "hvps", "Code", "C++",
-                        "Peripheral1", "main",
-                        "Generated", "OutputVoltageFeedbackModuleConfig.hpp"),
-                    outputVoltageFeedbackModuleConfigStruct,
-                    structHppFileRelativePath: "Generated/VoltageFeedbackModuleConfiguration.hpp",
-                    dependenciesIncludePathPrefix,
-                    alreadyWroteWatcher,
-                    instancePrefix:"OutputVoltageFeedbackModuleConfig"
-
-                );
-            #endregion
-            #endregion
-            /*
-            ConfigurationWriter.WriteConfigurationStructFile<CurrentFeedbackModuleConfig>(
-                Path.Combine(reposDirectory, "hvps", "Code", "C++", "CurrentFeedbackModuleBase",
-                    "Generated", "CurrentFeedbackModuleConfiguration.hpp"),
-                alreadyWroteWatcher
-            );*/
-            /*
-            {
-                CurrentFeedbackModuleConfig outputCurrentFeedbackModuleConfigStruct = new CurrentFeedbackModuleConfig
-                {
-                    senseResistanceOhms = Constants.SenseResistance,
-                    outputCurrentLimitingResistanceOhms=
-                        Constants.NSeriesOutputCurrentLimitingResistors*
-                        Constants.IndividualOutputCurrentLimitingResistorResistance,
-                    cumulativeEnergyThresholdJ = Constants.OutputResistorMaximumEnergy,
-                    energyDisipatedJPerS = Constants.OutputCurrentLimitingResistorMaxPowerDisipation,
-                    broadcastFrequencyHz = Constants.BroadcastFrequency
-                };
-                ConfigurationWriter.WriteProjectSpecificConfiguration(
-                    projectSpecificConfigurationFilePath:
-                        Path.Combine(reposDirectory, "hvps", "Code", "C++",
-                        "OutputCurrentFeedbackModule", "main",
-                        "Generated", "OutputCurrentFeedbackModuleConfig.hpp"),
-                    outputCurrentFeedbackModuleConfigStruct,
-                    structHppFileRelativePath: "Generated/CurrentFeedbackModuleConfiguration.hpp",
-                    dependenciesIncludePathPrefix,
-                    alreadyWroteWatcher
-
-                );
-            }*/
-            WritePeripheral1(reposDirectory,
-                dependenciesIncludePathPrefix,
-                alreadyWroteWatcher);
-        }
-        private static void WritePeripheral1(string reposDirectory,
-            string dependenciesIncludePathPrefix, 
-            AlreadyWroteWatcher alreadyWroteWatcher) {
-
-            Peripheral1Configuration peripheral1Config = new Peripheral1Configuration
-            {
                 errorColour = Constants.ErrorColour.ToUInt32(),
                 liveColour = Constants.LiveColour.ToUInt32(),
                 idleColour = Constants.IdleColour.ToUInt32(),
@@ -294,22 +116,35 @@ namespace HVPSConfigurationGenerator
                 unknownFlashDelayMs = FlashHzToMilliseconds(
                     Constants.UnknownFlashHz),
             };
-            CPlusPlusConfigurationWriter.WriteProjectSpecificConfiguration(
-                projectSpecificConfigurationFilePath:
-                    Path.Combine(reposDirectory, "hvps", "Code", "C++",
-                    "Peripheral1", "main",
-                    "Generated", "Peripheral1Config.hpp"),
-                peripheral1Config,
-                structHppFileRelativePath: "Peripheral1Configuration.hpp",
-                dependenciesIncludePathPrefix,
-                alreadyWroteWatcher
-            );
-            CPlusPlusConfigurationWriter.WriteConfigurationStructFile<Peripheral1Configuration>(
-                Path.Combine(reposDirectory, "hvps", "Code", "C++", "Peripheral1",
+            AlreadyWroteWatcher alreadyWroteWatcher = new AlreadyWroteWatcher();
+            CPlusPlusConfigurationWriter.WriteConfigurationStructFile<HVPSConfiguration>(Path.Combine(
+                    reposDirectory,
+                    "hvps",
+                    "Code",
+                    "C++",
+                    "HVPSController2",
                     "main",
-                    "Generated", "Peripheral1Configuration.hpp"),
-                alreadyWroteWatcher
-            );
+                    "Generated",
+                    "HVPSConfiguration.hpp"
+            ), alreadyWroteWatcher);
+            {
+                CPlusPlusConfigurationWriter.WriteProjectSpecificConfiguration(
+                    projectSpecificConfigurationFilePath: Path.Combine(
+                        reposDirectory,
+                        "hvps",
+                        "Code",
+                        "C++",
+                        "HVPSController2",
+                        "main",
+                        "Generated",
+                        "HVPSConfig.hpp"
+                ),
+                    configurationStruct,
+                    structHppFileRelativePath: "HVPSConfiguration.hpp",
+                    dependenciesIncludePathPrefix,
+                    alreadyWroteWatcher
+                );
+            }
         }
         private static UInt32 FlashHzToMilliseconds(double hz){
             if (hz <= 0) return 0;

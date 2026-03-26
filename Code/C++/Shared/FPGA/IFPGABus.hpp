@@ -2,7 +2,7 @@
 class IFPGABus
 {
 public:
-    virtual ~IESPSideOfBus() = default;
+    virtual ~IFPGABus() = default;
     virtual void setGoLive(bool value) = 0;
     virtual void setInShift(bool value) = 0;
     virtual void setOutShift(bool value) = 0;

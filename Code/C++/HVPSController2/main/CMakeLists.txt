@@ -11,10 +11,14 @@ idf_component_register(
 		"ControllerCore/SystemChecks.cpp"
 		"ControllerCore/SystemChecksResult.cpp"
 		"Broadcasting/LiveDataBroadcaster.cpp"
-		"IO/SoftStartHandler.cpp"
+		"IO/PowerConditioningMonitor.cpp"
 		"Temperature/MOSFETTemperatureSensor.cpp"
+		"Generated/HVPS_FPGAInterface.cpp"
+		"Graphics/HVPSLEDDisplay.cpp"
+		"Graphics/LEDStrip.cpp"
+		"IO/HVPSFPGABus.cpp"
 	PRIV_REQUIRES spi_flash driver bt nvs_flash esp_adc
-	INCLUDE_DIRS ""
+	INCLUDE_DIRS "."
 	REQUIRES
 		Shared espcoredump
 )

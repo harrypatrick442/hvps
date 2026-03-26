@@ -16,7 +16,6 @@ export default class LiveDataMessage
     r["j"]=o.primaryPowerWatts;
     r["k"]=o.totalPrimaryEnergyJouls;
     r["m"]=o.mosfetTemperatureDegreesC;
-    r["n"]=o.lowerSnubberDiodeTemperatureDegreesC;
     return r;
  }
  static fromJSON(o){
@@ -34,7 +33,6 @@ export default class LiveDataMessage
     r.primaryPowerWatts=o["j"];
     r.totalPrimaryEnergyJouls=o["k"];
     r.mosfetTemperatureDegreesC=o["m"];
-    r.lowerSnubberDiodeTemperatureDegreesC=o["n"];
    return r;
  }
 }

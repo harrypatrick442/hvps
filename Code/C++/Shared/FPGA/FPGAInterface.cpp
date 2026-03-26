@@ -1,5 +1,7 @@
 #include "FPGAInterface.hpp"
-
+#include "Timing/Delay.hpp"
+#include "Timing/TimeHelper.hpp"
+#include "Tasks/TaskFactory.hpp"
 #include <chrono>
 #include <cstring>
 
@@ -10,10 +12,13 @@ FPGAInterface::FPGAInterface(
     : _inputsLength(inputsLength)
     , _outputsLength(outputsLength)
 	, _fullOutputBufferLength(inputsLength + outputsLength)
+	, _inputBuffer(nullptr)
+	, _fullOutputBuffer(nullptr)
     , _fpgaBus(fpgaBus)
     , _disposed(false)
 	, _taskFinished(false)
     , _inputsChanged(true)
+	, _lastUpdateTimeUs(0)
 {
     _inputBuffer      = new bool[inputsLength]();
     _fullOutputBuffer = new bool[_fullOutputBufferLength]();
@@ -30,12 +35,16 @@ FPGAInterface::~FPGAInterface()
 {
     dispose();
 	while (!_taskFinished) {
-		vTaskDelay(pdMS_TO_TICKS(10));
+		Delay::ms(10);
 	}
     delete[] _inputBuffer;
     delete[] _fullOutputBuffer;
 }
 
+
+uint64_t FPGAInterface::getLastUpdateTimeUs(){
+	return _lastUpdateTimeUs.load(std::memory_order_relaxed);
+}
 // ─── Public: Input setters ────────────────────────────────────────────────────
 
 void FPGAInterface::setBit(size_t index, bool value)
@@ -225,7 +234,7 @@ void FPGAInterface::loop()
 				_taskFinished = true;
 				return;
 			}
-
+			uint64_t timeUs = TimeHelper::us();
             if (!_inputsChanged)
             {
                 readOutputs(false);
@@ -240,6 +249,7 @@ void FPGAInterface::loop()
                     _inputsChanged = false;
                 }
             }
+			_lastUpdateTimeUs.store(timeUs, std::memory_order_relaxed);
         }
         doLoopSleep(startTime);
     }

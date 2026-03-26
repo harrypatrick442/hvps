@@ -51,6 +51,7 @@ bool TemperatureMonitor::findSensorIndex(
 	return false;
 }
 void TemperatureMonitor::monitor(){
+	return;
 	size_t index = 0;
 	for (auto& temperatureSensorAndLimit : _temperatureSensorAndLimit_s) {
 		ITemperatureSensor& temperatureSensor = temperatureSensorAndLimit.temperatureSensor;

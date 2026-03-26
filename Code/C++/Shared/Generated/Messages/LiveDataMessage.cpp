@@ -5,7 +5,6 @@ LiveDataMessage::LiveDataMessage(
     float firstStageVoltageVolts, 
     float frequencyHz, 
     uint8_t frequencyHzValueBoundType, 
-    float lowerSnubberDiodeTemperatureDegreesC, 
     float mosfetTemperatureDegreesC, 
     float outputCurrentAmps, 
     uint8_t outputVoltageValueBoundType, 
@@ -19,7 +18,6 @@ LiveDataMessage::LiveDataMessage(
         _firstStageVoltageVolts(firstStageVoltageVolts),
         _frequencyHz(frequencyHz),
         _frequencyHzValueBoundType(frequencyHzValueBoundType),
-        _lowerSnubberDiodeTemperatureDegreesC(lowerSnubberDiodeTemperatureDegreesC),
         _mosfetTemperatureDegreesC(mosfetTemperatureDegreesC),
         _outputCurrentAmps(outputCurrentAmps),
         _outputVoltageValueBoundType(outputVoltageValueBoundType),
@@ -41,9 +39,6 @@ float LiveDataMessage::getFrequencyHz()const noexcept{
 }
 uint8_t LiveDataMessage::getFrequencyHzValueBoundType()const noexcept{
     return this->_frequencyHzValueBoundType;
-}
-float LiveDataMessage::getLowerSnubberDiodeTemperatureDegreesC()const noexcept{
-    return this->_lowerSnubberDiodeTemperatureDegreesC;
 }
 float LiveDataMessage::getMosfetTemperatureDegreesC()const noexcept{
     return this->_mosfetTemperatureDegreesC;
@@ -78,7 +73,6 @@ cJSON* LiveDataMessage::toJSON(){
     JHelper::addFloat(j, "e", this->_firstStageVoltageVolts);
     JHelper::addFloat(j, "g", this->_frequencyHz);
     JHelper::addUInt8(j, "h", this->_frequencyHzValueBoundType);
-    JHelper::addFloat(j, "n", this->_lowerSnubberDiodeTemperatureDegreesC);
     JHelper::addFloat(j, "m", this->_mosfetTemperatureDegreesC);
     JHelper::addFloat(j, "c", this->_outputCurrentAmps);
     JHelper::addUInt8(j, "b", this->_outputVoltageValueBoundType);
@@ -97,7 +91,6 @@ LiveDataMessage* LiveDataMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucke
     float firstStageVoltageVolts = JHelper::getFloat(j, "e", s);
     float frequencyHz = JHelper::getFloat(j, "g", s);
     uint8_t frequencyHzValueBoundType = JHelper::getUInt8(j, "h", s);
-    float lowerSnubberDiodeTemperatureDegreesC = JHelper::getFloat(j, "n", s);
     float mosfetTemperatureDegreesC = JHelper::getFloat(j, "m", s);
     float outputCurrentAmps = JHelper::getFloat(j, "c", s);
     uint8_t outputVoltageValueBoundType = JHelper::getUInt8(j, "b", s);
@@ -107,7 +100,7 @@ LiveDataMessage* LiveDataMessage::fromJSON(cJSON* j, CleanupBucket& cleanupBucke
     float primaryPowerWatts = JHelper::getFloat(j, "j", s);
     float totalOutputEnergyJouls = JHelper::getFloat(j, "d", s);
     float totalPrimaryEnergyJouls = JHelper::getFloat(j, "k", s);
-    auto r = new LiveDataMessage(firstStageVoltageValueBoundType, firstStageVoltageVolts, frequencyHz, frequencyHzValueBoundType, lowerSnubberDiodeTemperatureDegreesC, mosfetTemperatureDegreesC, outputCurrentAmps, outputVoltageValueBoundType, outputVoltageVolts, peakPrimaryCurrentAmps, peakPrimaryCurrentValueBoundType, primaryPowerWatts, totalOutputEnergyJouls, totalPrimaryEnergyJouls);
+    auto r = new LiveDataMessage(firstStageVoltageValueBoundType, firstStageVoltageVolts, frequencyHz, frequencyHzValueBoundType, mosfetTemperatureDegreesC, outputCurrentAmps, outputVoltageValueBoundType, outputVoltageVolts, peakPrimaryCurrentAmps, peakPrimaryCurrentValueBoundType, primaryPowerWatts, totalOutputEnergyJouls, totalPrimaryEnergyJouls);
     cleanupBucket.addDelete(r);
     return r;
 }

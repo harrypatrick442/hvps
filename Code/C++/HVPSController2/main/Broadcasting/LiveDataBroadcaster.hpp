@@ -2,11 +2,9 @@
 #include "Timing/FrequencyMeter.hpp"
 #include "Timing/Timer.hpp"
 #include "Core/SingletonBase.hpp"
-#include "../ControllerCore/LiveDataCache.hpp"
 #include "../ControllerCore/HighSpeedCore.hpp"
 #include "Temperature/TemperatureMonitor.hpp"
 #include "../Ports/Port_ControllingMachine.hpp"
-#include "Structs/VoltageWithRawAndTime.hpp"
 #include "Components/TemperatureSensors/Interfaces/ITemperatureSensor.hpp"
 class LiveDataBroadcaster final
 	:
@@ -18,7 +16,6 @@ class LiveDataBroadcaster final
 		void stop();
 	private:
 		friend class SingletonBase<LiveDataBroadcaster>;
-		LiveDataCache& _liveDataCache;
 		Port_ControllingMachine& _portControllingMachine;
 		HighSpeedCore& _highSpeedCore;
 		TemperatureMonitor& _temperatureMonitor;
@@ -27,7 +24,6 @@ class LiveDataBroadcaster final
 		EventConnection _eventConnectionPortOnOpen;
 		EventConnection _eventConnectionPortOnClose;
 		LiveDataBroadcaster(
-			LiveDataCache& liveDataCache, 
 			Port_ControllingMachine& port_ControllingMachine,
 			HighSpeedCore& highSpeedCore, 
 			TemperatureMonitor& temperatureMonitor,

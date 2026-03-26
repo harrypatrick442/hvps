@@ -10,31 +10,34 @@ module HVPS_FPGAInterface (
     // Named outputs to core logic
     output wire  drive,
     output wire  drive2,
-    output wire [7:0] max_first_stage_voltage_allowed,
+    output wire [7:0] desired_max_first_stage_voltage,
     output wire [7:0] desired_output_voltage,
+    output wire [7:0] desired_max_peak_primary_current,
     input wire [7:0] actual_first_stage_voltage,
     input wire [7:0] actual_output_voltage,
-    input wire [7:0] actual_primary_current
+    input wire [7:0] actual_peak_primary_current,
+    input wire  error
 );
 
     // Input buffer (staged, not yet live)
-    reg [17:0] input_staged;
+    reg [25:0] input_staged;
     // Live input buffer
-    reg [17:0] input_live;
+    reg [25:0] input_live;
     // Full output shift buffer (inputs + outputs)
-    reg [41:0] output_buffer;
+    reg [50:0] output_buffer;
     // Shift counter
     integer shift_count;
 
     // Named signal assignments from live input buffer
     assign drive = input_live[0];
     assign drive2 = input_live[1];
-    assign max_first_stage_voltage_allowed = input_live[9:2];
+    assign desired_max_first_stage_voltage = input_live[9:2];
     assign desired_output_voltage = input_live[17:10];
+    assign desired_max_peak_primary_current = input_live[25:18];
 
     // Shift in - MSB first
     always @(posedge in_shift) begin
-        input_staged <= {input_staged[16:0], in_value};
+        input_staged <= {input_staged[24:0], in_value};
     end
 
     // Go live - commit staged to live
@@ -44,13 +47,13 @@ module HVPS_FPGAInterface (
 
     // Load output buffer when to_output pulses
     always @(posedge to_output) begin
-        output_buffer <= {actual_first_stage_voltage, actual_output_voltage, actual_primary_current, input_staged};
+        output_buffer <= {actual_first_stage_voltage, actual_output_voltage, actual_peak_primary_current, error, input_staged};
     end
 
     // Shift out - MSB first
     always @(posedge out_shift) begin
-        out_value <= output_buffer[41];
-        output_buffer <= {output_buffer[40:0], 1'b0};
+        out_value <= output_buffer[50];
+        output_buffer <= {output_buffer[49:0], 1'b0};
     end
 
 endmodule

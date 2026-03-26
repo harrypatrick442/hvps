@@ -3,13 +3,14 @@
 #include "Communication/Interfaces/IIncomingMessageHandler.hpp"
 #include "Communication/Interfaces/IDuplexChannel.hpp"
 #include "Ticketing/TicketedSender.hpp"
-#include "Generated/Messages/LiveDataMessage.hpp"
 #include "Timing/Timer.hpp"
 #include "Core/SingletonBase.hpp"
 #include "Core/Macros.hpp"
 #include "Enums/SystemState.hpp"
 #include "../ControllerCore/HighSpeedCore.hpp"
 #include "Communication/Enums/MessageIntegrity.hpp"
+#include "Generated/Messages/LiveDataMessage.hpp"
+#include "Generated/Messages/CoreDumpSummaryMessage.hpp"
 #include "cJSON/cJSON.h"
 #include <string>
 

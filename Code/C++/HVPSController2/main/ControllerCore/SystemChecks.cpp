@@ -1,10 +1,6 @@
 #include <memory>
 #include "SystemChecks.hpp"
-#include "../Ports/Port_VoltageFeedbackBase.hpp"
-#include "../Ports/Port_OutputVoltageFeedback.hpp"
-#include "../Ports/Port_FirstStageVoltageFeedback.hpp"
 #include "../Ports/Port_ControllingMachine.hpp"
-#include "../Ports/Port_OtherPeripherals.hpp"
 #include "Timing/Delay.hpp"
 #include "Macros/IncludeLineOnEnd.hpp"
 #include "../IO/Inputs.hpp"

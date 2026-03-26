@@ -4,21 +4,35 @@
 #include "Core/Checksums/Crc32.hpp"
 inline constexpr HVPSConfiguration Config1{
     .broadcastFrequencyHz = 2,
-    .currentSenseVoltageToCurrentAmps = 17.543858,
+    .primaryCurrentFromRaw = 0.15686275,
+    .firstStageVoltageFromRaw = 43.92157,
+    .outputVoltageFromRaw = 241.56863,
     .firstStageVoltageThresholdVolts = 14255.604,
     .maxAverageOutputPowerWatts = 12.5,
     .maxFlybackEnergyPerCycleJouls = 0.0098,
     .maxOutputVoltageThresholdVolts = 80000,
-    .maxTemperatureLowerSnubberDiodeDegreesC = 50,
     .maxTemperatureMosfetDegreesC = 50,
     .minOutputVoltageThresholdVolts = 60000,
-    .vPsOverVadcRatio = 33,
+    .vPsOverVadcRatio = 16.5,
     .villardCapacitorCapacitanceFarads = 1E-09,
     .nVillardStages = 6,
-    .offTimeMicroSeconds = 31,
-    .onTimeMicroSeconds = 31,
-    .pingTimeoutMilliseconds = 3000,
-    .villardCapacitorsBleedTimeConstantSeconds = 19
+    .pingTimeoutMilliseconds = 10000,
+    .sendPingIntervalMilliseconds = 2000,
+    .villardCapacitorsBleedTimeConstantSeconds = 19,
+    .idleColour = 14724644,
+    .liveColour = 255,
+    .runningSystemChecksColour = 5631,
+    .shuttingDownColour = 16523,
+    .shutDownColour = 65280,
+    .errorColour = 6227959,
+    .unknownColour = 16777215,
+    .idleFlashDelayMs = 250,
+    .liveFlashDelayMs = 250,
+    .runningSystemChecksFlashDelayMs = 500,
+    .shuttingDownFlashDelayMs = 500,
+    .shutDownFlashDelayMs = 0,
+    .errorFlashDelayMs = 500,
+    .unknownFlashDelayMs = 500
 };
 inline HVPSConfiguration Config2 = Config1;//This one is in RAM. Config1 is in ROM.
 inline bool validateConfig(){
@@ -28,7 +42,7 @@ inline bool validateConfig(){
         SAFE_ABORT("The CRC32 computed for Config2 did not match the CRC32 for Config1");
         return false;
     }
-    if (podConfig1 != 1684788341){
+    if (podConfig1 != 2389219390){
         SAFE_ABORT("The CRC32 computed for Config1 did not match the expected value");
         return false;
     }

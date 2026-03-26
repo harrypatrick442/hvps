@@ -6,9 +6,12 @@ namespace HVPSConstants
     public class Constants
     {
         public const double SafetyFactor = 1.2;
+        public const double ADCRawToUnscaledVoltage = 2d / 255d;
         public const int Frequency = 16000;
         public const int BroadcastFrequency = 2;
         public const double DutyCycle = 0.5;
+        public const double PrimaryCurrentFeedbackCurrentTransformerRatioSecondaryToPrimary = 200d;
+        public const double PrimaryCurrentFeedbackBurdenResistorResistanceOhms = 10;
         public const double VillardCapacitorVoltageRating = 20000;
         public const double VillardCapacitorDeratedMaximumVoltage = 15000;
         public const double VillardCapacitorCapacitance = 1e-9;
@@ -26,15 +29,15 @@ namespace HVPSConstants
         public const double NSeriesOutputCurrentLimitingResistors = 5;
         public const double IndividualOutputCurrentLimitingResistorResistance = 200000;
         public const double MaximumCompositeOutputCurrentLimitingResistorAveragePower = 12.5;
-        public const double PowerSupplyVoltageFeedbackPotentialDividerRatio = 33;
+        public const double PowerSupplyVoltageFeedbackPotentialDividerRatio = 16.5;
         public const double FirstStageVoltageFeedbackPotentialDividerRatio = 5600;
         public const double OutputVoltageFeedbackPotentialDividerRatio = 3.08e4;
         //public const double OutputResistorMaximumEnergy = ;
         public const double OutputCurrentLimitingResistorMaxPowerDisipation = 15;
-        public const double CurrentFeedbackSenseVoltageToCurrent = 1f/(0.001f * 57f);
         public const float MaxTemperatureMosfet = 50;
         public const float MaxTemperatureLowerSnubberDiode = 50;
-        public const int PingTimeoutMilliseconds = 3000;
+        public const int PingTimeoutMilliseconds = 10000;
+        public const int SendPingIntervalMilliseconds = 2000;
         public static readonly RGB IdleColour = new RGB("#24aee0");
         public const double IdleFlashHz = 2;
         public static readonly RGB LiveColour = new RGB("#ff0000");

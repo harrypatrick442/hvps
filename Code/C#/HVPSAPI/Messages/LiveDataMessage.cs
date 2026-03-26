@@ -60,10 +60,6 @@ namespace HVPSAPI.Messages
         [JsonInclude]
         [DataMember(Name = LiveDataMessageDataMemberNames.MosfetTemperatureDegreesC)]
         public float MosfetTemperatureDegreesC { get; protected set; }
-        [JsonPropertyName(LiveDataMessageDataMemberNames.LowerSnubberDiodeTemperatureDegreesC)]
-        [JsonInclude]
-        [DataMember(Name = LiveDataMessageDataMemberNames.LowerSnubberDiodeTemperatureDegreesC)]
-        public float LowerSnubberDiodeTemperatureDegreesC { get; protected set; }
         public LiveDataMessage()
             : base()
         {

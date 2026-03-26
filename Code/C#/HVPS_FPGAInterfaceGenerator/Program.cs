@@ -24,11 +24,13 @@ namespace HVPS_FPGAInterfaceGenerator
                 "HVPS_FPGAInterface",
                 new Input("Drive", VariableType.Bit),
                 new Input("Drive2", VariableType.Bit),
-                new Input("MaxFirstStageVoltageAllowed", VariableType.Byte),
+                new Input("DesiredMaxFirstStageVoltage", VariableType.Byte),
                 new Input("DesiredOutputVoltage", VariableType.Byte),
+                new Input("DesiredMaxPeakPrimaryCurrent", VariableType.Byte),
                 new Output("ActualFirstStageVoltage", VariableType.Byte),
                 new Output("ActualOutputVoltage", VariableType.Byte),
-                new Output("ActualPrimaryCurrent", VariableType.Byte)
+                new Output("ActualPeakPrimaryCurrent", VariableType.Byte),
+                new Output("Error", VariableType.Bit)
             );
             FPGAInterfaceGenerator.FPGAInterfaceGenerator
                 .Generate(

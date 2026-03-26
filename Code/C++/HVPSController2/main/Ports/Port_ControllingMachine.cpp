@@ -12,7 +12,6 @@
 #include "Generated/Messages/StopMessage.hpp"
 #include "Generated/Messages/StateChangedMessage.hpp"
 #include "Generated/Messages/PingMessage.hpp"
-#include "Generated/Messages/CoreDumpSummaryMessage.hpp"
 #include "Generated/Messages/LastAbortMessage.hpp"
 #include "Generated/Messages/ClearLoggedErrorsMessage.hpp"
 #include "System/CrashReporter.hpp"

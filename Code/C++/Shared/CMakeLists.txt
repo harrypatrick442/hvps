@@ -1,6 +1,7 @@
 idf_component_register(
     SRCS 
 	"ADC/ADC.cpp"
+	"ADC/ADCOneShot.cpp"
 	"ADC/MonitorVoltageThresholdHandle.cpp"
 	"ADC/MonitorCurrentAndPowerHandle.cpp"
 	"ADC/ReverseVoltageToRawLookup.cpp"
@@ -31,6 +32,7 @@ idf_component_register(
 	"Core/RingBuffer.cpp"
 	"DAC/DAC.cpp"
 	"Encoding/Base64.cpp"
+	"IO/IOHelper.cpp"
 	"IO/IOInteruptHelper.cpp"
 	"JSON/CJsonRAII.cpp"
 	"JSON/JHelper.cpp"
@@ -60,6 +62,8 @@ idf_component_register(
 	"Timing/HardwareTimerPool/HardwareTimerPool.cpp"
 	"Timing/HardwareTimerPool/HardwareTimerLease.cpp"
 	"Timing/HardwareTimerPool/HardwareTimerInfo.cpp"
+	"FPGA/FPGABus.cpp"
+	"FPGA/FPGAInterface.cpp"
 	"Generated/Messages/ConsoleMessage.cpp"
 	"Generated/Messages/GetVoltageRequest.cpp"
 	"Generated/Messages/GetVoltageResponse.cpp"

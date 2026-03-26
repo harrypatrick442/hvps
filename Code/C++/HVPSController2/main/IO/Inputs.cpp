@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include "PinDefinitions.hpp"
 #include "ADCChannels.hpp"
-#include "ADC/ADC.hpp"
+#include "ADC/ADCOneShot.hpp"
 #include "System/SafeAbort.hpp"
 
 const char* Inputs::TAG = "Inputs";
@@ -28,5 +28,5 @@ void Inputs::checkInitialized(){
 	}
 }
 void Inputs::useADCPowerSupplyVoltageFeedbackChannel(const std::function<void(IADCSession&&)>& fn){
-    ADC::use(ADCChannels::POWER_SUPPLY_VOLTAGE_FEEDBACK, fn);
+    ADCOneShot::use(ADCChannels::POWER_SUPPLY_VOLTAGE_FEEDBACK, fn);
 }

@@ -15,7 +15,6 @@ class LiveDataMessage
         float _firstStageVoltageVolts;
         float _frequencyHz;
         uint8_t _frequencyHzValueBoundType;
-        float _lowerSnubberDiodeTemperatureDegreesC;
         float _mosfetTemperatureDegreesC;
         float _outputCurrentAmps;
         uint8_t _outputVoltageValueBoundType;
@@ -30,7 +29,6 @@ class LiveDataMessage
         float getFirstStageVoltageVolts()const noexcept;
         float getFrequencyHz()const noexcept;
         uint8_t getFrequencyHzValueBoundType()const noexcept;
-        float getLowerSnubberDiodeTemperatureDegreesC()const noexcept;
         float getMosfetTemperatureDegreesC()const noexcept;
         float getOutputCurrentAmps()const noexcept;
         uint8_t getOutputVoltageValueBoundType()const noexcept;
@@ -45,7 +43,6 @@ class LiveDataMessage
            float firstStageVoltageVolts, 
            float frequencyHz, 
            uint8_t frequencyHzValueBoundType, 
-           float lowerSnubberDiodeTemperatureDegreesC, 
            float mosfetTemperatureDegreesC, 
            float outputCurrentAmps, 
            uint8_t outputVoltageValueBoundType, 

@@ -26,11 +26,11 @@ namespace FPGAInterfaceGenerator
             sbHpp.Append(className);
             sbHpp.AppendLine(" {");
             sbHpp.AppendLine("private:");
-            sbHpp.Append("    FPGAInterface _fpgaInterface;");
-            sbHpp.AppendLine();
+            sbHpp.AppendLine("    FPGAInterface _fpgaInterface;");
             sbCpp.Append("#include \"");
             sbCpp.Append(className);
             sbCpp.AppendLine(".hpp\"");
+            sbCpp.AppendLine("#include \"Timing/TimeHelper.hpp\"");
             var appendInput = Create_AppendInput(className, sbInputsHpp, sbInputsCpp,
                 out Func<int> getInputsLength);
             foreach (var input in setup.Inputs)
@@ -44,8 +44,14 @@ namespace FPGAInterfaceGenerator
             {
                 appendOutput(output);
             }
+            sbHpp.AppendLine("public:");
             CreateConstructor(className, sbHpp, sbCpp,
                 getInputsLength(), getOutputsLength());
+
+            sbHpp.AppendLine("    uint64_t getLastUpdateTimeUs();");
+            sbCpp.Append("uint64_t ");
+            sbCpp.Append(className);
+            sbCpp.AppendLine("::getLastUpdateTimeUs(){ return _fpgaInterface.getLastUpdateTimeUs();}");
             sbHpp.Append(sbInputsHpp);
             sbCpp.Append(sbInputsCpp);
             sbHpp.Append(sbOutputsHpp);
@@ -63,7 +69,6 @@ namespace FPGAInterfaceGenerator
             int inputsLength,
             int outputsLength)
         {
-            sbHpp.AppendLine("public:");
             sbHpp.Append("    ");
             sbHpp.Append(className);
             sbHpp.AppendLine("(IFPGABus& fpgaBus);");

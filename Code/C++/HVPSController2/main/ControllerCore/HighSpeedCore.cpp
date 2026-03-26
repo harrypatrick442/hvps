@@ -13,10 +13,12 @@ const char* HighSpeedCore::getTag() {return GET_FILE_NAME;}
 HighSpeedCore::HighSpeedCore(
 	const HVPSConfiguration& hvpsConfiguration1,
 	const HVPSConfiguration& hvpsConfiguration2,
+	IFPGABus& fpgaBus,
 	bool inError
 ):
 _hvpsConfiguration1(hvpsConfiguration1),
 _hvpsConfiguration2(hvpsConfiguration2),
+_fpgaInterface(fpgaBus),
 
 /*
 DO NOT EVER SET _shuttingOrShutDown or _shuttingOrShutDown_2 BACK TO FALSE. EVER!!!!
@@ -33,9 +35,8 @@ _systemChecksResult(nullptr),
 _runSystemChecksLatch(),
 _startLiveTimeUs(0),
 _nCyclesCount(0),
-_peakCurrentSenseVoltageRaw(0),
-_watchdogFed(true),
-_watchdogFail(false){
+_peakCurrentSenseVoltageRaw(0)
+{
 	startCoreTask();
 }
 float HighSpeedCore::getFrequencyHz(ValueBoundType& valueBoundType){
@@ -61,11 +62,17 @@ float HighSpeedCore::getFrequencyHz(ValueBoundType& valueBoundType){
 	return static_cast<float>(nCyclesCount)
 		*(1000000.0f/static_cast<float>(dtUs));
 }
-float HighSpeedCore::getPeakPrimaryCurrent(ValueBoundType& valueBoundType){
-	uint16_t peakCurrentSenseVoltageRaw = _peakCurrentSenseVoltageRaw;
-	valueBoundType = (peakCurrentSenseVoltageRaw==0?ValueBoundType::MinimumKnown:ValueBoundType::Exact);
-	return ADC::convertRawToVoltage(peakCurrentSenseVoltageRaw)*_hvpsConfiguration1.currentSenseVoltageToCurrentAmps
-;
+float HighSpeedCore::getActualPeakPrimaryCurrent(){
+	uint8_t raw = _fpgaInterface.getActualPeakPrimaryCurrent();
+	return _hvpsConfiguration1.primaryCurrentFromRaw * static_cast<float>(raw);
+}
+float HighSpeedCore::getActualOutputVoltage(){
+	uint8_t raw = _fpgaInterface.getActualOutputVoltage();
+	return _hvpsConfiguration1.outputVoltageFromRaw * static_cast<float>(raw);
+}
+float HighSpeedCore::getActualFirstStageVoltage(){
+	uint8_t raw = _fpgaInterface.getActualFirstStageVoltage();
+	return _hvpsConfiguration1.firstStageVoltageFromRaw * static_cast<float>(raw);
 }
 void HighSpeedCore::start(){
 	setDesiredSystemState(SystemState::Live);
@@ -159,8 +166,8 @@ void HighSpeedCore::_run(){
 				continue;
 			case SystemState::Live:
 				doLive();
-				_fpga.setDrive(false);
-				_fpga.setDrive2(false);
+				_fpgaInterface.setDrive(false);
+				_fpgaInterface.setDrive2(false);
 				continue;
 			case SystemState::ShutDown:
 				doShutDown();
@@ -214,8 +221,8 @@ void HighSpeedCore::doShutDown(){
 	setActualSystemState(SystemState::ShuttingDown);
 	uint64_t lastTime = 0;
 	SystemState desiredSystemState = getDesiredSystemState();
-	uint64_t timeRawReachedZero = 0;
-	uint64_t timeAtWhichClassifiedSafeSeconds_1 = 0, timeAtWhichClassifiedSafeSeconds_2 = 0;
+	uint64_t timeAtWhichClassifiedSafeSeconds_1 = 0, 
+		timeAtWhichClassifiedSafeSeconds_2 = 0;
 	setActualSystemState(SystemState::ShuttingDown);
 	bool issuedWarning = false;
 	while(true){
@@ -227,45 +234,57 @@ void HighSpeedCore::doShutDown(){
 		{
 			return;
 		}
-		_fpga.setDrive(false);
-		_fpga.setDrive2(false);
-		VoltageWithRawAndTime outputVoltageWithRawAndTime = _liveDataCache.getOutputVoltage();
-		if(outputVoltageWithRawAndTime.timeUs==lastTime){
+		_fpgaInterface.setDrive(false);
+		_fpgaInterface.setDrive2(false);
+		uint64_t fpgaUpdateTime = _fpgaInterface.getLastUpdateTimeUs();
+		if(fpgaUpdateTime==lastTime){
 			continue;
 		}
-		lastTime = outputVoltageWithRawAndTime.timeUs;
-		if(outputVoltageWithRawAndTime.voltage<=SAFE_OUTPUT_VOLTAGE){
+		float outputVoltage = getActualOutputVoltage();
+		lastTime = fpgaUpdateTime;
+		if(outputVoltage>SAFE_OUTPUT_VOLTAGE){
+			timeAtWhichClassifiedSafeSeconds_1=0;
+			timeAtWhichClassifiedSafeSeconds_2=0;
+			continue;
+		}
+		if(_hvpsConfiguration1.outputVoltageFromRaw*2.0f<=SAFE_OUTPUT_VOLTAGE
+		||_hvpsConfiguration2.outputVoltageFromRaw*2.0f<=SAFE_OUTPUT_VOLTAGE){
 			setActualSystemState(SystemState::ShutDown);
 			continue;
 		}
-		if(outputVoltageWithRawAndTime.raw>0){
-			setActualSystemState(SystemState::ShuttingDown);
-			continue;
-		}
-		if(timeRawReachedZero==0){
-			timeRawReachedZero = outputVoltageWithRawAndTime.timeUs;
-			/*t=−R*C*ln(V0​/Vdes​​)*/
-			continue;
-		}
 		if(
-			(timeAtWhichClassifiedSafeSeconds_1==0||timeAtWhichClassifiedSafeSeconds_2==0)
-			&&outputVoltageWithRawAndTime.voltage>0
-			){				
+			(timeAtWhichClassifiedSafeSeconds_1==0
+			||timeAtWhichClassifiedSafeSeconds_2==0)
+			)
+		{				
 			float additionalTimeRequiredToDischargeSeconds_1;	
 			float additionalTimeRequiredToDischargeSeconds_2;
-			calculateAdditionalShutdownTime(outputVoltageWithRawAndTime.voltage, additionalTimeRequiredToDischargeSeconds_1,
-				additionalTimeRequiredToDischargeSeconds_2);
+			//TODO not everything is bit flip safe
+			calculateAdditionalShutdownTime(
+				_hvpsConfiguration1.outputVoltageFromRaw*2.0f,
+					additionalTimeRequiredToDischargeSeconds_1,
+					additionalTimeRequiredToDischargeSeconds_2);
 			LOG_INFO("additionalTimeRequiredToDischargeSeconds: %f", additionalTimeRequiredToDischargeSeconds_1);
-			timeAtWhichClassifiedSafeSeconds_1 = (2.0f*additionalTimeRequiredToDischargeSeconds_1)+TimeHelper::s();
-			timeAtWhichClassifiedSafeSeconds_2 = (2.0f*additionalTimeRequiredToDischargeSeconds_2)+TimeHelper::s();
+			float nowSeconds = static_cast<float>(TimeHelper::s());
+			timeAtWhichClassifiedSafeSeconds_1 = (2.0f*additionalTimeRequiredToDischargeSeconds_1)+nowSeconds;
+			timeAtWhichClassifiedSafeSeconds_2 = (2.0f*additionalTimeRequiredToDischargeSeconds_2)+nowSeconds;
 			if(timeAtWhichClassifiedSafeSeconds_1!=timeAtWhichClassifiedSafeSeconds_2){
 				timeAtWhichClassifiedSafeSeconds_1 = 0;
 				timeAtWhichClassifiedSafeSeconds_2 = 0;
 			}
 		}
-		if((timeRawReachedZero>0)
-			&&((timeAtWhichClassifiedSafeSeconds_1>0)&&(timeAtWhichClassifiedSafeSeconds_1<=TimeHelper::s()))
-			&&((timeAtWhichClassifiedSafeSeconds_2>0)&&(timeAtWhichClassifiedSafeSeconds_2<=TimeHelper::s()))){
+		if(
+			(
+				(timeAtWhichClassifiedSafeSeconds_1>0)
+				&&
+				(timeAtWhichClassifiedSafeSeconds_1<=TimeHelper::s())
+			)
+			&&
+			(
+				(timeAtWhichClassifiedSafeSeconds_2>0)
+				&&
+				(timeAtWhichClassifiedSafeSeconds_2<=TimeHelper::s())
+			)){
 			setActualSystemState(SystemState::ShutDown);
 			if(!issuedWarning){
 				dispatchWarning("The last portion of the shutdown period had to be approximated due to limited accuracy of voltage feedback. You may now HOTSTICK the device fitting the grounding connector");
@@ -281,8 +300,8 @@ void HighSpeedCore::doIdle(){
 		if(desiredSystemState!=SystemState::Idle){
 			return;
 		}
-		_fpga.setDrive(False);
-		_fpga.setDrive2(False);
+		_fpgaInterface.setDrive(false);
+		_fpgaInterface.setDrive2(false);
 		Delay::ms(100);
 	}
 }
@@ -300,18 +319,9 @@ void HighSpeedCore::doLive(){
 	if(getDesiredSystemState()!=SystemState::Live){
 		return;
 	}
-    std::shared_ptr<InterruptTimer> liveWatchdog
-		= initializeLiveWatchdog();
-    if (liveWatchdog==nullptr) {
-        return;
-    }
-	if(!testLiveWatchdog(liveWatchdog)){
-		return;
-	}
 	dispatchMessage("Going live!");
 	setActualSystemState(SystemState::Live);
 	while(true){
-		feedWatchdog();
 		if(getDesiredSystemState()!=SystemState::Live){
 			break;
 		}
@@ -321,18 +331,17 @@ void HighSpeedCore::doLive(){
 		if(getInError()){
 			break;
 		}
-		_fpga.setDrive(true);
-		_fpga.setDrive2(true);
+		_fpgaInterface.setDrive(true);
+		_fpgaInterface.setDrive2(true);
 	}
-	feedWatchdog();
-	_fpga.setDrive(false);
-	_fpga.setDrive2(false);
+	_fpgaInterface.setDrive(false);
+	_fpgaInterface.setDrive2(false);
 }
 void HighSpeedCore::doError(){
 	setActualSystemState(SystemState::Error);
 	while(true){
-		_fpga.setDrive(false);
-		_fpga.setDrive2(false);
+		_fpgaInterface.setDrive(false);
+		_fpgaInterface.setDrive2(false);
 		Delay::ms(100);
 		if(getActualSystemState()!=SystemState::Error){
 			break;
@@ -360,69 +369,4 @@ void HighSpeedCore::calculateAdditionalShutdownTime(float voltage, float& timeSe
 					* std::log(voltage / SAFE_OUTPUT_VOLTAGE);
 	time2Seconds =  static_cast<float>(_hvpsConfiguration2.villardCapacitorsBleedTimeConstantSeconds)
 					* std::log(voltage / SAFE_OUTPUT_VOLTAGE);
-}
-std::shared_ptr<InterruptTimer> HighSpeedCore::initializeLiveWatchdog()
-{
-    const uint32_t periodUs_1 = _hvpsConfiguration1.onTimeMicroSeconds * 2;
-    const uint32_t periodUs_2 = _hvpsConfiguration2.onTimeMicroSeconds * 2;
-
-    if (periodUs_1 != periodUs_2) {
-        SAFE_ABORT("Memory corruption");
-    }
-
-    std::shared_ptr<InterruptTimer> timer
-	= std::make_shared<InterruptTimer>(
-        periodUs_1,
-        ESP_INTR_FLAG_LEVEL3,
-        true
-    );
-
-    if (periodUs_1 != periodUs_2) {
-        SAFE_ABORT("Stack corruption during watchdog init");
-    }
-
-    esp_err_t err = timer->configure(&HighSpeedCore::liveWatchdogTimerTrampoline, this);
-    if (err != ESP_OK) {
-        SAFE_ABORT("Failed to initialize timer interrupt");
-        return nullptr;
-    }
-	timer->start();
-    return timer; // move-constructed into optional
-}
-
-inline void IRAM_ATTR HighSpeedCore::feedWatchdog()
-{
-	_watchdogFed = true;
-}
-inline void IRAM_ATTR HighSpeedCore::checkWatchdog()
-{
-	if(_watchdogFed){
-		_watchdogFed = false;
-		return;
-	}
-	
-	Outputs::setMOSFETOffNoLock();
-	_watchdogFail = true;
-}
-
-bool IRAM_ATTR HighSpeedCore::liveWatchdogTimerTrampoline(void *arg)
-{
-    static_cast<HighSpeedCore*>(arg)->checkWatchdog();
-    return false;  // no context switch needed
-}
-bool HighSpeedCore::testLiveWatchdog(std::shared_ptr<InterruptTimer> liveWatchdog){
-	_watchdogFail = false;
-	liveWatchdog->getPeriodUs();
-	while(_watchdogFed){
-		//LOG_INFO("Waiting for watchdog to begin starving");
-	}
-	uint64_t endTime = TimeHelper::us()+(liveWatchdog->getPeriodUs()+10);
-	while (TimeHelper::us() < endTime) {}
-	if(!_watchdogFail){
-		SAFE_ABORT("Watchdog test failed");
-		return false;
-	}
-	feedWatchdog();
-	_watchdogFail = false;
-	return true;
 }

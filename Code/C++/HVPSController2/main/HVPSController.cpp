@@ -1,15 +1,12 @@
-#include "ADC/ADC.hpp"
+#include "ADC/ADCOneShot.hpp"
 #include "Broadcasting/LiveDataBroadcaster.hpp"
 #include "Communication/Bluetooth/Bluetooth_BR_EDR.hpp"
-#include "IO/SoftStartHandler.hpp"
+#include "IO/PowerConditioningMonitor.hpp"
 #include "IO/Inputs.hpp"
 #include "IO/Outputs.hpp"
 #include "Storage/Flash.hpp"
 #include "Tasks/TaskFactory.hpp"
 #include "Ports/Port_ControllingMachine.hpp"
-#include "Ports/Port_FirstStageVoltageFeedback.hpp"
-#include "Ports/Port_OutputVoltageFeedback.hpp"
-#include "Ports/Port_OtherPeripherals.hpp"
 #include "System/StayTheFuckAwake.hpp"
 #include "Generated/HVPSConfiguration.hpp"
 #include "Generated/HVPSConfig.hpp"
@@ -25,7 +22,10 @@
 #include "Temperature/TemperatureSensorAndLimit.hpp"
 #include "Temperature/TemperatureMonitor.hpp"
 #include "IO/PinDefinitions.hpp"
+#include "Enums/SystemState.hpp"
+#include "Graphics/HVPSLEDDisplay.hpp"
 #include "Watchdog/WatchdogCollection.hpp"
+#include "IO/HVPSFPGABus.hpp"
 #include <driver/gpio.h>
 
 static const char *TAG = "HVPS";
@@ -50,10 +50,14 @@ extern "C" void app_main(void)
     StayTheFuckAwake::disableWatchdog();
 	
 	validateConfig();
+	HVPSLEDDisplay& hVPSLEDDisplay 
+		= HVPSLEDDisplay::initialize(Config1);
 	WatchdogCollection::initialize();
-	ADC::initialize();
-	SoftStartHandler::doSoftStart(Config1, Config2);
+	ADCOneShot::initialize();
+	PowerConditioningMonitor& powerConditioningMonitor = PowerConditioningMonitor::initialize(Config1, Config2);
+	powerConditioningMonitor.waitForSoftStart();
 	Inputs::initialize();
+	HVPSFPGABus& hvpsFPGABus = HVPSFPGABus::initialize();
     // Initialize the I2C bus
 	I2CConfigurationOptions options;
 	options.sclPin = static_cast<gpio_num_t>(PinDefinitions::I2C_SCL_PIN);
@@ -62,26 +66,23 @@ extern "C" void app_main(void)
     I2C::initialize(i2cConfiguration);
     I2C& i2c = I2C::getInstance();
 	MOSFETTemperatureSensor& mosfetTemperatureSensor = MOSFETTemperatureSensor::initialize(i2c);
-		
+	LOG_INFO("Doing bluetooth");
     Bluetooth::initialize(
         "HVPS", 
         "HVPSControllerServer"
      );
+	LOG_INFO("Doing bluetooth b");
     Bluetooth& bluetooth = Bluetooth::getInstance();
-	LiveDataCache& liveDataCache = LiveDataCache::initialize(
-		port_FirstStageVoltageFeedback,
-		port_OutputVoltageFeedback
-	);
+	LOG_INFO("Doing bluetooth c");
 	bool inError = Aborter::hasLastAbortReason()||CrashReporter::hasCoreDumpSummary();
+	LOG_INFO("Doing bluetooth d");
 	HighSpeedCore& highSpeedCore = HighSpeedCore::initialize(
 		Config1,
 		Config2,
-		port_FirstStageVoltageFeedback,
-		port_OutputVoltageFeedback,
-		liveDataCache,
+		hvpsFPGABus,
 		inError
 	);
-	Port_OtherPeripherals& port_OtherPeripherals = Port_OtherPeripherals::initialize(highSpeedCore);
+	highSpeedCore.onSystemStateChanged.addHandler([&hVPSLEDDisplay](SystemState systemState) {hVPSLEDDisplay.indicateState(systemState);});
 	Port_ControllingMachine& portControllingMachine 
 		= Port_ControllingMachine::initialize(
 			bluetooth, 
@@ -97,12 +98,16 @@ extern "C" void app_main(void)
 	});
 	
 	LiveDataBroadcaster::initialize(
-		liveDataCache, 
 		portControllingMachine,
 		highSpeedCore,
 		temperatureMonitor,
 		mosfetTemperatureSensor
 	);
+	LOG_INFO("Initialized");
+	while(true){
+		hVPSLEDDisplay.indicateState(SystemState::Error);
+		Delay::ms(1000);
+	}
 	vTaskDelete(NULL); // Delete the current task*/
 }  
 
