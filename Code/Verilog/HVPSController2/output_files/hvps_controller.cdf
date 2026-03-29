@@ -4,7 +4,7 @@ JedecChain;
 	DefaultMfr(6E);
 
 	P ActionCode(Cfg)
-		Device PartName(EP4CE10E22) Path("C:/repos/hvps/Code/Verilog/HVPSController2/output_files/") File("hvps_controller.sof") MfrSpec(OpMask(1));
+		Device PartName(EP4CE6) Path("C:/repos/hvps/Code/Verilog/HVPSController2/output_files/") File("output_file.jic") MfrSpec(OpMask(1) SEC_Device(EPCS16) Child_OpMask(1 1));
 
 ChainEnd;
 

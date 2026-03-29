@@ -1,5 +1,5 @@
 Analysis & Synthesis report for hvps_controller
-Mon Feb 23 07:32:34 2026
+Sun Mar 29 09:08:43 2026
 Quartus Prime Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
 
 
@@ -14,9 +14,11 @@ Quartus Prime Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
   6. Analysis & Synthesis Resource Usage Summary
   7. Analysis & Synthesis Resource Utilization by Entity
   8. General Register Statistics
-  9. Post-Synthesis Netlist Statistics for Top Partition
- 10. Elapsed Time Per Partition
- 11. Analysis & Synthesis Messages
+  9. Inverted Register Statistics
+ 10. Port Connectivity Checks: "HVPS_FPGAInterface:fpga_interface"
+ 11. Post-Synthesis Netlist Statistics for Top Partition
+ 12. Elapsed Time Per Partition
+ 13. Analysis & Synthesis Messages
 
 
 
@@ -43,15 +45,15 @@ on the Quartus Prime software download page.
 +--------------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                         ;
 +------------------------------------+-------------------------------------------------+
-; Analysis & Synthesis Status        ; Successful - Mon Feb 23 07:32:34 2026           ;
+; Analysis & Synthesis Status        ; Successful - Sun Mar 29 09:08:43 2026           ;
 ; Quartus Prime Version              ; 25.1std.0 Build 1129 10/21/2025 SC Lite Edition ;
 ; Revision Name                      ; hvps_controller                                 ;
 ; Top-level Entity Name              ; hvps_controller                                 ;
 ; Family                             ; Cyclone IV E                                    ;
-; Total logic elements               ; 2,249                                           ;
-;     Total combinational functions  ; 2,249                                           ;
-;     Dedicated logic registers      ; 1,683                                           ;
-; Total registers                    ; 1683                                            ;
+; Total logic elements               ; 128                                             ;
+;     Total combinational functions  ; 90                                              ;
+;     Dedicated logic registers      ; 78                                              ;
+; Total registers                    ; 78                                              ;
 ; Total pins                         ; 52                                              ;
 ; Total virtual pins                 ; 0                                               ;
 ; Total memory bits                  ; 0                                               ;
@@ -65,7 +67,7 @@ on the Quartus Prime software download page.
 +------------------------------------------------------------------+--------------------+--------------------+
 ; Option                                                           ; Setting            ; Default Value      ;
 +------------------------------------------------------------------+--------------------+--------------------+
-; Device                                                           ; EP4CE10E22C8       ;                    ;
+; Device                                                           ; EP4CE6E22C8L       ;                    ;
 ; Top-level entity name                                            ; hvps_controller    ; hvps_controller    ;
 ; Family name                                                      ; Cyclone IV E       ; Cyclone V          ;
 ; Use smart compilation                                            ; Off                ; Off                ;
@@ -154,69 +156,64 @@ on the Quartus Prime software download page.
 ; Number detected on machine ; 16          ;
 ; Maximum allowed            ; 8           ;
 ;                            ;             ;
-; Average used               ; 1.01        ;
-; Maximum used               ; 8           ;
+; Average used               ; 1.00        ;
+; Maximum used               ; 1           ;
 ;                            ;             ;
 ; Usage by Processor         ; % Time Used ;
 ;     Processor 1            ; 100.0%      ;
-;     Processor 2            ;   0.1%      ;
-;     Processor 3            ;   0.1%      ;
-;     Processor 4            ;   0.1%      ;
-;     Processor 5            ;   0.1%      ;
-;     Processor 6            ;   0.1%      ;
-;     Processor 7            ;   0.1%      ;
-;     Processor 8            ;   0.1%      ;
 +----------------------------+-------------+
 
 
-+------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Analysis & Synthesis Source Files Read                                                                                                               ;
-+----------------------------------+-----------------+------------------------+--------------------------------------------------------------+---------+
-; File Name with User-Entered Path ; Used in Netlist ; File Type              ; File Name with Absolute Path                                 ; Library ;
-+----------------------------------+-----------------+------------------------+--------------------------------------------------------------+---------+
-; hvps_controller.v                ; yes             ; User Verilog HDL File  ; C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v ;         ;
-+----------------------------------+-----------------+------------------------+--------------------------------------------------------------+---------+
++---------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Source Files Read                                                                                                                  ;
++----------------------------------+-----------------+------------------------+-----------------------------------------------------------------+---------+
+; File Name with User-Entered Path ; Used in Netlist ; File Type              ; File Name with Absolute Path                                    ; Library ;
++----------------------------------+-----------------+------------------------+-----------------------------------------------------------------+---------+
+; HVPS_FPGAInterface.v             ; yes             ; User Verilog HDL File  ; C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v ;         ;
+; hvps_controller.v                ; yes             ; User Verilog HDL File  ; C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v    ;         ;
++----------------------------------+-----------------+------------------------+-----------------------------------------------------------------+---------+
 
 
-+---------------------------------------------------------+
-; Analysis & Synthesis Resource Usage Summary             ;
-+---------------------------------------------+-----------+
-; Resource                                    ; Usage     ;
-+---------------------------------------------+-----------+
-; Estimated Total logic elements              ; 2,249     ;
-;                                             ;           ;
-; Total combinational functions               ; 2249      ;
-; Logic element usage by number of LUT inputs ;           ;
-;     -- 4 input functions                    ; 505       ;
-;     -- 3 input functions                    ; 53        ;
-;     -- <=2 input functions                  ; 1691      ;
-;                                             ;           ;
-; Logic elements by mode                      ;           ;
-;     -- normal mode                          ; 668       ;
-;     -- arithmetic mode                      ; 1581      ;
-;                                             ;           ;
-; Total registers                             ; 1683      ;
-;     -- Dedicated logic registers            ; 1683      ;
-;     -- I/O registers                        ; 0         ;
-;                                             ;           ;
-; I/O pins                                    ; 52        ;
-;                                             ;           ;
-; Embedded Multiplier 9-bit elements          ; 0         ;
-;                                             ;           ;
-; Maximum fan-out node                        ; clk~input ;
-; Maximum fan-out                             ; 1683      ;
-; Total fan-out                               ; 10611     ;
-; Average fan-out                             ; 2.63      ;
-+---------------------------------------------+-----------+
++-------------------------------------------------------------------+
+; Analysis & Synthesis Resource Usage Summary                       ;
++---------------------------------------------+---------------------+
+; Resource                                    ; Usage               ;
++---------------------------------------------+---------------------+
+; Estimated Total logic elements              ; 128                 ;
+;                                             ;                     ;
+; Total combinational functions               ; 90                  ;
+; Logic element usage by number of LUT inputs ;                     ;
+;     -- 4 input functions                    ; 26                  ;
+;     -- 3 input functions                    ; 26                  ;
+;     -- <=2 input functions                  ; 38                  ;
+;                                             ;                     ;
+; Logic elements by mode                      ;                     ;
+;     -- normal mode                          ; 90                  ;
+;     -- arithmetic mode                      ; 0                   ;
+;                                             ;                     ;
+; Total registers                             ; 78                  ;
+;     -- Dedicated logic registers            ; 78                  ;
+;     -- I/O registers                        ; 0                   ;
+;                                             ;                     ;
+; I/O pins                                    ; 52                  ;
+;                                             ;                     ;
+; Embedded Multiplier 9-bit elements          ; 0                   ;
+;                                             ;                     ;
+; Maximum fan-out node                        ; ESP_TO_OUTPUT~input ;
+; Maximum fan-out                             ; 104                 ;
+; Total fan-out                               ; 506                 ;
+; Average fan-out                             ; 1.86                ;
++---------------------------------------------+---------------------+
 
 
-+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Analysis & Synthesis Resource Utilization by Entity                                                                                                                                                          ;
-+----------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+---------------------+-----------------+--------------+
-; Compilation Hierarchy Node ; Combinational ALUTs ; Dedicated Logic Registers ; Memory Bits ; DSP Elements ; DSP 9x9 ; DSP 18x18 ; Pins ; Virtual Pins ; Full Hierarchy Name ; Entity Name     ; Library Name ;
-+----------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+---------------------+-----------------+--------------+
-; |hvps_controller           ; 2249 (2249)         ; 1683 (1683)               ; 0           ; 0            ; 0       ; 0         ; 52   ; 0            ; |hvps_controller    ; hvps_controller ; work         ;
-+----------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+---------------------+-----------------+--------------+
++------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Resource Utilization by Entity                                                                                                                                                                                                        ;
++----------------------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+----------------------------------------------------+--------------------+--------------+
+; Compilation Hierarchy Node             ; Combinational ALUTs ; Dedicated Logic Registers ; Memory Bits ; DSP Elements ; DSP 9x9 ; DSP 18x18 ; Pins ; Virtual Pins ; Full Hierarchy Name                                ; Entity Name        ; Library Name ;
++----------------------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+----------------------------------------------------+--------------------+--------------+
+; |hvps_controller                       ; 90 (0)              ; 78 (0)                    ; 0           ; 0            ; 0       ; 0         ; 52   ; 0            ; |hvps_controller                                   ; hvps_controller    ; work         ;
+;    |HVPS_FPGAInterface:fpga_interface| ; 90 (90)             ; 78 (78)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |hvps_controller|HVPS_FPGAInterface:fpga_interface ; HVPS_FPGAInterface ; work         ;
++----------------------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+----------------------------------------------------+--------------------+--------------+
 Note: For table entries with two numbers listed, the numbers in parentheses indicate the number of resources of the given type used by the specific entity alone. The numbers listed outside of parentheses indicate the total resources of the given type used by the specific entity and all of its sub-entities in the hierarchy.
 
 
@@ -225,14 +222,61 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +----------------------------------------------+-------+
 ; Statistic                                    ; Value ;
 +----------------------------------------------+-------+
-; Total registers                              ; 1683  ;
-; Number of registers using Synchronous Clear  ; 1632  ;
+; Total registers                              ; 78    ;
+; Number of registers using Synchronous Clear  ; 0     ;
 ; Number of registers using Synchronous Load   ; 0     ;
-; Number of registers using Asynchronous Clear ; 0     ;
+; Number of registers using Asynchronous Clear ; 51    ;
 ; Number of registers using Asynchronous Load  ; 0     ;
-; Number of registers using Clock Enable       ; 0     ;
+; Number of registers using Clock Enable       ; 1     ;
 ; Number of registers using Preset             ; 0     ;
 +----------------------------------------------+-------+
+
+
++---------------------------------------------------------------+
+; Inverted Register Statistics                                  ;
++-----------------------------------------------------+---------+
+; Inverted Register                                   ; Fan out ;
++-----------------------------------------------------+---------+
+; HVPS_FPGAInterface:fpga_interface|output_buffer[50] ; 1       ;
+; HVPS_FPGAInterface:fpga_interface|output_buffer[45] ; 1       ;
+; HVPS_FPGAInterface:fpga_interface|output_buffer[44] ; 1       ;
+; HVPS_FPGAInterface:fpga_interface|output_buffer[43] ; 1       ;
+; HVPS_FPGAInterface:fpga_interface|output_buffer[42] ; 1       ;
+; HVPS_FPGAInterface:fpga_interface|output_buffer[36] ; 1       ;
+; HVPS_FPGAInterface:fpga_interface|output_buffer[35] ; 1       ;
+; HVPS_FPGAInterface:fpga_interface|output_buffer[34] ; 1       ;
+; HVPS_FPGAInterface:fpga_interface|output_buffer[32] ; 1       ;
+; HVPS_FPGAInterface:fpga_interface|output_buffer[30] ; 1       ;
+; HVPS_FPGAInterface:fpga_interface|output_buffer[28] ; 1       ;
+; HVPS_FPGAInterface:fpga_interface|output_buffer[26] ; 1       ;
+; Total number of inverted registers = 12             ;         ;
++-----------------------------------------------------+---------+
+
+
++---------------------------------------------------------------------------------------------------------------------------------------------+
+; Port Connectivity Checks: "HVPS_FPGAInterface:fpga_interface"                                                                               ;
++-----------------------------------+--------+----------+-------------------------------------------------------------------------------------+
+; Port                              ; Type   ; Severity ; Details                                                                             ;
++-----------------------------------+--------+----------+-------------------------------------------------------------------------------------+
+; drive                             ; Output ; Info     ; Connected to dangling logic. Logic that only feeds a dangling port will be removed. ;
+; drive2                            ; Output ; Info     ; Connected to dangling logic. Logic that only feeds a dangling port will be removed. ;
+; desired_max_first_stage_voltage   ; Output ; Info     ; Connected to dangling logic. Logic that only feeds a dangling port will be removed. ;
+; desired_output_voltage            ; Output ; Info     ; Connected to dangling logic. Logic that only feeds a dangling port will be removed. ;
+; desired_max_peak_primary_current  ; Output ; Info     ; Connected to dangling logic. Logic that only feeds a dangling port will be removed. ;
+; actual_first_stage_voltage[7]     ; Input  ; Info     ; Stuck at GND                                                                        ;
+; actual_first_stage_voltage[6]     ; Input  ; Info     ; Stuck at VCC                                                                        ;
+; actual_first_stage_voltage[5]     ; Input  ; Info     ; Stuck at GND                                                                        ;
+; actual_first_stage_voltage[4]     ; Input  ; Info     ; Stuck at VCC                                                                        ;
+; actual_first_stage_voltage[3]     ; Input  ; Info     ; Stuck at GND                                                                        ;
+; actual_first_stage_voltage[2]     ; Input  ; Info     ; Stuck at VCC                                                                        ;
+; actual_first_stage_voltage[1]     ; Input  ; Info     ; Stuck at GND                                                                        ;
+; actual_first_stage_voltage[0]     ; Input  ; Info     ; Stuck at VCC                                                                        ;
+; actual_output_voltage[2..0]       ; Input  ; Info     ; Stuck at VCC                                                                        ;
+; actual_output_voltage[7..3]       ; Input  ; Info     ; Stuck at GND                                                                        ;
+; actual_peak_primary_current[3..0] ; Input  ; Info     ; Stuck at VCC                                                                        ;
+; actual_peak_primary_current[7..4] ; Input  ; Info     ; Stuck at GND                                                                        ;
+; error                             ; Input  ; Info     ; Stuck at VCC                                                                        ;
++-----------------------------------+--------+----------+-------------------------------------------------------------------------------------+
 
 
 +-----------------------------------------------------+
@@ -241,20 +285,19 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 ; Type                  ; Count                       ;
 +-----------------------+-----------------------------+
 ; boundary_port         ; 52                          ;
-; cycloneiii_ff         ; 1683                        ;
-;     SCLR              ; 1632                        ;
-;     plain             ; 51                          ;
-; cycloneiii_lcell_comb ; 2249                        ;
-;     arith             ; 1581                        ;
-;         2 data inputs ; 1581                        ;
-;     normal            ; 668                         ;
-;         1 data inputs ; 51                          ;
-;         2 data inputs ; 59                          ;
-;         3 data inputs ; 53                          ;
-;         4 data inputs ; 505                         ;
+; cycloneiii_ff         ; 78                          ;
+;     CLR               ; 51                          ;
+;     ENA               ; 1                           ;
+;     plain             ; 26                          ;
+; cycloneiii_lcell_comb ; 90                          ;
+;     normal            ; 90                          ;
+;         1 data inputs ; 13                          ;
+;         2 data inputs ; 25                          ;
+;         3 data inputs ; 26                          ;
+;         4 data inputs ; 26                          ;
 ;                       ;                             ;
-; Max LUT depth         ; 7.00                        ;
-; Average LUT depth     ; 3.61                        ;
+; Max LUT depth         ; 2.00                        ;
+; Average LUT depth     ; 1.56                        ;
 +-----------------------+-----------------------------+
 
 
@@ -263,7 +306,7 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +----------------+--------------+
 ; Partition Name ; Elapsed Time ;
 +----------------+--------------+
-; Top            ; 00:00:02     ;
+; Top            ; 00:00:00     ;
 +----------------+--------------+
 
 
@@ -273,24 +316,104 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Synthesis
     Info: Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
-    Info: Processing started: Mon Feb 23 07:32:26 2026
+    Info: Processing started: Sun Mar 29 09:08:37 2026
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off HVPSController2 -c hvps_controller
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
 Info (20030): Parallel compilation is enabled and will use 8 of the 8 processors detected
+Info (12021): Found 1 design units, including 1 entities, in source file hvps_fpgainterface.v
+    Info (12023): Found entity 1: HVPS_FPGAInterface File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 1
 Info (12021): Found 1 design units, including 1 entities, in source file hvps_controller.v
-    Info (12023): Found entity 1: hvps_controller File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 1
+    Info (12023): Found entity 1: hvps_controller File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 8
 Info (12127): Elaborating entity "hvps_controller" for the top level hierarchy
+Info (12128): Elaborating entity "HVPS_FPGAInterface" for hierarchy "HVPS_FPGAInterface:fpga_interface" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 96
+Info (13000): Registers with preset signals will power-up high File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 52
+Info (13003): DEV_CLRn pin will set, and not reset, register with preset signal due to NOT Gate Push-Back
+Warning (13004): Presettable and clearable registers converted to equivalent circuits with latches. Registers power-up to an undefined state, and DEVCLRn places the registers in an undefined state.
+    Warning (13310): Register "HVPS_FPGAInterface:fpga_interface|output_buffer[25]" is converted into an equivalent circuit using register "HVPS_FPGAInterface:fpga_interface|output_buffer[25]~_emulated" and latch "HVPS_FPGAInterface:fpga_interface|output_buffer[25]~1" File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 52
+    Warning (13310): Register "HVPS_FPGAInterface:fpga_interface|output_buffer[24]" is converted into an equivalent circuit using register "HVPS_FPGAInterface:fpga_interface|output_buffer[24]~_emulated" and latch "HVPS_FPGAInterface:fpga_interface|output_buffer[24]~5" File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 52
+    Warning (13310): Register "HVPS_FPGAInterface:fpga_interface|output_buffer[23]" is converted into an equivalent circuit using register "HVPS_FPGAInterface:fpga_interface|output_buffer[23]~_emulated" and latch "HVPS_FPGAInterface:fpga_interface|output_buffer[23]~9" File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 52
+    Warning (13310): Register "HVPS_FPGAInterface:fpga_interface|output_buffer[22]" is converted into an equivalent circuit using register "HVPS_FPGAInterface:fpga_interface|output_buffer[22]~_emulated" and latch "HVPS_FPGAInterface:fpga_interface|output_buffer[22]~13" File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 52
+    Warning (13310): Register "HVPS_FPGAInterface:fpga_interface|output_buffer[21]" is converted into an equivalent circuit using register "HVPS_FPGAInterface:fpga_interface|output_buffer[21]~_emulated" and latch "HVPS_FPGAInterface:fpga_interface|output_buffer[21]~17" File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 52
+    Warning (13310): Register "HVPS_FPGAInterface:fpga_interface|output_buffer[20]" is converted into an equivalent circuit using register "HVPS_FPGAInterface:fpga_interface|output_buffer[20]~_emulated" and latch "HVPS_FPGAInterface:fpga_interface|output_buffer[20]~21" File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 52
+    Warning (13310): Register "HVPS_FPGAInterface:fpga_interface|output_buffer[19]" is converted into an equivalent circuit using register "HVPS_FPGAInterface:fpga_interface|output_buffer[19]~_emulated" and latch "HVPS_FPGAInterface:fpga_interface|output_buffer[19]~25" File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 52
+    Warning (13310): Register "HVPS_FPGAInterface:fpga_interface|output_buffer[18]" is converted into an equivalent circuit using register "HVPS_FPGAInterface:fpga_interface|output_buffer[18]~_emulated" and latch "HVPS_FPGAInterface:fpga_interface|output_buffer[18]~29" File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 52
+    Warning (13310): Register "HVPS_FPGAInterface:fpga_interface|output_buffer[17]" is converted into an equivalent circuit using register "HVPS_FPGAInterface:fpga_interface|output_buffer[17]~_emulated" and latch "HVPS_FPGAInterface:fpga_interface|output_buffer[17]~33" File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 52
+    Warning (13310): Register "HVPS_FPGAInterface:fpga_interface|output_buffer[16]" is converted into an equivalent circuit using register "HVPS_FPGAInterface:fpga_interface|output_buffer[16]~_emulated" and latch "HVPS_FPGAInterface:fpga_interface|output_buffer[16]~37" File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 52
+    Warning (13310): Register "HVPS_FPGAInterface:fpga_interface|output_buffer[15]" is converted into an equivalent circuit using register "HVPS_FPGAInterface:fpga_interface|output_buffer[15]~_emulated" and latch "HVPS_FPGAInterface:fpga_interface|output_buffer[15]~41" File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 52
+    Warning (13310): Register "HVPS_FPGAInterface:fpga_interface|output_buffer[14]" is converted into an equivalent circuit using register "HVPS_FPGAInterface:fpga_interface|output_buffer[14]~_emulated" and latch "HVPS_FPGAInterface:fpga_interface|output_buffer[14]~45" File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 52
+    Warning (13310): Register "HVPS_FPGAInterface:fpga_interface|output_buffer[13]" is converted into an equivalent circuit using register "HVPS_FPGAInterface:fpga_interface|output_buffer[13]~_emulated" and latch "HVPS_FPGAInterface:fpga_interface|output_buffer[13]~49" File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 52
+    Warning (13310): Register "HVPS_FPGAInterface:fpga_interface|output_buffer[12]" is converted into an equivalent circuit using register "HVPS_FPGAInterface:fpga_interface|output_buffer[12]~_emulated" and latch "HVPS_FPGAInterface:fpga_interface|output_buffer[12]~53" File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 52
+    Warning (13310): Register "HVPS_FPGAInterface:fpga_interface|output_buffer[11]" is converted into an equivalent circuit using register "HVPS_FPGAInterface:fpga_interface|output_buffer[11]~_emulated" and latch "HVPS_FPGAInterface:fpga_interface|output_buffer[11]~57" File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 52
+    Warning (13310): Register "HVPS_FPGAInterface:fpga_interface|output_buffer[10]" is converted into an equivalent circuit using register "HVPS_FPGAInterface:fpga_interface|output_buffer[10]~_emulated" and latch "HVPS_FPGAInterface:fpga_interface|output_buffer[10]~61" File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 52
+    Warning (13310): Register "HVPS_FPGAInterface:fpga_interface|output_buffer[9]" is converted into an equivalent circuit using register "HVPS_FPGAInterface:fpga_interface|output_buffer[9]~_emulated" and latch "HVPS_FPGAInterface:fpga_interface|output_buffer[9]~65" File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 52
+    Warning (13310): Register "HVPS_FPGAInterface:fpga_interface|output_buffer[8]" is converted into an equivalent circuit using register "HVPS_FPGAInterface:fpga_interface|output_buffer[8]~_emulated" and latch "HVPS_FPGAInterface:fpga_interface|output_buffer[8]~69" File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 52
+    Warning (13310): Register "HVPS_FPGAInterface:fpga_interface|output_buffer[7]" is converted into an equivalent circuit using register "HVPS_FPGAInterface:fpga_interface|output_buffer[7]~_emulated" and latch "HVPS_FPGAInterface:fpga_interface|output_buffer[7]~73" File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 52
+    Warning (13310): Register "HVPS_FPGAInterface:fpga_interface|output_buffer[6]" is converted into an equivalent circuit using register "HVPS_FPGAInterface:fpga_interface|output_buffer[6]~_emulated" and latch "HVPS_FPGAInterface:fpga_interface|output_buffer[6]~77" File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 52
+    Warning (13310): Register "HVPS_FPGAInterface:fpga_interface|output_buffer[5]" is converted into an equivalent circuit using register "HVPS_FPGAInterface:fpga_interface|output_buffer[5]~_emulated" and latch "HVPS_FPGAInterface:fpga_interface|output_buffer[5]~81" File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 52
+    Warning (13310): Register "HVPS_FPGAInterface:fpga_interface|output_buffer[4]" is converted into an equivalent circuit using register "HVPS_FPGAInterface:fpga_interface|output_buffer[4]~_emulated" and latch "HVPS_FPGAInterface:fpga_interface|output_buffer[4]~85" File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 52
+    Warning (13310): Register "HVPS_FPGAInterface:fpga_interface|output_buffer[3]" is converted into an equivalent circuit using register "HVPS_FPGAInterface:fpga_interface|output_buffer[3]~_emulated" and latch "HVPS_FPGAInterface:fpga_interface|output_buffer[3]~89" File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 52
+    Warning (13310): Register "HVPS_FPGAInterface:fpga_interface|output_buffer[2]" is converted into an equivalent circuit using register "HVPS_FPGAInterface:fpga_interface|output_buffer[2]~_emulated" and latch "HVPS_FPGAInterface:fpga_interface|output_buffer[2]~93" File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 52
+    Warning (13310): Register "HVPS_FPGAInterface:fpga_interface|output_buffer[1]" is converted into an equivalent circuit using register "HVPS_FPGAInterface:fpga_interface|output_buffer[1]~_emulated" and latch "HVPS_FPGAInterface:fpga_interface|output_buffer[1]~97" File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 52
+    Warning (13310): Register "HVPS_FPGAInterface:fpga_interface|output_buffer[0]" is converted into an equivalent circuit using register "HVPS_FPGAInterface:fpga_interface|output_buffer[0]~_emulated" and latch "HVPS_FPGAInterface:fpga_interface|output_buffer[0]~101" File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 52
 Info (286030): Timing-Driven Synthesis is running
 Info (16010): Generating hard_block partition "hard_block:auto_generated_inst"
     Info (16011): Adding 0 node(s), including 0 DDIO, 0 PLL, 0 transceiver and 0 LCELL
-Info (21057): Implemented 2301 device resources after synthesis - the final resource count might be different
-    Info (21058): Implemented 1 input pins
-    Info (21059): Implemented 51 output pins
-    Info (21061): Implemented 2249 logic cells
-Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 1 warning
-    Info: Peak virtual memory: 4862 megabytes
-    Info: Processing ended: Mon Feb 23 07:32:34 2026
-    Info: Elapsed time: 00:00:08
-    Info: Total CPU time (on all processors): 00:00:19
+Warning (21074): Design contains 47 input pin(s) that do not drive logic
+    Warning (15610): No output dependent on input pin "clk" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 9
+    Warning (15610): No output dependent on input pin "ESP_EMERGENCY_STOP" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 11
+    Warning (15610): No output dependent on input pin "ESP_GO_LIVE" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 12
+    Warning (15610): No output dependent on input pin "OR4" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 18
+    Warning (15610): No output dependent on input pin "OR5" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 19
+    Warning (15610): No output dependent on input pin "OR6" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 20
+    Warning (15610): No output dependent on input pin "OT4" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 21
+    Warning (15610): No output dependent on input pin "OT5" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 22
+    Warning (15610): No output dependent on input pin "U5_DB0" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 23
+    Warning (15610): No output dependent on input pin "U5_DB1" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 24
+    Warning (15610): No output dependent on input pin "U5_DB2" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 25
+    Warning (15610): No output dependent on input pin "U5_DB3" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 26
+    Warning (15610): No output dependent on input pin "U5_DB4" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 27
+    Warning (15610): No output dependent on input pin "U5_DB5" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 28
+    Warning (15610): No output dependent on input pin "U5_DB6" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 29
+    Warning (15610): No output dependent on input pin "U5_DB7" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 30
+    Warning (15610): No output dependent on input pin "U5_INV_CONVST" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 31
+    Warning (15610): No output dependent on input pin "U5_INV_EOC" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 32
+    Warning (15610): No output dependent on input pin "U5_INV_RD" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 33
+    Warning (15610): No output dependent on input pin "U12_DB0" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 34
+    Warning (15610): No output dependent on input pin "U12_DB1" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 35
+    Warning (15610): No output dependent on input pin "U12_DB2" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 36
+    Warning (15610): No output dependent on input pin "U12_DB3" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 37
+    Warning (15610): No output dependent on input pin "U12_DB4" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 38
+    Warning (15610): No output dependent on input pin "U12_DB5" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 39
+    Warning (15610): No output dependent on input pin "U12_DB6" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 40
+    Warning (15610): No output dependent on input pin "U12_DB7" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 41
+    Warning (15610): No output dependent on input pin "U12_INV_CONVST" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 42
+    Warning (15610): No output dependent on input pin "U12_INV_EOC" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 43
+    Warning (15610): No output dependent on input pin "U12_INV_RD" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 44
+    Warning (15610): No output dependent on input pin "U20_DB0" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 45
+    Warning (15610): No output dependent on input pin "U20_DB1" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 46
+    Warning (15610): No output dependent on input pin "U20_DB2" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 47
+    Warning (15610): No output dependent on input pin "U20_DB3" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 48
+    Warning (15610): No output dependent on input pin "U20_DB4" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 49
+    Warning (15610): No output dependent on input pin "U20_DB5" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 50
+    Warning (15610): No output dependent on input pin "U20_DB6" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 51
+    Warning (15610): No output dependent on input pin "U20_DB7" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 52
+    Warning (15610): No output dependent on input pin "U20_INV_CONVST" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 53
+    Warning (15610): No output dependent on input pin "U20_INV_EOC" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 54
+    Warning (15610): No output dependent on input pin "U20_INV_RD" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 55
+    Warning (15610): No output dependent on input pin "U23_HIN" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 56
+    Warning (15610): No output dependent on input pin "U23_LIN" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 57
+    Warning (15610): No output dependent on input pin "U23_SD" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 58
+    Warning (15610): No output dependent on input pin "U24_HIN" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 59
+    Warning (15610): No output dependent on input pin "U24_LIN" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 60
+    Warning (15610): No output dependent on input pin "U24_SD" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 62
+Info (21057): Implemented 181 device resources after synthesis - the final resource count might be different
+    Info (21058): Implemented 51 input pins
+    Info (21059): Implemented 1 output pins
+    Info (21061): Implemented 129 logic cells
+Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 76 warnings
+    Info: Peak virtual memory: 4800 megabytes
+    Info: Processing ended: Sun Mar 29 09:08:43 2026
+    Info: Elapsed time: 00:00:06
+    Info: Total CPU time (on all processors): 00:00:18
 
 

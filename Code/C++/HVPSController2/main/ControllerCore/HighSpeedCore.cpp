@@ -64,14 +64,17 @@ float HighSpeedCore::getFrequencyHz(ValueBoundType& valueBoundType){
 }
 float HighSpeedCore::getActualPeakPrimaryCurrent(){
 	uint8_t raw = _fpgaInterface.getActualPeakPrimaryCurrent();
+	LOG_INFO("raw peak primary current: %" PRIu8, raw);
 	return _hvpsConfiguration1.primaryCurrentFromRaw * static_cast<float>(raw);
 }
 float HighSpeedCore::getActualOutputVoltage(){
 	uint8_t raw = _fpgaInterface.getActualOutputVoltage();
+	LOG_INFO("raw output voltage: %" PRIu8, raw);
 	return _hvpsConfiguration1.outputVoltageFromRaw * static_cast<float>(raw);
 }
 float HighSpeedCore::getActualFirstStageVoltage(){
 	uint8_t raw = _fpgaInterface.getActualFirstStageVoltage();
+	LOG_INFO("raw first stage voltage: %" PRIu8, raw);
 	return _hvpsConfiguration1.firstStageVoltageFromRaw * static_cast<float>(raw);
 }
 void HighSpeedCore::start(){
@@ -155,7 +158,10 @@ void HighSpeedCore::startCoreTask(){
 }
 void HighSpeedCore::_run(){
 	while(true){
+	LOG_INFO("HighSpeedCore::_run while(true){");
 		Delay::ms(100);
+		LOG_INFO("Values are: output voltage: %f, first stage voltage: %f, peak primary current: %f", getActualOutputVoltage(), getActualFirstStageVoltage(), getActualPeakPrimaryCurrent());
+		continue;
 		if(isShuttingDownOrShutDown()||getActualSystemState()==SystemState::ShutDown){
 			doShutDown();
 			continue;

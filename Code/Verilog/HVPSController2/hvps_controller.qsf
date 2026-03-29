@@ -38,7 +38,7 @@
 
 
 set_global_assignment -name FAMILY "Cyclone IV E"
-set_global_assignment -name DEVICE EP4CE10E22C8
+set_global_assignment -name DEVICE EP4CE6E22C8L
 set_global_assignment -name TOP_LEVEL_ENTITY hvps_controller
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 25.1STD.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "02:14:56  FEBRUARY 02, 2026"
@@ -47,7 +47,6 @@ set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 1
-set_global_assignment -name NOMINAL_CORE_SUPPLY_VOLTAGE 1.2V
 set_global_assignment -name EDA_SIMULATION_TOOL "Questa Altera FPGA (Verilog)"
 set_global_assignment -name EDA_TIME_SCALE "1 ps" -section_id eda_simulation
 set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda_simulation
@@ -55,7 +54,6 @@ set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_
 set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_board_design_symbol
 set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_board_design_signal_integrity
 set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_board_design_boundary_scan
-set_global_assignment -name VERILOG_FILE hvps_controller.v
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
@@ -99,13 +97,10 @@ set_location_assignment PIN_69 -to ESP_OUT_VALUE
 set_location_assignment PIN_60 -to ESP_OUT_SHIFT
 set_location_assignment PIN_52 -to ESP_IN_VALUE
 set_location_assignment PIN_50 -to ESP_IN_SHIFT
-set_location_assignment PIN_54 -to ESP_GO_LIVE
-set_location_assignment PIN_71 -to ESP_EMERGENCY_SHUTDOWN
-set_global_assignment -name SDC_FILE hvps_controller.sdc
+set_location_assignment PIN_58 -to ESP_GO_LIVE
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to U23_SD
-set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to ESP_EMERGENCY_SHUTDOWN
 set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to ESP_GO_LIVE
 set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to ESP_IN_SHIFT
 set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to ESP_IN_VALUE
@@ -159,11 +154,27 @@ set_location_assignment PIN_104 -to U24_LIN
 set_location_assignment PIN_3 -to U23_LIN
 set_location_assignment PIN_2 -to U23_SD
 set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to ESP_TO_OUTPUT
-set_location_assignment PIN_58 -to ESP_TO_OUTPUT
+set_location_assignment PIN_54 -to ESP_TO_OUTPUT
 set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to OT5
 set_location_assignment PIN_38 -to OT5
 set_location_assignment PIN_121 -to U20_DB7
 set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to U20_DB7
 set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to clk
 set_location_assignment PIN_91 -to clk
+set_global_assignment -name VERILOG_FILE HVPS_FPGAInterface.v
+set_global_assignment -name VERILOG_FILE hvps_controller.v
+set_global_assignment -name SDC_FILE hvps_controller.sdc
+set_location_assignment PIN_71 -to ESP_EMERGENCY_STOP
+set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to ESP_EMERGENCY_STOP
+set_global_assignment -name ENABLE_OCT_DONE OFF
+set_global_assignment -name ENABLE_CONFIGURATION_PINS OFF
+set_global_assignment -name ENABLE_BOOT_SEL_PIN OFF
+set_global_assignment -name USE_CONFIGURATION_DEVICE OFF
+set_global_assignment -name CRC_ERROR_OPEN_DRAIN OFF
+set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -rise
+set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -fall
+set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -rise
+set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -fall
+set_global_assignment -name CDF_FILE output_files/flash.cdf
+set_global_assignment -name CDF_FILE output_files/write_volatile.cdf
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

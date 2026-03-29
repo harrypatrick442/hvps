@@ -1,0 +1,5 @@
+module hvps_controller(
+    // your ports here
+);
+// your logic here
+endmodule

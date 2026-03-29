@@ -10,7 +10,7 @@ class PowerConditioningMonitor:public SingletonBase<PowerConditioningMonitor>{
 		static inline constexpr int WINDOW_SAMPLES     = 100;
 		static inline constexpr int RELAY_SWITCH_TIME_MILLISECONDS = 1000;
 		static inline constexpr int TALK_INTERVAL_MILLISECONDS = 2000;
-		static inline constexpr int READY_VOLTAGE_HYSTERESIS_WINDOW_UPPER_BOUND = 30;//TODO
+		static inline constexpr int READY_VOLTAGE_HYSTERESIS_WINDOW_UPPER_BOUND = 29;//TODO
 		static inline constexpr int READY_VOLTAGE_HYSTERESIS_WINDOW_LOWER_BOUND = 28;
 		
 		const HVPSConfiguration& _config1;

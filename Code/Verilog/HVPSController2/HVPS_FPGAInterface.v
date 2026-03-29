@@ -1,6 +1,6 @@
 module HVPS_FPGAInterface (
-    input wire clk,
     // Shift register bus pins
+    input wire clk,
     input wire in_shift,
     input wire in_value,
     output reg out_value,
@@ -45,15 +45,13 @@ module HVPS_FPGAInterface (
         input_live <= input_staged;
     end
 
-    // Load output buffer when to_output pulses
-    always @(posedge to_output) begin
-        output_buffer <= {actual_first_stage_voltage, actual_output_voltage, actual_peak_primary_current, error, input_staged};
+    // Output buffer - single always block
+    always @(posedge to_output or posedge out_shift) begin
+        if (to_output) begin
+            output_buffer <= {error, actual_peak_primary_current, actual_output_voltage, actual_first_stage_voltage, input_staged};
+        end else if (out_shift) begin
+            out_value <= output_buffer[50];
+            output_buffer <= {output_buffer[49:0], 1'b0};
+        end
     end
-
-    // Shift out - MSB first
-    always @(posedge out_shift) begin
-        out_value <= output_buffer[50];
-        output_buffer <= {output_buffer[49:0], 1'b0};
-    end
-
 endmodule

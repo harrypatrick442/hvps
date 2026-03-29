@@ -31,7 +31,7 @@ void PowerConditioningMonitor::run(){
 	Inputs::useADCPowerSupplyVoltageFeedbackChannel([&](IADCSession&& adc){
 		while(true){
 			float averageVoltage = computeLatestAverageVoltage(std::forward<IADCSession>(adc));
-			//LOG_INFO("averageVoltage %f", averageVoltage);
+			LOG_INFO("averageVoltage %f", averageVoltage);
 			float lastAverageVoltage = _lastAverageVoltage;
 			_lastAverageVoltage = averageVoltage;
 			

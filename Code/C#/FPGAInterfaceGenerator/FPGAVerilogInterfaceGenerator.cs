@@ -27,8 +27,8 @@ namespace FPGAInterfaceGenerator
 
             // Module declaration
             sb.AppendLine($"module {moduleName} (");
-            sb.AppendLine("    input wire clk,");
             sb.AppendLine("    // Shift register bus pins");
+            sb.AppendLine("    input wire clk,");
             sb.AppendLine("    input wire in_shift,");
             sb.AppendLine("    input wire in_value,");
             sb.AppendLine("    output reg out_value,");
@@ -107,30 +107,23 @@ namespace FPGAInterfaceGenerator
             sb.AppendLine("        input_live <= input_staged;");
             sb.AppendLine("    end");
             sb.AppendLine();
+            // Combined output buffer block - single always block to avoid multiple drivers
+            sb.AppendLine("    // Output buffer - single always block");
+            sb.AppendLine("    always @(posedge to_output or posedge out_shift) begin");
+            sb.AppendLine("        if (to_output) begin");
+            sb.Append($"            output_buffer <= {{");
 
-            // Load output buffer on to_output
-            sb.AppendLine("    // Load output buffer when to_output pulses");
-            sb.AppendLine("    always @(posedge to_output) begin");
-            sb.Append($"        output_buffer <= {{");
-
-            // Pack outputs MSB first: staged inputs first, then core logic outputs
-           
-            foreach (var output in setup.Outputs)
+            foreach (var output in setup.Outputs.Reverse())
             {
                 string portName = StringHelper.CamelCaseToSnakeCase(output.Name);
                 sb.Append($"{portName}, ");
             }
             sb.AppendLine("input_staged};");
+            sb.AppendLine("        end else if (out_shift) begin");
+            sb.AppendLine($"            out_value <= output_buffer[{totalLength - 1}];");
+            sb.AppendLine($"            output_buffer <= {{output_buffer[{totalLength - 2}:0], 1'b0}};");
+            sb.AppendLine("        end");
             sb.AppendLine("    end");
-            sb.AppendLine();
-
-            // Shift out logic
-            sb.AppendLine("    // Shift out - MSB first");
-            sb.AppendLine("    always @(posedge out_shift) begin");
-            sb.AppendLine($"        out_value <= output_buffer[{totalLength - 1}];");
-            sb.AppendLine($"        output_buffer <= {{output_buffer[{totalLength - 2}:0], 1'b0}};");
-            sb.AppendLine("    end");
-            sb.AppendLine();
 
             sb.AppendLine("endmodule");
 

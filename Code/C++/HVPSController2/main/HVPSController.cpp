@@ -58,6 +58,10 @@ extern "C" void app_main(void)
 	powerConditioningMonitor.waitForSoftStart();
 	Inputs::initialize();
 	HVPSFPGABus& hvpsFPGABus = HVPSFPGABus::initialize();
+	
+	
+	
+	
     // Initialize the I2C bus
 	I2CConfigurationOptions options;
 	options.sclPin = static_cast<gpio_num_t>(PinDefinitions::I2C_SCL_PIN);
@@ -106,6 +110,12 @@ extern "C" void app_main(void)
 	LOG_INFO("Initialized");
 	while(true){
 		hVPSLEDDisplay.indicateState(SystemState::Error);
+		
+		//hvpsFPGABus.setGoLive(false);
+		//hvpsFPGABus.setInShift(false);
+		//hvpsFPGABus.setOutShift(false);
+		//hvpsFPGABus.setToOutput(false);
+		//hvpsFPGABus.setInValue(false);
 		Delay::ms(1000);
 	}
 	vTaskDelete(NULL); // Delete the current task*/

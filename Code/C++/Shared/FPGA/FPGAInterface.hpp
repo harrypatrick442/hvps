@@ -26,7 +26,8 @@ private:
     bool _inputsChanged;
     std::atomic<uint64_t> _lastUpdateTimeUs;
 
-    std::mutex _lock;
+    std::mutex _lockInputBuffer;
+    std::mutex _lockFullOutputsBuffer;
 
 public:
     FPGAInterface(size_t inputsLength, size_t outputsLength, IFPGABus& fpgaBus);
@@ -44,9 +45,9 @@ public:
     virtual ~FPGAInterface();
 
 private:
-    void shiftValuesIn();
-    void readOutputs(bool includingStaging);
-    bool validateStagedInputs();
+    void shiftValuesIn(bool* temporaryInputBuffer);
+    void readOutputs(bool includingStaging, bool* temporaryFullOutputBuffer);
+    bool validateStagedInputs(bool* temporaryInputBuffer, bool* temporaryFullOutputBuffer);
     void setStagedInputsLive();
     void sleep();
     void startLooping();
