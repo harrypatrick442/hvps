@@ -20,17 +20,39 @@ namespace HVPS_FPGAInterfaceGenerator
                 "main", "Generated");
             string verilogDirectory =  Path.Combine(
                 hvpsDirectory, "Code", "Verilog", "HVPSController2");
+            Output actualFirstStageVoltage = new Output("ActualFirstStageVoltage", VariableType.Byte);
+            Output actualOutputVoltage = new Output("ActualOutputVoltage", VariableType.Byte);
+            Output actualPeakPrimaryCurrent = new Output("ActualPeakPrimaryCurrent", VariableType.Byte);
+            Output actualFirstStageVoltage2 = new Output("ActualFirstStageVoltage2", VariableType.Byte);
+            Output actualOutputVoltage2 = new Output("ActualOutputVoltage2", VariableType.Byte);
+            Output actualPeakPrimaryCurrent2 = new Output("ActualPeakPrimaryCurrent2", VariableType.Byte);
             FPGAInterfaceSetup fpgaInterfaceSetup = new FPGAInterfaceSetup(
                 "HVPS_FPGAInterface",
-                new Input("Drive", VariableType.Bit),
-                new Input("Drive2", VariableType.Bit),
-                new Input("DesiredMaxFirstStageVoltage", VariableType.Byte),
-                new Input("DesiredOutputVoltage", VariableType.Byte),
-                new Input("DesiredMaxPeakPrimaryCurrent", VariableType.Byte),
-                new Output("ActualFirstStageVoltage", VariableType.Byte),
-                new Output("ActualOutputVoltage", VariableType.Byte),
-                new Output("ActualPeakPrimaryCurrent", VariableType.Byte),
-                new Output("Error", VariableType.Bit)
+                new IOVariable[] {
+                    new Input("Drive", VariableType.Bit),
+                    new Input("Drive2", VariableType.Bit),
+                    new Input("DesiredMaxFirstStageVoltage", VariableType.Byte),
+                    new Input("DesiredOutputVoltage", VariableType.Byte),
+                    new Input("DesiredMaxPeakPrimaryCurrent", VariableType.Byte),
+                    actualFirstStageVoltage,
+                    actualOutputVoltage,
+                    actualPeakPrimaryCurrent,
+                    actualFirstStageVoltage2,
+                    actualOutputVoltage2,
+                    actualPeakPrimaryCurrent2,
+                    new Output("Error", VariableType.Bit)
+                },
+                new GetMultipleVariableCPlusPlusMethod[] {
+                    new GetMultipleVariableCPlusPlusMethod(
+                        "getAllFeedbacks",
+                        actualFirstStageVoltage,
+                        actualOutputVoltage,
+                        actualPeakPrimaryCurrent,
+                        actualFirstStageVoltage2,
+                        actualOutputVoltage2,
+                        actualPeakPrimaryCurrent2
+                    )
+                }
             );
             FPGAInterfaceGenerator.FPGAInterfaceGenerator
                 .Generate(

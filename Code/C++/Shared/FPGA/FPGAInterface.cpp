@@ -9,7 +9,7 @@
 // ─── Constructor / Destructor ─────────────────────────────────────────────────
 
 FPGAInterface::FPGAInterface(
-    size_t inputsLength, size_t outputsLength, IFPGABus& fpgaBus)
+    size_t inputsLength, size_t outputsLength, IFPGABus& fpgaBus, uint64_t sleepMs)
     : _inputsLength(inputsLength)
     , _outputsLength(outputsLength)
 	, _fullOutputBufferLength(inputsLength + outputsLength)
@@ -20,6 +20,7 @@ FPGAInterface::FPGAInterface(
 	, _taskFinished(false)
     , _inputsChanged(true)
 	, _lastUpdateTimeUs(0)
+	, _sleepMs(sleepMs)
 {
     _inputBuffer      = new bool[inputsLength]();
     _fullOutputBuffer = new bool[_fullOutputBufferLength]();
@@ -91,16 +92,33 @@ void FPGAInterface::setUInt16(size_t indexFrom, uint16_t value)
     buf[indexFrom + 15] = (value & 0x8000) != 0;
     _inputsChanged = true;
 }
-
+void FPGAInterface::usingLocked(std::function<void(LockedFPGAInterface)> callback)
+{
+    std::lock_guard<std::mutex> guard(_lockFullOutputsBuffer);
+    LockedFPGAInterface locked(
+        [this](size_t i)     { return getBitNoLock(i);     },
+        [this](size_t i)     { return getByteNoLock(i);    },
+        [this](size_t i)     { return getUInt16NoLock(i);  }
+    );
+    callback(locked);
+}
 bool FPGAInterface::getBit(size_t index)
 {
     std::lock_guard<std::mutex> guard(_lockFullOutputsBuffer);
+    return getBitNoLock(index);
+}
+bool FPGAInterface::getBitNoLock(size_t index)
+{
     return _fullOutputBuffer[index];
 }
 
 uint8_t FPGAInterface::getByte(size_t indexFrom)
 {
     std::lock_guard<std::mutex> guard(_lockFullOutputsBuffer);
+	return getByteNoLock(indexFrom);
+}
+uint8_t FPGAInterface::getByteNoLock(size_t indexFrom)
+{
     const bool* buf = _fullOutputBuffer;
     int result = 0;
     if (buf[indexFrom + 0]) result |= 0x01;
@@ -117,6 +135,10 @@ uint8_t FPGAInterface::getByte(size_t indexFrom)
 uint16_t FPGAInterface::getUInt16(size_t indexFrom)
 {
     std::lock_guard<std::mutex> guard(_lockFullOutputsBuffer);
+    return getUInt16NoLock(indexFrom);
+}
+uint16_t FPGAInterface::getUInt16NoLock(size_t indexFrom)
+{
     const bool* buf = _fullOutputBuffer;
     uint16_t result = 0;
     if (buf[indexFrom + 0])  result |= 0x0001;
@@ -194,20 +216,21 @@ void FPGAInterface::readOutputs(bool includingStaging, bool* temporaryFullOutput
 
     size_t intoIndex = _fullOutputBufferLength - 1;
 
-	//std::string binaryString(length, 'z');
+	std::string binaryString(length, 'z');
     for (size_t i = 0; i < length; ++i)
     {
-        _fpgaBus.setOutShift(true);
-        sleep();
 		bool value = _fpgaBus.getOutValue();
-        temporaryFullOutputBuffer[intoIndex--] = value;
-        _fpgaBus.setOutShift(false);
         sleep();
-		/*if (value)
+        temporaryFullOutputBuffer[intoIndex--] = value;
+		if (value)
 			binaryString[i] = '1';
 		else{
 			binaryString[i] = '0';
-		}*/
+		}
+        _fpgaBus.setOutShift(true);
+        sleep();
+        _fpgaBus.setOutShift(false);
+        sleep();
     }
 	/*
 	in verilog 
@@ -218,7 +241,7 @@ void FPGAInterface::readOutputs(bool includingStaging, bool* temporaryFullOutput
 	we work backwards on index. so now the msb is at the highest index. 
 	
 	*/
-	//LOG_INFO("what came out in order it came out from left ot right: %s", binaryString.c_str());
+	LOG_INFO("what came out in order it came out from left ot right: %s", binaryString.c_str());
 	
 /*	std::string binaryStringActualOrderStored(_fullOutputBufferLength, 'z');
 	for (size_t i = 0; i < _fullOutputBufferLength; i++)
@@ -234,7 +257,7 @@ void FPGAInterface::readOutputs(bool includingStaging, bool* temporaryFullOutput
 
 void FPGAInterface::sleep()
 {
-    std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    Delay::ms(10);
 }
 
 // ─── Private: Loop ────────────────────────────────────────────────────────────
@@ -264,16 +287,14 @@ void FPGAInterface::loop()
 		}
 		uint64_t timeUs = TimeHelper::us();
 		_lockInputBuffer.lock();
-		if (!_inputsChanged)
+		if (!_inputsChanged||true)
 		{
+			LOG_INFO("The right one");
 			_lockInputBuffer.unlock();
-			//LOG_INFO("Inputs Have Not Changed");
 			readOutputs(false, temporaryFullOutputBuffer);
 		}
 		else
 		{
-			//LOG_INFO("Inputs Have Changed");
-			
 			for(size_t i=0; i<_inputsLength; i++){
 				temporaryInputBuffer[i]=_inputBuffer[i];
 			}

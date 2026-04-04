@@ -161,9 +161,6 @@ set_location_assignment PIN_121 -to U20_DB7
 set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to U20_DB7
 set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to clk
 set_location_assignment PIN_91 -to clk
-set_global_assignment -name VERILOG_FILE HVPS_FPGAInterface.v
-set_global_assignment -name VERILOG_FILE hvps_controller.v
-set_global_assignment -name SDC_FILE hvps_controller.sdc
 set_location_assignment PIN_71 -to ESP_EMERGENCY_STOP
 set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to ESP_EMERGENCY_STOP
 set_global_assignment -name ENABLE_OCT_DONE OFF
@@ -175,6 +172,13 @@ set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -rise
 set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -fall
 set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -rise
 set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -fall
+set_global_assignment -name VERILOG_FILE HBridge.v
+set_global_assignment -name VERILOG_FILE BangBangController.v
+set_global_assignment -name VERILOG_FILE AD7822.v
+set_global_assignment -name VERILOG_FILE HVPS_FPGAInterface.v
+set_global_assignment -name VERILOG_FILE hvps_controller.v
+set_global_assignment -name SDC_FILE hvps_controller.sdc
 set_global_assignment -name CDF_FILE output_files/flash.cdf
 set_global_assignment -name CDF_FILE output_files/write_volatile.cdf
+set_global_assignment -name VERILOG_FILE debouncer.v
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

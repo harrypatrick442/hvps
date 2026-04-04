@@ -64,6 +64,7 @@ idf_component_register(
 	"Timing/HardwareTimerPool/HardwareTimerInfo.cpp"
 	"FPGA/FPGABus.cpp"
 	"FPGA/FPGAInterface.cpp"
+	"FPGA/LockedFPGAInterface.cpp"
 	"Generated/Messages/ConsoleMessage.cpp"
 	"Generated/Messages/GetVoltageRequest.cpp"
 	"Generated/Messages/GetVoltageResponse.cpp"

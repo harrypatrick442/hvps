@@ -64,6 +64,9 @@ public:
 	float getActualPeakPrimaryCurrent();
 	float getActualOutputVoltage();
 	float getActualFirstStageVoltage();
+	float getActualPeakPrimaryCurrent2();
+	float getActualOutputVoltage2();
+	float getActualFirstStageVoltage2();
 private:
     friend class SingletonBase<HighSpeedCore>;
 	const float SAFE_OUTPUT_VOLTAGE = 20.0f;

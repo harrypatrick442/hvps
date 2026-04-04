@@ -39,14 +39,15 @@ namespace FPGAInterfaceGenerator
             }
             var appendOutput = Create_AppendOutput(className, sbOutputsHpp, sbOutputsCpp,
                 getInputsLength(),
-                out Func<int> getOutputsLength);
+                out Func<int> getOutputsLength,
+                out Func<string, int> getOutputFullIndex);
             foreach (var output in setup.Outputs)
             {
                 appendOutput(output);
             }
             sbHpp.AppendLine("public:");
             CreateConstructor(className, sbHpp, sbCpp,
-                getInputsLength(), getOutputsLength());
+                getInputsLength(), getOutputsLength(), setup.SleepPeriodMs);
 
             sbHpp.AppendLine("    uint64_t getLastUpdateTimeUs();");
             sbCpp.Append("uint64_t ");
@@ -56,18 +57,64 @@ namespace FPGAInterfaceGenerator
             sbCpp.Append(sbInputsCpp);
             sbHpp.Append(sbOutputsHpp);
             sbCpp.Append(sbOutputsCpp);
+
+            // Generate GetMultiple methods if any
+            if (setup.GetMultipleVariableCPlusPlusMethods != null)
+            {
+                foreach (var method in setup.GetMultipleVariableCPlusPlusMethods)
+                {
+                    AppendGetMultipleMethod(className, method, getOutputFullIndex, sbHpp, sbCpp);
+                }
+            }
+
             sbHpp.AppendLine("};");
             File.Delete(cppFilePath);
             File.WriteAllText(cppFilePath, sbCpp.ToString());
             File.Delete(hppFilePath);
             File.WriteAllText(hppFilePath, sbHpp.ToString());
         }
+
+        private static void AppendGetMultipleMethod(
+            string className,
+            GetMultipleVariableCPlusPlusMethod method,
+            Func<string, int> getOutputFullIndex,
+            StringBuilder sbHpp,
+            StringBuilder sbCpp)
+        {
+            // Build parameter list
+            var parameters = method.Outputs
+                .Select(o => $"{GetTypeName(o.VariableType)}& {StringHelper.LowerCamelCase(o.Name)}")
+                .ToList();
+            string paramList = string.Join(", ", parameters);
+
+            // hpp declaration
+            sbHpp.Append("    void ");
+            sbHpp.Append(method.Name);
+            sbHpp.Append("(");
+            sbHpp.Append(paramList);
+            sbHpp.AppendLine(");");
+
+            // cpp definition
+            sbCpp.AppendLine($"void {className}::{method.Name}({paramList}){{");
+            sbCpp.AppendLine("    _fpgaInterface.usingLocked([&](LockedFPGAInterface locked){");
+            foreach (var output in method.Outputs)
+            {
+                string varName = StringHelper.LowerCamelCase(output.Name);
+                string getMethod = GetLockedGetMethodName(output.VariableType);
+                int index = getOutputFullIndex(output.Name);
+                sbCpp.AppendLine($"        {varName} = locked.{getMethod}({index});");
+            }
+            sbCpp.AppendLine("    });");
+            sbCpp.AppendLine("}");
+        }
+
         private static void CreateConstructor(
             string className,
             StringBuilder sbHpp,
             StringBuilder sbCpp,
             int inputsLength,
-            int outputsLength)
+            int outputsLength,
+            int sleepPeriodMs)
         {
             sbHpp.Append("    ");
             sbHpp.Append(className);
@@ -80,20 +127,29 @@ namespace FPGAInterfaceGenerator
             sbCpp.Append(inputsLength);
             sbCpp.Append(",");
             sbCpp.Append(outputsLength);
-            sbCpp.Append(", fpgaBus){");
+            sbCpp.Append(", fpgaBus, ");
+            sbCpp.Append(sleepPeriodMs);
+            sbCpp.Append("){");
             sbCpp.AppendLine("}");
         }
+
         private static Action<Output> Create_AppendOutput(
             string className,
             StringBuilder sbHpp,
             StringBuilder sbCpp,
             int inputsLength,
-            out Func<int> getOutputsLength) {
+            out Func<int> getOutputsLength,
+            out Func<string, int> getOutputFullIndex)
+        {
             int nextOutputIndex = 0;
+            var outputIndices = new Dictionary<string, int>();
             getOutputsLength = () => nextOutputIndex;
+            getOutputFullIndex = (name) => outputIndices[name];
             return (output) =>
             {
                 string returnTypeName = GetTypeName(output.VariableType);
+                int fullOutputsIndex = inputsLength + nextOutputIndex;
+                outputIndices[output.Name] = fullOutputsIndex;
 
                 sbHpp.Append("    ");
                 sbHpp.Append(returnTypeName);
@@ -110,13 +166,13 @@ namespace FPGAInterfaceGenerator
                 sbCpp.Append("     return _fpgaInterface.");
                 sbCpp.Append(GetGetMethodName(output.VariableType));
                 sbCpp.Append("(");
-                int fullOutputsIndex = inputsLength + nextOutputIndex;
                 sbCpp.Append(fullOutputsIndex.ToString());
                 sbCpp.AppendLine(");");
                 sbCpp.AppendLine("}");
                 IncrementIndexForType(ref nextOutputIndex, output.VariableType);
             };
         }
+
         static Action<Input> Create_AppendInput(
             string className,
             StringBuilder sbHpp,
@@ -151,8 +207,11 @@ namespace FPGAInterfaceGenerator
                 IncrementIndexForType(ref nextInputIndex, input.VariableType);
             };
         }
-        private static void IncrementIndexForType(ref int index, VariableType variableType) {
-            switch (variableType) {
+
+        private static void IncrementIndexForType(ref int index, VariableType variableType)
+        {
+            switch (variableType)
+            {
                 case VariableType.Bit:
                     index++;
                     return;
@@ -166,8 +225,10 @@ namespace FPGAInterfaceGenerator
                     throw new NotImplementedException();
             }
         }
-        private static string GetTypeName(VariableType variableType) { 
-            switch(variableType)
+
+        private static string GetTypeName(VariableType variableType)
+        {
+            switch (variableType)
             {
                 case VariableType.Bit:
                     return "bool";
@@ -179,8 +240,9 @@ namespace FPGAInterfaceGenerator
                     throw new NotImplementedException();
             }
         }
-        private static string GetGetMethodName(VariableType variableType) {
 
+        private static string GetGetMethodName(VariableType variableType)
+        {
             switch (variableType)
             {
                 case VariableType.Bit:
@@ -193,9 +255,24 @@ namespace FPGAInterfaceGenerator
                     throw new NotImplementedException();
             }
         }
+
+        private static string GetLockedGetMethodName(VariableType variableType)
+        {
+            switch (variableType)
+            {
+                case VariableType.Bit:
+                    return "getBit";
+                case VariableType.Byte:
+                    return "getByte";
+                case VariableType.UInt16:
+                    return "getUInt16";
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
         private static string GetSetMethodName(VariableType variableType)
         {
-
             switch (variableType)
             {
                 case VariableType.Bit:

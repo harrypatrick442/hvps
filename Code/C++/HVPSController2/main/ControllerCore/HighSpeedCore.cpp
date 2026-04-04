@@ -77,6 +77,21 @@ float HighSpeedCore::getActualFirstStageVoltage(){
 	LOG_INFO("raw first stage voltage: %" PRIu8, raw);
 	return _hvpsConfiguration1.firstStageVoltageFromRaw * static_cast<float>(raw);
 }
+float HighSpeedCore::getActualPeakPrimaryCurrent2(){
+	uint8_t raw = _fpgaInterface.getActualPeakPrimaryCurrent2();
+	LOG_INFO("raw peak primary current: %" PRIu8, raw);
+	return _hvpsConfiguration1.primaryCurrentFromRaw * static_cast<float>(raw);
+}
+float HighSpeedCore::getActualOutputVoltage2(){
+	uint8_t raw = _fpgaInterface.getActualOutputVoltage2();
+	LOG_INFO("raw output voltage: %" PRIu8, raw);
+	return _hvpsConfiguration1.outputVoltageFromRaw * static_cast<float>(raw);
+}
+float HighSpeedCore::getActualFirstStageVoltage2(){
+	uint8_t raw = _fpgaInterface.getActualFirstStageVoltage2();
+	LOG_INFO("raw first stage voltage: %" PRIu8, raw);
+	return _hvpsConfiguration1.firstStageVoltageFromRaw * static_cast<float>(raw);
+}
 void HighSpeedCore::start(){
 	setDesiredSystemState(SystemState::Live);
 }
@@ -158,9 +173,30 @@ void HighSpeedCore::startCoreTask(){
 }
 void HighSpeedCore::_run(){
 	while(true){
-	LOG_INFO("HighSpeedCore::_run while(true){");
-		Delay::ms(100);
-		LOG_INFO("Values are: output voltage: %f, first stage voltage: %f, peak primary current: %f", getActualOutputVoltage(), getActualFirstStageVoltage(), getActualPeakPrimaryCurrent());
+		Delay::ms(500);
+		uint8_t actualFirstStageVoltage;
+		uint8_t actualOutputVoltage;
+		uint8_t actualPeakPrimaryCurrent;
+		uint8_t actualFirstStageVoltage2;
+		uint8_t actualOutputVoltage2;
+		uint8_t actualPeakPrimaryCurrent2;
+		_fpgaInterface.getAllFeedbacks(
+			actualFirstStageVoltage, 
+			actualOutputVoltage, 
+			actualPeakPrimaryCurrent, 
+			actualFirstStageVoltage2, 
+			actualOutputVoltage2,
+			actualPeakPrimaryCurrent2
+		);
+		LOG_INFO(
+			"Values are: output voltage: %" PRIu8", first stage voltage: %" PRIu8", peak primary current: %" PRIu8", output voltage 2: %" PRIu8", first stage voltage 2: %" PRIu8", peak primary current 2: %" PRIu8, 
+			actualOutputVoltage, 
+			actualFirstStageVoltage, 
+			actualPeakPrimaryCurrent,
+			actualOutputVoltage2, 
+			actualFirstStageVoltage2, 
+			actualPeakPrimaryCurrent2
+		);
 		continue;
 		if(isShuttingDownOrShutDown()||getActualSystemState()==SystemState::ShutDown){
 			doShutDown();

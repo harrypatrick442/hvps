@@ -6,10 +6,16 @@ namespace FPGAInterfaceGenerator
 {
     public class FPGAVerilogInterfaceGenerator
     {
+
         public static void GenerateVerilogInterface(
             FPGAInterfaceSetup setup,
             string outputDirectory)
         {
+            int debounceLimit = 20000;
+            float debounceMs = ((float)debounceLimit)/50000f;
+            if(debounceMs * 2 > setup.SleepPeriodMs) {
+                throw new ArgumentException($"{nameof(setup.SleepPeriodMs)} is too short");
+            }
             string moduleName = setup.Name;
             string vFilePath = Path.Combine(outputDirectory, $"{moduleName}.v");
             StringBuilder sb = new StringBuilder();
@@ -31,7 +37,7 @@ namespace FPGAInterfaceGenerator
             sb.AppendLine("    input wire clk,");
             sb.AppendLine("    input wire in_shift,");
             sb.AppendLine("    input wire in_value,");
-            sb.AppendLine("    output reg out_value,");
+            sb.AppendLine("    output wire out_value,");  // wire not reg - driven by assign
             sb.AppendLine("    input wire out_shift,");
             sb.AppendLine("    input wire to_output,");
             sb.AppendLine("    input wire go_live,");
@@ -71,8 +77,22 @@ namespace FPGAInterfaceGenerator
             sb.AppendLine($"    reg [{inputsLength - 1}:0] input_live;");
             sb.AppendLine($"    // Full output shift buffer (inputs + outputs)");
             sb.AppendLine($"    reg [{totalLength - 1}:0] output_buffer;");
-            sb.AppendLine($"    // Shift counter");
-            sb.AppendLine($"    integer shift_count;");
+            sb.AppendLine();
+
+            // Edge detection registers
+            sb.AppendLine("    // Edge detection registers");
+            sb.AppendLine("    reg in_shift_prev;");
+            sb.AppendLine("    reg go_live_prev;");
+            sb.AppendLine("    reg to_output_prev;");
+            sb.AppendLine("    reg out_shift_prev;");
+            sb.AppendLine();
+
+            // Debounced signal wires
+            sb.AppendLine("    // Debounced signal wires");
+            sb.AppendLine("    wire in_shift_debounced;");
+            sb.AppendLine("    wire go_live_debounced;");
+            sb.AppendLine("    wire to_output_debounced;");
+            sb.AppendLine("    wire out_shift_debounced;");
             sb.AppendLine();
 
             // Assign named output wires from live buffer
@@ -92,43 +112,71 @@ namespace FPGAInterfaceGenerator
                 }
                 IncrementIndexForType(ref bitIndex, input.VariableType);
             }
+
+            // Combinatorial assignment for out_value - always reflects current top of buffer
+            sb.AppendLine($"    assign out_value = output_buffer[{totalLength - 1}];");
             sb.AppendLine();
 
-            // Shift in logic (MSB first)
-            sb.AppendLine("    // Shift in - MSB first");
-            sb.AppendLine("    always @(posedge in_shift) begin");
-            sb.AppendLine($"        input_staged <= {{input_staged[{inputsLength - 2}:0], in_value}};");
-            sb.AppendLine("    end");
+            // Debouncer instantiations
+            sb.AppendLine("    // Debouncer instantiations");
+            AppendDebouncer(sb, "in_shift", "in_shift_debounced", debounceLimit);
+            AppendDebouncer(sb, "go_live", "go_live_debounced", debounceLimit);
+            AppendDebouncer(sb, "to_output", "to_output_debounced", debounceLimit);
+            AppendDebouncer(sb, "out_shift", "out_shift_debounced", debounceLimit);
             sb.AppendLine();
 
-            // Go live logic
-            sb.AppendLine("    // Go live - commit staged to live");
-            sb.AppendLine("    always @(posedge go_live) begin");
-            sb.AppendLine("        input_live <= input_staged;");
-            sb.AppendLine("    end");
+            // Single synchronous always block
+            sb.AppendLine("    // All logic synchronous to system clock");
+            sb.AppendLine("    always @(posedge clk) begin");
             sb.AppendLine();
-            // Combined output buffer block - single always block to avoid multiple drivers
-            sb.AppendLine("    // Output buffer - single always block");
-            sb.AppendLine("    always @(posedge to_output or posedge out_shift) begin");
-            sb.AppendLine("        if (to_output) begin");
+            sb.AppendLine("        // Update edge detection registers");
+            sb.AppendLine("        in_shift_prev  <= in_shift_debounced;");
+            sb.AppendLine("        go_live_prev   <= go_live_debounced;");
+            sb.AppendLine("        to_output_prev <= to_output_debounced;");
+            sb.AppendLine("        out_shift_prev <= out_shift_debounced;");
+            sb.AppendLine();
+            sb.AppendLine("        // Shift in - rising edge of in_shift");
+            sb.AppendLine("        if (in_shift_debounced && !in_shift_prev) begin");
+            sb.AppendLine($"            input_staged <= {{input_staged[{inputsLength - 2}:0], in_value}};");
+            sb.AppendLine("        end");
+            sb.AppendLine();
+            sb.AppendLine("        // Go live - rising edge of go_live");
+            sb.AppendLine("        if (go_live_debounced && !go_live_prev) begin");
+            sb.AppendLine("            input_live <= input_staged;");
+            sb.AppendLine("        end");
+            sb.AppendLine();
+            sb.AppendLine("        // Output buffer - rising edge of to_output or out_shift");
+            sb.AppendLine("        if (to_output_debounced && !to_output_prev) begin");
             sb.Append($"            output_buffer <= {{");
-
             foreach (var output in setup.Outputs.Reverse())
             {
                 string portName = StringHelper.CamelCaseToSnakeCase(output.Name);
                 sb.Append($"{portName}, ");
             }
             sb.AppendLine("input_staged};");
-            sb.AppendLine("        end else if (out_shift) begin");
-            sb.AppendLine($"            out_value <= output_buffer[{totalLength - 1}];");
+            sb.AppendLine("        end else if (out_shift_debounced && !out_shift_prev) begin");
             sb.AppendLine($"            output_buffer <= {{output_buffer[{totalLength - 2}:0], 1'b0}};");
             sb.AppendLine("        end");
+            sb.AppendLine();
             sb.AppendLine("    end");
-
+            sb.AppendLine();
             sb.AppendLine("endmodule");
 
             File.Delete(vFilePath);
             File.WriteAllText(vFilePath, sb.ToString());
+        }
+
+        private static void AppendDebouncer(
+            StringBuilder sb, string signalName, string debouncedName,
+            int debounceLimit)
+        {
+            sb.AppendLine($"    debouncer #(");
+            sb.AppendLine($"        .DEBOUNCE_LIMIT({debounceLimit})");
+            sb.AppendLine($"    ) debouncer_{signalName} (");
+            sb.AppendLine($"        .clk(clk),");
+            sb.AppendLine($"        .bouncy_in({signalName}),");
+            sb.AppendLine($"        .debounced_out({debouncedName})");
+            sb.AppendLine($"    );");
         }
 
         private static void IncrementIndexForType(ref int index, VariableType variableType)

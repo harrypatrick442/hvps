@@ -15,5 +15,9 @@ public:
     uint8_t getActualFirstStageVoltage();
     uint8_t getActualOutputVoltage();
     uint8_t getActualPeakPrimaryCurrent();
+    uint8_t getActualFirstStageVoltage2();
+    uint8_t getActualOutputVoltage2();
+    uint8_t getActualPeakPrimaryCurrent2();
     bool getError();
+    void getAllFeedbacks(uint8_t& actualFirstStageVoltage, uint8_t& actualOutputVoltage, uint8_t& actualPeakPrimaryCurrent, uint8_t& actualFirstStageVoltage2, uint8_t& actualOutputVoltage2, uint8_t& actualPeakPrimaryCurrent2);
 };

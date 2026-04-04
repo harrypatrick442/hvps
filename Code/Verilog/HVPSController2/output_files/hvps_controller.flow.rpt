@@ -1,5 +1,5 @@
 Flow report for hvps_controller
-Sun Mar 29 09:08:51 2026
+Sat Apr  4 17:41:58 2026
 Quartus Prime Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
 
 
@@ -41,17 +41,17 @@ on the Quartus Prime software download page.
 +--------------------------------------------------------------------------------------+
 ; Flow Summary                                                                         ;
 +------------------------------------+-------------------------------------------------+
-; Flow Status                        ; Successful - Sun Mar 29 09:08:51 2026           ;
+; Flow Status                        ; Successful - Sat Apr  4 17:41:58 2026           ;
 ; Quartus Prime Version              ; 25.1std.0 Build 1129 10/21/2025 SC Lite Edition ;
 ; Revision Name                      ; hvps_controller                                 ;
 ; Top-level Entity Name              ; hvps_controller                                 ;
 ; Family                             ; Cyclone IV E                                    ;
 ; Device                             ; EP4CE6E22C8L                                    ;
 ; Timing Models                      ; Final                                           ;
-; Total logic elements               ; 127 / 6,272 ( 2 % )                             ;
-;     Total combinational functions  ; 90 / 6,272 ( 1 % )                              ;
-;     Dedicated logic registers      ; 78 / 6,272 ( 1 % )                              ;
-; Total registers                    ; 78                                              ;
+; Total logic elements               ; 272 / 6,272 ( 4 % )                             ;
+;     Total combinational functions  ; 230 / 6,272 ( 4 % )                             ;
+;     Dedicated logic registers      ; 226 / 6,272 ( 4 % )                             ;
+; Total registers                    ; 233                                             ;
 ; Total pins                         ; 52 / 92 ( 57 % )                                ;
 ; Total virtual pins                 ; 0                                               ;
 ; Total memory bits                  ; 0 / 276,480 ( 0 % )                             ;
@@ -65,7 +65,7 @@ on the Quartus Prime software download page.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 03/29/2026 09:08:37 ;
+; Start date & time ; 04/04/2026 17:41:43 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; hvps_controller     ;
 +-------------------+---------------------+
@@ -76,7 +76,7 @@ on the Quartus Prime software download page.
 +-------------------------------------+----------------------------------------+---------------+-------------+-----------------------------------+
 ; Assignment Name                     ; Value                                  ; Default Value ; Entity Name ; Section Id                        ;
 +-------------------------------------+----------------------------------------+---------------+-------------+-----------------------------------+
-; COMPILER_SIGNATURE_ID               ; 244654764343635.177477171711884        ; --            ; --          ; --                                ;
+; COMPILER_SIGNATURE_ID               ; 239956070121811.177532090339564        ; --            ; --          ; --                                ;
 ; EDA_GENERATE_FUNCTIONAL_NETLIST     ; Off                                    ; --            ; --          ; eda_board_design_timing           ;
 ; EDA_GENERATE_FUNCTIONAL_NETLIST     ; Off                                    ; --            ; --          ; eda_board_design_boundary_scan    ;
 ; EDA_GENERATE_FUNCTIONAL_NETLIST     ; Off                                    ; --            ; --          ; eda_board_design_signal_integrity ;
@@ -104,12 +104,12 @@ on the Quartus Prime software download page.
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name          ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Synthesis ; 00:00:06     ; 1.0                     ; 4800 MB             ; 00:00:18                           ;
-; Fitter               ; 00:00:02     ; 1.1                     ; 5819 MB             ; 00:00:03                           ;
+; Analysis & Synthesis ; 00:00:06     ; 1.0                     ; 4828 MB             ; 00:00:18                           ;
+; Fitter               ; 00:00:03     ; 1.1                     ; 5819 MB             ; 00:00:04                           ;
 ; Assembler            ; 00:00:01     ; 1.0                     ; 4718 MB             ; 00:00:01                           ;
-; Timing Analyzer      ; 00:00:01     ; 1.1                     ; 4830 MB             ; 00:00:01                           ;
-; EDA Netlist Writer   ; 00:00:01     ; 1.0                     ; 4658 MB             ; 00:00:00                           ;
-; Total                ; 00:00:11     ; --                      ; --                  ; 00:00:23                           ;
+; Timing Analyzer      ; 00:00:01     ; 1.2                     ; 4834 MB             ; 00:00:01                           ;
+; EDA Netlist Writer   ; 00:00:00     ; 1.0                     ; 4674 MB             ; 00:00:00                           ;
+; Total                ; 00:00:11     ; --                      ; --                  ; 00:00:24                           ;
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 

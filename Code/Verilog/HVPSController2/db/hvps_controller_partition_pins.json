@@ -8,11 +8,147 @@
 					"strict" : false
 				},
 				{
-					"name" : "ESP_OUT_SHIFT",
+					"name" : "U5_INV_CONVST",
+					"strict" : false
+				},
+				{
+					"name" : "U5_INV_RD",
+					"strict" : false
+				},
+				{
+					"name" : "U12_INV_CONVST",
+					"strict" : false
+				},
+				{
+					"name" : "U12_INV_RD",
+					"strict" : false
+				},
+				{
+					"name" : "U20_INV_CONVST",
+					"strict" : false
+				},
+				{
+					"name" : "U20_INV_RD",
+					"strict" : false
+				},
+				{
+					"name" : "clk",
+					"strict" : false
+				},
+				{
+					"name" : "U5_INV_EOC",
+					"strict" : false
+				},
+				{
+					"name" : "U12_INV_EOC",
+					"strict" : false
+				},
+				{
+					"name" : "U20_INV_EOC",
+					"strict" : false
+				},
+				{
+					"name" : "U12_DB7",
+					"strict" : false
+				},
+				{
+					"name" : "U12_DB6",
 					"strict" : false
 				},
 				{
 					"name" : "ESP_TO_OUTPUT",
+					"strict" : false
+				},
+				{
+					"name" : "ESP_OUT_SHIFT",
+					"strict" : false
+				},
+				{
+					"name" : "U12_DB5",
+					"strict" : false
+				},
+				{
+					"name" : "U12_DB4",
+					"strict" : false
+				},
+				{
+					"name" : "U12_DB3",
+					"strict" : false
+				},
+				{
+					"name" : "U12_DB2",
+					"strict" : false
+				},
+				{
+					"name" : "U12_DB1",
+					"strict" : false
+				},
+				{
+					"name" : "U12_DB0",
+					"strict" : false
+				},
+				{
+					"name" : "U5_DB7",
+					"strict" : false
+				},
+				{
+					"name" : "U5_DB6",
+					"strict" : false
+				},
+				{
+					"name" : "U5_DB5",
+					"strict" : false
+				},
+				{
+					"name" : "U5_DB4",
+					"strict" : false
+				},
+				{
+					"name" : "U5_DB3",
+					"strict" : false
+				},
+				{
+					"name" : "U5_DB2",
+					"strict" : false
+				},
+				{
+					"name" : "U5_DB1",
+					"strict" : false
+				},
+				{
+					"name" : "U5_DB0",
+					"strict" : false
+				},
+				{
+					"name" : "U20_DB7",
+					"strict" : false
+				},
+				{
+					"name" : "U20_DB6",
+					"strict" : false
+				},
+				{
+					"name" : "U20_DB5",
+					"strict" : false
+				},
+				{
+					"name" : "U20_DB4",
+					"strict" : false
+				},
+				{
+					"name" : "U20_DB3",
+					"strict" : false
+				},
+				{
+					"name" : "U20_DB2",
+					"strict" : false
+				},
+				{
+					"name" : "U20_DB1",
+					"strict" : false
+				},
+				{
+					"name" : "U20_DB0",
 					"strict" : false
 				},
 				{

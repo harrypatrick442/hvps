@@ -7,8 +7,13 @@
         public Input[] Inputs { get;}
         public Output[] Outputs { get;}
         public Bidirectional[] Bidirectionals { get;}
+        public int SleepPeriodMs { get; }
+        public GetMultipleVariableCPlusPlusMethod[]? GetMultipleVariableCPlusPlusMethods { get; }
 
-        public FPGAInterfaceSetup(string name, params IOVariable[] variables)
+        public FPGAInterfaceSetup(
+            string name, IOVariable[] variables,
+            GetMultipleVariableCPlusPlusMethod[]? getMultipleVariableCPlusPlusMethods = null,
+            int sleepPeriodMs = 10)
         {
             Name = name;
             AllVariables = variables;
@@ -18,6 +23,8 @@
                 .Cast<Output>().ToArray();
             Bidirectionals = variables.Where(v => v.Direction == Direction.Bidirectional)
                 .Cast<Bidirectional>().ToArray();
+            GetMultipleVariableCPlusPlusMethods = getMultipleVariableCPlusPlusMethods;
+            SleepPeriodMs = sleepPeriodMs;
         }
     }
 }

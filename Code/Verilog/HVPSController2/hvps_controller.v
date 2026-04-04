@@ -7,7 +7,6 @@
 
 module hvps_controller(
     input  wire clk,
-
     input wire ESP_EMERGENCY_STOP,
     input wire ESP_GO_LIVE, 
     input wire ESP_IN_SHIFT,
@@ -19,7 +18,7 @@ module hvps_controller(
 	 input wire OR5,
 	 input wire OR6,
 	 input wire OT4,
-	 input wire OT5,
+	 output wire OT5,
 	 input wire U5_DB0,
 	 input wire U5_DB1,
 	 input wire U5_DB2,
@@ -28,9 +27,9 @@ module hvps_controller(
 	 input wire U5_DB5,
 	 input wire U5_DB6,
 	 input wire U5_DB7,
-	 input wire U5_INV_CONVST,
+	 output wire U5_INV_CONVST,
 	 input wire U5_INV_EOC,
-	 input wire U5_INV_RD,
+	 output wire U5_INV_RD,
     input wire U12_DB0,
     input wire U12_DB1,
     input wire U12_DB2,
@@ -39,9 +38,9 @@ module hvps_controller(
     input wire U12_DB5,
     input wire U12_DB6,
     input wire U12_DB7,
-    input wire U12_INV_CONVST,
+    output wire U12_INV_CONVST,
 	 input wire U12_INV_EOC,
-	 input wire U12_INV_RD,
+	 output wire U12_INV_RD,
     input wire U20_DB0,
     input wire U20_DB1,
     input wire U20_DB2,
@@ -50,9 +49,9 @@ module hvps_controller(
     input wire U20_DB5,
     input wire U20_DB6,
     input wire U20_DB7,
-    input wire U20_INV_CONVST,
+    output wire U20_INV_CONVST,
 	 input wire U20_INV_EOC,
-	 input wire U20_INV_RD,
+	 output wire U20_INV_RD,
 	 input wire U23_HIN,
 	 input wire U23_LIN,
 	 input wire U23_SD,
@@ -69,10 +68,16 @@ module hvps_controller(
     wire [7:0] desired_max_peak_primary_current;
     
     // These would come from your actual core logic
-    reg [7:0] actual_first_stage_voltage =  8'b01010101;
-    reg [7:0] actual_output_voltage = 8'b00000111;
-    reg [7:0] actual_peak_primary_current = 8'b00001111;
+    wire [7:0] primary_current_raw;
+    wire [7:0] first_stage_voltage_raw;
+    wire [7:0] output_voltage_raw;
+    wire [7:0] primary_current_raw_2;
+    wire [7:0] first_stage_voltage_raw_2;
+    wire [7:0] output_voltage_raw_2;
     reg fpga_in_error = 1;
+	 
+	 wire can_drive;//The sacred signal from the bangbang controller that goes into the H-Bridge.
+	 //assign OT5 = drive2;
     //assign ESP_OUT_VALUE = 1'b1;
 	 
     // Instantiate the module
@@ -89,10 +94,84 @@ module hvps_controller(
         .desired_max_first_stage_voltage(desired_max_first_stage_voltage),
         .desired_output_voltage(desired_output_voltage),
         .desired_max_peak_primary_current(desired_max_peak_primary_current),
-        .actual_first_stage_voltage(actual_first_stage_voltage),
-        .actual_output_voltage(actual_output_voltage),
-        .actual_peak_primary_current(actual_peak_primary_current),
+        .actual_first_stage_voltage(first_stage_voltage_raw),
+        .actual_output_voltage(output_voltage_raw),
+        .actual_peak_primary_current(primary_current_raw),
+        .actual_first_stage_voltage2(first_stage_voltage_raw_2),
+        .actual_output_voltage2(output_voltage_raw_2),
+        .actual_peak_primary_current2(primary_current_raw_2),
         .error(fpga_in_error)
     );
-
+	 
+	 
+	 AD7822 primary_current_feedback_adc(
+		 .clk_50MHz(clk),
+		 .DB0(U12_DB0),
+		 .DB1(U12_DB1),
+		 .DB2(U12_DB2),
+		 .DB3(U12_DB3),
+		 .DB4(U12_DB4),
+		 .DB5(U12_DB5),
+		 .DB6(U12_DB6),
+		 .DB7(U12_DB7),
+		 .INV_CONVST(U12_INV_CONVST),
+		 .INV_EOC(U12_INV_EOC),
+		 .INV_RD(U12_INV_RD),
+		 .data(primary_current_raw),
+		 .data2(primary_current_raw_2)
+	  );
+	 AD7822 output_voltage_feedback_adc(
+		 .clk_50MHz(clk),
+		 .DB0(U5_DB0),
+		 .DB1(U5_DB1),
+		 .DB2(U5_DB2),
+		 .DB3(U5_DB3),
+		 .DB4(U5_DB4),
+		 .DB5(U5_DB5),
+		 .DB6(U5_DB6),
+		 .DB7(U5_DB7),
+		 .INV_CONVST(U5_INV_CONVST),
+		 .INV_EOC(U5_INV_EOC),
+		 .INV_RD(U5_INV_RD),
+		 .data(output_voltage_raw),
+		 .data2(output_voltage_raw_2)
+	  );
+	 AD7822 first_stage_voltage_feedback_adc(
+		 .clk_50MHz(clk),
+		 .DB0(U20_DB0),
+		 .DB1(U20_DB1),
+		 .DB2(U20_DB2),
+		 .DB3(U20_DB3),
+		 .DB4(U20_DB4),
+		 .DB5(U20_DB5),
+		 .DB6(U20_DB6),
+		 .DB7(U20_DB7),
+		 .INV_CONVST(U20_INV_CONVST),
+		 .INV_EOC(U20_INV_EOC),
+		 .INV_RD(U20_INV_RD),
+		 .data(first_stage_voltage_raw),
+		 .data2(first_stage_voltage_raw_2)
+	  );
+	  BangBangController bang_bang_controller(
+		 .primary_current_raw(primary_current_raw),
+		 .first_stage_voltage_raw(first_stage_voltage_raw),
+		 .output_voltage_raw(output_voltage_raw),
+		 .drive(drive),
+		 .drive2(drive2),
+		 .desired_max_first_stage_voltage(desired_max_first_stage_voltage),
+		 .desired_output_voltage(desired_output_voltage),
+		 .desired_max_peak_primary_current(desired_max_peak_primary_current),
+		 .can_drive(can_drive)
+	  );
+	  HBridge hBridge(
+		 .clk(clk),           // 50MHz system clock
+		 .can_drive(can_drive),     // from BangBangController
+		 .U23_HIN(U23_HIN),
+		 .U23_LIN(U23_LIN),
+		 .U23_SD(U23_SD),
+		 .U24_HIN(U24_HIN),
+		 .U24_LIN(U24_LIN),
+		 .U24_SD(U24_SD)
+	  );
+	  
 endmodule
