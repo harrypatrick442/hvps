@@ -34,13 +34,18 @@ namespace HVPS_FPGAInterfaceGenerator
                     new Input("DesiredMaxFirstStageVoltage", VariableType.Byte),
                     new Input("DesiredOutputVoltage", VariableType.Byte),
                     new Input("DesiredMaxPeakPrimaryCurrent", VariableType.Byte),
+                    new Input("Command", VariableType.CustomLengthBits, 8),
                     actualFirstStageVoltage,
                     actualOutputVoltage,
                     actualPeakPrimaryCurrent,
                     actualFirstStageVoltage2,
                     actualOutputVoltage2,
                     actualPeakPrimaryCurrent2,
-                    new Output("Error", VariableType.Bit)
+                    new Output("Error", VariableType.Bit),
+                    new Output("EchoDesiredMaxFirstStageVoltage", VariableType.Byte),
+                    new Output("EchoDesiredDesiredOutputVoltage", VariableType.Byte),
+                    new Output("EchoDesiredMaxPeakPrimaryCurrent", VariableType.Byte),
+                    new Output("BufferedData", VariableType.CustomLengthBytes, 120),
                 },
                 new GetMultipleVariableCPlusPlusMethod[] {
                     new GetMultipleVariableCPlusPlusMethod(

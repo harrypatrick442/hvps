@@ -9,7 +9,7 @@
 // ─── Constructor / Destructor ─────────────────────────────────────────────────
 
 FPGAInterface::FPGAInterface(
-    size_t inputsLength, size_t outputsLength, IFPGABus& fpgaBus, uint64_t sleepMs)
+    size_t inputsLength, size_t outputsLength, IFPGABus& fpgaBus, uint64_t sleepUs)
     : _inputsLength(inputsLength)
     , _outputsLength(outputsLength)
 	, _fullOutputBufferLength(inputsLength + outputsLength)
@@ -20,7 +20,7 @@ FPGAInterface::FPGAInterface(
 	, _taskFinished(false)
     , _inputsChanged(true)
 	, _lastUpdateTimeUs(0)
-	, _sleepMs(sleepMs)
+	, _sleepUs(sleepUs)
 {
     _inputBuffer      = new bool[inputsLength]();
     _fullOutputBuffer = new bool[_fullOutputBufferLength]();
@@ -92,6 +92,33 @@ void FPGAInterface::setUInt16(size_t indexFrom, uint16_t value)
     buf[indexFrom + 15] = (value & 0x8000) != 0;
     _inputsChanged = true;
 }
+void FPGAInterface::setByteArray(size_t indexFrom, uint8_t* value, size_t length){
+    std::lock_guard<std::mutex> guard(_lockInputBuffer);
+    bool* buf = _inputBuffer;
+	size_t i = 0;
+	while(i<length){
+		uint8_t byte  = value[i++];
+		buf[indexFrom++]  = (byte & 0x0001) != 0;
+		buf[indexFrom++]  = (byte & 0x0002) != 0;
+		buf[indexFrom++]  = (byte & 0x0004) != 0;
+		buf[indexFrom++]  = (byte & 0x0008) != 0;
+		buf[indexFrom++]  = (byte & 0x0010) != 0;
+		buf[indexFrom++]  = (byte & 0x0020) != 0;
+		buf[indexFrom++]  = (byte & 0x0040) != 0;
+		buf[indexFrom++]  = (byte & 0x0080) != 0;
+	}
+    _inputsChanged = true;
+}
+void FPGAInterface::setBoolArray(size_t indexFrom, bool* value, size_t length){
+    std::lock_guard<std::mutex> guard(_lockInputBuffer);
+    bool* buf = _inputBuffer;
+	size_t i = 0;
+	while(i<length){
+		
+		buf[indexFrom++]  = value[i++];
+	}
+    _inputsChanged = true;
+}
 void FPGAInterface::usingLocked(std::function<void(LockedFPGAInterface)> callback)
 {
     std::lock_guard<std::mutex> guard(_lockFullOutputsBuffer);
@@ -159,6 +186,34 @@ uint16_t FPGAInterface::getUInt16NoLock(size_t indexFrom)
     if (buf[indexFrom + 15]) result |= 0x8000;
     return result;
 }
+void FPGAInterface::getByteArray(size_t indexFrom, uint8_t* bytes, size_t length)
+{
+    std::lock_guard<std::mutex> guard(_lockFullOutputsBuffer);
+    const bool* buf = _fullOutputBuffer;
+	int i=0;
+	while(i<length){
+		uint8_t byte = 0;
+		if (buf[indexFrom++])  byte |= 0x0001;
+		if (buf[indexFrom++])  byte |= 0x0002;
+		if (buf[indexFrom++])  byte |= 0x0004;
+		if (buf[indexFrom++])  byte |= 0x0008;
+		if (buf[indexFrom++])  byte |= 0x0010;
+		if (buf[indexFrom++])  byte |= 0x0020;
+		if (buf[indexFrom++])  byte |= 0x0040;
+		if (buf[indexFrom++])  byte |= 0x0080;
+		bytes[i++]=byte;
+	}
+}
+
+void FPGAInterface::getBoolArray(size_t indexFrom, bool* bits, size_t length)
+{
+    std::lock_guard<std::mutex> guard(_lockFullOutputsBuffer);
+    const bool* buf = _fullOutputBuffer;
+	int i=0;
+	while(i<length){
+		bits[i++]=buf[indexFrom++];
+	}
+}
 
 // ─── Public: Lifecycle ────────────────────────────────────────────────────────
 
@@ -216,17 +271,19 @@ void FPGAInterface::readOutputs(bool includingStaging, bool* temporaryFullOutput
 
     size_t intoIndex = _fullOutputBufferLength - 1;
 
-	std::string binaryString(length, 'z');
+	//std::string binaryString(length, 'z');
     for (size_t i = 0; i < length; ++i)
     {
 		bool value = _fpgaBus.getOutValue();
         sleep();
         temporaryFullOutputBuffer[intoIndex--] = value;
+		/*
 		if (value)
 			binaryString[i] = '1';
 		else{
 			binaryString[i] = '0';
 		}
+		*/
         _fpgaBus.setOutShift(true);
         sleep();
         _fpgaBus.setOutShift(false);
@@ -241,7 +298,8 @@ void FPGAInterface::readOutputs(bool includingStaging, bool* temporaryFullOutput
 	we work backwards on index. so now the msb is at the highest index. 
 	
 	*/
-	LOG_INFO("what came out in order it came out from left ot right: %s", binaryString.c_str());
+	//LOG_INFO(includingStaging?"Included staging":"Did not include staging");
+	//LOG_INFO("what came out in order it came out from left ot right: %s", binaryString.c_str());
 	
 /*	std::string binaryStringActualOrderStored(_fullOutputBufferLength, 'z');
 	for (size_t i = 0; i < _fullOutputBufferLength; i++)
@@ -257,7 +315,7 @@ void FPGAInterface::readOutputs(bool includingStaging, bool* temporaryFullOutput
 
 void FPGAInterface::sleep()
 {
-    Delay::ms(10);
+    Delay::usBlockingOtherTasks(_sleepUs);
 }
 
 // ─── Private: Loop ────────────────────────────────────────────────────────────
@@ -287,9 +345,8 @@ void FPGAInterface::loop()
 		}
 		uint64_t timeUs = TimeHelper::us();
 		_lockInputBuffer.lock();
-		if (!_inputsChanged||true)
+		if (!_inputsChanged)
 		{
-			LOG_INFO("The right one");
 			_lockInputBuffer.unlock();
 			readOutputs(false, temporaryFullOutputBuffer);
 		}

@@ -10,7 +10,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Windows;
-
+using InfernoDispatcher;
 namespace HVPSUI
 {
     /// <summary>
@@ -25,6 +25,7 @@ namespace HVPSUI
             string logFilePath = Path.Join(executingDirectory, "log.txt");
             Logs.Initialize(logFilePath);
             Logs.Default.AddLogWriter(new DiagnosticsConsoleWriter());
+            InfernoDispatcher.Dispatcher.InitializeWithNative(Logs.Default.Error);
             ShutdownManager.Initialize(Application.Current.Shutdown, () => Logs.Default);
             InitializeComponent();
             InitAsync();

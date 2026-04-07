@@ -1,4 +1,5 @@
 ﻿using Core.Strings;
+using System;
 using System.Linq;
 using System.Text;
 
@@ -11,11 +12,7 @@ namespace FPGAInterfaceGenerator
             FPGAInterfaceSetup setup,
             string outputDirectory)
         {
-            int debounceLimit = 20000;
-            float debounceMs = ((float)debounceLimit)/50000f;
-            if(debounceMs * 2 > setup.SleepPeriodMs) {
-                throw new ArgumentException($"{nameof(setup.SleepPeriodMs)} is too short");
-            }
+            int debounceLimit = (50 * setup.SleepPeriodUs);
             string moduleName = setup.Name;
             string vFilePath = Path.Combine(outputDirectory, $"{moduleName}.v");
             StringBuilder sb = new StringBuilder();
@@ -23,11 +20,11 @@ namespace FPGAInterfaceGenerator
             // Calculate total bit lengths
             int inputsLength = 0;
             foreach (var input in setup.Inputs)
-                IncrementIndexForType(ref inputsLength, input.VariableType);
+                IncrementIndexForType(ref inputsLength, input.VariableType, input.CustomLength);
 
             int outputsLength = 0;
             foreach (var output in setup.Outputs)
-                IncrementIndexForType(ref outputsLength, output.VariableType);
+                IncrementIndexForType(ref outputsLength, output.VariableType, output.CustomLength);
 
             int totalLength = inputsLength + outputsLength;
 
@@ -48,9 +45,9 @@ namespace FPGAInterfaceGenerator
             foreach (var input in setup.Inputs)
             {
                 string portName = StringHelper.CamelCaseToSnakeCase(input.Name);
-                string typeName = GetVerilogType(input.VariableType);
+                string typeName = GetVerilogType(input.VariableType, input.CustomLength);
                 sb.AppendLine($"    output wire {typeName} {portName},");
-                IncrementIndexForType(ref bitIndex, input.VariableType);
+                IncrementIndexForType(ref bitIndex, input.VariableType, input.CustomLength);
             }
 
             // Named input ports (these come FROM core logic)
@@ -61,10 +58,10 @@ namespace FPGAInterfaceGenerator
             {
                 currentOutput++;
                 string portName = StringHelper.CamelCaseToSnakeCase(output.Name);
-                string typeName = GetVerilogType(output.VariableType);
+                string typeName = GetVerilogType(output.VariableType, output.CustomLength);
                 string comma = currentOutput < outputPortCount ? "," : "";
                 sb.AppendLine($"    input wire {typeName} {portName}{comma}");
-                IncrementIndexForType(ref bitIndex, output.VariableType);
+                IncrementIndexForType(ref bitIndex, output.VariableType, output.CustomLength);
             }
 
             sb.AppendLine(");");
@@ -101,7 +98,7 @@ namespace FPGAInterfaceGenerator
             foreach (var input in setup.Inputs)
             {
                 string portName = StringHelper.CamelCaseToSnakeCase(input.Name);
-                int width = GetBitWidth(input.VariableType);
+                int width = GetBitWidth(input.VariableType, input.CustomLength);
                 if (width == 1)
                 {
                     sb.AppendLine($"    assign {portName} = input_live[{bitIndex}];");
@@ -110,7 +107,7 @@ namespace FPGAInterfaceGenerator
                 {
                     sb.AppendLine($"    assign {portName} = input_live[{bitIndex + width - 1}:{bitIndex}];");
                 }
-                IncrementIndexForType(ref bitIndex, input.VariableType);
+                IncrementIndexForType(ref bitIndex, input.VariableType, input.CustomLength);
             }
 
             // Combinatorial assignment for out_value - always reflects current top of buffer
@@ -179,35 +176,41 @@ namespace FPGAInterfaceGenerator
             sb.AppendLine($"    );");
         }
 
-        private static void IncrementIndexForType(ref int index, VariableType variableType)
+        private static void IncrementIndexForType(ref int index, VariableType variableType, int? customLength)
         {
             switch (variableType)
             {
                 case VariableType.Bit: index++; return;
                 case VariableType.Byte: index += 8; return;
                 case VariableType.UInt16: index += 16; return;
+                case VariableType.CustomLengthBits: index += customLength!.Value; return;
+                case VariableType.CustomLengthBytes: index += (customLength!.Value * 8); return;
                 default: throw new NotImplementedException();
             }
         }
 
-        private static int GetBitWidth(VariableType variableType)
+        private static int GetBitWidth(VariableType variableType, int? customLength)
         {
             switch (variableType)
             {
                 case VariableType.Bit: return 1;
                 case VariableType.Byte: return 8;
                 case VariableType.UInt16: return 16;
+                case VariableType.CustomLengthBits: return customLength!.Value;
+                case VariableType.CustomLengthBytes: return customLength!.Value * 8;
                 default: throw new NotImplementedException();
             }
         }
 
-        private static string GetVerilogType(VariableType variableType)
+        private static string GetVerilogType(VariableType variableType, int? customLength)
         {
             switch (variableType)
             {
                 case VariableType.Bit: return "";
                 case VariableType.Byte: return "[7:0]";
                 case VariableType.UInt16: return "[15:0]";
+                case VariableType.CustomLengthBits: return $"[{customLength!.Value - 1}:0]";
+                case VariableType.CustomLengthBytes: return $"[{(customLength!.Value * 8)- 1}:0]";
                 default: throw new NotImplementedException();
             }
         }

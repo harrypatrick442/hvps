@@ -6,6 +6,7 @@ idf_component_register(
 		"IO/Inputs.cpp"
 		"IO/Outputs.cpp"
 		"Peripherals/Addresses.cpp"
+		"Peripherals/LocalUI.cpp"
 		"Ports/Port_ControllingMachine.cpp"
 		"ControllerCore/HighSpeedCore.cpp"
 		"ControllerCore/SystemChecks.cpp"

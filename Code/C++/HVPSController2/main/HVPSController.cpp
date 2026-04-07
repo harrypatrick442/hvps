@@ -1,3 +1,7 @@
+
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+
 #include "ADC/ADCOneShot.hpp"
 #include "Broadcasting/LiveDataBroadcaster.hpp"
 #include "Communication/Bluetooth/Bluetooth_BR_EDR.hpp"
@@ -22,6 +26,7 @@
 #include "Temperature/TemperatureSensorAndLimit.hpp"
 #include "Temperature/TemperatureMonitor.hpp"
 #include "IO/PinDefinitions.hpp"
+#include "Peripherals/LocalUI.hpp"
 #include "Enums/SystemState.hpp"
 #include "Graphics/HVPSLEDDisplay.hpp"
 #include "Watchdog/WatchdogCollection.hpp"
@@ -43,6 +48,7 @@ extern "C" void app_main(void)
 	esp_wifi_deinit();
     esp_log_set_vprintf(vprintf);
     esp_log_level_set("*", ESP_LOG_VERBOSE);
+	LOG_INFO("1 to ticks is %f: ", static_cast<float>(pdMS_TO_TICKS(1)));
 	
     StayTheFuckAwake::disableSleepSources();
     StayTheFuckAwake::disablePowerManagement();
@@ -72,21 +78,18 @@ extern "C" void app_main(void)
 	MOSFETTemperatureSensor& mosfetTemperatureSensor = MOSFETTemperatureSensor::initialize(i2c);
 	LOG_INFO("Doing bluetooth");
     Bluetooth::initialize(
-        "HVPS", 
+        "HVPS2", 
         "HVPSControllerServer"
      );
-	LOG_INFO("Doing bluetooth b");
     Bluetooth& bluetooth = Bluetooth::getInstance();
-	LOG_INFO("Doing bluetooth c");
 	bool inError = Aborter::hasLastAbortReason()||CrashReporter::hasCoreDumpSummary();
-	LOG_INFO("Doing bluetooth d");
 	HighSpeedCore& highSpeedCore = HighSpeedCore::initialize(
 		Config1,
 		Config2,
 		hvpsFPGABus,
 		inError
 	);
-	highSpeedCore.onSystemStateChanged.addHandler([&hVPSLEDDisplay](SystemState systemState) {hVPSLEDDisplay.indicateState(systemState);});
+	LocalUI& localUI = LocalUI::initialize(highSpeedCore, hVPSLEDDisplay);
 	Port_ControllingMachine& portControllingMachine 
 		= Port_ControllingMachine::initialize(
 			bluetooth, 
@@ -108,6 +111,7 @@ extern "C" void app_main(void)
 		mosfetTemperatureSensor
 	);
 	LOG_INFO("Initialized");
+	/*
 	while(true){
 		hVPSLEDDisplay.indicateState(SystemState::Error);
 		
@@ -117,7 +121,7 @@ extern "C" void app_main(void)
 		//hvpsFPGABus.setToOutput(false);
 		//hvpsFPGABus.setInValue(false);
 		Delay::ms(1000);
-	}
+	}*/
 	vTaskDelete(NULL); // Delete the current task*/
 }  
 

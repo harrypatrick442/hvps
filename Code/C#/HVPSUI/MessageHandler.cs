@@ -24,7 +24,8 @@ namespace HVPSUI
             _PingDisconnectDetector = new PingDisconnectDetector(
                 _DeviceRegistrationMessageHandler,
                 DeviceDisconnected,
-                HVPSConstants.Constants.PingTimeoutMilliseconds
+                HVPSConstants.Constants.PingTimeoutMilliseconds,
+                HVPSConstants.Constants.SendPingIntervalMilliseconds
             );
             _WebViewMessagingInterface.OnMessage += HandleMessageFromJavaScript;
             _WebViewMessagingInterface.RegisterMethod<

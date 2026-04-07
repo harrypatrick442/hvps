@@ -27,21 +27,25 @@ private:
 	volatile bool _taskFinished;
     bool _inputsChanged;
     std::atomic<uint64_t> _lastUpdateTimeUs;
-	uint64_t _sleepMs;
+	uint64_t _sleepUs;
 
     std::mutex _lockInputBuffer;
     std::mutex _lockFullOutputsBuffer;
 
 public:
-    FPGAInterface(size_t inputsLength, size_t outputsLength, IFPGABus& fpgaBus, uint64_t sleepMs);
+    FPGAInterface(size_t inputsLength, size_t outputsLength, IFPGABus& fpgaBus, uint64_t sleepUs);
 	uint64_t getLastUpdateTimeUs();
     void setBit(size_t index, bool value);
     void setByte(size_t indexFrom, uint8_t value);
     void setUInt16(size_t indexFrom, uint16_t value);
+    void setBoolArray(size_t indexFrom, bool* value, size_t length);
+    void setByteArray(size_t indexFrom, uint8_t* value, size_t length);
 	void usingLocked(std::function<void(LockedFPGAInterface)> callback);
     bool     getBit(size_t index);
     uint8_t  getByte(size_t indexFrom);
     uint16_t getUInt16(size_t indexFrom);
+	void getBoolArray(size_t indexFrom, bool* bits, size_t length);
+	void getByteArray(size_t indexFrom, uint8_t* bytes, size_t length);
 
     void dispose();
 

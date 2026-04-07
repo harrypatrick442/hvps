@@ -52,12 +52,12 @@ module hvps_controller(
     output wire U20_INV_CONVST,
 	 input wire U20_INV_EOC,
 	 output wire U20_INV_RD,
-	 input wire U23_HIN,
-	 input wire U23_LIN,
-	 input wire U23_SD,
-	 input wire U24_HIN,
-	 input wire U24_LIN,
-	 input wire U24_SD
+	 output wire U23_HIN,
+	 output wire U23_LIN,
+	 output wire U23_SD,
+	 output wire U24_HIN,
+	 output wire U24_LIN,
+	 output wire U24_SD
 );
 
     // Wires to connect to the interface
@@ -77,8 +77,7 @@ module hvps_controller(
     reg fpga_in_error = 1;
 	 
 	 wire can_drive;//The sacred signal from the bangbang controller that goes into the H-Bridge.
-	 //assign OT5 = drive2;
-    //assign ESP_OUT_VALUE = 1'b1;
+	 assign OT5 = drive & drive2;
 	 
     // Instantiate the module
     HVPS_FPGAInterface fpga_interface (
@@ -165,7 +164,7 @@ module hvps_controller(
 	  );
 	  HBridge hBridge(
 		 .clk(clk),           // 50MHz system clock
-		 .can_drive(can_drive),     // from BangBangController
+		 .can_drive(drive),    // from BangBangController
 		 .U23_HIN(U23_HIN),
 		 .U23_LIN(U23_LIN),
 		 .U23_SD(U23_SD),

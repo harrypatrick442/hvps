@@ -250,6 +250,7 @@ export default class HVPSUIViewModel{
 		try{
 			HVPSUIAPI.connectToBluetoothDevice(address)
 			.then(res=>{
+				console.log('result of bluetooth connect');
 				console.log(res);
 				if(isNullOrUndefined(res.failedReason)){
 					this._setShowBluetoothReconnect(false);

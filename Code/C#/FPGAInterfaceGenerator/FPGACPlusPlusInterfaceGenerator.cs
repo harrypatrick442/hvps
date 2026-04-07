@@ -47,7 +47,7 @@ namespace FPGAInterfaceGenerator
             }
             sbHpp.AppendLine("public:");
             CreateConstructor(className, sbHpp, sbCpp,
-                getInputsLength(), getOutputsLength(), setup.SleepPeriodMs);
+                getInputsLength(), getOutputsLength(), setup.SleepPeriodUs);
 
             sbHpp.AppendLine("    uint64_t getLastUpdateTimeUs();");
             sbCpp.Append("uint64_t ");
@@ -114,7 +114,7 @@ namespace FPGAInterfaceGenerator
             StringBuilder sbCpp,
             int inputsLength,
             int outputsLength,
-            int sleepPeriodMs)
+            int sleepPeriodUs)
         {
             sbHpp.Append("    ");
             sbHpp.Append(className);
@@ -128,7 +128,7 @@ namespace FPGAInterfaceGenerator
             sbCpp.Append(",");
             sbCpp.Append(outputsLength);
             sbCpp.Append(", fpgaBus, ");
-            sbCpp.Append(sleepPeriodMs);
+            sbCpp.Append(sleepPeriodUs);
             sbCpp.Append("){");
             sbCpp.AppendLine("}");
         }
@@ -147,30 +147,86 @@ namespace FPGAInterfaceGenerator
             getOutputFullIndex = (name) => outputIndices[name];
             return (output) =>
             {
-                string returnTypeName = GetTypeName(output.VariableType);
                 int fullOutputsIndex = inputsLength + nextOutputIndex;
                 outputIndices[output.Name] = fullOutputsIndex;
+                if (output.VariableType.Equals(VariableType.CustomLengthBits)
+                || output.VariableType.Equals(VariableType.CustomLengthBytes))
+                {
+                    AppendOutputArray(sbHpp, sbCpp, output, inputsLength,
+                        ref nextOutputIndex, className, fullOutputsIndex);
+                    return;
+                }
+                AppendOutputNonArray(
+                    sbHpp,  sbCpp,  output,
+                    inputsLength, ref nextOutputIndex,  
+                    className,  fullOutputsIndex
+                );
+            };
+        }
+        private static void AppendOutputNonArray(
+            StringBuilder sbHpp, StringBuilder sbCpp, Output output,
+            int inputsLength, ref int nextOutputIndex, string className, 
+            int fullOutputsIndex) {
 
-                sbHpp.Append("    ");
-                sbHpp.Append(returnTypeName);
-                sbCpp.Append(returnTypeName);
-                sbCpp.Append(" ");
-                sbCpp.Append(className);
+            string returnTypeName = GetTypeName(output.VariableType);
+            sbHpp.Append("    ");
+            sbHpp.Append(returnTypeName);
+            sbCpp.Append(returnTypeName);
+            sbCpp.Append(" ");
+            sbCpp.Append(className);
+            string methodName = $"get{StringHelper.UpperCamelCase(output.Name)}";
+            sbCpp.Append("::");
+            sbCpp.Append(methodName);
+            sbHpp.Append(" ");
+            sbHpp.Append(methodName);
+            sbHpp.AppendLine("();");
+            sbCpp.AppendLine("(){");
+            sbCpp.Append("     return _fpgaInterface.");
+            sbCpp.Append(GetGetMethodName(output.VariableType));
+            sbCpp.Append("(");
+            sbCpp.Append(fullOutputsIndex.ToString());
+            sbCpp.AppendLine(");");
+            sbCpp.AppendLine("}");
+            IncrementIndexForType(ref nextOutputIndex, output.VariableType);
+        }
+        private static void AppendOutputArray(
+          StringBuilder sbHpp, StringBuilder sbCpp, Output output,
+          int inputsLength, ref int nextOutputIndex, string className,
+          int fullOutputsIndex)
+        {
+                string returnTypeName = GetTypeName(output.VariableType);
+
                 string methodName = $"get{StringHelper.UpperCamelCase(output.Name)}";
+
+                sbHpp.Append("    void  ");
+                sbHpp.Append(methodName);
+                sbHpp.Append("(");
+                sbHpp.Append(returnTypeName);
+                sbHpp.Append(" (&value)[");
+                sbHpp.Append(output.CustomLength);
+                sbHpp.Append("]");
+                sbHpp.AppendLine(");");
+
+                sbCpp.Append("void ");
+                sbCpp.Append(className);
                 sbCpp.Append("::");
                 sbCpp.Append(methodName);
-                sbHpp.Append(" ");
-                sbHpp.Append(methodName);
-                sbHpp.AppendLine("();");
-                sbCpp.AppendLine("(){");
-                sbCpp.Append("     return _fpgaInterface.");
+                sbCpp.Append("(");
+                sbCpp.Append(returnTypeName);
+                sbCpp.Append(" (&value)[");
+                sbCpp.Append(output.CustomLength);
+                sbCpp.Append("]");
+                sbCpp.AppendLine("){");
+                sbCpp.Append("    _fpgaInterface.");
                 sbCpp.Append(GetGetMethodName(output.VariableType));
                 sbCpp.Append("(");
                 sbCpp.Append(fullOutputsIndex.ToString());
+                sbCpp.Append(", value, ");
+                sbCpp.Append(output.CustomLength);
                 sbCpp.AppendLine(");");
                 sbCpp.AppendLine("}");
-                IncrementIndexForType(ref nextOutputIndex, output.VariableType);
-            };
+
+                IncrementIndexForType(ref nextOutputIndex, output.VariableType, output.CustomLength);
         }
 
         static Action<Input> Create_AppendInput(
@@ -183,32 +239,72 @@ namespace FPGAInterfaceGenerator
             getInputsLength = () => nextInputIndex;
             return (input) =>
             {
-                sbCpp.Append("void ");
-                sbHpp.Append("    void ");
-                sbCpp.Append(className);
-                sbCpp.Append("::");
-                string methodName = $"set{StringHelper.UpperCamelCase(input.Name)}";
-                sbCpp.Append(methodName);
-                sbHpp.Append(methodName);
-                string valueTypeName = GetTypeName(input.VariableType);
-                sbCpp.Append("(");
-                sbCpp.Append(valueTypeName);
-                sbCpp.AppendLine(" value){");
-                sbHpp.Append("(");
-                sbHpp.Append(valueTypeName);
-                sbHpp.AppendLine(" value);");
-                sbCpp.Append("     return _fpgaInterface.");
-                sbCpp.Append(GetSetMethodName(input.VariableType));
-                sbCpp.Append("(");
-                sbCpp.Append(nextInputIndex.ToString());
-                sbCpp.Append(", value");
-                sbCpp.AppendLine(");");
-                sbCpp.AppendLine("}");
-                IncrementIndexForType(ref nextInputIndex, input.VariableType);
+                if (input.VariableType.Equals(VariableType.CustomLengthBits)|| input.VariableType.Equals(VariableType.CustomLengthBytes)) {
+                    AppendInputArray(sbCpp, sbHpp, className, input, ref nextInputIndex);
+                    return;
+                }
+                AppendInputNonArray(sbCpp,  sbHpp, className, input, ref nextInputIndex);
             };
         }
+        private static void AppendInputNonArray(StringBuilder sbCpp, StringBuilder sbHpp, string className, Input input, ref int nextInputIndex) {
 
-        private static void IncrementIndexForType(ref int index, VariableType variableType)
+            sbCpp.Append("void ");
+            sbHpp.Append("    void ");
+            sbCpp.Append(className);
+            sbCpp.Append("::");
+            string methodName = $"set{StringHelper.UpperCamelCase(input.Name)}";
+            sbCpp.Append(methodName);
+            sbHpp.Append(methodName);
+            string valueTypeName = GetTypeName(input.VariableType);
+            sbCpp.Append("(");
+            sbCpp.Append(valueTypeName);
+            sbCpp.AppendLine(" value){");
+            sbHpp.Append("(");
+            sbHpp.Append(valueTypeName);
+            sbHpp.AppendLine(" value);");
+            sbCpp.Append("     return _fpgaInterface.");
+            sbCpp.Append(GetSetMethodName(input.VariableType));
+            sbCpp.Append("(");
+            sbCpp.Append(nextInputIndex.ToString());
+            sbCpp.Append(", value");
+            sbCpp.AppendLine(");");
+            sbCpp.AppendLine("}");
+            IncrementIndexForType(ref nextInputIndex, input.VariableType);
+        }
+        private static void AppendInputArray(StringBuilder sbCpp, StringBuilder sbHpp, string className, Input input, ref int nextInputIndex)
+        {
+
+            sbCpp.Append("void ");
+            sbCpp.Append(className);
+            sbCpp.Append("::");
+            string methodName = $"set{StringHelper.UpperCamelCase(input.Name)}";
+            sbCpp.Append(methodName);
+            string valueTypeName = GetTypeName(input.VariableType);
+            sbCpp.Append("(");
+            sbCpp.Append(valueTypeName);
+            sbCpp.Append(" (&value)[");
+            sbCpp.Append(input.CustomLength!.Value);
+            sbCpp.AppendLine("]){");
+            sbCpp.Append("     return _fpgaInterface.");
+            sbCpp.Append(GetSetMethodName(input.VariableType));
+            sbCpp.Append("(");
+            sbCpp.Append(nextInputIndex.ToString());
+            sbCpp.Append(", value, ");
+            sbCpp.Append(input.CustomLength!.Value);
+            sbCpp.AppendLine(");");
+            sbCpp.AppendLine("}");
+
+            sbHpp.Append("    void ");
+            sbHpp.Append(methodName);
+            sbHpp.Append("(");
+            sbHpp.Append(valueTypeName);
+            sbHpp.Append(" (&value)[");
+            sbHpp.Append(input.CustomLength!.Value);
+            sbHpp.AppendLine("]);");
+            IncrementIndexForType(ref nextInputIndex, input.VariableType, input.CustomLength);
+        }
+
+        private static void IncrementIndexForType(ref int index, VariableType variableType, int? customLength = null)
         {
             switch (variableType)
             {
@@ -220,6 +316,12 @@ namespace FPGAInterfaceGenerator
                     return;
                 case VariableType.UInt16:
                     index += 16;
+                    return;
+                case VariableType.CustomLengthBytes:
+                    index += customLength!.Value * 8;
+                    return;
+                case VariableType.CustomLengthBits:
+                    index += customLength!.Value;
                     return;
                 default:
                     throw new NotImplementedException();
@@ -236,6 +338,10 @@ namespace FPGAInterfaceGenerator
                     return "uint8_t";
                 case VariableType.UInt16:
                     return "uint16_t";
+                case VariableType.CustomLengthBits:
+                    return "bool";
+                case VariableType.CustomLengthBytes:
+                    return "uint8_t";
                 default:
                     throw new NotImplementedException();
             }
@@ -251,6 +357,10 @@ namespace FPGAInterfaceGenerator
                     return "getByte";
                 case VariableType.UInt16:
                     return "getUInt16";
+                case VariableType.CustomLengthBits:
+                    return "getBoolArray";
+                case VariableType.CustomLengthBytes:
+                    return "getByteArray";
                 default:
                     throw new NotImplementedException();
             }
@@ -281,6 +391,10 @@ namespace FPGAInterfaceGenerator
                     return "setByte";
                 case VariableType.UInt16:
                     return "setUInt16";
+                case VariableType.CustomLengthBits:
+                    return "setBoolArray";
+                case VariableType.CustomLengthBytes:
+                    return "setByteArray";
                 default:
                     throw new NotImplementedException();
             }

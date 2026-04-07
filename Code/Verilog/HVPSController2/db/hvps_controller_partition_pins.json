@@ -8,6 +8,10 @@
 					"strict" : false
 				},
 				{
+					"name" : "OT5",
+					"strict" : false
+				},
+				{
 					"name" : "U5_INV_CONVST",
 					"strict" : false
 				},
@@ -32,6 +36,22 @@
 					"strict" : false
 				},
 				{
+					"name" : "U23_HIN",
+					"strict" : false
+				},
+				{
+					"name" : "U23_LIN",
+					"strict" : false
+				},
+				{
+					"name" : "U24_HIN",
+					"strict" : false
+				},
+				{
+					"name" : "U24_LIN",
+					"strict" : false
+				},
+				{
 					"name" : "clk",
 					"strict" : false
 				},
@@ -48,11 +68,7 @@
 					"strict" : false
 				},
 				{
-					"name" : "U12_DB7",
-					"strict" : false
-				},
-				{
-					"name" : "U12_DB6",
+					"name" : "ESP_IN_VALUE",
 					"strict" : false
 				},
 				{
@@ -61,6 +77,22 @@
 				},
 				{
 					"name" : "ESP_OUT_SHIFT",
+					"strict" : false
+				},
+				{
+					"name" : "ESP_GO_LIVE",
+					"strict" : false
+				},
+				{
+					"name" : "ESP_IN_SHIFT",
+					"strict" : false
+				},
+				{
+					"name" : "U12_DB7",
+					"strict" : false
+				},
+				{
+					"name" : "U12_DB6",
 					"strict" : false
 				},
 				{
@@ -149,14 +181,6 @@
 				},
 				{
 					"name" : "U20_DB0",
-					"strict" : false
-				},
-				{
-					"name" : "ESP_IN_SHIFT",
-					"strict" : false
-				},
-				{
-					"name" : "ESP_IN_VALUE",
 					"strict" : false
 				}
 			]

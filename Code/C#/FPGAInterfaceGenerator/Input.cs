@@ -2,8 +2,8 @@
 {
     public class Input:IOVariable
     {
-        public Input(string name, VariableType variableType) :
-            base(name, Direction.Input, variableType)
+        public Input(string name, VariableType variableType, int? customLength = null) :
+            base(name, Direction.Input, variableType, customLength)
         { 
             
         }

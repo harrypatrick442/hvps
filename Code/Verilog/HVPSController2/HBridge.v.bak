@@ -25,7 +25,7 @@ always @(posedge clk) begin
 
     if (counter >= QUARTER_CYCLE - 1) begin
         counter <= 0;
-        quarter <= (quarter >= 3) ? 0 : quarter + 1;
+        quarter <= (quarter == 3) ? 0 : quarter + 1;
 		drive_ended_for_quarter <= 0;
     end else begin
         counter <= counter + 1;

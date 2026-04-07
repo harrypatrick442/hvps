@@ -5,5 +5,7 @@
         Bit,
         Byte,
         UInt16,
+        CustomLengthBits,
+        CustomLengthBytes
     }
 }

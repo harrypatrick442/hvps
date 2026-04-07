@@ -64,32 +64,32 @@ float HighSpeedCore::getFrequencyHz(ValueBoundType& valueBoundType){
 }
 float HighSpeedCore::getActualPeakPrimaryCurrent(){
 	uint8_t raw = _fpgaInterface.getActualPeakPrimaryCurrent();
-	LOG_INFO("raw peak primary current: %" PRIu8, raw);
+	//LOG_INFO("raw peak primary current: %" PRIu8, raw);
 	return _hvpsConfiguration1.primaryCurrentFromRaw * static_cast<float>(raw);
 }
 float HighSpeedCore::getActualOutputVoltage(){
 	uint8_t raw = _fpgaInterface.getActualOutputVoltage();
-	LOG_INFO("raw output voltage: %" PRIu8, raw);
+	//LOG_INFO("raw output voltage: %" PRIu8, raw);
 	return _hvpsConfiguration1.outputVoltageFromRaw * static_cast<float>(raw);
 }
 float HighSpeedCore::getActualFirstStageVoltage(){
 	uint8_t raw = _fpgaInterface.getActualFirstStageVoltage();
-	LOG_INFO("raw first stage voltage: %" PRIu8, raw);
+	//LOG_INFO("raw first stage voltage: %" PRIu8, raw);
 	return _hvpsConfiguration1.firstStageVoltageFromRaw * static_cast<float>(raw);
 }
 float HighSpeedCore::getActualPeakPrimaryCurrent2(){
 	uint8_t raw = _fpgaInterface.getActualPeakPrimaryCurrent2();
-	LOG_INFO("raw peak primary current: %" PRIu8, raw);
+	//LOG_INFO("raw peak primary current: %" PRIu8, raw);
 	return _hvpsConfiguration1.primaryCurrentFromRaw * static_cast<float>(raw);
 }
 float HighSpeedCore::getActualOutputVoltage2(){
 	uint8_t raw = _fpgaInterface.getActualOutputVoltage2();
-	LOG_INFO("raw output voltage: %" PRIu8, raw);
+	//LOG_INFO("raw output voltage: %" PRIu8, raw);
 	return _hvpsConfiguration1.outputVoltageFromRaw * static_cast<float>(raw);
 }
 float HighSpeedCore::getActualFirstStageVoltage2(){
 	uint8_t raw = _fpgaInterface.getActualFirstStageVoltage2();
-	LOG_INFO("raw first stage voltage: %" PRIu8, raw);
+	//LOG_INFO("raw first stage voltage: %" PRIu8, raw);
 	return _hvpsConfiguration1.firstStageVoltageFromRaw * static_cast<float>(raw);
 }
 void HighSpeedCore::start(){
@@ -172,7 +172,7 @@ void HighSpeedCore::startCoreTask(){
 	}, "HighSpeedCore::_run");
 }
 void HighSpeedCore::_run(){
-	while(true){
+	while(true){/*
 		Delay::ms(500);
 		uint8_t actualFirstStageVoltage;
 		uint8_t actualOutputVoltage;
@@ -197,24 +197,28 @@ void HighSpeedCore::_run(){
 			actualFirstStageVoltage2, 
 			actualPeakPrimaryCurrent2
 		);
-		continue;
+		continue;*/
 		if(isShuttingDownOrShutDown()||getActualSystemState()==SystemState::ShutDown){
 			doShutDown();
 			continue;
 		}
 		switch(getDesiredSystemState()){
 			case SystemState::Idle:
+				LOG_INFO("Idle");
 				doIdle();
 				continue;
 			case SystemState::Live:
+				LOG_INFO("Live");
 				doLive();
 				_fpgaInterface.setDrive(false);
 				_fpgaInterface.setDrive2(false);
 				continue;
 			case SystemState::ShutDown:
+				LOG_INFO("ShutDown");
 				doShutDown();
 				continue;
 			case SystemState::RunningSystemChecks:
+				LOG_INFO("Running System Checks");
 				doRunningSystemChecks();
 				continue;
 			case SystemState::Error:
@@ -376,6 +380,7 @@ void HighSpeedCore::doLive(){
 		_fpgaInterface.setDrive(true);
 		_fpgaInterface.setDrive2(true);
 	}
+	LOG_INFO("Exited loop");
 	_fpgaInterface.setDrive(false);
 	_fpgaInterface.setDrive2(false);
 }
@@ -394,6 +399,7 @@ void HighSpeedCore::doError(){
 	}
 }
 void HighSpeedCore::dispatchSystemStateChanged(SystemState v){
+	LOG_INFO("HighSpeedCore::dispatchSystemStateChanged");
 	onSystemStateChanged.dispatch(v);
 }
 void HighSpeedCore::dispatchError(std::string errorMessage){
