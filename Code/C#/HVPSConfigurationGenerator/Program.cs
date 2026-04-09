@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using HVPSConstants;
 using ConfigurationClassBuilder;
+using FPGAConstantsGenerator;
 namespace HVPSConfigurationGenerator
 {
     class Program
@@ -64,6 +65,7 @@ namespace HVPSConfigurationGenerator
                 maxAverageOutputPowerWatts = (float)Constants.MaximumCompositeOutputCurrentLimitingResistorAveragePower,
                 maxFlybackEnergyPerCycleJouls = (float)maxFlybackEnergyPerCycle,
                 maxOutputVoltageThresholdVolts = (float)maxOutputVoltageThreshold,
+                defaultOutputVoltageVolts = (float)maxOutputVoltageThreshold,
                 minOutputVoltageThresholdVolts = (float)Constants.MinimumDesiredOutputVoltage,
                 nVillardStages = Constants.NStages,
                 pingTimeoutMilliseconds = Constants.PingTimeoutMilliseconds,
@@ -76,9 +78,8 @@ namespace HVPSConfigurationGenerator
                         *Constants.VillardCapacitorCapacitance
                         *(1d + (Constants.VillardCapacitorBleedResistorTolerancePercent / 100d)) 
                         * Constants.VillardCapacitorBleedResistance),
-                primaryCurrentFromRaw = 
-                    (float)(
-                        (Constants.ADCRawToUnscaledVoltage/
+                primaryCurrentFromRaw = (float)(
+                        (Constants.ADCRawToUnscaledVoltage /
                                 Constants.PrimaryCurrentFeedbackBurdenResistorResistanceOhms
                         )
                         * Constants.PrimaryCurrentFeedbackCurrentTransformerRatioSecondaryToPrimary
@@ -89,7 +90,7 @@ namespace HVPSConfigurationGenerator
                 outputVoltageFromRaw = 
                     (float)(Constants.OutputVoltageFeedbackPotentialDividerRatio
                     * Constants.ADCRawToUnscaledVoltage),
-               maxTemperatureMosfetDegreesC = Constants.MaxTemperatureMosfet,
+                maxTemperatureMosfetDegreesC = Constants.MaxTemperatureMosfet,
 
 
                 errorColour = Constants.ErrorColour.ToUInt32(),
@@ -145,6 +146,23 @@ namespace HVPSConfigurationGenerator
                     alreadyWroteWatcher
                 );
             }
+            GenerateFPGAConstants(reposDirectory, configurationStruct);
+        }
+        private static void GenerateFPGAConstants(string reposDirectory, HVPSConfiguration configurationStruct) {
+            int maxPrimaryCurrent = (int)Math.Floor(Constants.FlybackTransformerMaximumCurrent / configurationStruct.primaryCurrentFromRaw);
+            int maxFirstStageVoltage = (int)Math.Floor(configurationStruct.firstStageVoltageThresholdVolts/configurationStruct.firstStageVoltageFromRaw);
+            int maxOutputVoltage = (int)Math.Floor(configurationStruct.maxOutputVoltageThresholdVolts / configurationStruct.outputVoltageFromRaw);
+            FPGAConstantsGenerator.ConstantsGenerator.Generate(Path.Combine(
+                        reposDirectory,
+                        "hvps",
+                        "Code",
+                        "Verilog",
+                        "HVPSController2",
+                        "GeneratedConstants.sv"
+                ),
+                new Constant(name: "MAX_PRIMARY_CURRENT", value: maxPrimaryCurrent, nBits: 8, Format.Decimal),
+                new Constant(name: "MAX_FIRST_STAGE_VOLTAGE", value: maxFirstStageVoltage, nBits: 8, Format.Decimal),
+                new Constant(name: "MAX_OUTPUT_VOLTAGE", value: maxFirstStageVoltage, nBits: 8, Format.Decimal));
         }
         private static UInt32 FlashHzToMilliseconds(double hz){
             if (hz <= 0) return 0;

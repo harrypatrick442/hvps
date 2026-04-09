@@ -12,7 +12,7 @@ namespace FPGAInterfaceGenerator
             FPGAInterfaceSetup setup,
             string outputDirectory)
         {
-            int debounceLimit = (50 * setup.SleepPeriodUs);
+            int debounceLimit = (50 * setup.SleepPeriodUs)/2;
             string moduleName = setup.Name;
             string vFilePath = Path.Combine(outputDirectory, $"{moduleName}.v");
             StringBuilder sb = new StringBuilder();
@@ -183,8 +183,14 @@ namespace FPGAInterfaceGenerator
                 case VariableType.Bit: index++; return;
                 case VariableType.Byte: index += 8; return;
                 case VariableType.UInt16: index += 16; return;
-                case VariableType.CustomLengthBits: index += customLength!.Value; return;
-                case VariableType.CustomLengthBytes: index += (customLength!.Value * 8); return;
+                case VariableType.CustomLengthBits:
+                    if (!customLength.HasValue) throw new NullReferenceException();
+                    index += customLength!.Value; 
+                    return;
+                case VariableType.CustomLengthBytes:
+                    if (!customLength.HasValue) throw new NullReferenceException();
+                    index += (customLength!.Value * 8); 
+                    return;
                 default: throw new NotImplementedException();
             }
         }
@@ -196,8 +202,12 @@ namespace FPGAInterfaceGenerator
                 case VariableType.Bit: return 1;
                 case VariableType.Byte: return 8;
                 case VariableType.UInt16: return 16;
-                case VariableType.CustomLengthBits: return customLength!.Value;
-                case VariableType.CustomLengthBytes: return customLength!.Value * 8;
+                case VariableType.CustomLengthBits:
+                    if (!customLength.HasValue) throw new NullReferenceException(); 
+                    return customLength!.Value;
+                case VariableType.CustomLengthBytes:
+                    if (!customLength.HasValue) throw new NullReferenceException(); 
+                    return customLength!.Value * 8;
                 default: throw new NotImplementedException();
             }
         }
@@ -209,8 +219,12 @@ namespace FPGAInterfaceGenerator
                 case VariableType.Bit: return "";
                 case VariableType.Byte: return "[7:0]";
                 case VariableType.UInt16: return "[15:0]";
-                case VariableType.CustomLengthBits: return $"[{customLength!.Value - 1}:0]";
-                case VariableType.CustomLengthBytes: return $"[{(customLength!.Value * 8)- 1}:0]";
+                case VariableType.CustomLengthBits:
+                    if (!customLength.HasValue) throw new NullReferenceException(); 
+                    return $"[{customLength!.Value - 1}:0]";
+                case VariableType.CustomLengthBytes:
+                    if (!customLength.HasValue) throw new NullReferenceException(); 
+                    return $"[{(customLength!.Value * 8)- 1}:0]";
                 default: throw new NotImplementedException();
             }
         }

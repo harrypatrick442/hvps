@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "FPGAConstantsGenerator/1.0.0": {
+        "runtime": {
+          "FPGAConstantsGenerator.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "FPGAConstantsGenerator/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

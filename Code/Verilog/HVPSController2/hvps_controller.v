@@ -63,17 +63,14 @@ module hvps_controller(
     // Wires to connect to the interface
     wire drive;
     wire drive2;
-    wire [7:0] desired_max_first_stage_voltage;
     wire [7:0] desired_output_voltage;
-    wire [7:0] desired_max_peak_primary_current;
+    wire [7:0] command;
     
     // These would come from your actual core logic
     wire [7:0] primary_current_raw;
     wire [7:0] first_stage_voltage_raw;
     wire [7:0] output_voltage_raw;
-    wire [7:0] primary_current_raw_2;
-    wire [7:0] first_stage_voltage_raw_2;
-    wire [7:0] output_voltage_raw_2;
+	 reg [1023:0] buffered_data;
     reg fpga_in_error = 1;
 	 
 	 wire can_drive;//The sacred signal from the bangbang controller that goes into the H-Bridge.
@@ -90,16 +87,17 @@ module hvps_controller(
         .go_live(ESP_GO_LIVE),
         .drive(drive),
         .drive2(drive2),
-        .desired_max_first_stage_voltage(desired_max_first_stage_voltage),
         .desired_output_voltage(desired_output_voltage),
-        .desired_max_peak_primary_current(desired_max_peak_primary_current),
+        .command(command),
         .actual_first_stage_voltage(first_stage_voltage_raw),
         .actual_output_voltage(output_voltage_raw),
         .actual_peak_primary_current(primary_current_raw),
-        .actual_first_stage_voltage2(first_stage_voltage_raw_2),
-        .actual_output_voltage2(output_voltage_raw_2),
-        .actual_peak_primary_current2(primary_current_raw_2),
-        .error(fpga_in_error)
+        .error(fpga_in_error),
+        .max_first_stage_voltage(MAX_FIRST_STAGE_VOLTAGE),
+        .max_output_voltage(MAX_OUTPUT_VOLTAGE),
+        .max_primary_current(MAX_PRIMARY_CURRENT),
+        .echo_desired_output_voltage(desired_output_voltage),
+        .buffered_data(buffered_data)
     );
 	 
 	 
@@ -116,8 +114,7 @@ module hvps_controller(
 		 .INV_CONVST(U12_INV_CONVST),
 		 .INV_EOC(U12_INV_EOC),
 		 .INV_RD(U12_INV_RD),
-		 .data(primary_current_raw),
-		 .data2(primary_current_raw_2)
+		 .data(primary_current_raw)
 	  );
 	 AD7822 output_voltage_feedback_adc(
 		 .clk_50MHz(clk),
@@ -132,8 +129,7 @@ module hvps_controller(
 		 .INV_CONVST(U5_INV_CONVST),
 		 .INV_EOC(U5_INV_EOC),
 		 .INV_RD(U5_INV_RD),
-		 .data(output_voltage_raw),
-		 .data2(output_voltage_raw_2)
+		 .data(output_voltage_raw)
 	  );
 	 AD7822 first_stage_voltage_feedback_adc(
 		 .clk_50MHz(clk),
@@ -148,8 +144,7 @@ module hvps_controller(
 		 .INV_CONVST(U20_INV_CONVST),
 		 .INV_EOC(U20_INV_EOC),
 		 .INV_RD(U20_INV_RD),
-		 .data(first_stage_voltage_raw),
-		 .data2(first_stage_voltage_raw_2)
+		 .data(first_stage_voltage_raw)
 	  );
 	  BangBangController bang_bang_controller(
 		 .primary_current_raw(primary_current_raw),
@@ -157,9 +152,7 @@ module hvps_controller(
 		 .output_voltage_raw(output_voltage_raw),
 		 .drive(drive),
 		 .drive2(drive2),
-		 .desired_max_first_stage_voltage(desired_max_first_stage_voltage),
 		 .desired_output_voltage(desired_output_voltage),
-		 .desired_max_peak_primary_current(desired_max_peak_primary_current),
 		 .can_drive(can_drive)
 	  );
 	  HBridge hBridge(

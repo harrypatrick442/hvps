@@ -9,6 +9,7 @@ struct HVPSConfiguration {
     const float maxAverageOutputPowerWatts;
     const float maxFlybackEnergyPerCycleJouls;
     const float maxOutputVoltageThresholdVolts;
+    const float defaultOutputVoltageVolts;
     const float maxTemperatureMosfetDegreesC;
     const float minOutputVoltageThresholdVolts;
     const float vPsOverVadcRatio;

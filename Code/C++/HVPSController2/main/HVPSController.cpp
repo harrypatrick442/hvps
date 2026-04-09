@@ -31,7 +31,9 @@
 #include "Graphics/HVPSLEDDisplay.hpp"
 #include "Watchdog/WatchdogCollection.hpp"
 #include "IO/HVPSFPGABus.hpp"
+#include "ControllerCore/ThresholdController.hpp"
 #include <driver/gpio.h>
+#include "Generated/HVPS_FPGAInterface.hpp"
 
 static const char *TAG = "HVPS";
 
@@ -83,10 +85,13 @@ extern "C" void app_main(void)
      );
     Bluetooth& bluetooth = Bluetooth::getInstance();
 	bool inError = Aborter::hasLastAbortReason()||CrashReporter::hasCoreDumpSummary();
+	
+	HVPS_FPGAInterface& fpgaInterface = HVPS_FPGAInterface::initialize(hvpsFPGABus);
+	ThresholdController& thresholdController = ThresholdController::initialize(Config1, Config2, fpgaInterface);
 	HighSpeedCore& highSpeedCore = HighSpeedCore::initialize(
 		Config1,
 		Config2,
-		hvpsFPGABus,
+		fpgaInterface,
 		inError
 	);
 	LocalUI& localUI = LocalUI::initialize(highSpeedCore, hVPSLEDDisplay);

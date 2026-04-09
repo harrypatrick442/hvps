@@ -9,6 +9,7 @@ idf_component_register(
 		"Peripherals/LocalUI.cpp"
 		"Ports/Port_ControllingMachine.cpp"
 		"ControllerCore/HighSpeedCore.cpp"
+		"ControllerCore/ThresholdController.cpp"
 		"ControllerCore/SystemChecks.cpp"
 		"ControllerCore/SystemChecksResult.cpp"
 		"Broadcasting/LiveDataBroadcaster.cpp"

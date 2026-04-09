@@ -1,0 +1,12 @@
+C:\repos\hvps\Code\C#\FPGAConstantsGenerator\bin\Debug\net8.0\FPGAConstantsGenerator.deps.json
+C:\repos\hvps\Code\C#\FPGAConstantsGenerator\bin\Debug\net8.0\FPGAConstantsGenerator.dll
+C:\repos\hvps\Code\C#\FPGAConstantsGenerator\bin\Debug\net8.0\FPGAConstantsGenerator.pdb
+C:\repos\hvps\Code\C#\FPGAConstantsGenerator\obj\Debug\net8.0\FPGAConstantsGenerator.GeneratedMSBuildEditorConfig.editorconfig
+C:\repos\hvps\Code\C#\FPGAConstantsGenerator\obj\Debug\net8.0\FPGAConstantsGenerator.AssemblyInfoInputs.cache
+C:\repos\hvps\Code\C#\FPGAConstantsGenerator\obj\Debug\net8.0\FPGAConstantsGenerator.AssemblyInfo.cs
+C:\repos\hvps\Code\C#\FPGAConstantsGenerator\obj\Debug\net8.0\FPGAConstantsGenerator.csproj.CoreCompileInputs.cache
+C:\repos\hvps\Code\C#\FPGAConstantsGenerator\obj\Debug\net8.0\FPGAConstantsGenerator.sourcelink.json
+C:\repos\hvps\Code\C#\FPGAConstantsGenerator\obj\Debug\net8.0\FPGAConstantsGenerator.dll
+C:\repos\hvps\Code\C#\FPGAConstantsGenerator\obj\Debug\net8.0\refint\FPGAConstantsGenerator.dll
+C:\repos\hvps\Code\C#\FPGAConstantsGenerator\obj\Debug\net8.0\FPGAConstantsGenerator.pdb
+C:\repos\hvps\Code\C#\FPGAConstantsGenerator\obj\Debug\net8.0\ref\FPGAConstantsGenerator.dll

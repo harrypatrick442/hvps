@@ -13,12 +13,12 @@ const char* HighSpeedCore::getTag() {return GET_FILE_NAME;}
 HighSpeedCore::HighSpeedCore(
 	const HVPSConfiguration& hvpsConfiguration1,
 	const HVPSConfiguration& hvpsConfiguration2,
-	IFPGABus& fpgaBus,
+	HVPS_FPGAInterface& fpgaInterface,
 	bool inError
 ):
 _hvpsConfiguration1(hvpsConfiguration1),
 _hvpsConfiguration2(hvpsConfiguration2),
-_fpgaInterface(fpgaBus),
+_fpgaInterface(fpgaInterface),
 
 /*
 DO NOT EVER SET _shuttingOrShutDown or _shuttingOrShutDown_2 BACK TO FALSE. EVER!!!!
@@ -74,21 +74,6 @@ float HighSpeedCore::getActualOutputVoltage(){
 }
 float HighSpeedCore::getActualFirstStageVoltage(){
 	uint8_t raw = _fpgaInterface.getActualFirstStageVoltage();
-	//LOG_INFO("raw first stage voltage: %" PRIu8, raw);
-	return _hvpsConfiguration1.firstStageVoltageFromRaw * static_cast<float>(raw);
-}
-float HighSpeedCore::getActualPeakPrimaryCurrent2(){
-	uint8_t raw = _fpgaInterface.getActualPeakPrimaryCurrent2();
-	//LOG_INFO("raw peak primary current: %" PRIu8, raw);
-	return _hvpsConfiguration1.primaryCurrentFromRaw * static_cast<float>(raw);
-}
-float HighSpeedCore::getActualOutputVoltage2(){
-	uint8_t raw = _fpgaInterface.getActualOutputVoltage2();
-	//LOG_INFO("raw output voltage: %" PRIu8, raw);
-	return _hvpsConfiguration1.outputVoltageFromRaw * static_cast<float>(raw);
-}
-float HighSpeedCore::getActualFirstStageVoltage2(){
-	uint8_t raw = _fpgaInterface.getActualFirstStageVoltage2();
 	//LOG_INFO("raw first stage voltage: %" PRIu8, raw);
 	return _hvpsConfiguration1.firstStageVoltageFromRaw * static_cast<float>(raw);
 }

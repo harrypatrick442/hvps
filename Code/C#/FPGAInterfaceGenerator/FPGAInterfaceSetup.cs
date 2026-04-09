@@ -9,12 +9,14 @@
         public Bidirectional[] Bidirectionals { get;}
         public int SleepPeriodUs { get; }
         public GetMultipleVariableCPlusPlusMethod[]? GetMultipleVariableCPlusPlusMethods { get; }
-
+        public bool Singleton { get; }
         public FPGAInterfaceSetup(
             string name, IOVariable[] variables,
             GetMultipleVariableCPlusPlusMethod[]? getMultipleVariableCPlusPlusMethods = null,
-            int sleepPeriodUs = 50)
+            int sleepPeriodUs = 150/*was 50*/,
+            bool singleton = true)
         {
+            variables = variables.Reverse().ToArray();//This means most important first.
             Name = name;
             AllVariables = variables;
             Inputs = variables.Where(v => v.Direction == Direction.Input)
@@ -25,6 +27,7 @@
                 .Cast<Bidirectional>().ToArray();
             GetMultipleVariableCPlusPlusMethods = getMultipleVariableCPlusPlusMethods;
             SleepPeriodUs = sleepPeriodUs;
+            Singleton = singleton;
         }
     }
 }

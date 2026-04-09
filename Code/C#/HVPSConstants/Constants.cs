@@ -30,7 +30,7 @@ namespace HVPSConstants
         public const double IndividualOutputCurrentLimitingResistorResistance = 200000;
         public const double MaximumCompositeOutputCurrentLimitingResistorAveragePower = 12.5;
         public const double PowerSupplyVoltageFeedbackPotentialDividerRatio = 16.5;
-        public const double FirstStageVoltageFeedbackPotentialDividerRatio = 5600;
+        public const double FirstStageVoltageFeedbackPotentialDividerRatio = 8400;
         public const double OutputVoltageFeedbackPotentialDividerRatio = 3.08e4;
         //public const double OutputResistorMaximumEnergy = ;
         public const double OutputCurrentLimitingResistorMaxPowerDisipation = 15;

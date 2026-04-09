@@ -1,0 +1,6 @@
+// AUTO GENERATED - DO NOT EDIT
+
+localparam MAX_PRIMARY_CURRENT = 8'd127;
+localparam MAX_FIRST_STAGE_VOLTAGE = 8'd216;
+localparam MAX_OUTPUT_VOLTAGE = 8'd216;
+

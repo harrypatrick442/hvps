@@ -25,7 +25,7 @@ private:
 	
 	const HVPSConfiguration& _hvpsConfiguration1;
 	const HVPSConfiguration& _hvpsConfiguration2;
-	HVPS_FPGAInterface _fpgaInterface;
+	HVPS_FPGAInterface& _fpgaInterface;
 	
 	/*
 	DO NOT EVER SET _shuttingOrShutDown or _shuttingOrShutDown_2 BACK TO FALSE. EVER!!!!
@@ -64,9 +64,6 @@ public:
 	float getActualPeakPrimaryCurrent();
 	float getActualOutputVoltage();
 	float getActualFirstStageVoltage();
-	float getActualPeakPrimaryCurrent2();
-	float getActualOutputVoltage2();
-	float getActualFirstStageVoltage2();
 private:
     friend class SingletonBase<HighSpeedCore>;
 	const float SAFE_OUTPUT_VOLTAGE = 20.0f;
@@ -74,7 +71,7 @@ private:
 	HighSpeedCore(
 		const HVPSConfiguration& hvpsConfiguration1,
 		const HVPSConfiguration& hvpsConfiguration2,
-		IFPGABus& fpgaBus,
+		HVPS_FPGAInterface& fpgaInterface,
 		bool inError
 	)noexcept;
 	

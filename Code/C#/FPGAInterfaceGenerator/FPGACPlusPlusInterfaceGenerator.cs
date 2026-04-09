@@ -22,15 +22,39 @@ namespace FPGAInterfaceGenerator
             sbHpp.AppendLine("#pragma once");
             sbHpp.AppendLine("#include \"FPGA/FPGAInterface.hpp\"");
             sbHpp.AppendLine("#include \"FPGA/IFPGABus.hpp\"");
+            if (setup.Singleton) {
+                sbHpp.AppendLine("#include \"Core/SingletonBase.hpp\"");
+                sbCpp.AppendLine("#include \"Macros/GetFileName.hpp\"");
+            }
             sbHpp.Append("class ");
             sbHpp.Append(className);
+            if(setup.Singleton)
+            {
+                sbHpp.Append(" final : public SingletonBase<");
+                sbHpp.Append(className);
+                sbHpp.Append(">");
+            }
             sbHpp.AppendLine(" {");
+            if (setup.Singleton)
+            {
+                sbHpp.AppendLine("public:");
+                sbHpp.AppendLine("    static const char* getTag();");
+            }
             sbHpp.AppendLine("private:");
+            if (setup.Singleton)
+            {
+                sbHpp.Append("    friend class SingletonBase<");
+                sbHpp.Append(className);
+                sbHpp.AppendLine(">;");
+            }
             sbHpp.AppendLine("    FPGAInterface _fpgaInterface;");
             sbCpp.Append("#include \"");
             sbCpp.Append(className);
             sbCpp.AppendLine(".hpp\"");
             sbCpp.AppendLine("#include \"Timing/TimeHelper.hpp\"");
+            sbCpp.Append("const char* ");
+            sbCpp.Append(className);
+            sbCpp.AppendLine("::getTag() {return GET_FILE_NAME;}");
             var appendInput = Create_AppendInput(className, sbInputsHpp, sbInputsCpp,
                 out Func<int> getInputsLength);
             foreach (var input in setup.Inputs)
@@ -187,7 +211,7 @@ namespace FPGAInterfaceGenerator
             sbCpp.Append(fullOutputsIndex.ToString());
             sbCpp.AppendLine(");");
             sbCpp.AppendLine("}");
-            IncrementIndexForType(ref nextOutputIndex, output.VariableType);
+            IncrementIndexForType(ref nextOutputIndex, output.VariableType, null);
         }
         private static void AppendOutputArray(
           StringBuilder sbHpp, StringBuilder sbCpp, Output output,
@@ -269,7 +293,7 @@ namespace FPGAInterfaceGenerator
             sbCpp.Append(", value");
             sbCpp.AppendLine(");");
             sbCpp.AppendLine("}");
-            IncrementIndexForType(ref nextInputIndex, input.VariableType);
+            IncrementIndexForType(ref nextInputIndex, input.VariableType, null);
         }
         private static void AppendInputArray(StringBuilder sbCpp, StringBuilder sbHpp, string className, Input input, ref int nextInputIndex)
         {
@@ -304,7 +328,7 @@ namespace FPGAInterfaceGenerator
             IncrementIndexForType(ref nextInputIndex, input.VariableType, input.CustomLength);
         }
 
-        private static void IncrementIndexForType(ref int index, VariableType variableType, int? customLength = null)
+        private static void IncrementIndexForType(ref int index, VariableType variableType, int? customLength)
         {
             switch (variableType)
             {
@@ -318,9 +342,11 @@ namespace FPGAInterfaceGenerator
                     index += 16;
                     return;
                 case VariableType.CustomLengthBytes:
-                    index += customLength!.Value * 8;
+                    if (!customLength.HasValue) throw new NullReferenceException();
+                    index += (customLength!.Value * 8);
                     return;
                 case VariableType.CustomLengthBits:
+                    if (!customLength.HasValue) throw new NullReferenceException();
                     index += customLength!.Value;
                     return;
                 default:

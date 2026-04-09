@@ -5,12 +5,13 @@
 inline constexpr HVPSConfiguration Config1{
     .broadcastFrequencyHz = 2,
     .primaryCurrentFromRaw = 0.15686275,
-    .firstStageVoltageFromRaw = 43.92157,
+    .firstStageVoltageFromRaw = 65.882355,
     .outputVoltageFromRaw = 241.56863,
     .firstStageVoltageThresholdVolts = 14255.604,
     .maxAverageOutputPowerWatts = 12.5,
     .maxFlybackEnergyPerCycleJouls = 0.0098,
     .maxOutputVoltageThresholdVolts = 80000,
+    .defaultOutputVoltageVolts = 80000,
     .maxTemperatureMosfetDegreesC = 50,
     .minOutputVoltageThresholdVolts = 60000,
     .vPsOverVadcRatio = 16.5,
@@ -42,7 +43,7 @@ inline bool validateConfig(){
         SAFE_ABORT("The CRC32 computed for Config2 did not match the CRC32 for Config1");
         return false;
     }
-    if (podConfig1 != 2389219390){
+    if (podConfig1 != 506985598){
         SAFE_ABORT("The CRC32 computed for Config1 did not match the expected value");
         return false;
     }

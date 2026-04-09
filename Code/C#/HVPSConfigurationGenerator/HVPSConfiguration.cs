@@ -12,6 +12,7 @@ namespace HVPSConfigurationGenerator
         public float maxAverageOutputPowerWatts;
         public float maxFlybackEnergyPerCycleJouls;
         public float maxOutputVoltageThresholdVolts;
+        public float defaultOutputVoltageVolts;
         public float maxTemperatureMosfetDegreesC;
         public float minOutputVoltageThresholdVolts;
         public float vPsOverVadcRatio;

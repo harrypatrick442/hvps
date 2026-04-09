@@ -1,5 +1,5 @@
 Fitter report for hvps_controller
-Tue Apr  7 18:31:45 2026
+Thu Apr  9 15:56:11 2026
 Quartus Prime Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
 
 
@@ -70,17 +70,17 @@ on the Quartus Prime software download page.
 +--------------------------------------------------------------------------------------+
 ; Fitter Summary                                                                       ;
 +------------------------------------+-------------------------------------------------+
-; Fitter Status                      ; Successful - Tue Apr  7 18:31:45 2026           ;
+; Fitter Status                      ; Successful - Thu Apr  9 15:56:11 2026           ;
 ; Quartus Prime Version              ; 25.1std.0 Build 1129 10/21/2025 SC Lite Edition ;
 ; Revision Name                      ; hvps_controller                                 ;
 ; Top-level Entity Name              ; hvps_controller                                 ;
 ; Family                             ; Cyclone IV E                                    ;
 ; Device                             ; EP4CE6E22C8L                                    ;
 ; Timing Models                      ; Final                                           ;
-; Total logic elements               ; 1,323 / 6,272 ( 21 % )                          ;
-;     Total combinational functions  ; 1,280 / 6,272 ( 20 % )                          ;
-;     Dedicated logic registers      ; 1,250 / 6,272 ( 20 % )                          ;
-; Total registers                    ; 1261                                            ;
+; Total logic elements               ; 1,360 / 6,272 ( 22 % )                          ;
+;     Total combinational functions  ; 1,318 / 6,272 ( 21 % )                          ;
+;     Dedicated logic registers      ; 1,290 / 6,272 ( 21 % )                          ;
+; Total registers                    ; 1301                                            ;
 ; Total pins                         ; 52 / 92 ( 57 % )                                ;
 ; Total virtual pins                 ; 0                                               ;
 ; Total memory bits                  ; 0 / 276,480 ( 0 % )                             ;
@@ -156,18 +156,18 @@ on the Quartus Prime software download page.
 ; Number detected on machine ; 16          ;
 ; Maximum allowed            ; 8           ;
 ;                            ;             ;
-; Average used               ; 1.32        ;
+; Average used               ; 1.37        ;
 ; Maximum used               ; 8           ;
 ;                            ;             ;
 ; Usage by Processor         ; % Time Used ;
 ;     Processor 1            ; 100.0%      ;
-;     Processor 2            ;   4.9%      ;
-;     Processor 3            ;   4.7%      ;
-;     Processor 4            ;   4.6%      ;
-;     Processor 5            ;   4.5%      ;
-;     Processor 6            ;   4.5%      ;
-;     Processor 7            ;   4.5%      ;
-;     Processor 8            ;   4.4%      ;
+;     Processor 2            ;   5.6%      ;
+;     Processor 3            ;   5.3%      ;
+;     Processor 4            ;   5.3%      ;
+;     Processor 5            ;   5.2%      ;
+;     Processor 6            ;   5.2%      ;
+;     Processor 7            ;   5.2%      ;
+;     Processor 8            ;   5.1%      ;
 +----------------------------+-------------+
 
 
@@ -195,7 +195,7 @@ on the Quartus Prime software download page.
 ; HBridge:hBridge|U23_LIN                               ; Packed Register ; Register Packing ; Timing optimization ; Q         ;                ; U23_LIN~output                                                  ; I                ;                       ;
 ; HBridge:hBridge|U24_HIN                               ; Packed Register ; Register Packing ; Timing optimization ; Q         ;                ; U24_HIN~output                                                  ; I                ;                       ;
 ; HBridge:hBridge|U24_LIN                               ; Packed Register ; Register Packing ; Timing optimization ; Q         ;                ; U24_LIN~output                                                  ; I                ;                       ;
-; HVPS_FPGAInterface:fpga_interface|output_buffer[1058] ; Packed Register ; Register Packing ; Timing optimization ; Q         ;                ; ESP_OUT_VALUE~output                                            ; I                ;                       ;
+; HVPS_FPGAInterface:fpga_interface|output_buffer[1098] ; Packed Register ; Register Packing ; Timing optimization ; Q         ;                ; ESP_OUT_VALUE~output                                            ; I                ;                       ;
 +-------------------------------------------------------+-----------------+------------------+---------------------+-----------+----------------+-----------------------------------------------------------------+------------------+-----------------------+
 
 
@@ -205,8 +205,8 @@ on the Quartus Prime software download page.
 ; Type                ; Total [A + B]       ; From Design Partitions [A] ; From Rapid Recompile [B] ;
 +---------------------+---------------------+----------------------------+--------------------------+
 ; Placement (by node) ;                     ;                            ;                          ;
-;     -- Requested    ; 0.00 % ( 0 / 2651 ) ; 0.00 % ( 0 / 2651 )        ; 0.00 % ( 0 / 2651 )      ;
-;     -- Achieved     ; 0.00 % ( 0 / 2651 ) ; 0.00 % ( 0 / 2651 )        ; 0.00 % ( 0 / 2651 )      ;
+;     -- Requested    ; 0.00 % ( 0 / 2729 ) ; 0.00 % ( 0 / 2729 )        ; 0.00 % ( 0 / 2729 )      ;
+;     -- Achieved     ; 0.00 % ( 0 / 2729 ) ; 0.00 % ( 0 / 2729 )        ; 0.00 % ( 0 / 2729 )      ;
 ;                     ;                     ;                            ;                          ;
 ; Routing (by net)    ;                     ;                            ;                          ;
 ;     -- Requested    ; 0.00 % ( 0 / 0 )    ; 0.00 % ( 0 / 0 )           ; 0.00 % ( 0 / 0 )         ;
@@ -229,7 +229,7 @@ on the Quartus Prime software download page.
 +--------------------------------+-----------------------+-------------------------+-------------------+---------------------+-------+
 ; Partition Name                 ; Preservation Achieved ; Preservation Level Used ; Netlist Type Used ; Preservation Method ; Notes ;
 +--------------------------------+-----------------------+-------------------------+-------------------+---------------------+-------+
-; Top                            ; 0.00 % ( 0 / 2641 )   ; N/A                     ; Source File       ; N/A                 ;       ;
+; Top                            ; 0.00 % ( 0 / 2719 )   ; N/A                     ; Source File       ; N/A                 ;       ;
 ; hard_block:auto_generated_inst ; 0.00 % ( 0 / 10 )     ; N/A                     ; Source File       ; N/A                 ;       ;
 +--------------------------------+-----------------------+-------------------------+-------------------+---------------------+-------+
 
@@ -245,26 +245,26 @@ The pin-out file can be found in C:/repos/hvps/Code/Verilog/HVPSController2/outp
 +---------------------------------------------+------------------------+
 ; Resource                                    ; Usage                  ;
 +---------------------------------------------+------------------------+
-; Total logic elements                        ; 1,323 / 6,272 ( 21 % ) ;
-;     -- Combinational with no register       ; 73                     ;
-;     -- Register only                        ; 43                     ;
-;     -- Combinational with a register        ; 1207                   ;
+; Total logic elements                        ; 1,360 / 6,272 ( 22 % ) ;
+;     -- Combinational with no register       ; 70                     ;
+;     -- Register only                        ; 42                     ;
+;     -- Combinational with a register        ; 1248                   ;
 ;                                             ;                        ;
 ; Logic element usage by number of LUT inputs ;                        ;
-;     -- 4 input functions                    ; 148                    ;
-;     -- 3 input functions                    ; 1003                   ;
-;     -- <=2 input functions                  ; 129                    ;
-;     -- Register only                        ; 43                     ;
+;     -- 4 input functions                    ; 124                    ;
+;     -- 3 input functions                    ; 1067                   ;
+;     -- <=2 input functions                  ; 127                    ;
+;     -- Register only                        ; 42                     ;
 ;                                             ;                        ;
 ; Logic elements by mode                      ;                        ;
-;     -- normal mode                          ; 1185                   ;
+;     -- normal mode                          ; 1223                   ;
 ;     -- arithmetic mode                      ; 95                     ;
 ;                                             ;                        ;
-; Total registers*                            ; 1,261 / 6,684 ( 19 % ) ;
-;     -- Dedicated logic registers            ; 1,250 / 6,272 ( 20 % ) ;
+; Total registers*                            ; 1,301 / 6,684 ( 19 % ) ;
+;     -- Dedicated logic registers            ; 1,290 / 6,272 ( 21 % ) ;
 ;     -- I/O registers                        ; 11 / 412 ( 3 % )       ;
 ;                                             ;                        ;
-; Total LABs:  partially or completely used   ; 92 / 392 ( 23 % )      ;
+; Total LABs:  partially or completely used   ; 95 / 392 ( 24 % )      ;
 ; Virtual pins                                ; 0                      ;
 ; I/O pins                                    ; 52 / 92 ( 57 % )       ;
 ;     -- Clock pins                           ; 1 / 3 ( 33 % )         ;
@@ -282,11 +282,11 @@ The pin-out file can be found in C:/repos/hvps/Code/Verilog/HVPSController2/outp
 ; ASMI blocks                                 ; 0 / 1 ( 0 % )          ;
 ; Oscillator blocks                           ; 0 / 1 ( 0 % )          ;
 ; Impedance control blocks                    ; 0 / 4 ( 0 % )          ;
-; Average interconnect usage (total/H/V)      ; 1.0% / 0.9% / 1.1%     ;
-; Peak interconnect usage (total/H/V)         ; 2.1% / 1.9% / 2.4%     ;
-; Maximum fan-out                             ; 1261                   ;
-; Highest non-global fan-out                  ; 1063                   ;
-; Total fan-out                               ; 7690                   ;
+; Average interconnect usage (total/H/V)      ; 1.1% / 0.9% / 1.3%     ;
+; Peak interconnect usage (total/H/V)         ; 2.0% / 1.5% / 2.9%     ;
+; Maximum fan-out                             ; 1301                   ;
+; Highest non-global fan-out                  ; 1103                   ;
+; Total fan-out                               ; 7901                   ;
 ; Average fan-out                             ; 2.85                   ;
 +---------------------------------------------+------------------------+
 *  Register count does not include registers inside RAM blocks or DSP blocks.
@@ -300,26 +300,26 @@ The pin-out file can be found in C:/repos/hvps/Code/Verilog/HVPSController2/outp
 +---------------------------------------------+----------------------+--------------------------------+
 ; Difficulty Clustering Region                ; Low                  ; Low                            ;
 ;                                             ;                      ;                                ;
-; Total logic elements                        ; 1323 / 6272 ( 21 % ) ; 0 / 6272 ( 0 % )               ;
-;     -- Combinational with no register       ; 73                   ; 0                              ;
-;     -- Register only                        ; 43                   ; 0                              ;
-;     -- Combinational with a register        ; 1207                 ; 0                              ;
+; Total logic elements                        ; 1360 / 6272 ( 22 % ) ; 0 / 6272 ( 0 % )               ;
+;     -- Combinational with no register       ; 70                   ; 0                              ;
+;     -- Register only                        ; 42                   ; 0                              ;
+;     -- Combinational with a register        ; 1248                 ; 0                              ;
 ;                                             ;                      ;                                ;
 ; Logic element usage by number of LUT inputs ;                      ;                                ;
-;     -- 4 input functions                    ; 148                  ; 0                              ;
-;     -- 3 input functions                    ; 1003                 ; 0                              ;
-;     -- <=2 input functions                  ; 129                  ; 0                              ;
-;     -- Register only                        ; 43                   ; 0                              ;
+;     -- 4 input functions                    ; 124                  ; 0                              ;
+;     -- 3 input functions                    ; 1067                 ; 0                              ;
+;     -- <=2 input functions                  ; 127                  ; 0                              ;
+;     -- Register only                        ; 42                   ; 0                              ;
 ;                                             ;                      ;                                ;
 ; Logic elements by mode                      ;                      ;                                ;
-;     -- normal mode                          ; 1185                 ; 0                              ;
+;     -- normal mode                          ; 1223                 ; 0                              ;
 ;     -- arithmetic mode                      ; 95                   ; 0                              ;
 ;                                             ;                      ;                                ;
-; Total registers                             ; 1261                 ; 0                              ;
-;     -- Dedicated logic registers            ; 1250 / 6272 ( 20 % ) ; 0 / 6272 ( 0 % )               ;
+; Total registers                             ; 1301                 ; 0                              ;
+;     -- Dedicated logic registers            ; 1290 / 6272 ( 21 % ) ; 0 / 6272 ( 0 % )               ;
 ;     -- I/O registers                        ; 22                   ; 0                              ;
 ;                                             ;                      ;                                ;
-; Total LABs:  partially or completely used   ; 92 / 392 ( 23 % )    ; 0 / 392 ( 0 % )                ;
+; Total LABs:  partially or completely used   ; 95 / 392 ( 24 % )    ; 0 / 392 ( 0 % )                ;
 ;                                             ;                      ;                                ;
 ; Virtual pins                                ; 0                    ; 0                              ;
 ; I/O pins                                    ; 52                   ; 0                              ;
@@ -336,8 +336,8 @@ The pin-out file can be found in C:/repos/hvps/Code/Verilog/HVPSController2/outp
 ;     -- Registered Output Connections        ; 0                    ; 0                              ;
 ;                                             ;                      ;                                ;
 ; Internal Connections                        ;                      ;                                ;
-;     -- Total Connections                    ; 7685                 ; 5                              ;
-;     -- Registered Connections               ; 3640                 ; 0                              ;
+;     -- Total Connections                    ; 7896                 ; 5                              ;
+;     -- Registered Connections               ; 3739                 ; 0                              ;
 ;                                             ;                      ;                                ;
 ; External Connections                        ;                      ;                                ;
 ;     -- Top                                  ; 0                    ; 0                              ;
@@ -406,7 +406,7 @@ The pin-out file can be found in C:/repos/hvps/Code/Verilog/HVPSController2/outp
 ; U5_DB6             ; 64    ; 4        ; 25           ; 0            ; 0            ; 1                     ; 0                  ; no     ; no             ; no            ; yes             ; no       ; Off          ; 3.3-V LVCMOS ; --                        ; User                 ; no        ;
 ; U5_DB7             ; 59    ; 4        ; 23           ; 0            ; 14           ; 1                     ; 0                  ; no     ; no             ; no            ; yes             ; no       ; Off          ; 3.3-V LVCMOS ; --                        ; User                 ; no        ;
 ; U5_INV_EOC         ; 73    ; 5        ; 34           ; 2            ; 21           ; 3                     ; 0                  ; no     ; no             ; no            ; yes             ; no       ; Off          ; 3.3-V LVCMOS ; --                        ; User                 ; no        ;
-; clk                ; 91    ; 6        ; 34           ; 12           ; 0            ; 1261                  ; 0                  ; yes    ; no             ; no            ; yes             ; no       ; Off          ; 3.3-V LVCMOS ; --                        ; User                 ; no        ;
+; clk                ; 91    ; 6        ; 34           ; 12           ; 0            ; 1301                  ; 0                  ; yes    ; no             ; no            ; yes             ; no       ; Off          ; 3.3-V LVCMOS ; --                        ; User                 ; no        ;
 +--------------------+-------+----------+--------------+--------------+--------------+-----------------------+--------------------+--------+----------------+---------------+-----------------+----------+--------------+--------------+---------------------------+----------------------+-----------+
 
 
@@ -651,12 +651,12 @@ Note: Pin directions (input, output or bidir) are based on device operating in u
 +----------------------------------------------+-------------+---------------------------+---------------+-------------+------+--------------+---------+-----------+------+--------------+--------------+-------------------+------------------+----------------------------------------------------------------------------------+--------------------+--------------+
 ; Compilation Hierarchy Node                   ; Logic Cells ; Dedicated Logic Registers ; I/O Registers ; Memory Bits ; M9Ks ; DSP Elements ; DSP 9x9 ; DSP 18x18 ; Pins ; Virtual Pins ; LUT-Only LCs ; Register-Only LCs ; LUT/Register LCs ; Full Hierarchy Name                                                              ; Entity Name        ; Library Name ;
 +----------------------------------------------+-------------+---------------------------+---------------+-------------+------+--------------+---------+-----------+------+--------------+--------------+-------------------+------------------+----------------------------------------------------------------------------------+--------------------+--------------+
-; |hvps_controller                             ; 1323 (0)    ; 1250 (0)                  ; 11 (11)       ; 0           ; 0    ; 0            ; 0       ; 0         ; 52   ; 0            ; 73 (0)       ; 43 (0)            ; 1207 (1)         ; |hvps_controller                                                                 ; hvps_controller    ; work         ;
-;    |AD7822:first_stage_voltage_feedback_adc| ; 30 (30)     ; 19 (19)                   ; 0 (0)         ; 0           ; 0    ; 0            ; 0       ; 0         ; 0    ; 0            ; 11 (11)      ; 4 (4)             ; 15 (15)          ; |hvps_controller|AD7822:first_stage_voltage_feedback_adc                         ; AD7822             ; work         ;
-;    |AD7822:output_voltage_feedback_adc|      ; 29 (29)     ; 19 (19)                   ; 0 (0)         ; 0           ; 0    ; 0            ; 0       ; 0         ; 0    ; 0            ; 10 (10)      ; 3 (3)             ; 16 (16)          ; |hvps_controller|AD7822:output_voltage_feedback_adc                              ; AD7822             ; work         ;
+; |hvps_controller                             ; 1360 (0)    ; 1290 (0)                  ; 11 (11)       ; 0           ; 0    ; 0            ; 0       ; 0         ; 52   ; 0            ; 70 (0)       ; 42 (0)            ; 1248 (1)         ; |hvps_controller                                                                 ; hvps_controller    ; work         ;
+;    |AD7822:first_stage_voltage_feedback_adc| ; 30 (30)     ; 19 (19)                   ; 0 (0)         ; 0           ; 0    ; 0            ; 0       ; 0         ; 0    ; 0            ; 11 (11)      ; 3 (3)             ; 16 (16)          ; |hvps_controller|AD7822:first_stage_voltage_feedback_adc                         ; AD7822             ; work         ;
+;    |AD7822:output_voltage_feedback_adc|      ; 29 (29)     ; 19 (19)                   ; 0 (0)         ; 0           ; 0    ; 0            ; 0       ; 0         ; 0    ; 0            ; 10 (10)      ; 4 (4)             ; 15 (15)          ; |hvps_controller|AD7822:output_voltage_feedback_adc                              ; AD7822             ; work         ;
 ;    |AD7822:primary_current_feedback_adc|     ; 30 (30)     ; 19 (19)                   ; 0 (0)         ; 0           ; 0    ; 0            ; 0       ; 0         ; 0    ; 0            ; 11 (11)      ; 4 (4)             ; 15 (15)          ; |hvps_controller|AD7822:primary_current_feedback_adc                             ; AD7822             ; work         ;
-;    |HBridge:hBridge|                         ; 26 (26)     ; 15 (15)                   ; 0 (0)         ; 0           ; 0    ; 0            ; 0       ; 0         ; 0    ; 0            ; 11 (11)      ; 0 (0)             ; 15 (15)          ; |hvps_controller|HBridge:hBridge                                                 ; HBridge            ; work         ;
-;    |HVPS_FPGAInterface:fpga_interface|       ; 1208 (1092) ; 1178 (1090)               ; 0 (0)         ; 0           ; 0    ; 0            ; 0       ; 0         ; 0    ; 0            ; 30 (2)       ; 32 (28)           ; 1146 (1062)      ; |hvps_controller|HVPS_FPGAInterface:fpga_interface                               ; HVPS_FPGAInterface ; work         ;
+;    |HBridge:hBridge|                         ; 25 (25)     ; 15 (15)                   ; 0 (0)         ; 0           ; 0    ; 0            ; 0       ; 0         ; 0    ; 0            ; 9 (9)        ; 0 (0)             ; 16 (16)          ; |hvps_controller|HBridge:hBridge                                                 ; HBridge            ; work         ;
+;    |HVPS_FPGAInterface:fpga_interface|       ; 1248 (1132) ; 1218 (1130)               ; 0 (0)         ; 0           ; 0    ; 0            ; 0       ; 0         ; 0    ; 0            ; 29 (1)       ; 31 (27)           ; 1188 (1104)      ; |hvps_controller|HVPS_FPGAInterface:fpga_interface                               ; HVPS_FPGAInterface ; work         ;
 ;       |debouncer:debouncer_go_live|          ; 29 (29)     ; 22 (22)                   ; 0 (0)         ; 0           ; 0    ; 0            ; 0       ; 0         ; 0    ; 0            ; 7 (7)        ; 1 (1)             ; 21 (21)          ; |hvps_controller|HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_go_live   ; debouncer          ; work         ;
 ;       |debouncer:debouncer_in_shift|         ; 29 (29)     ; 22 (22)                   ; 0 (0)         ; 0           ; 0    ; 0            ; 0       ; 0         ; 0    ; 0            ; 7 (7)        ; 1 (1)             ; 21 (21)          ; |hvps_controller|HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_in_shift  ; debouncer          ; work         ;
 ;       |debouncer:debouncer_out_shift|        ; 29 (29)     ; 22 (22)                   ; 0 (0)         ; 0           ; 0    ; 0            ; 0       ; 0         ; 0    ; 0            ; 7 (7)        ; 1 (1)             ; 21 (21)          ; |hvps_controller|HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_out_shift ; debouncer          ; work         ;
@@ -693,12 +693,28 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 ; U5_INV_EOC         ; Input    ; (6) 2058 ps   ; (6) 2058 ps   ; --                    ; --         ; --   ;
 ; U12_INV_EOC        ; Input    ; (6) 2058 ps   ; (6) 2058 ps   ; --                    ; --         ; --   ;
 ; U20_INV_EOC        ; Input    ; (6) 2054 ps   ; (6) 2054 ps   ; --                    ; --         ; --   ;
-; ESP_IN_VALUE       ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
-; ESP_TO_OUTPUT      ; Input    ; --            ; (6) 2054 ps   ; --                    ; --         ; --   ;
+; U20_DB7            ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
+; U20_DB6            ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
+; U20_DB5            ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
+; ESP_TO_OUTPUT      ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
 ; ESP_OUT_SHIFT      ; Input    ; --            ; (6) 2054 ps   ; --                    ; --         ; --   ;
-; ESP_GO_LIVE        ; Input    ; --            ; (6) 2054 ps   ; --                    ; --         ; --   ;
+; ESP_GO_LIVE        ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
+; U20_DB4            ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
 ; ESP_IN_SHIFT       ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
+; U20_DB3            ; Input    ; --            ; (6) 2054 ps   ; --                    ; --         ; --   ;
+; U20_DB2            ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
+; U20_DB1            ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
+; U20_DB0            ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
+; U5_DB7             ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
+; U5_DB6             ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
+; U5_DB5             ; Input    ; --            ; (6) 2054 ps   ; --                    ; --         ; --   ;
+; U5_DB4             ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
+; U5_DB3             ; Input    ; --            ; (6) 2054 ps   ; --                    ; --         ; --   ;
+; U5_DB2             ; Input    ; (6) 2058 ps   ; --            ; --                    ; --         ; --   ;
+; U5_DB1             ; Input    ; (6) 2058 ps   ; --            ; --                    ; --         ; --   ;
+; U5_DB0             ; Input    ; (6) 2058 ps   ; --            ; --                    ; --         ; --   ;
 ; U12_DB7            ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
+; ESP_IN_VALUE       ; Input    ; --            ; (6) 2054 ps   ; --                    ; --         ; --   ;
 ; U12_DB6            ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
 ; U12_DB5            ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
 ; U12_DB4            ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
@@ -706,22 +722,6 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 ; U12_DB2            ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
 ; U12_DB1            ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
 ; U12_DB0            ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
-; U5_DB7             ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
-; U5_DB6             ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
-; U5_DB5             ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
-; U5_DB4             ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
-; U5_DB3             ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
-; U5_DB2             ; Input    ; (6) 2058 ps   ; --            ; --                    ; --         ; --   ;
-; U5_DB1             ; Input    ; (6) 2058 ps   ; --            ; --                    ; --         ; --   ;
-; U5_DB0             ; Input    ; (6) 2058 ps   ; --            ; --                    ; --         ; --   ;
-; U20_DB7            ; Input    ; --            ; (6) 2054 ps   ; --                    ; --         ; --   ;
-; U20_DB6            ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
-; U20_DB5            ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
-; U20_DB4            ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
-; U20_DB3            ; Input    ; --            ; (6) 2054 ps   ; --                    ; --         ; --   ;
-; U20_DB2            ; Input    ; --            ; (6) 2054 ps   ; --                    ; --         ; --   ;
-; U20_DB1            ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
-; U20_DB0            ; Input    ; (6) 2054 ps   ; --            ; --                    ; --         ; --   ;
 +--------------------+----------+---------------+---------------+-----------------------+------------+------+
 
 
@@ -738,74 +738,74 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 ; clk                                                                                  ;                   ;         ;
 ; U5_INV_EOC                                                                           ;                   ;         ;
 ;      - AD7822:output_voltage_feedback_adc|Selector1~1                                ; 1                 ; 6       ;
-;      - AD7822:output_voltage_feedback_adc|Selector9~2                                ; 0                 ; 6       ;
+;      - AD7822:output_voltage_feedback_adc|Selector8~2                                ; 0                 ; 6       ;
 ;      - AD7822:output_voltage_feedback_adc|Selector7~0                                ; 0                 ; 6       ;
 ; U12_INV_EOC                                                                          ;                   ;         ;
 ;      - AD7822:primary_current_feedback_adc|Selector1~1                               ; 0                 ; 6       ;
-;      - AD7822:primary_current_feedback_adc|Selector10~3                              ; 1                 ; 6       ;
+;      - AD7822:primary_current_feedback_adc|Selector8~2                               ; 1                 ; 6       ;
 ;      - AD7822:primary_current_feedback_adc|Selector7~0                               ; 1                 ; 6       ;
 ; U20_INV_EOC                                                                          ;                   ;         ;
 ;      - AD7822:first_stage_voltage_feedback_adc|Selector1~1                           ; 0                 ; 6       ;
-;      - AD7822:first_stage_voltage_feedback_adc|Selector9~2                           ; 1                 ; 6       ;
+;      - AD7822:first_stage_voltage_feedback_adc|Selector9~1                           ; 1                 ; 6       ;
 ;      - AD7822:first_stage_voltage_feedback_adc|Selector7~0                           ; 1                 ; 6       ;
-; ESP_IN_VALUE                                                                         ;                   ;         ;
-;      - HVPS_FPGAInterface:fpga_interface|input_staged[0]~feeder                      ; 0                 ; 6       ;
+; U20_DB7                                                                              ;                   ;         ;
+;      - AD7822:first_stage_voltage_feedback_adc|data[7]                               ; 0                 ; 6       ;
+; U20_DB6                                                                              ;                   ;         ;
+;      - AD7822:first_stage_voltage_feedback_adc|data[6]~feeder                        ; 0                 ; 6       ;
+; U20_DB5                                                                              ;                   ;         ;
+;      - AD7822:first_stage_voltage_feedback_adc|data[5]~feeder                        ; 0                 ; 6       ;
 ; ESP_TO_OUTPUT                                                                        ;                   ;         ;
-;      - HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_to_output|sync_0~feeder ; 1                 ; 6       ;
+;      - HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_to_output|sync_0~feeder ; 0                 ; 6       ;
 ; ESP_OUT_SHIFT                                                                        ;                   ;         ;
 ;      - HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_out_shift|sync_0~feeder ; 1                 ; 6       ;
 ; ESP_GO_LIVE                                                                          ;                   ;         ;
-;      - HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_go_live|sync_0~feeder   ; 1                 ; 6       ;
+;      - HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_go_live|sync_0~feeder   ; 0                 ; 6       ;
+; U20_DB4                                                                              ;                   ;         ;
+;      - AD7822:first_stage_voltage_feedback_adc|data[4]~feeder                        ; 0                 ; 6       ;
 ; ESP_IN_SHIFT                                                                         ;                   ;         ;
 ;      - HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_in_shift|sync_0~feeder  ; 0                 ; 6       ;
-; U12_DB7                                                                              ;                   ;         ;
-;      - AD7822:primary_current_feedback_adc|data2[7]~feeder                           ; 0                 ; 6       ;
-; U12_DB6                                                                              ;                   ;         ;
-;      - AD7822:primary_current_feedback_adc|data2[6]~feeder                           ; 0                 ; 6       ;
-; U12_DB5                                                                              ;                   ;         ;
-;      - AD7822:primary_current_feedback_adc|data2[5]~feeder                           ; 0                 ; 6       ;
-; U12_DB4                                                                              ;                   ;         ;
-;      - AD7822:primary_current_feedback_adc|data2[4]~feeder                           ; 0                 ; 6       ;
-; U12_DB3                                                                              ;                   ;         ;
-;      - AD7822:primary_current_feedback_adc|data2[3]~0                                ; 0                 ; 6       ;
-; U12_DB2                                                                              ;                   ;         ;
-;      - AD7822:primary_current_feedback_adc|data2[2]~1                                ; 0                 ; 6       ;
-; U12_DB1                                                                              ;                   ;         ;
-;      - AD7822:primary_current_feedback_adc|data2[1]~2                                ; 0                 ; 6       ;
-; U12_DB0                                                                              ;                   ;         ;
-;      - AD7822:primary_current_feedback_adc|data2[0]~3                                ; 0                 ; 6       ;
-; U5_DB7                                                                               ;                   ;         ;
-;      - AD7822:output_voltage_feedback_adc|data2[7]                                   ; 0                 ; 6       ;
-; U5_DB6                                                                               ;                   ;         ;
-;      - AD7822:output_voltage_feedback_adc|data2[6]~feeder                            ; 0                 ; 6       ;
-; U5_DB5                                                                               ;                   ;         ;
-;      - AD7822:output_voltage_feedback_adc|data2[5]~feeder                            ; 0                 ; 6       ;
-; U5_DB4                                                                               ;                   ;         ;
-;      - AD7822:output_voltage_feedback_adc|data2[4]~feeder                            ; 0                 ; 6       ;
-; U5_DB3                                                                               ;                   ;         ;
-;      - AD7822:output_voltage_feedback_adc|data2[3]~0                                 ; 0                 ; 6       ;
-; U5_DB2                                                                               ;                   ;         ;
-;      - AD7822:output_voltage_feedback_adc|data2[2]~1                                 ; 0                 ; 6       ;
-; U5_DB1                                                                               ;                   ;         ;
-;      - AD7822:output_voltage_feedback_adc|data2[1]~2                                 ; 0                 ; 6       ;
-; U5_DB0                                                                               ;                   ;         ;
-;      - AD7822:output_voltage_feedback_adc|data2[0]~3                                 ; 0                 ; 6       ;
-; U20_DB7                                                                              ;                   ;         ;
-;      - AD7822:first_stage_voltage_feedback_adc|data2[7]~feeder                       ; 1                 ; 6       ;
-; U20_DB6                                                                              ;                   ;         ;
-;      - AD7822:first_stage_voltage_feedback_adc|data2[6]~feeder                       ; 0                 ; 6       ;
-; U20_DB5                                                                              ;                   ;         ;
-;      - AD7822:first_stage_voltage_feedback_adc|data2[5]~feeder                       ; 0                 ; 6       ;
-; U20_DB4                                                                              ;                   ;         ;
-;      - AD7822:first_stage_voltage_feedback_adc|data2[4]~feeder                       ; 0                 ; 6       ;
 ; U20_DB3                                                                              ;                   ;         ;
-;      - AD7822:first_stage_voltage_feedback_adc|data2[3]~0                            ; 1                 ; 6       ;
+;      - AD7822:first_stage_voltage_feedback_adc|data[3]~1                             ; 1                 ; 6       ;
 ; U20_DB2                                                                              ;                   ;         ;
-;      - AD7822:first_stage_voltage_feedback_adc|data2[2]~1                            ; 1                 ; 6       ;
+;      - AD7822:first_stage_voltage_feedback_adc|data[2]~2                             ; 0                 ; 6       ;
 ; U20_DB1                                                                              ;                   ;         ;
-;      - AD7822:first_stage_voltage_feedback_adc|data2[1]~2                            ; 0                 ; 6       ;
+;      - AD7822:first_stage_voltage_feedback_adc|data[1]~3                             ; 0                 ; 6       ;
 ; U20_DB0                                                                              ;                   ;         ;
-;      - AD7822:first_stage_voltage_feedback_adc|data2[0]~3                            ; 0                 ; 6       ;
+;      - AD7822:first_stage_voltage_feedback_adc|data[0]~4                             ; 0                 ; 6       ;
+; U5_DB7                                                                               ;                   ;         ;
+;      - AD7822:output_voltage_feedback_adc|data[7]~feeder                             ; 0                 ; 6       ;
+; U5_DB6                                                                               ;                   ;         ;
+;      - AD7822:output_voltage_feedback_adc|data[6]~feeder                             ; 0                 ; 6       ;
+; U5_DB5                                                                               ;                   ;         ;
+;      - AD7822:output_voltage_feedback_adc|data[5]~feeder                             ; 1                 ; 6       ;
+; U5_DB4                                                                               ;                   ;         ;
+;      - AD7822:output_voltage_feedback_adc|data[4]~feeder                             ; 0                 ; 6       ;
+; U5_DB3                                                                               ;                   ;         ;
+;      - AD7822:output_voltage_feedback_adc|data[3]~0                                  ; 1                 ; 6       ;
+; U5_DB2                                                                               ;                   ;         ;
+;      - AD7822:output_voltage_feedback_adc|data[2]~1                                  ; 0                 ; 6       ;
+; U5_DB1                                                                               ;                   ;         ;
+;      - AD7822:output_voltage_feedback_adc|data[1]~2                                  ; 0                 ; 6       ;
+; U5_DB0                                                                               ;                   ;         ;
+;      - AD7822:output_voltage_feedback_adc|data[0]~3                                  ; 0                 ; 6       ;
+; U12_DB7                                                                              ;                   ;         ;
+;      - AD7822:primary_current_feedback_adc|data[7]~feeder                            ; 0                 ; 6       ;
+; ESP_IN_VALUE                                                                         ;                   ;         ;
+;      - HVPS_FPGAInterface:fpga_interface|input_staged[0]~feeder                      ; 1                 ; 6       ;
+; U12_DB6                                                                              ;                   ;         ;
+;      - AD7822:primary_current_feedback_adc|data[6]~feeder                            ; 0                 ; 6       ;
+; U12_DB5                                                                              ;                   ;         ;
+;      - AD7822:primary_current_feedback_adc|data[5]~feeder                            ; 0                 ; 6       ;
+; U12_DB4                                                                              ;                   ;         ;
+;      - AD7822:primary_current_feedback_adc|data[4]~feeder                            ; 0                 ; 6       ;
+; U12_DB3                                                                              ;                   ;         ;
+;      - AD7822:primary_current_feedback_adc|data[3]~0                                 ; 0                 ; 6       ;
+; U12_DB2                                                                              ;                   ;         ;
+;      - AD7822:primary_current_feedback_adc|data[2]~1                                 ; 0                 ; 6       ;
+; U12_DB1                                                                              ;                   ;         ;
+;      - AD7822:primary_current_feedback_adc|data[1]~2                                 ; 0                 ; 6       ;
+; U12_DB0                                                                              ;                   ;         ;
+;      - AD7822:primary_current_feedback_adc|data[0]~3                                 ; 0                 ; 6       ;
 +--------------------------------------------------------------------------------------+-------------------+---------+
 
 
@@ -814,22 +814,22 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +--------------------------------------------------------------------------------+--------------------+---------+---------------------------+--------+----------------------+------------------+---------------------------+
 ; Name                                                                           ; Location           ; Fan-Out ; Usage                     ; Global ; Global Resource Used ; Global Line Name ; Enable Signal Source Name ;
 +--------------------------------------------------------------------------------+--------------------+---------+---------------------------+--------+----------------------+------------------+---------------------------+
-; AD7822:first_stage_voltage_feedback_adc|Selector9~1                            ; LCCOMB_X12_Y10_N14 ; 11      ; Clock enable              ; no     ; --                   ; --               ; --                        ;
-; AD7822:first_stage_voltage_feedback_adc|counter[0]~9                           ; LCCOMB_X13_Y10_N28 ; 5       ; Sync. clear               ; no     ; --                   ; --               ; --                        ;
-; AD7822:output_voltage_feedback_adc|Selector9~1                                 ; LCCOMB_X28_Y6_N6   ; 11      ; Clock enable              ; no     ; --                   ; --               ; --                        ;
-; AD7822:output_voltage_feedback_adc|counter[0]~9                                ; LCCOMB_X28_Y6_N16  ; 5       ; Sync. clear               ; no     ; --                   ; --               ; --                        ;
-; AD7822:primary_current_feedback_adc|Selector10~2                               ; LCCOMB_X17_Y16_N4  ; 11      ; Clock enable              ; no     ; --                   ; --               ; --                        ;
-; AD7822:primary_current_feedback_adc|counter[4]~9                               ; LCCOMB_X18_Y16_N6  ; 5       ; Sync. clear               ; no     ; --                   ; --               ; --                        ;
-; HBridge:hBridge|LessThan0~2                                                    ; LCCOMB_X21_Y13_N4  ; 15      ; Clock enable, Sync. clear ; no     ; --                   ; --               ; --                        ;
-; HVPS_FPGAInterface:fpga_interface|always0~0                                    ; LCCOMB_X21_Y13_N20 ; 2       ; Clock enable              ; no     ; --                   ; --               ; --                        ;
-; HVPS_FPGAInterface:fpga_interface|always0~1                                    ; LCCOMB_X12_Y13_N16 ; 26      ; Clock enable              ; no     ; --                   ; --               ; --                        ;
-; HVPS_FPGAInterface:fpga_interface|always0~2                                    ; LCCOMB_X17_Y13_N14 ; 1       ; Sync. load                ; no     ; --                   ; --               ; --                        ;
-; HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_go_live|counter[17]~46   ; LCCOMB_X22_Y6_N28  ; 19      ; Sync. clear               ; no     ; --                   ; --               ; --                        ;
-; HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_in_shift|counter[13]~46  ; LCCOMB_X9_Y8_N20   ; 19      ; Sync. clear               ; no     ; --                   ; --               ; --                        ;
-; HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_out_shift|counter[5]~46  ; LCCOMB_X22_Y3_N20  ; 19      ; Sync. clear               ; no     ; --                   ; --               ; --                        ;
-; HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_to_output|counter[18]~46 ; LCCOMB_X6_Y10_N20  ; 19      ; Sync. clear               ; no     ; --                   ; --               ; --                        ;
-; HVPS_FPGAInterface:fpga_interface|output_buffer[1034]~1                        ; LCCOMB_X16_Y10_N8  ; 1058    ; Clock enable              ; no     ; --                   ; --               ; --                        ;
-; clk                                                                            ; PIN_91             ; 1261    ; Clock                     ; yes    ; Global Clock         ; GCLK9            ; --                        ;
+; AD7822:first_stage_voltage_feedback_adc|counter[2]~9                           ; LCCOMB_X22_Y7_N30  ; 5       ; Sync. clear               ; no     ; --                   ; --               ; --                        ;
+; AD7822:first_stage_voltage_feedback_adc|data[7]~0                              ; LCCOMB_X22_Y7_N2   ; 11      ; Clock enable              ; no     ; --                   ; --               ; --                        ;
+; AD7822:output_voltage_feedback_adc|Selector8~1                                 ; LCCOMB_X33_Y9_N14  ; 11      ; Clock enable              ; no     ; --                   ; --               ; --                        ;
+; AD7822:output_voltage_feedback_adc|counter[4]~9                                ; LCCOMB_X33_Y6_N30  ; 5       ; Sync. clear               ; no     ; --                   ; --               ; --                        ;
+; AD7822:primary_current_feedback_adc|Selector8~1                                ; LCCOMB_X18_Y19_N4  ; 11      ; Clock enable              ; no     ; --                   ; --               ; --                        ;
+; AD7822:primary_current_feedback_adc|counter[1]~9                               ; LCCOMB_X18_Y19_N30 ; 5       ; Sync. clear               ; no     ; --                   ; --               ; --                        ;
+; HBridge:hBridge|LessThan0~2                                                    ; LCCOMB_X16_Y12_N30 ; 15      ; Clock enable, Sync. clear ; no     ; --                   ; --               ; --                        ;
+; HVPS_FPGAInterface:fpga_interface|always0~0                                    ; LCCOMB_X18_Y11_N20 ; 10      ; Clock enable              ; no     ; --                   ; --               ; --                        ;
+; HVPS_FPGAInterface:fpga_interface|always0~1                                    ; LCCOMB_X14_Y13_N16 ; 18      ; Clock enable              ; no     ; --                   ; --               ; --                        ;
+; HVPS_FPGAInterface:fpga_interface|always0~2                                    ; LCCOMB_X23_Y12_N20 ; 1       ; Sync. load                ; no     ; --                   ; --               ; --                        ;
+; HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_go_live|counter[3]~46    ; LCCOMB_X17_Y9_N10  ; 19      ; Sync. clear               ; no     ; --                   ; --               ; --                        ;
+; HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_in_shift|counter[4]~46   ; LCCOMB_X18_Y13_N16 ; 19      ; Sync. clear               ; no     ; --                   ; --               ; --                        ;
+; HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_out_shift|counter[14]~46 ; LCCOMB_X23_Y2_N10  ; 19      ; Sync. clear               ; no     ; --                   ; --               ; --                        ;
+; HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_to_output|counter[3]~46  ; LCCOMB_X19_Y8_N26  ; 19      ; Sync. clear               ; no     ; --                   ; --               ; --                        ;
+; HVPS_FPGAInterface:fpga_interface|output_buffer[1075]~1                        ; LCCOMB_X22_Y9_N4   ; 1098    ; Clock enable              ; no     ; --                   ; --               ; --                        ;
+; clk                                                                            ; PIN_91             ; 1301    ; Clock                     ; yes    ; Global Clock         ; GCLK9            ; --                        ;
 +--------------------------------------------------------------------------------+--------------------+---------+---------------------------+--------+----------------------+------------------+---------------------------+
 
 
@@ -838,7 +838,7 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +------+----------+---------+--------------------------------------+----------------------+------------------+---------------------------+
 ; Name ; Location ; Fan-Out ; Fan-Out Using Intentional Clock Skew ; Global Resource Used ; Global Line Name ; Enable Signal Source Name ;
 +------+----------+---------+--------------------------------------+----------------------+------------------+---------------------------+
-; clk  ; PIN_91   ; 1261    ; 0                                    ; Global Clock         ; GCLK9            ; --                        ;
+; clk  ; PIN_91   ; 1301    ; 0                                    ; Global Clock         ; GCLK9            ; --                        ;
 +------+----------+---------+--------------------------------------+----------------------+------------------+---------------------------+
 
 
@@ -847,9 +847,9 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +-------------------------------------------------------------------------------+---------+
 ; Name                                                                          ; Fan-Out ;
 +-------------------------------------------------------------------------------+---------+
-; HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_to_output|debounced_out ; 1063    ;
-; HVPS_FPGAInterface:fpga_interface|to_output_prev                              ; 1060    ;
-; HVPS_FPGAInterface:fpga_interface|output_buffer[1034]~1                       ; 1058    ;
+; HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_to_output|debounced_out ; 1103    ;
+; HVPS_FPGAInterface:fpga_interface|to_output_prev                              ; 1100    ;
+; HVPS_FPGAInterface:fpga_interface|output_buffer[1075]~1                       ; 1098    ;
 +-------------------------------------------------------------------------------+---------+
 
 
@@ -858,143 +858,144 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +-----------------------+-------------------------+
 ; Routing Resource Type ; Usage                   ;
 +-----------------------+-------------------------+
-; Block interconnects   ; 508 / 32,401 ( 2 % )    ;
-; C16 interconnects     ; 33 / 1,326 ( 2 % )      ;
-; C4 interconnects      ; 179 / 21,816 ( < 1 % )  ;
+; Block interconnects   ; 579 / 32,401 ( 2 % )    ;
+; C16 interconnects     ; 35 / 1,326 ( 3 % )      ;
+; C4 interconnects      ; 232 / 21,816 ( 1 % )    ;
 ; Direct links          ; 127 / 32,401 ( < 1 % )  ;
 ; Global clocks         ; 1 / 10 ( 10 % )         ;
-; Local interconnects   ; 1,153 / 10,320 ( 11 % ) ;
-; R24 interconnects     ; 24 / 1,289 ( 2 % )      ;
-; R4 interconnects      ; 181 / 28,186 ( < 1 % )  ;
+; Local interconnects   ; 1,138 / 10,320 ( 11 % ) ;
+; R24 interconnects     ; 16 / 1,289 ( 1 % )      ;
+; R4 interconnects      ; 197 / 28,186 ( < 1 % )  ;
 +-----------------------+-------------------------+
 
 
 +----------------------------------------------------------------------------+
 ; LAB Logic Elements                                                         ;
 +---------------------------------------------+------------------------------+
-; Number of Logic Elements  (Average = 14.38) ; Number of LABs  (Total = 92) ;
+; Number of Logic Elements  (Average = 14.32) ; Number of LABs  (Total = 95) ;
 +---------------------------------------------+------------------------------+
 ; 1                                           ; 2                            ;
-; 2                                           ; 2                            ;
-; 3                                           ; 3                            ;
+; 2                                           ; 0                            ;
+; 3                                           ; 4                            ;
 ; 4                                           ; 1                            ;
-; 5                                           ; 0                            ;
-; 6                                           ; 0                            ;
+; 5                                           ; 1                            ;
+; 6                                           ; 1                            ;
 ; 7                                           ; 0                            ;
-; 8                                           ; 0                            ;
+; 8                                           ; 1                            ;
 ; 9                                           ; 0                            ;
 ; 10                                          ; 0                            ;
-; 11                                          ; 5                            ;
+; 11                                          ; 4                            ;
 ; 12                                          ; 0                            ;
-; 13                                          ; 1                            ;
-; 14                                          ; 1                            ;
-; 15                                          ; 10                           ;
-; 16                                          ; 67                           ;
+; 13                                          ; 2                            ;
+; 14                                          ; 2                            ;
+; 15                                          ; 7                            ;
+; 16                                          ; 70                           ;
 +---------------------------------------------+------------------------------+
 
 
 +-------------------------------------------------------------------+
 ; LAB-wide Signals                                                  ;
 +------------------------------------+------------------------------+
-; LAB-wide Signals  (Average = 1.85) ; Number of LABs  (Total = 92) ;
+; LAB-wide Signals  (Average = 1.88) ; Number of LABs  (Total = 95) ;
 +------------------------------------+------------------------------+
-; 1 Clock                            ; 92                           ;
-; 1 Clock enable                     ; 68                           ;
-; 1 Sync. clear                      ; 7                            ;
-; 2 Clock enables                    ; 3                            ;
+; 1 Clock                            ; 94                           ;
+; 1 Clock enable                     ; 74                           ;
+; 1 Sync. clear                      ; 8                            ;
+; 1 Sync. load                       ; 1                            ;
+; 2 Clock enables                    ; 2                            ;
 +------------------------------------+------------------------------+
 
 
 +-----------------------------------------------------------------------------+
 ; LAB Signals Sourced                                                         ;
 +----------------------------------------------+------------------------------+
-; Number of Signals Sourced  (Average = 27.97) ; Number of LABs  (Total = 92) ;
+; Number of Signals Sourced  (Average = 27.89) ; Number of LABs  (Total = 95) ;
 +----------------------------------------------+------------------------------+
 ; 0                                            ; 0                            ;
-; 1                                            ; 0                            ;
-; 2                                            ; 2                            ;
+; 1                                            ; 1                            ;
+; 2                                            ; 1                            ;
 ; 3                                            ; 0                            ;
-; 4                                            ; 2                            ;
+; 4                                            ; 0                            ;
 ; 5                                            ; 0                            ;
-; 6                                            ; 3                            ;
-; 7                                            ; 1                            ;
-; 8                                            ; 0                            ;
+; 6                                            ; 4                            ;
+; 7                                            ; 0                            ;
+; 8                                            ; 2                            ;
 ; 9                                            ; 0                            ;
-; 10                                           ; 0                            ;
+; 10                                           ; 1                            ;
 ; 11                                           ; 0                            ;
 ; 12                                           ; 0                            ;
 ; 13                                           ; 0                            ;
-; 14                                           ; 0                            ;
-; 15                                           ; 1                            ;
+; 14                                           ; 1                            ;
+; 15                                           ; 0                            ;
 ; 16                                           ; 0                            ;
 ; 17                                           ; 0                            ;
 ; 18                                           ; 0                            ;
 ; 19                                           ; 0                            ;
-; 20                                           ; 5                            ;
+; 20                                           ; 4                            ;
 ; 21                                           ; 0                            ;
-; 22                                           ; 1                            ;
+; 22                                           ; 0                            ;
 ; 23                                           ; 0                            ;
-; 24                                           ; 0                            ;
-; 25                                           ; 5                            ;
+; 24                                           ; 3                            ;
+; 25                                           ; 6                            ;
 ; 26                                           ; 1                            ;
-; 27                                           ; 1                            ;
-; 28                                           ; 3                            ;
-; 29                                           ; 0                            ;
+; 27                                           ; 0                            ;
+; 28                                           ; 2                            ;
+; 29                                           ; 1                            ;
 ; 30                                           ; 3                            ;
-; 31                                           ; 1                            ;
-; 32                                           ; 63                           ;
+; 31                                           ; 0                            ;
+; 32                                           ; 65                           ;
 +----------------------------------------------+------------------------------+
 
 
 +--------------------------------------------------------------------------------+
 ; LAB Signals Sourced Out                                                        ;
 +-------------------------------------------------+------------------------------+
-; Number of Signals Sourced Out  (Average = 2.34) ; Number of LABs  (Total = 92) ;
+; Number of Signals Sourced Out  (Average = 2.49) ; Number of LABs  (Total = 95) ;
 +-------------------------------------------------+------------------------------+
 ; 0                                               ; 0                            ;
 ; 1                                               ; 49                           ;
-; 2                                               ; 21                           ;
-; 3                                               ; 10                           ;
-; 4                                               ; 4                            ;
-; 5                                               ; 0                            ;
+; 2                                               ; 18                           ;
+; 3                                               ; 14                           ;
+; 4                                               ; 1                            ;
+; 5                                               ; 3                            ;
 ; 6                                               ; 1                            ;
-; 7                                               ; 1                            ;
+; 7                                               ; 3                            ;
 ; 8                                               ; 2                            ;
 ; 9                                               ; 0                            ;
-; 10                                              ; 0                            ;
-; 11                                              ; 3                            ;
+; 10                                              ; 1                            ;
+; 11                                              ; 1                            ;
 ; 12                                              ; 0                            ;
-; 13                                              ; 0                            ;
-; 14                                              ; 0                            ;
-; 15                                              ; 0                            ;
-; 16                                              ; 1                            ;
+; 13                                              ; 1                            ;
+; 14                                              ; 1                            ;
 +-------------------------------------------------+------------------------------+
 
 
 +----------------------------------------------------------------------------+
 ; LAB Distinct Inputs                                                        ;
 +---------------------------------------------+------------------------------+
-; Number of Distinct Inputs  (Average = 5.93) ; Number of LABs  (Total = 92) ;
+; Number of Distinct Inputs  (Average = 6.16) ; Number of LABs  (Total = 95) ;
 +---------------------------------------------+------------------------------+
 ; 0                                           ; 0                            ;
 ; 1                                           ; 0                            ;
-; 2                                           ; 7                            ;
-; 3                                           ; 1                            ;
-; 4                                           ; 5                            ;
-; 5                                           ; 49                           ;
-; 6                                           ; 10                           ;
-; 7                                           ; 7                            ;
-; 8                                           ; 1                            ;
+; 2                                           ; 5                            ;
+; 3                                           ; 2                            ;
+; 4                                           ; 0                            ;
+; 5                                           ; 51                           ;
+; 6                                           ; 18                           ;
+; 7                                           ; 6                            ;
+; 8                                           ; 2                            ;
 ; 9                                           ; 2                            ;
-; 10                                          ; 3                            ;
+; 10                                          ; 1                            ;
 ; 11                                          ; 1                            ;
-; 12                                          ; 0                            ;
+; 12                                          ; 1                            ;
 ; 13                                          ; 1                            ;
-; 14                                          ; 3                            ;
+; 14                                          ; 1                            ;
 ; 15                                          ; 1                            ;
 ; 16                                          ; 0                            ;
-; 17                                          ; 0                            ;
+; 17                                          ; 1                            ;
 ; 18                                          ; 1                            ;
+; 19                                          ; 0                            ;
+; 20                                          ; 1                            ;
 +---------------------------------------------+------------------------------+
 
 
@@ -1081,19 +1082,18 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 ; U5_INV_EOC         ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
 ; U12_INV_EOC        ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
 ; U20_INV_EOC        ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
-; ESP_IN_VALUE       ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
+; U20_DB7            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
+; U20_DB6            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
+; U20_DB5            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
 ; ESP_TO_OUTPUT      ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
 ; ESP_OUT_SHIFT      ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
 ; ESP_GO_LIVE        ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
+; U20_DB4            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
 ; ESP_IN_SHIFT       ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
-; U12_DB7            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
-; U12_DB6            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
-; U12_DB5            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
-; U12_DB4            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
-; U12_DB3            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
-; U12_DB2            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
-; U12_DB1            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
-; U12_DB0            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
+; U20_DB3            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
+; U20_DB2            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
+; U20_DB1            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
+; U20_DB0            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
 ; U5_DB7             ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
 ; U5_DB6             ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
 ; U5_DB5             ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
@@ -1102,14 +1102,15 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 ; U5_DB2             ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
 ; U5_DB1             ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
 ; U5_DB0             ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
-; U20_DB7            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
-; U20_DB6            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
-; U20_DB5            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
-; U20_DB4            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
-; U20_DB3            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
-; U20_DB2            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
-; U20_DB1            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
-; U20_DB0            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
+; U12_DB7            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
+; ESP_IN_VALUE       ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
+; U12_DB6            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
+; U12_DB5            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
+; U12_DB4            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
+; U12_DB3            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
+; U12_DB2            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
+; U12_DB1            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
+; U12_DB0            ; Pass      ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Pass      ; Pass      ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Pass         ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Inapplicable ; Pass      ; Inapplicable ; Inapplicable ;
 +--------------------+-----------+--------------+-----------+--------------+--------------+-----------+-----------+--------------+-----------+-----------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+-----------+--------------+--------------+
 
 
@@ -1154,6 +1155,8 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +-----------------+----------------------+-------------------+
 ; Source Clock(s) ; Destination Clock(s) ; Delay Added in ns ;
 +-----------------+----------------------+-------------------+
+; I/O             ; clk                  ; 3.2               ;
++-----------------+----------------------+-------------------+
 Note: For more information on problematic transfers, consider running the Fitter again with the Optimize hold timing option (Settings Menu) turned off.
 This will disable optimization of problematic paths and expose them for further analysis using the Timing Analyzer.
 
@@ -1163,9 +1166,9 @@ This will disable optimization of problematic paths and expose them for further 
 +-----------------+------------------------------------------------+-------------------+
 ; Source Register ; Destination Register                           ; Delay Added in ns ;
 +-----------------+------------------------------------------------+-------------------+
-; U12_INV_EOC     ; AD7822:primary_current_feedback_adc|INV_RD     ; 0.202             ;
-; U5_INV_EOC      ; AD7822:output_voltage_feedback_adc|INV_RD      ; 0.160             ;
-; U20_INV_EOC     ; AD7822:first_stage_voltage_feedback_adc|INV_RD ; 0.067             ;
+; U12_INV_EOC     ; AD7822:primary_current_feedback_adc|INV_RD     ; 1.489             ;
+; U5_INV_EOC      ; AD7822:output_voltage_feedback_adc|INV_RD      ; 0.834             ;
+; U20_INV_EOC     ; AD7822:first_stage_voltage_feedback_adc|INV_RD ; 0.361             ;
 +-----------------+------------------------------------------------+-------------------+
 Note: This table only shows the top 3 path(s) that have the largest delay added for hold.
 
@@ -1217,13 +1220,13 @@ Info (170191): Fitter placement operations beginning
 Info (170137): Fitter placement was successful
 Info (170192): Fitter placement operations ending: elapsed time is 00:00:00
 Info (170193): Fitter routing operations beginning
-Info (170195): Router estimated average interconnect usage is 0% of the available device resources
-    Info (170196): Router estimated peak interconnect usage is 2% of the available device resources in the region that extends from location X11_Y0 to location X22_Y11
+Info (170195): Router estimated average interconnect usage is 1% of the available device resources
+    Info (170196): Router estimated peak interconnect usage is 1% of the available device resources in the region that extends from location X11_Y12 to location X22_Y24
 Info (170199): The Fitter performed an Auto Fit compilation.  Optimizations were skipped to reduce compilation time.
     Info (170201): Optimizations that may affect the design's routability were skipped
     Info (170200): Optimizations that may affect the design's timing were skipped
 Info (170194): Fitter routing operations ending: elapsed time is 00:00:01
-Info (11888): Total time spent on timing analysis during the Fitter is 0.40 seconds.
+Info (11888): Total time spent on timing analysis during the Fitter is 0.38 seconds.
 Info (334003): Started post-fitting delay annotation
 Info (334004): Delay annotation completed successfully
 Info (334003): Started post-fitting delay annotation
@@ -1239,19 +1242,18 @@ Warning (169177): 38 pins must meet Intel FPGA requirements for 3.3-, 3.0-, and 
     Info (169178): Pin U5_INV_EOC uses I/O standard 3.3-V LVCMOS at 73 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 31
     Info (169178): Pin U12_INV_EOC uses I/O standard 3.3-V LVCMOS at 106 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 42
     Info (169178): Pin U20_INV_EOC uses I/O standard 3.3-V LVCMOS at 55 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 53
-    Info (169178): Pin ESP_IN_VALUE uses I/O standard 3.3-V LVCMOS at 52 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 13
+    Info (169178): Pin U20_DB7 uses I/O standard 3.3-V LVCMOS at 121 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 51
+    Info (169178): Pin U20_DB6 uses I/O standard 3.3-V LVCMOS at 125 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 50
+    Info (169178): Pin U20_DB5 uses I/O standard 3.3-V LVCMOS at 127 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 49
     Info (169178): Pin ESP_TO_OUTPUT uses I/O standard 3.3-V LVCMOS at 54 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 16
     Info (169178): Pin ESP_OUT_SHIFT uses I/O standard 3.3-V LVCMOS at 60 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 14
     Info (169178): Pin ESP_GO_LIVE uses I/O standard 3.3-V LVCMOS at 58 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 11
+    Info (169178): Pin U20_DB4 uses I/O standard 3.3-V LVCMOS at 129 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 48
     Info (169178): Pin ESP_IN_SHIFT uses I/O standard 3.3-V LVCMOS at 50 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 12
-    Info (169178): Pin U12_DB7 uses I/O standard 3.3-V LVCMOS at 128 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 40
-    Info (169178): Pin U12_DB6 uses I/O standard 3.3-V LVCMOS at 135 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 39
-    Info (169178): Pin U12_DB5 uses I/O standard 3.3-V LVCMOS at 141 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 38
-    Info (169178): Pin U12_DB4 uses I/O standard 3.3-V LVCMOS at 143 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 37
-    Info (169178): Pin U12_DB3 uses I/O standard 3.3-V LVCMOS at 1 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 36
-    Info (169178): Pin U12_DB2 uses I/O standard 3.3-V LVCMOS at 126 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 35
-    Info (169178): Pin U12_DB1 uses I/O standard 3.3-V LVCMOS at 124 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 34
-    Info (169178): Pin U12_DB0 uses I/O standard 3.3-V LVCMOS at 120 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 33
+    Info (169178): Pin U20_DB3 uses I/O standard 3.3-V LVCMOS at 142 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 47
+    Info (169178): Pin U20_DB2 uses I/O standard 3.3-V LVCMOS at 42 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 46
+    Info (169178): Pin U20_DB1 uses I/O standard 3.3-V LVCMOS at 44 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 45
+    Info (169178): Pin U20_DB0 uses I/O standard 3.3-V LVCMOS at 49 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 44
     Info (169178): Pin U5_DB7 uses I/O standard 3.3-V LVCMOS at 59 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 29
     Info (169178): Pin U5_DB6 uses I/O standard 3.3-V LVCMOS at 64 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 28
     Info (169178): Pin U5_DB5 uses I/O standard 3.3-V LVCMOS at 68 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 27
@@ -1260,19 +1262,20 @@ Warning (169177): 38 pins must meet Intel FPGA requirements for 3.3-, 3.0-, and 
     Info (169178): Pin U5_DB2 uses I/O standard 3.3-V LVCMOS at 85 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 24
     Info (169178): Pin U5_DB1 uses I/O standard 3.3-V LVCMOS at 84 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 23
     Info (169178): Pin U5_DB0 uses I/O standard 3.3-V LVCMOS at 74 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 22
-    Info (169178): Pin U20_DB7 uses I/O standard 3.3-V LVCMOS at 121 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 51
-    Info (169178): Pin U20_DB6 uses I/O standard 3.3-V LVCMOS at 125 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 50
-    Info (169178): Pin U20_DB5 uses I/O standard 3.3-V LVCMOS at 127 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 49
-    Info (169178): Pin U20_DB4 uses I/O standard 3.3-V LVCMOS at 129 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 48
-    Info (169178): Pin U20_DB3 uses I/O standard 3.3-V LVCMOS at 142 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 47
-    Info (169178): Pin U20_DB2 uses I/O standard 3.3-V LVCMOS at 42 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 46
-    Info (169178): Pin U20_DB1 uses I/O standard 3.3-V LVCMOS at 44 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 45
-    Info (169178): Pin U20_DB0 uses I/O standard 3.3-V LVCMOS at 49 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 44
+    Info (169178): Pin U12_DB7 uses I/O standard 3.3-V LVCMOS at 128 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 40
+    Info (169178): Pin ESP_IN_VALUE uses I/O standard 3.3-V LVCMOS at 52 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 13
+    Info (169178): Pin U12_DB6 uses I/O standard 3.3-V LVCMOS at 135 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 39
+    Info (169178): Pin U12_DB5 uses I/O standard 3.3-V LVCMOS at 141 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 38
+    Info (169178): Pin U12_DB4 uses I/O standard 3.3-V LVCMOS at 143 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 37
+    Info (169178): Pin U12_DB3 uses I/O standard 3.3-V LVCMOS at 1 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 36
+    Info (169178): Pin U12_DB2 uses I/O standard 3.3-V LVCMOS at 126 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 35
+    Info (169178): Pin U12_DB1 uses I/O standard 3.3-V LVCMOS at 124 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 34
+    Info (169178): Pin U12_DB0 uses I/O standard 3.3-V LVCMOS at 120 File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 33
 Info (144001): Generated suppressed messages file C:/repos/hvps/Code/Verilog/HVPSController2/output_files/hvps_controller.fit.smsg
 Info: Quartus Prime Fitter was successful. 0 errors, 4 warnings
-    Info: Peak virtual memory: 5835 megabytes
-    Info: Processing ended: Tue Apr  7 18:31:46 2026
-    Info: Elapsed time: 00:00:07
+    Info: Peak virtual memory: 5864 megabytes
+    Info: Processing ended: Thu Apr  9 15:56:11 2026
+    Info: Elapsed time: 00:00:05
     Info: Total CPU time (on all processors): 00:00:07
 
 

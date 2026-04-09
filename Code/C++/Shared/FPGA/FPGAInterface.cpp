@@ -300,7 +300,25 @@ void FPGAInterface::readOutputs(bool includingStaging, bool* temporaryFullOutput
 	*/
 	//LOG_INFO(includingStaging?"Included staging":"Did not include staging");
 	//LOG_INFO("what came out in order it came out from left ot right: %s", binaryString.c_str());
-	
+	/*size_t j = 34;
+	size_t l = 0;
+	while(l<4){		
+		if((temporaryFullOutputBuffer[j++]!=1)
+			||(temporaryFullOutputBuffer[j++]!=1)
+			||(temporaryFullOutputBuffer[j++]!=1)
+			||(temporaryFullOutputBuffer[j++]!=1)){
+					LOG_INFO("WRONG WRONG WRONG");
+			
+		}
+		if((temporaryFullOutputBuffer[j++]!=0)
+			||(temporaryFullOutputBuffer[j++]!=0)
+			||(temporaryFullOutputBuffer[j++]!=0)
+			||(temporaryFullOutputBuffer[j++]!=0)){
+					LOG_INFO("WRONG WRONG WRONG");
+			
+		}
+		l++;
+	}*/
 /*	std::string binaryStringActualOrderStored(_fullOutputBufferLength, 'z');
 	for (size_t i = 0; i < _fullOutputBufferLength; i++)
 	{

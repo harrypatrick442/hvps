@@ -10,6 +10,7 @@
     <ProjectReference Include="..\..\..\..\shared-private\Configuration\Configurations.csproj" />
     <ProjectReference Include="..\..\..\..\shared-public\ConfigurationClassBuilder\ConfigurationClassBuilder.csproj" />
     <ProjectReference Include="..\..\..\..\shared-public\Core\CSharp\Core.csproj" />
+    <ProjectReference Include="..\FPGAConstantsGenerator\FPGAConstantsGenerator.csproj" />
     <ProjectReference Include="..\HVPSConstants\HVPSConstants.csproj" />
   </ItemGroup>
 </Project>
