@@ -1,0 +1,5 @@
+localparam DRIVE_MODE_NO_DRIVE = 2'b00;
+localparam DRIVE_MODE_DRIVE= 2'b01;
+localparam DRIVE_MODE_DRIVE_FINITE_HALF_CYCLES = 2'b10;
+localparam DRIVE_MODE_UNUSED = 2'b11;
+

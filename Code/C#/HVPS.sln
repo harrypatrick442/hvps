@@ -68,8 +68,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ESPFPGAInterface", "ESPFPGA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ESPFPGAInterfaceEmulation", "ESPFPGAInterfaceEmulation\ESPFPGAInterfaceEmulation.csproj", "{44C61E0A-A9AD-455A-A697-31C05B475F7D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HVPS_FPGAInterfaceGenerator", "HVPS_FPGAInterfaceGenerator\HVPS_FPGAInterfaceGenerator.csproj", "{C1D7E52D-91C5-4FDD-A281-4222C0AB1228}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FPGAInterfaceGenerator", "FPGAInterfaceGenerator\FPGAInterfaceGenerator.csproj", "{51731C32-20E5-4917-9744-111B0FB4EEE6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FPGAConstantsGenerator", "FPGAConstantsGenerator\FPGAConstantsGenerator.csproj", "{2627973F-7E26-4DEB-BC37-6EADD5B7BDF5}"
@@ -212,10 +210,6 @@ Global
 		{44C61E0A-A9AD-455A-A697-31C05B475F7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44C61E0A-A9AD-455A-A697-31C05B475F7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44C61E0A-A9AD-455A-A697-31C05B475F7D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C1D7E52D-91C5-4FDD-A281-4222C0AB1228}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C1D7E52D-91C5-4FDD-A281-4222C0AB1228}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C1D7E52D-91C5-4FDD-A281-4222C0AB1228}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C1D7E52D-91C5-4FDD-A281-4222C0AB1228}.Release|Any CPU.Build.0 = Release|Any CPU
 		{51731C32-20E5-4917-9744-111B0FB4EEE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{51731C32-20E5-4917-9744-111B0FB4EEE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51731C32-20E5-4917-9744-111B0FB4EEE6}.Release|Any CPU.ActiveCfg = Release|Any CPU

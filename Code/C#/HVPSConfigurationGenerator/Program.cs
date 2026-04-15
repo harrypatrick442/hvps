@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using HVPSConstants;
 using ConfigurationClassBuilder;
 using FPGAConstantsGenerator;
+using HVPSCore.Enums;
 namespace HVPSConfigurationGenerator
 {
     class Program
@@ -13,7 +14,6 @@ namespace HVPSConfigurationGenerator
 
         static void Main(string[] args)
         {
-            string dependenciesIncludePathPrefix = "";
             string reposDirectory = Assembly.GetEntryAssembly()!.Location;
             while (Path.GetFileName(reposDirectory).ToLower() != "repos")
             {
@@ -117,6 +117,12 @@ namespace HVPSConfigurationGenerator
                 unknownFlashDelayMs = FlashHzToMilliseconds(
                     Constants.UnknownFlashHz),
             };
+            GenerateCPlusPlusConfigurations(reposDirectory, configurationStruct);
+            GenerateFPGAConstants(reposDirectory, configurationStruct);
+        }
+        private static void GenerateCPlusPlusConfigurations(string reposDirectory, 
+            HVPSConfiguration configurationStruct) {
+            string dependenciesIncludePathPrefix = "";
             AlreadyWroteWatcher alreadyWroteWatcher = new AlreadyWroteWatcher();
             CPlusPlusConfigurationWriter.WriteConfigurationStructFile<HVPSConfiguration>(Path.Combine(
                     reposDirectory,
@@ -146,7 +152,18 @@ namespace HVPSConfigurationGenerator
                     alreadyWroteWatcher
                 );
             }
-            GenerateFPGAConstants(reposDirectory, configurationStruct);
+            CPlusPlusEnumWriter.Write<FPGACommand>(
+                Path.Combine(
+                        reposDirectory,
+                        "hvps",
+                        "Code",
+                        "C++",
+                        "HVPSController2",
+                        "main",
+                        "Generated",
+                        "Enums"
+                )
+            );
         }
         private static void GenerateFPGAConstants(string reposDirectory, HVPSConfiguration configurationStruct) {
             int maxPrimaryCurrent = (int)Math.Floor(Constants.FlybackTransformerMaximumCurrent / configurationStruct.primaryCurrentFromRaw);
@@ -160,9 +177,11 @@ namespace HVPSConfigurationGenerator
                         "HVPSController2",
                         "GeneratedConstants.sv"
                 ),
-                new Constant(name: "MAX_PRIMARY_CURRENT", value: maxPrimaryCurrent, nBits: 8, Format.Decimal),
-                new Constant(name: "MAX_FIRST_STAGE_VOLTAGE", value: maxFirstStageVoltage, nBits: 8, Format.Decimal),
-                new Constant(name: "MAX_OUTPUT_VOLTAGE", value: maxFirstStageVoltage, nBits: 8, Format.Decimal));
+                new Constant[] {
+                    new Constant(name: "MAX_PRIMARY_CURRENT", value: maxPrimaryCurrent, nBits: 8, Format.Decimal),
+                    new Constant(name: "MAX_FIRST_STAGE_VOLTAGE", value: maxFirstStageVoltage, nBits: 8, Format.Decimal),
+                    new Constant(name: "MAX_OUTPUT_VOLTAGE", value: maxFirstStageVoltage, nBits: 8, Format.Decimal)
+                }.Concat(FPGAConstantsGenerator.ConstantsFactory.FromEnum<FPGACommand>(8)).ToArray());
         }
         private static UInt32 FlashHzToMilliseconds(double hz){
             if (hz <= 0) return 0;

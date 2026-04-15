@@ -55,7 +55,7 @@ always @(posedge clk_50MHz) begin
 				  counter <= 0;
 				  state   <= IDLE; // go back and try again
 			 end else begin
-				  counter <= counter + 1;
+				  counter <= counter + 5'd1;
 			 end
 		end
 
@@ -68,7 +68,7 @@ always @(posedge clk_50MHz) begin
                 counter <= 0;
                 state   <= RD_HOLD;
             end else begin
-                counter <= counter + 1;
+                counter <= counter + 5'd1;
             end
         end
 
@@ -80,7 +80,7 @@ always @(posedge clk_50MHz) begin
                 state   <= IDLE;
                 counter <= 0;
             end else begin
-                counter <= counter + 1;
+                counter <= counter + 5'd1;;
             end
         end
     endcase

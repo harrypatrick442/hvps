@@ -13,16 +13,15 @@ public:
     uint64_t getLastUpdateTimeUs();
     void setCommand(bool (&value)[8]);
     void setDesiredOutputVoltage(uint8_t value);
-    void setDrive2(bool value);
-    void setDrive(bool value);
     void  getBufferedData(uint8_t (&value)[128]);
     uint8_t getEchoDesiredOutputVoltage();
     uint8_t getMaxPrimaryCurrent();
     uint8_t getMaxOutputVoltage();
     uint8_t getMaxFirstStageVoltage();
-    bool getError();
+    void  getState(bool (&value)[8]);
     uint8_t getActualPeakPrimaryCurrent();
     uint8_t getActualOutputVoltage();
     uint8_t getActualFirstStageVoltage();
+    bool getDoneCommand();
     void getAllFeedbacks(uint8_t& actualFirstStageVoltage, uint8_t& actualOutputVoltage, uint8_t& actualPeakPrimaryCurrent);
 };

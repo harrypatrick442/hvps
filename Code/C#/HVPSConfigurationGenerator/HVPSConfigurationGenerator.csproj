@@ -12,5 +12,6 @@
     <ProjectReference Include="..\..\..\..\shared-public\Core\CSharp\Core.csproj" />
     <ProjectReference Include="..\FPGAConstantsGenerator\FPGAConstantsGenerator.csproj" />
     <ProjectReference Include="..\HVPSConstants\HVPSConstants.csproj" />
+    <ProjectReference Include="..\HVPSCore\HVPSCore.csproj" />
   </ItemGroup>
 </Project>

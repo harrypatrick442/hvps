@@ -44,6 +44,10 @@
 					"strict" : false
 				},
 				{
+					"name" : "U23_SD",
+					"strict" : false
+				},
+				{
 					"name" : "U24_HIN",
 					"strict" : false
 				},
@@ -52,67 +56,15 @@
 					"strict" : false
 				},
 				{
+					"name" : "U24_SD",
+					"strict" : false
+				},
+				{
 					"name" : "clk",
 					"strict" : false
 				},
 				{
-					"name" : "U5_INV_EOC",
-					"strict" : false
-				},
-				{
-					"name" : "U12_INV_EOC",
-					"strict" : false
-				},
-				{
-					"name" : "U20_INV_EOC",
-					"strict" : false
-				},
-				{
-					"name" : "U20_DB7",
-					"strict" : false
-				},
-				{
-					"name" : "U20_DB6",
-					"strict" : false
-				},
-				{
-					"name" : "U20_DB5",
-					"strict" : false
-				},
-				{
-					"name" : "ESP_TO_OUTPUT",
-					"strict" : false
-				},
-				{
-					"name" : "ESP_OUT_SHIFT",
-					"strict" : false
-				},
-				{
-					"name" : "ESP_GO_LIVE",
-					"strict" : false
-				},
-				{
-					"name" : "U20_DB4",
-					"strict" : false
-				},
-				{
-					"name" : "ESP_IN_SHIFT",
-					"strict" : false
-				},
-				{
-					"name" : "U20_DB3",
-					"strict" : false
-				},
-				{
-					"name" : "U20_DB2",
-					"strict" : false
-				},
-				{
-					"name" : "U20_DB1",
-					"strict" : false
-				},
-				{
-					"name" : "U20_DB0",
+					"name" : "U12_DB7",
 					"strict" : false
 				},
 				{
@@ -148,31 +100,7 @@
 					"strict" : false
 				},
 				{
-					"name" : "U12_DB7",
-					"strict" : false
-				},
-				{
-					"name" : "ESP_IN_VALUE",
-					"strict" : false
-				},
-				{
-					"name" : "U12_DB6",
-					"strict" : false
-				},
-				{
-					"name" : "U12_DB5",
-					"strict" : false
-				},
-				{
-					"name" : "U12_DB4",
-					"strict" : false
-				},
-				{
-					"name" : "U12_DB3",
-					"strict" : false
-				},
-				{
-					"name" : "U12_DB2",
+					"name" : "U12_DB0",
 					"strict" : false
 				},
 				{
@@ -180,7 +108,87 @@
 					"strict" : false
 				},
 				{
-					"name" : "U12_DB0",
+					"name" : "U12_DB2",
+					"strict" : false
+				},
+				{
+					"name" : "U12_DB3",
+					"strict" : false
+				},
+				{
+					"name" : "U12_DB4",
+					"strict" : false
+				},
+				{
+					"name" : "U12_DB5",
+					"strict" : false
+				},
+				{
+					"name" : "U12_DB6",
+					"strict" : false
+				},
+				{
+					"name" : "U20_DB6",
+					"strict" : false
+				},
+				{
+					"name" : "U20_DB7",
+					"strict" : false
+				},
+				{
+					"name" : "U20_DB3",
+					"strict" : false
+				},
+				{
+					"name" : "U20_DB4",
+					"strict" : false
+				},
+				{
+					"name" : "U20_DB5",
+					"strict" : false
+				},
+				{
+					"name" : "U5_INV_EOC",
+					"strict" : false
+				},
+				{
+					"name" : "U12_INV_EOC",
+					"strict" : false
+				},
+				{
+					"name" : "U20_INV_EOC",
+					"strict" : false
+				},
+				{
+					"name" : "ESP_IN_VALUE",
+					"strict" : false
+				},
+				{
+					"name" : "ESP_TO_OUTPUT",
+					"strict" : false
+				},
+				{
+					"name" : "ESP_OUT_SHIFT",
+					"strict" : false
+				},
+				{
+					"name" : "ESP_GO_LIVE",
+					"strict" : false
+				},
+				{
+					"name" : "ESP_IN_SHIFT",
+					"strict" : false
+				},
+				{
+					"name" : "U20_DB2",
+					"strict" : false
+				},
+				{
+					"name" : "U20_DB1",
+					"strict" : false
+				},
+				{
+					"name" : "U20_DB0",
 					"strict" : false
 				}
 			]

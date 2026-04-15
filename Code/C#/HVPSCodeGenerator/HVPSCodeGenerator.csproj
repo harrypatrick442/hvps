@@ -14,6 +14,7 @@
     <ProjectReference Include="..\..\..\..\shared-public\Native\CSharp\Native.csproj" />
     <ProjectReference Include="..\..\..\..\shared-public\SharedMasterSlaveUARTMessages\SharedMasterSlaveUARTMessages.csproj" />
     <ProjectReference Include="..\FPGAConstantsGenerator\FPGAConstantsGenerator.csproj" />
+    <ProjectReference Include="..\FPGAInterfaceGenerator\FPGAInterfaceGenerator.csproj" />
     <ProjectReference Include="..\HVPSAPI\HVPSAPI.csproj" />
     <ProjectReference Include="..\HVPSMessages\HVPSMessages.csproj" />
     <ProjectReference Include="..\HVPSUIMessages\HVPSUIMessages.csproj" />

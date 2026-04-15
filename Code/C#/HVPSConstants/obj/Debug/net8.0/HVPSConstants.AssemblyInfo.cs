@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HVPSConstants")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9657f8c17943dc4403034322ab557f9fcede5f5b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
 [assembly: System.Reflection.AssemblyProductAttribute("HVPSConstants")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HVPSConstants")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

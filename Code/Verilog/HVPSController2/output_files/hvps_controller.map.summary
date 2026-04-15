@@ -1,12 +1,12 @@
-Analysis & Synthesis Status : Successful - Thu Apr  9 15:56:05 2026
+Analysis & Synthesis Status : Successful - Wed Apr 15 14:08:07 2026
 Quartus Prime Version : 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
 Revision Name : hvps_controller
 Top-level Entity Name : hvps_controller
 Family : Cyclone IV E
-Total logic elements : 1,372
-    Total combinational functions : 1,318
-    Dedicated logic registers : 1,295
-Total registers : 1295
+Total logic elements : 1,423
+    Total combinational functions : 1,359
+    Dedicated logic registers : 1,318
+Total registers : 1318
 Total pins : 52
 Total virtual pins : 0
 Total memory bits : 0

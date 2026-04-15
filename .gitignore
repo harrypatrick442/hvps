@@ -173,3 +173,15 @@ Kicad/HVPSController2/_autosave-HVPSController2.kicad_sch
 /Code/C\#/HVPSConstants/obj
 /Code/Verilog/HVPSController2/db
 /Code/Verilog/HVPSController2/output_files
+/Code/C\#/ESPFPGAInterface/bin
+/Code/C\#/ESPFPGAInterface/bin
+/Code/C\#/ESPFPGAInterface/obj
+/Code/C\#/ESPFPGAInterfaceEmulation/bin
+/Code/C\#/FPGAConstantsGenerator/bin
+/Code/C\#/FPGAConstantsGenerator/obj
+/Code/C\#/FPGAConstantsGenerator/obj
+/Code/C\#/HVPSConstants/bin
+/Code/C++/HVPSController2/main/Generated
+/Code/Verilog/HVPSController2/db
+/Code/Verilog/HVPSController2/incremental_db
+/Code/Verilog/HVPSController2/output_files

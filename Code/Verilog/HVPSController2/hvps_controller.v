@@ -60,21 +60,22 @@ module hvps_controller(
 	 output wire U24_SD
 );
 
-    // Wires to connect to the interface
-    wire drive;
-    wire drive2;
+	 reg [1023:0] buffered_data;
     wire [7:0] desired_output_voltage;
     wire [7:0] command;
-    
-    // These would come from your actual core logic
-    wire [7:0] primary_current_raw;
+	 wire done_finite_half_cycles;
+	 wire [1:0] drive_mode;
+	 wire done_command;
     wire [7:0] first_stage_voltage_raw;
+	 wire [3:0] n_half_cycles_to_drive;
+
     wire [7:0] output_voltage_raw;
-	 reg [1023:0] buffered_data;
-    reg fpga_in_error = 1;
+    wire [7:0] primary_current_raw;
+	 wire shut_down_h_bridge;
+    wire [7:0] state;
 	 
 	 wire can_drive;//The sacred signal from the bangbang controller that goes into the H-Bridge.
-	 assign OT5 = drive & drive2;
+	 assign OT5 = can_drive;
 	 
     // Instantiate the module
     HVPS_FPGAInterface fpga_interface (
@@ -85,19 +86,18 @@ module hvps_controller(
         .out_shift(ESP_OUT_SHIFT),
         .to_output(ESP_TO_OUTPUT),
         .go_live(ESP_GO_LIVE),
-        .drive(drive),
-        .drive2(drive2),
         .desired_output_voltage(desired_output_voltage),
         .command(command),
+		  .done_command(done_command),
+        .state(state),
+        .buffered_data(buffered_data),
         .actual_first_stage_voltage(first_stage_voltage_raw),
         .actual_output_voltage(output_voltage_raw),
         .actual_peak_primary_current(primary_current_raw),
-        .error(fpga_in_error),
         .max_first_stage_voltage(MAX_FIRST_STAGE_VOLTAGE),
         .max_output_voltage(MAX_OUTPUT_VOLTAGE),
         .max_primary_current(MAX_PRIMARY_CURRENT),
-        .echo_desired_output_voltage(desired_output_voltage),
-        .buffered_data(buffered_data)
+        .echo_desired_output_voltage(desired_output_voltage)
     );
 	 
 	 
@@ -150,14 +150,24 @@ module hvps_controller(
 		 .primary_current_raw(primary_current_raw),
 		 .first_stage_voltage_raw(first_stage_voltage_raw),
 		 .output_voltage_raw(output_voltage_raw),
-		 .drive(drive),
-		 .drive2(drive2),
 		 .desired_output_voltage(desired_output_voltage),
 		 .can_drive(can_drive)
 	  );
+	  CommandHandler command_handler(
+			.clk_50Mhz(clk),
+			.command(command),
+			.state(state),
+			.done_command(done_command),
+			.drive_mode(drive_mode),
+			.shut_down_h_bridge(shut_down_h_bridge),
+			.n_half_cycles_to_drive(n_half_cycles_to_drive)
+	  );
 	  HBridge hBridge(
 		 .clk(clk),           // 50MHz system clock
-		 .can_drive(drive),    // from BangBangController
+		 .can_drive(can_drive),    // from BangBangController
+		 .drive_mode(drive_mode),
+		 .shut_down(shut_down_h_bridge),
+		 .n_half_cycles_to_drive(n_half_cycles_to_drive),
 		 .U23_HIN(U23_HIN),
 		 .U23_LIN(U23_LIN),
 		 .U23_SD(U23_SD),
