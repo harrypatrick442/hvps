@@ -11,14 +11,14 @@ private:
 public:
     HVPS_FPGAInterface(IFPGABus& fpgaBus);
     uint64_t getLastUpdateTimeUs();
-    void setCommand(bool (&value)[8]);
+    void setCommand(uint8_t value);
     void setDesiredOutputVoltage(uint8_t value);
     void  getBufferedData(uint8_t (&value)[128]);
     uint8_t getEchoDesiredOutputVoltage();
     uint8_t getMaxPrimaryCurrent();
     uint8_t getMaxOutputVoltage();
     uint8_t getMaxFirstStageVoltage();
-    void  getState(bool (&value)[8]);
+    uint8_t getState();
     uint8_t getActualPeakPrimaryCurrent();
     uint8_t getActualOutputVoltage();
     uint8_t getActualFirstStageVoltage();

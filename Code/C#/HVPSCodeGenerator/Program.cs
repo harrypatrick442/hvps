@@ -87,12 +87,12 @@ namespace HVPSCodeGenerator
                 new IOVariable[] {
                     //PUT MOST IMPORTANT FIRST
                     new Input("DesiredOutputVoltage", VariableType.Byte),
-                    new Input("Command", VariableType.CustomLengthBits, 8),
+                    new Input("Command", VariableType.Byte),
                     new Output("DoneCommand", VariableType.Bit),
                     actualFirstStageVoltage,
                     actualOutputVoltage,
                     actualPeakPrimaryCurrent,
-                    new Output("State", VariableType.CustomLengthBits, 8),
+                    new Output("State", VariableType.Byte),
                     new Output("MaxFirstStageVoltage", VariableType.Byte),
                     new Output("MaxOutputVoltage", VariableType.Byte),
                     new Output("MaxPrimaryCurrent", VariableType.Byte),

@@ -95,6 +95,8 @@ private:
 	void dispatchWarning(std::string message);
 	void loopFrequencyMeasurement();
 	void calculateAdditionalShutdownTime(float voltage, float& timeSeconds, float& time2Seconds);
+	void setFPGACommandDrive();
+	void setFPGACommandNone();
 };
 
 #endif // HIGH_SPEED_CORE_HPP

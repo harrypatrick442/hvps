@@ -62,17 +62,16 @@ module hvps_controller(
 
 	 reg [1023:0] buffered_data;
     wire [7:0] desired_output_voltage;
-    wire [7:0] command;
-	 wire done_finite_half_cycles;
+    wire [FPGA_COMMAND_LAST_INDEX:0] command;
+	 wire done_finite_quarter_cycles;
 	 wire [1:0] drive_mode;
-	 wire done_command;
     wire [7:0] first_stage_voltage_raw;
-	 wire [3:0] n_half_cycles_to_drive;
+	 wire [3:0] n_quarter_cycles_to_drive;
 
     wire [7:0] output_voltage_raw;
     wire [7:0] primary_current_raw;
 	 wire shut_down_h_bridge;
-    wire [7:0] state;
+    wire [FPGA_STATE_LAST_INDEX:0] state;
 	 
 	 wire can_drive;//The sacred signal from the bangbang controller that goes into the H-Bridge.
 	 assign OT5 = can_drive;
@@ -88,7 +87,6 @@ module hvps_controller(
         .go_live(ESP_GO_LIVE),
         .desired_output_voltage(desired_output_voltage),
         .command(command),
-		  .done_command(done_command),
         .state(state),
         .buffered_data(buffered_data),
         .actual_first_stage_voltage(first_stage_voltage_raw),
@@ -157,17 +155,16 @@ module hvps_controller(
 			.clk_50Mhz(clk),
 			.command(command),
 			.state(state),
-			.done_command(done_command),
 			.drive_mode(drive_mode),
 			.shut_down_h_bridge(shut_down_h_bridge),
-			.n_half_cycles_to_drive(n_half_cycles_to_drive)
+			.n_quarter_cycles_to_drive(n_quarter_cycles_to_drive)
 	  );
 	  HBridge hBridge(
 		 .clk(clk),           // 50MHz system clock
 		 .can_drive(can_drive),    // from BangBangController
 		 .drive_mode(drive_mode),
 		 .shut_down(shut_down_h_bridge),
-		 .n_half_cycles_to_drive(n_half_cycles_to_drive),
+		 .n_quarter_cycles_to_drive(n_quarter_cycles_to_drive),
 		 .U23_HIN(U23_HIN),
 		 .U23_LIN(U23_LIN),
 		 .U23_SD(U23_SD),

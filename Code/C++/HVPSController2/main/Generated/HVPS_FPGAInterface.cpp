@@ -4,8 +4,8 @@
 const char* HVPS_FPGAInterface::getTag() {return GET_FILE_NAME;}
 HVPS_FPGAInterface::HVPS_FPGAInterface(IFPGABus& fpgaBus):_fpgaInterface(16,1089, fpgaBus, 150){}
 uint64_t HVPS_FPGAInterface::getLastUpdateTimeUs(){ return _fpgaInterface.getLastUpdateTimeUs();}
-void HVPS_FPGAInterface::setCommand(bool (&value)[8]){
-     return _fpgaInterface.setBoolArray(0, value, 8);
+void HVPS_FPGAInterface::setCommand(uint8_t value){
+     return _fpgaInterface.setByte(0, value);
 }
 void HVPS_FPGAInterface::setDesiredOutputVoltage(uint8_t value){
      return _fpgaInterface.setByte(8, value);
@@ -25,8 +25,8 @@ uint8_t HVPS_FPGAInterface::getMaxOutputVoltage(){
 uint8_t HVPS_FPGAInterface::getMaxFirstStageVoltage(){
      return _fpgaInterface.getByte(1064);
 }
-void HVPS_FPGAInterface::getState(bool (&value)[8]){
-    _fpgaInterface.getBoolArray(1072, value, 8);
+uint8_t HVPS_FPGAInterface::getState(){
+     return _fpgaInterface.getByte(1072);
 }
 uint8_t HVPS_FPGAInterface::getActualPeakPrimaryCurrent(){
      return _fpgaInterface.getByte(1080);

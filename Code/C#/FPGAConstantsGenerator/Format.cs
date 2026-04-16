@@ -4,6 +4,7 @@
     {
         Binary,
         Decimal,
-        Hex
+        Hex,
+        RawInteger
     }
 }

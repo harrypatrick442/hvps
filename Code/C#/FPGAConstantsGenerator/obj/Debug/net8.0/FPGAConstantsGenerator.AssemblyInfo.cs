@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FPGAConstantsGenerator")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7f7d1e70fb3a948612bc328d26c680096cae466b")]
 [assembly: System.Reflection.AssemblyProductAttribute("FPGAConstantsGenerator")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FPGAConstantsGenerator")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

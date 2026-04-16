@@ -2,8 +2,8 @@ module HBridge(
     input wire clk,           // 50MHz system clock
     input wire can_drive,     // from BangBangController
 	 input wire [1:0] drive_mode,//From CommandHandler
-	 input wire [3:0] n_half_cycles_to_drive,
-	 output reg done_finite_half_cycles,
+	 input wire [3:0] n_quarter_cycles_to_drive,
+	 output reg done_finite_quarter_cycles,
 	 input wire shut_down,
     output wire U23_HIN,
     output wire U23_LIN,
@@ -25,7 +25,7 @@ localparam DEAD_TIME     = 5;    // 5 clocks = 100ns
 reg [11:0] counter = 0;
 reg [3:0]  quarter = 0;        // 0,1,2,3
 reg drive_ended_for_quarter = 0;
-reg [3:0] n_half_cycles_driven = 0;
+reg [3:0] n_quarter_cycles_driven = 0;
 reg hLeft = 0;
 reg lLeft = 0;
 reg hRight = 0;
@@ -45,28 +45,28 @@ always @(posedge clk) begin
 			counter <= 0;
 			case(drive_mode)
 				DRIVE_MODE_NO_DRIVE: begin
-					n_half_cycles_driven <= 0;
-					done_finite_half_cycles <= 0;
+					n_quarter_cycles_driven <= 0;
+					done_finite_quarter_cycles <= 0;
 					drive_ended_for_quarter <= 1;
 				end
 				DRIVE_MODE_DRIVE:begin				
-					n_half_cycles_driven <= 0;
+					n_quarter_cycles_driven <= 0;
 					drive_ended_for_quarter <= ~can_drive;
-					done_finite_half_cycles <= 0;
+					done_finite_quarter_cycles <= 0;
 				end
-				DRIVE_MODE_DRIVE_FINITE_HALF_CYCLES:begin				
-					if(n_half_cycles_driven< n_half_cycles_to_drive) begin
-						n_half_cycles_driven <= n_half_cycles_driven + 4'd1;
+				DRIVE_MODE_DRIVE_FINITE_QUARTER_CYCLES:begin				
+					if(n_quarter_cycles_driven< n_quarter_cycles_to_drive) begin
+						n_quarter_cycles_driven <= n_quarter_cycles_driven + 4'd1;
 						drive_ended_for_quarter <= ~can_drive;
 					end
 					else begin
-						done_finite_half_cycles <= 1;
+						done_finite_quarter_cycles <= 1;
 						drive_ended_for_quarter<= 1;
 					end
 				end
 				default:begin
-					n_half_cycles_driven <= 0;
-					done_finite_half_cycles <= 0;
+					n_quarter_cycles_driven <= 0;
+					done_finite_quarter_cycles <= 0;
 					drive_ended_for_quarter <= 1;
 				end
 			endcase

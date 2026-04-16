@@ -164,6 +164,18 @@ namespace HVPSConfigurationGenerator
                         "Enums"
                 )
             );
+            CPlusPlusEnumWriter.Write<FPGAState>(
+                Path.Combine(
+                        reposDirectory,
+                        "hvps",
+                        "Code",
+                        "C++",
+                        "HVPSController2",
+                        "main",
+                        "Generated",
+                        "Enums"
+                )
+            );
         }
         private static void GenerateFPGAConstants(string reposDirectory, HVPSConfiguration configurationStruct) {
             int maxPrimaryCurrent = (int)Math.Floor(Constants.FlybackTransformerMaximumCurrent / configurationStruct.primaryCurrentFromRaw);
@@ -178,10 +190,14 @@ namespace HVPSConfigurationGenerator
                         "GeneratedConstants.sv"
                 ),
                 new Constant[] {
-                    new Constant(name: "MAX_PRIMARY_CURRENT", value: maxPrimaryCurrent, nBits: 8, Format.Decimal),
-                    new Constant(name: "MAX_FIRST_STAGE_VOLTAGE", value: maxFirstStageVoltage, nBits: 8, Format.Decimal),
-                    new Constant(name: "MAX_OUTPUT_VOLTAGE", value: maxFirstStageVoltage, nBits: 8, Format.Decimal)
-                }.Concat(FPGAConstantsGenerator.ConstantsFactory.FromEnum<FPGACommand>(8)).ToArray());
+                    new Constant(name: "MAX_PRIMARY_CURRENT", value: maxPrimaryCurrent, Format.Decimal, nBits: 8),
+                    new Constant(name: "MAX_FIRST_STAGE_VOLTAGE", value: maxFirstStageVoltage, Format.Decimal, nBits: 8),
+                    new Constant(name: "MAX_OUTPUT_VOLTAGE", value: maxFirstStageVoltage, Format.Decimal, nBits: 8)
+                }
+                .Concat(FPGAConstantsGenerator.ConstantsFactory.FromEnum<FPGACommand>(8))
+                .Concat(FPGAConstantsGenerator.ConstantsFactory.FromEnum<FPGAState>(8))
+                .ToArray()
+            );
         }
         private static UInt32 FlashHzToMilliseconds(double hz){
             if (hz <= 0) return 0;

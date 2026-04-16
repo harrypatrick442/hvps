@@ -7,6 +7,7 @@
 #include "Core/FloatAndTime.hpp"
 #include "SystemChecks.hpp"
 #include "Macros/GetFileName.hpp"
+#include "Generated/Enums/FPGACommand.hpp"
 #include "ADC/ADC.hpp"
 #include <cmath>
 const char* HighSpeedCore::getTag() {return GET_FILE_NAME;}
@@ -195,8 +196,7 @@ void HighSpeedCore::_run(){
 			case SystemState::Live:
 				LOG_INFO("Live");
 				doLive();
-				_fpgaInterface.setDrive(false);
-				_fpgaInterface.setDrive2(false);
+				setFPGACommandDrive();
 				continue;
 			case SystemState::ShutDown:
 				LOG_INFO("ShutDown");
@@ -265,8 +265,7 @@ void HighSpeedCore::doShutDown(){
 		{
 			return;
 		}
-		_fpgaInterface.setDrive(false);
-		_fpgaInterface.setDrive2(false);
+		setFPGACommandNone();
 		uint64_t fpgaUpdateTime = _fpgaInterface.getLastUpdateTimeUs();
 		if(fpgaUpdateTime==lastTime){
 			continue;
@@ -331,8 +330,7 @@ void HighSpeedCore::doIdle(){
 		if(desiredSystemState!=SystemState::Idle){
 			return;
 		}
-		_fpgaInterface.setDrive(false);
-		_fpgaInterface.setDrive2(false);
+		setFPGACommandNone();
 		Delay::ms(100);
 	}
 }
@@ -362,18 +360,15 @@ void HighSpeedCore::doLive(){
 		if(getInError()){
 			break;
 		}
-		_fpgaInterface.setDrive(true);
-		_fpgaInterface.setDrive2(true);
+		setFPGACommandDrive();
 	}
 	LOG_INFO("Exited loop");
-	_fpgaInterface.setDrive(false);
-	_fpgaInterface.setDrive2(false);
+	setFPGACommandNone();
 }
 void HighSpeedCore::doError(){
 	setActualSystemState(SystemState::Error);
 	while(true){
-		_fpgaInterface.setDrive(false);
-		_fpgaInterface.setDrive2(false);
+		setFPGACommandNone();
 		Delay::ms(100);
 		if(getActualSystemState()!=SystemState::Error){
 			break;
@@ -402,4 +397,10 @@ void HighSpeedCore::calculateAdditionalShutdownTime(float voltage, float& timeSe
 					* std::log(voltage / SAFE_OUTPUT_VOLTAGE);
 	time2Seconds =  static_cast<float>(_hvpsConfiguration2.villardCapacitorsBleedTimeConstantSeconds)
 					* std::log(voltage / SAFE_OUTPUT_VOLTAGE);
+}
+void HighSpeedCore::setFPGACommandNone(){
+	_fpgaInterface.setCommand(FPGACommand::NONE);
+}
+void HighSpeedCore::setFPGACommandDrive(){
+	_fpgaInterface.setCommand(FPGACommand::DRIVE);
 }

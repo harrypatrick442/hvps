@@ -1,5 +1,5 @@
 Analysis & Synthesis report for hvps_controller
-Wed Apr 15 14:08:07 2026
+Thu Apr 16 12:47:01 2026
 Quartus Prime Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
 
 
@@ -60,15 +60,15 @@ on the Quartus Prime software download page.
 +--------------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                         ;
 +------------------------------------+-------------------------------------------------+
-; Analysis & Synthesis Status        ; Successful - Wed Apr 15 14:08:07 2026           ;
+; Analysis & Synthesis Status        ; Successful - Thu Apr 16 12:47:01 2026           ;
 ; Quartus Prime Version              ; 25.1std.0 Build 1129 10/21/2025 SC Lite Edition ;
 ; Revision Name                      ; hvps_controller                                 ;
 ; Top-level Entity Name              ; hvps_controller                                 ;
 ; Family                             ; Cyclone IV E                                    ;
-; Total logic elements               ; 1,423                                           ;
-;     Total combinational functions  ; 1,359                                           ;
-;     Dedicated logic registers      ; 1,318                                           ;
-; Total registers                    ; 1318                                            ;
+; Total logic elements               ; 1,429                                           ;
+;     Total combinational functions  ; 1,365                                           ;
+;     Dedicated logic registers      ; 1,322                                           ;
+; Total registers                    ; 1322                                            ;
 ; Total pins                         ; 52                                              ;
 ; Total virtual pins                 ; 0                                               ;
 ; Total memory bits                  ; 0                                               ;
@@ -180,8 +180,8 @@ on the Quartus Prime software download page.
 ;     Processor 3            ;   0.1%      ;
 ;     Processor 4            ;   0.1%      ;
 ;     Processor 5            ;   0.1%      ;
-;     Processor 6            ;   0.1%      ;
-;     Processor 7            ;   0.1%      ;
+;     Processor 6            ;   0.0%      ;
+;     Processor 7            ;   0.0%      ;
 ;     Processor 8            ;   0.0%      ;
 +----------------------------+-------------+
 
@@ -208,20 +208,20 @@ on the Quartus Prime software download page.
 +---------------------------------------------+-----------+
 ; Resource                                    ; Usage     ;
 +---------------------------------------------+-----------+
-; Estimated Total logic elements              ; 1,423     ;
+; Estimated Total logic elements              ; 1,429     ;
 ;                                             ;           ;
-; Total combinational functions               ; 1359      ;
+; Total combinational functions               ; 1365      ;
 ; Logic element usage by number of LUT inputs ;           ;
-;     -- 4 input functions                    ; 145       ;
-;     -- 3 input functions                    ; 1082      ;
-;     -- <=2 input functions                  ; 132       ;
+;     -- 4 input functions                    ; 147       ;
+;     -- 3 input functions                    ; 1087      ;
+;     -- <=2 input functions                  ; 131       ;
 ;                                             ;           ;
 ; Logic elements by mode                      ;           ;
-;     -- normal mode                          ; 1257      ;
+;     -- normal mode                          ; 1263      ;
 ;     -- arithmetic mode                      ; 102       ;
 ;                                             ;           ;
-; Total registers                             ; 1318      ;
-;     -- Dedicated logic registers            ; 1318      ;
+; Total registers                             ; 1322      ;
+;     -- Dedicated logic registers            ; 1322      ;
 ;     -- I/O registers                        ; 0         ;
 ;                                             ;           ;
 ; I/O pins                                    ; 52        ;
@@ -229,8 +229,8 @@ on the Quartus Prime software download page.
 ; Embedded Multiplier 9-bit elements          ; 0         ;
 ;                                             ;           ;
 ; Maximum fan-out node                        ; clk~input ;
-; Maximum fan-out                             ; 1318      ;
-; Total fan-out                               ; 8049      ;
+; Maximum fan-out                             ; 1322      ;
+; Total fan-out                               ; 8076      ;
 ; Average fan-out                             ; 2.89      ;
 +---------------------------------------------+-----------+
 
@@ -240,12 +240,12 @@ on the Quartus Prime software download page.
 +----------------------------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+----------------------------------------------------------------------------------+--------------------+--------------+
 ; Compilation Hierarchy Node                   ; Combinational ALUTs ; Dedicated Logic Registers ; Memory Bits ; DSP Elements ; DSP 9x9 ; DSP 18x18 ; Pins ; Virtual Pins ; Full Hierarchy Name                                                              ; Entity Name        ; Library Name ;
 +----------------------------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+----------------------------------------------------------------------------------+--------------------+--------------+
-; |hvps_controller                             ; 1359 (0)            ; 1318 (0)                  ; 0           ; 0            ; 0       ; 0         ; 52   ; 0            ; |hvps_controller                                                                 ; hvps_controller    ; work         ;
+; |hvps_controller                             ; 1365 (0)            ; 1322 (0)                  ; 0           ; 0            ; 0       ; 0         ; 52   ; 0            ; |hvps_controller                                                                 ; hvps_controller    ; work         ;
 ;    |AD7822:first_stage_voltage_feedback_adc| ; 26 (26)             ; 19 (19)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |hvps_controller|AD7822:first_stage_voltage_feedback_adc                         ; AD7822             ; work         ;
-;    |AD7822:output_voltage_feedback_adc|      ; 24 (24)             ; 19 (19)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |hvps_controller|AD7822:output_voltage_feedback_adc                              ; AD7822             ; work         ;
-;    |AD7822:primary_current_feedback_adc|     ; 24 (24)             ; 19 (19)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |hvps_controller|AD7822:primary_current_feedback_adc                             ; AD7822             ; work         ;
+;    |AD7822:output_voltage_feedback_adc|      ; 26 (26)             ; 19 (19)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |hvps_controller|AD7822:output_voltage_feedback_adc                              ; AD7822             ; work         ;
+;    |AD7822:primary_current_feedback_adc|     ; 25 (25)             ; 19 (19)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |hvps_controller|AD7822:primary_current_feedback_adc                             ; AD7822             ; work         ;
 ;    |BangBangController:bang_bang_controller| ; 14 (14)             ; 0 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |hvps_controller|BangBangController:bang_bang_controller                         ; BangBangController ; work         ;
-;    |CommandHandler:command_handler|          ; 13 (13)             ; 11 (11)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |hvps_controller|CommandHandler:command_handler                                  ; CommandHandler     ; work         ;
+;    |CommandHandler:command_handler|          ; 16 (16)             ; 15 (15)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |hvps_controller|CommandHandler:command_handler                                  ; CommandHandler     ; work         ;
 ;    |HBridge:hBridge|                         ; 37 (37)             ; 21 (21)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |hvps_controller|HBridge:hBridge                                                 ; HBridge            ; work         ;
 ;    |HVPS_FPGAInterface:fpga_interface|       ; 1221 (1109)         ; 1229 (1141)               ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |hvps_controller|HVPS_FPGAInterface:fpga_interface                               ; HVPS_FPGAInterface ; work         ;
 ;       |debouncer:debouncer_go_live|          ; 28 (28)             ; 22 (22)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |hvps_controller|HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_go_live   ; debouncer          ; work         ;
@@ -295,25 +295,27 @@ Encoding Type:  One-Hot
 +------------------+---------------+---------------+------------------+------------+
 
 
-+-------------------------------------------------------------------------------------------------------+
-; Registers Removed During Synthesis                                                                    ;
-+--------------------------------------------------------------+----------------------------------------+
-; Register name                                                ; Reason for Removal                     ;
-+--------------------------------------------------------------+----------------------------------------+
-; CommandHandler:command_handler|n_half_cycles_to_drive[1]     ; Stuck at VCC due to stuck port data_in ;
-; CommandHandler:command_handler|n_half_cycles_to_drive[0,2,3] ; Stuck at GND due to stuck port data_in ;
-; HBridge:hBridge|hLeft                                        ; Merged with HBridge:hBridge|lRight     ;
-; HBridge:hBridge|lLeft                                        ; Merged with HBridge:hBridge|hRight     ;
-; CommandHandler:command_handler|done_command                  ; Stuck at GND due to stuck port data_in ;
-; AD7822:first_stage_voltage_feedback_adc|state~6              ; Lost fanout                            ;
-; AD7822:first_stage_voltage_feedback_adc|state~7              ; Lost fanout                            ;
-; AD7822:output_voltage_feedback_adc|state~6                   ; Lost fanout                            ;
-; AD7822:output_voltage_feedback_adc|state~7                   ; Lost fanout                            ;
-; AD7822:primary_current_feedback_adc|state~6                  ; Lost fanout                            ;
-; AD7822:primary_current_feedback_adc|state~7                  ; Lost fanout                            ;
-; HBridge:hBridge|quarter[2,3]                                 ; Stuck at GND due to stuck port data_in ;
-; Total Number of Removed Registers = 15                       ;                                        ;
-+--------------------------------------------------------------+----------------------------------------+
++---------------------------------------------------------------------------------------------------------------------------------------+
+; Registers Removed During Synthesis                                                                                                    ;
++-------------------------------------------------------------+-------------------------------------------------------------------------+
+; Register name                                               ; Reason for Removal                                                      ;
++-------------------------------------------------------------+-------------------------------------------------------------------------+
+; HBridge:hBridge|hLeft                                       ; Merged with HBridge:hBridge|lRight                                      ;
+; HBridge:hBridge|lLeft                                       ; Merged with HBridge:hBridge|hRight                                      ;
+; CommandHandler:command_handler|n_quarter_cycles_to_drive[3] ; Merged with CommandHandler:command_handler|n_quarter_cycles_to_drive[0] ;
+; CommandHandler:command_handler|state[4..7]                  ; Merged with CommandHandler:command_handler|state[3]                     ;
+; CommandHandler:command_handler|n_quarter_cycles_to_drive[0] ; Stuck at GND due to stuck port data_in                                  ;
+; CommandHandler:command_handler|state[3]                     ; Stuck at GND due to stuck port data_in                                  ;
+; CommandHandler:command_handler|n_quarter_cycles_to_drive[1] ; Merged with CommandHandler:command_handler|n_quarter_cycles_to_drive[2] ;
+; AD7822:first_stage_voltage_feedback_adc|state~6             ; Lost fanout                                                             ;
+; AD7822:first_stage_voltage_feedback_adc|state~7             ; Lost fanout                                                             ;
+; AD7822:output_voltage_feedback_adc|state~6                  ; Lost fanout                                                             ;
+; AD7822:output_voltage_feedback_adc|state~7                  ; Lost fanout                                                             ;
+; AD7822:primary_current_feedback_adc|state~6                 ; Lost fanout                                                             ;
+; AD7822:primary_current_feedback_adc|state~7                 ; Lost fanout                                                             ;
+; HBridge:hBridge|quarter[2,3]                                ; Stuck at GND due to stuck port data_in                                  ;
+; Total Number of Removed Registers = 18                      ;                                                                         ;
++-------------------------------------------------------------+-------------------------------------------------------------------------+
 
 
 +------------------------------------------------------+
@@ -321,12 +323,12 @@ Encoding Type:  One-Hot
 +----------------------------------------------+-------+
 ; Statistic                                    ; Value ;
 +----------------------------------------------+-------+
-; Total registers                              ; 1318  ;
+; Total registers                              ; 1322  ;
 ; Number of registers using Synchronous Clear  ; 103   ;
 ; Number of registers using Synchronous Load   ; 1     ;
 ; Number of registers using Asynchronous Clear ; 0     ;
 ; Number of registers using Asynchronous Load  ; 0     ;
-; Number of registers using Clock Enable       ; 1173  ;
+; Number of registers using Clock Enable       ; 1171  ;
 ; Number of registers using Preset             ; 0     ;
 +----------------------------------------------+-------+
 
@@ -360,19 +362,21 @@ Encoding Type:  One-Hot
 +--------------------+-----------+---------------+----------------------+------------------------+------------+----------------------------------------------------------------------------------------------+
 ; Multiplexer Inputs ; Bus Width ; Baseline Area ; Area if Restructured ; Saving if Restructured ; Registered ; Example Multiplexer Output                                                                   ;
 +--------------------+-----------+---------------+----------------------+------------------------+------------+----------------------------------------------------------------------------------------------+
-; 3:1                ; 1057 bits ; 2114 LEs      ; 1057 LEs             ; 1057 LEs               ; Yes        ; |hvps_controller|HVPS_FPGAInterface:fpga_interface|output_buffer[928]                        ;
-; 3:1                ; 47 bits   ; 94 LEs        ; 47 LEs               ; 47 LEs                 ; Yes        ; |hvps_controller|HVPS_FPGAInterface:fpga_interface|output_buffer[1081]                       ;
-; 3:1                ; 19 bits   ; 38 LEs        ; 19 LEs               ; 19 LEs                 ; Yes        ; |hvps_controller|HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_out_shift|counter[11] ;
-; 3:1                ; 19 bits   ; 38 LEs        ; 19 LEs               ; 19 LEs                 ; Yes        ; |hvps_controller|HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_to_output|counter[3]  ;
-; 3:1                ; 19 bits   ; 38 LEs        ; 19 LEs               ; 19 LEs                 ; Yes        ; |hvps_controller|HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_go_live|counter[3]    ;
-; 3:1                ; 19 bits   ; 38 LEs        ; 19 LEs               ; 19 LEs                 ; Yes        ; |hvps_controller|HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_in_shift|counter[10]  ;
-; 3:1                ; 4 bits    ; 8 LEs         ; 4 LEs                ; 4 LEs                  ; Yes        ; |hvps_controller|HBridge:hBridge|n_half_cycles_driven[0]                                     ;
-; 8:1                ; 5 bits    ; 25 LEs        ; 5 LEs                ; 20 LEs                 ; Yes        ; |hvps_controller|AD7822:first_stage_voltage_feedback_adc|counter[4]                          ;
-; 8:1                ; 5 bits    ; 25 LEs        ; 5 LEs                ; 20 LEs                 ; Yes        ; |hvps_controller|AD7822:output_voltage_feedback_adc|counter[0]                               ;
-; 8:1                ; 5 bits    ; 25 LEs        ; 5 LEs                ; 20 LEs                 ; Yes        ; |hvps_controller|AD7822:primary_current_feedback_adc|counter[0]                              ;
-; 257:1              ; 2 bits    ; 342 LEs       ; 12 LEs               ; 330 LEs                ; Yes        ; |hvps_controller|CommandHandler:command_handler|shut_down_h_bridge                           ;
-; 8:1                ; 4 bits    ; 20 LEs        ; 12 LEs               ; 8 LEs                  ; No         ; |hvps_controller|AD7822:first_stage_voltage_feedback_adc|Selector10                          ;
-; 8:1                ; 4 bits    ; 20 LEs        ; 12 LEs               ; 8 LEs                  ; No         ; |hvps_controller|AD7822:output_voltage_feedback_adc|Selector7                                ;
+; 3:1                ; 1049 bits ; 2098 LEs      ; 1049 LEs             ; 1049 LEs               ; Yes        ; |hvps_controller|HVPS_FPGAInterface:fpga_interface|output_buffer[933]                        ;
+; 3:1                ; 55 bits   ; 110 LEs       ; 55 LEs               ; 55 LEs                 ; Yes        ; |hvps_controller|HVPS_FPGAInterface:fpga_interface|output_buffer[1087]                       ;
+; 3:1                ; 4 bits    ; 8 LEs         ; 4 LEs                ; 4 LEs                  ; Yes        ; |hvps_controller|HBridge:hBridge|n_quarter_cycles_driven[0]                                  ;
+; 3:1                ; 19 bits   ; 38 LEs        ; 19 LEs               ; 19 LEs                 ; Yes        ; |hvps_controller|HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_out_shift|counter[7]  ;
+; 3:1                ; 19 bits   ; 38 LEs        ; 19 LEs               ; 19 LEs                 ; Yes        ; |hvps_controller|HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_to_output|counter[14] ;
+; 3:1                ; 19 bits   ; 38 LEs        ; 19 LEs               ; 19 LEs                 ; Yes        ; |hvps_controller|HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_go_live|counter[11]   ;
+; 3:1                ; 19 bits   ; 38 LEs        ; 19 LEs               ; 19 LEs                 ; Yes        ; |hvps_controller|HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_in_shift|counter[2]   ;
+; 8:1                ; 5 bits    ; 25 LEs        ; 5 LEs                ; 20 LEs                 ; Yes        ; |hvps_controller|AD7822:first_stage_voltage_feedback_adc|counter[0]                          ;
+; 8:1                ; 5 bits    ; 25 LEs        ; 5 LEs                ; 20 LEs                 ; Yes        ; |hvps_controller|AD7822:output_voltage_feedback_adc|counter[3]                               ;
+; 8:1                ; 5 bits    ; 25 LEs        ; 5 LEs                ; 20 LEs                 ; Yes        ; |hvps_controller|AD7822:primary_current_feedback_adc|counter[3]                              ;
+; 258:1              ; 3 bits    ; 516 LEs       ; 18 LEs               ; 498 LEs                ; Yes        ; |hvps_controller|CommandHandler:command_handler|drive_mode[1]                                ;
+; 258:1              ; 4 bits    ; 688 LEs       ; 12 LEs               ; 676 LEs                ; Yes        ; |hvps_controller|CommandHandler:command_handler|state[1]                                     ;
+; 258:1              ; 3 bits    ; 516 LEs       ; 3 LEs                ; 513 LEs                ; Yes        ; |hvps_controller|CommandHandler:command_handler|n_quarter_cycles_to_drive[1]                 ;
+; 8:1                ; 4 bits    ; 20 LEs        ; 12 LEs               ; 8 LEs                  ; No         ; |hvps_controller|AD7822:first_stage_voltage_feedback_adc|Selector8                           ;
+; 8:1                ; 4 bits    ; 20 LEs        ; 12 LEs               ; 8 LEs                  ; No         ; |hvps_controller|AD7822:output_voltage_feedback_adc|Selector9                                ;
 ; 8:1                ; 4 bits    ; 20 LEs        ; 12 LEs               ; 8 LEs                  ; No         ; |hvps_controller|AD7822:primary_current_feedback_adc|Selector7                               ;
 +--------------------+-----------+---------------+----------------------+------------------------+------------+----------------------------------------------------------------------------------------------+
 
@@ -417,22 +421,22 @@ Note: In order to hide this table in the UI and the text report file, please set
 Note: In order to hide this table in the UI and the text report file, please set the "Show Parameter Settings in Synthesis Report" option in "Analysis and Synthesis Settings -> More Settings" to "Off".
 
 
-+--------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Port Connectivity Checks: "HBridge:hBridge"                                                                                                            ;
-+-------------------------+--------+----------+----------------------------------------------------------------------------------------------------------+
-; Port                    ; Type   ; Severity ; Details                                                                                                  ;
-+-------------------------+--------+----------+----------------------------------------------------------------------------------------------------------+
-; done_finite_half_cycles ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed. ;
-+-------------------------+--------+----------+----------------------------------------------------------------------------------------------------------+
++-----------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Port Connectivity Checks: "HBridge:hBridge"                                                                                                               ;
++----------------------------+--------+----------+----------------------------------------------------------------------------------------------------------+
+; Port                       ; Type   ; Severity ; Details                                                                                                  ;
++----------------------------+--------+----------+----------------------------------------------------------------------------------------------------------+
+; done_finite_quarter_cycles ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed. ;
++----------------------------+--------+----------+----------------------------------------------------------------------------------------------------------+
 
 
-+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Port Connectivity Checks: "CommandHandler:command_handler"                                                                                                                                ;
-+-------------------------+-------+----------+----------------------------------------------------------------------------------------------------------------------------------------------+
-; Port                    ; Type  ; Severity ; Details                                                                                                                                      ;
-+-------------------------+-------+----------+----------------------------------------------------------------------------------------------------------------------------------------------+
-; done_finite_half_cycles ; Input ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
-+-------------------------+-------+----------+----------------------------------------------------------------------------------------------------------------------------------------------+
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Port Connectivity Checks: "CommandHandler:command_handler"                                                                                                                                   ;
++----------------------------+-------+----------+----------------------------------------------------------------------------------------------------------------------------------------------+
+; Port                       ; Type  ; Severity ; Details                                                                                                                                      ;
++----------------------------+-------+----------+----------------------------------------------------------------------------------------------------------------------------------------------+
+; done_finite_quarter_cycles ; Input ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
++----------------------------+-------+----------+----------------------------------------------------------------------------------------------------------------------------------------------+
 
 
 +--------------------------------------------------------------------------------------------------------------------------------------+
@@ -462,22 +466,23 @@ Note: In order to hide this table in the UI and the text report file, please set
 +-------+--------+----------+----------------------------------------------------------------------------------------------------------+
 
 
-+-----------------------------------------------------------------+
-; Port Connectivity Checks: "HVPS_FPGAInterface:fpga_interface"   ;
-+-------------------------------+-------+----------+--------------+
-; Port                          ; Type  ; Severity ; Details      ;
-+-------------------------------+-------+----------+--------------+
-; max_first_stage_voltage[7..6] ; Input ; Info     ; Stuck at VCC ;
-; max_first_stage_voltage[4..3] ; Input ; Info     ; Stuck at VCC ;
-; max_first_stage_voltage[2..0] ; Input ; Info     ; Stuck at GND ;
-; max_first_stage_voltage[5]    ; Input ; Info     ; Stuck at GND ;
-; max_output_voltage[7..6]      ; Input ; Info     ; Stuck at VCC ;
-; max_output_voltage[4..3]      ; Input ; Info     ; Stuck at VCC ;
-; max_output_voltage[2..0]      ; Input ; Info     ; Stuck at GND ;
-; max_output_voltage[5]         ; Input ; Info     ; Stuck at GND ;
-; max_primary_current[6..0]     ; Input ; Info     ; Stuck at VCC ;
-; max_primary_current[7]        ; Input ; Info     ; Stuck at GND ;
-+-------------------------------+-------+----------+--------------+
++-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Port Connectivity Checks: "HVPS_FPGAInterface:fpga_interface"                                                                                                                                   ;
++-------------------------------+-------+----------+----------------------------------------------------------------------------------------------------------------------------------------------+
+; Port                          ; Type  ; Severity ; Details                                                                                                                                      ;
++-------------------------------+-------+----------+----------------------------------------------------------------------------------------------------------------------------------------------+
+; max_first_stage_voltage[7..6] ; Input ; Info     ; Stuck at VCC                                                                                                                                 ;
+; max_first_stage_voltage[4..3] ; Input ; Info     ; Stuck at VCC                                                                                                                                 ;
+; max_first_stage_voltage[2..0] ; Input ; Info     ; Stuck at GND                                                                                                                                 ;
+; max_first_stage_voltage[5]    ; Input ; Info     ; Stuck at GND                                                                                                                                 ;
+; max_output_voltage[7..6]      ; Input ; Info     ; Stuck at VCC                                                                                                                                 ;
+; max_output_voltage[4..3]      ; Input ; Info     ; Stuck at VCC                                                                                                                                 ;
+; max_output_voltage[2..0]      ; Input ; Info     ; Stuck at GND                                                                                                                                 ;
+; max_output_voltage[5]         ; Input ; Info     ; Stuck at GND                                                                                                                                 ;
+; max_primary_current[6..0]     ; Input ; Info     ; Stuck at VCC                                                                                                                                 ;
+; max_primary_current[7]        ; Input ; Info     ; Stuck at GND                                                                                                                                 ;
+; done_command                  ; Input ; Warning  ; Declared by entity but not connected by instance. If a default value exists, it will be used.  Otherwise, the port will be connected to GND. ;
++-------------------------------+-------+----------+----------------------------------------------------------------------------------------------------------------------------------------------+
 
 
 +-----------------------------------------------------+
@@ -486,22 +491,22 @@ Note: In order to hide this table in the UI and the text report file, please set
 ; Type                  ; Count                       ;
 +-----------------------+-----------------------------+
 ; boundary_port         ; 52                          ;
-; cycloneiii_ff         ; 1318                        ;
-;     ENA               ; 1173                        ;
+; cycloneiii_ff         ; 1322                        ;
+;     ENA               ; 1171                        ;
 ;     SCLR              ; 103                         ;
 ;     SLD               ; 1                           ;
-;     plain             ; 41                          ;
-; cycloneiii_lcell_comb ; 1363                        ;
+;     plain             ; 47                          ;
+; cycloneiii_lcell_comb ; 1369                        ;
 ;     arith             ; 102                         ;
 ;         2 data inputs ; 95                          ;
 ;         3 data inputs ; 7                           ;
-;     normal            ; 1261                        ;
+;     normal            ; 1267                        ;
 ;         1 data inputs ; 25                          ;
-;         2 data inputs ; 16                          ;
-;         3 data inputs ; 1075                        ;
-;         4 data inputs ; 145                         ;
+;         2 data inputs ; 15                          ;
+;         3 data inputs ; 1080                        ;
+;         4 data inputs ; 147                         ;
 ;                       ;                             ;
-; Max LUT depth         ; 4.00                        ;
+; Max LUT depth         ; 5.00                        ;
 ; Average LUT depth     ; 1.32                        ;
 +-----------------------+-----------------------------+
 
@@ -521,7 +526,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Synthesis
     Info: Version 25.1std.0 Build 1129 10/21/2025 SC Lite Edition
-    Info: Processing started: Wed Apr 15 14:07:59 2026
+    Info: Processing started: Thu Apr 16 12:46:52 2026
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off HVPSController2 -c hvps_controller
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
 Info (20030): Parallel compilation is enabled and will use 8 of the 8 processors detected
@@ -544,14 +549,13 @@ Info (12021): Found 1 design units, including 1 entities, in source file hvps_co
 Info (12021): Found 1 design units, including 1 entities, in source file debouncer.v
     Info (12023): Found entity 1: debouncer File: C:/repos/hvps/Code/Verilog/HVPSController2/debouncer.v Line: 1
 Info (12127): Elaborating entity "hvps_controller" for the top level hierarchy
-Info (12128): Elaborating entity "HVPS_FPGAInterface" for hierarchy "HVPS_FPGAInterface:fpga_interface" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 101
+Info (12128): Elaborating entity "HVPS_FPGAInterface" for hierarchy "HVPS_FPGAInterface:fpga_interface" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 99
 Info (12128): Elaborating entity "debouncer" for hierarchy "HVPS_FPGAInterface:fpga_interface|debouncer:debouncer_in_shift" File: C:/repos/hvps/Code/Verilog/HVPSController2/HVPS_FPGAInterface.v Line: 56
-Info (12128): Elaborating entity "AD7822" for hierarchy "AD7822:primary_current_feedback_adc" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 118
-Info (12128): Elaborating entity "BangBangController" for hierarchy "BangBangController:bang_bang_controller" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 155
-Info (12128): Elaborating entity "CommandHandler" for hierarchy "CommandHandler:command_handler" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 164
-Warning (10034): Output port "state" at CommandHandler.v(4) has no driver File: C:/repos/hvps/Code/Verilog/HVPSController2/CommandHandler.v Line: 4
-Info (12128): Elaborating entity "HBridge" for hierarchy "HBridge:hBridge" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 177
-Warning (12241): 5 hierarchies have connectivity warnings - see the Connectivity Checks report folder
+Info (12128): Elaborating entity "AD7822" for hierarchy "AD7822:primary_current_feedback_adc" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 116
+Info (12128): Elaborating entity "BangBangController" for hierarchy "BangBangController:bang_bang_controller" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 153
+Info (12128): Elaborating entity "CommandHandler" for hierarchy "CommandHandler:command_handler" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 161
+Info (12128): Elaborating entity "HBridge" for hierarchy "HBridge:hBridge" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 174
+Warning (12241): 6 hierarchies have connectivity warnings - see the Connectivity Checks report folder
 Info (286030): Timing-Driven Synthesis is running
 Info (17049): 6 registers lost all their fanouts during netlist optimizations.
 Info (144001): Generated suppressed messages file C:/repos/hvps/Code/Verilog/HVPSController2/output_files/hvps_controller.map.smsg
@@ -563,15 +567,15 @@ Warning (21074): Design contains 5 input pin(s) that do not drive logic
     Warning (15610): No output dependent on input pin "OR5" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 18
     Warning (15610): No output dependent on input pin "OR6" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 19
     Warning (15610): No output dependent on input pin "OT4" File: C:/repos/hvps/Code/Verilog/HVPSController2/hvps_controller.v Line: 20
-Info (21057): Implemented 1476 device resources after synthesis - the final resource count might be different
+Info (21057): Implemented 1483 device resources after synthesis - the final resource count might be different
     Info (21058): Implemented 38 input pins
     Info (21059): Implemented 14 output pins
-    Info (21061): Implemented 1424 logic cells
-Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 9 warnings
+    Info (21061): Implemented 1431 logic cells
+Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 8 warnings
     Info: Peak virtual memory: 4845 megabytes
-    Info: Processing ended: Wed Apr 15 14:08:07 2026
-    Info: Elapsed time: 00:00:08
-    Info: Total CPU time (on all processors): 00:00:19
+    Info: Processing ended: Thu Apr 16 12:47:01 2026
+    Info: Elapsed time: 00:00:09
+    Info: Total CPU time (on all processors): 00:00:22
 
 
 +------------------------------------------+
